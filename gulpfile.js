@@ -3,10 +3,28 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var minifyHTML = require('gulp-minify-html');
 
+var watching = false;
+
+// Wrap a stream in an error-handler (needed until Gulp 4).
+function wrap(stream) {
+  stream.on('error', function(error) {
+    gutil.log(gutil.colors.red(error.message));
+    gutil.log(error.stack);
+    if (watching) {
+      gutil.log(gutil.colors.yellow('[aborting]'));
+      stream.end();
+    } else {
+      gutil.log(gutil.colors.yellow('[exiting]'));
+      process.exit(1);
+    }
+  });
+  return stream;
+}
+
 gulp.task('default', ['watch']);
 
 gulp.task('watch', function() {
-  fatalLevel = 'off'; // provided by gutil; don't crash during watch
+  watching = true;
   gulp.watch('src/**/*.html', ['html']);
   gulp.watch('src/**/*.js', ['js']);
 });
@@ -15,12 +33,12 @@ gulp.task('build', ['html', 'js']);
 
 gulp.task('html', function() {
   return gulp.src('src/**/*.html')
-    .pipe(minifyHTML({}))
+    .pipe(wrap(minifyHTML()))
     .pipe(gulp.dest('dist'));
 });
 
 gulp.task('js', function() {
   return gulp.src('src/**/*.js')
-    .pipe(babel())
+    .pipe(wrap(babel()))
     .pipe(gulp.dest('dist'));
 });
