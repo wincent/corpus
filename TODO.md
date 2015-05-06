@@ -10,19 +10,32 @@ Base features (motivating features):
 
 - plain-text (Markdown) storage format
 - Git-backed versioning
-- rich text editor -> preview as Formatted Markdown, edit as Markdown
+- toggleable editing mode: rich text editor -> preview as Formatted Markdown
 - Vim mode
-- fuzzy search
+- note search (bonus points if it's fuzzy)
 
 Parity with nvALT:
 
 - tagging
 - linking between articles
 
+Nice to haves:
+
+- syntax highlighting of source markdown (markdown is assumed everywhere)
+- incremental search
+
 MINUTIAE
 
 - [DONE] get Babel working
 - [DONE] figure out how to bootstrap render processes (require modules etc)
 - [DONE] is it possible to render directly from JS without an intermediate HTML file?
-- get basic view layout working (search box up top, list on left, note on right)
+- [DONE] get basic view layout working (search box up top, list on left, note on right)
+- add linear gradient to OmniBar to extend window title
+- switch OmniBar gradient when window goes into the background
 - add Flux to handle data access
+- stop gulp watch task from dying when there's an error (again; I thought I'd done this, but it doesn't seem to catch all errors)
+
+IDEAS
+
+- use codemirror to get some stuff for free (syntax highlighting, vim mode)
+- use Immutable.js because it's cool
