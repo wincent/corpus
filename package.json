@@ -2,9 +2,11 @@
   "name": "corpus",
   "version": "0.0.1-pre",
   "description": "A note-management application for OS X.",
-  "main": "src/browser/main.js",
+  "main": "dist/browser/main.js",
   "scripts": {
-    "test": "npm test"
+    "build": "gulp build",
+    "test": "npm test",
+    "watch": "gulp"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,9 @@
   },
   "homepage": "https://github.com/wincent/corpus",
   "devDependencies": {
-    "babel-core": "^5.2.15"
+    "babel-core": "^5.2.15",
+    "gulp": "^3.8.11",
+    "gulp-babel": "^5.1.0",
+    "gulp-minify-html": "^1.0.2"
   }
 }
