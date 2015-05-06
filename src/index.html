@@ -7,5 +7,31 @@
     <h1>Electron</h1>
     We are using io.js <script>document.write(process.version)</script>
     and Electron <script>document.write(process.versions['electron'])</script>.
+    <script>
+      document.write(document.location);
+    </script>
+    <script>
+      var remote = require('remote');
+      var node_modules = remote.getGlobal('node_modules');
+      // document.write(
+      //   '<script src="' + node_modules + '/babel-core/browser.js"></scr' + 'ipt>'
+      // );
+      // we get an error evaling this script...
+      // Uncaught SyntaxError: Invalid regular expression: ...
+    </script>
+    <!--
+      This has the same problem
+      <script src="../node_modules/babel-core/browser.js"></script>
+      -->
+    <script type="text/babel">
+      class Test {
+        test() {
+          return "test";
+        }
+      }
+
+      var test = new Test;
+      document.write(test.test()); // "test"
+    </script>
   </body>
 </html>
