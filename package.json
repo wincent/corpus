@@ -1,0 +1,19 @@
+{
+  "name": "corpus",
+  "version": "0.0.1-pre",
+  "description": "A note-management application for OS X.",
+  "main": "src/browser/main.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wincent/corpus.git"
+  },
+  "author": "Greg Hurrell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wincent/corpus/issues"
+  },
+  "homepage": "https://github.com/wincent/corpus"
+}
