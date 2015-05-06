@@ -10,3 +10,10 @@ npm install electron-prebuilt -g
 ```
 ./corpus.sh
 ```
+
+
+# Adding dependencies to `package.json`
+
+```
+npm install --save-dev babel-core
+```

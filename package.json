@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/wincent/corpus/issues"
   },
-  "homepage": "https://github.com/wincent/corpus"
+  "homepage": "https://github.com/wincent/corpus",
+  "devDependencies": {
+    "babel-core": "^5.2.15"
+  }
 }
