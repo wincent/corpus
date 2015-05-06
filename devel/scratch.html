@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Scratch</title>
+    <style type="text/css">
+      /* reset */
+      body {
+        margin: 0;
+      }
+
+      /* sanity */
+      * {
+        box-sizing: border-box;
+      }
+
+      /* app */
+      .viewport {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100vw;
+      }
+      .search-bar {
+        padding: 4px 8px;
+        flex-grow: 0;
+        min-height: 28px;
+      }
+      .search-bar input {
+        width: 100%;
+      }
+      .split-view {
+        display: flex;
+        flex-grow: 1;
+      }
+      .left-pane {
+        border: 5px solid #00f;
+        /* flex box makes this really easy,
+           but the drag behavior may be non-trivial, because I will want to
+           change the position in absolute pixel terms */
+        flex-grow: 1;
+        overflow-y: scroll;
+      }
+      .right-pane {
+        border: 5px solid #f00;
+        flex-grow: 2;
+        overflow: scroll;
+      }
+      .separator {
+        background-color: #0f0;
+        flex-grow: 0;
+        width: 5px;
+      }
+      .notes-list {
+        border: 1px solid #ddd;
+          margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app-root">
+      <!-- React mounts inside here -->
+      <div class="viewport">
+        <div class="search-bar">
+          <!-- will have a special input here that also shows status
+            eg. word count, modal mode etc -->
+          <input type="search" />
+        </div>
+        <div class="split-view">
+          <div class="left-pane">
+            <ul class="notes-list">
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+              <li>oh, look! a thing! </li>
+            </ul>
+          </div>
+          <div class="separator">
+            <!-- dragging this should resize left-pane; will want to throttle -->
+            <!-- might want media queries, which could affect my style strategy -->
+          </div>
+          <div class="right-pane">
+            <!-- We want this to use document scrolling, for perf; but it gets
+              tricky -->
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+            <p>Plenty of content for the right pane.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
