@@ -2,24 +2,22 @@
 
 import React from 'react';
 
+import Note from './Note.react';
+import NoteList from './NoteList.react';
+import OmniBar from './OmniBar.react';
 import SplitView from './SplitView.react';
-import colors from './colors';
-
-const styles = {
-  container: {
-    border: `1px solid ${colors.border}`,
-  },
-};
+import Viewport from './Viewport.react';
 
 export default class Corpus extends React.Component {
   render() {
     return (
-      <div style={styles.container}>
+      <Viewport>
+        <OmniBar />
         <SplitView>
-          <div>left</div>
-          <div>right</div>
+          <NoteList />
+          <Note />
         </SplitView>
-      </div>
+      </Viewport>
     );
   }
 }

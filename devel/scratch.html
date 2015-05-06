@@ -9,8 +9,19 @@
       }
 
       /* sanity */
-      * {
+      html {
         box-sizing: border-box;
+      }
+      *,
+      *:after,
+      *:before {
+        box-sizing: inherit;
+      }
+
+      /* no rubber banding */
+      body,
+      html {
+        overflow: hidden;
       }
 
       /* app */

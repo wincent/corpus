@@ -5,6 +5,13 @@ import invariant from 'react/lib/invariant';
 
 import Separator from './Separator.react';
 
+const styles = {
+  root: {
+    display: 'flex',
+    flexGrow: 1,
+  },
+};
+
 export default class SplitView extends React.Component {
   render() {
     invariant(
@@ -20,7 +27,7 @@ export default class SplitView extends React.Component {
     );
     children.splice(1, 0, <Separator key="separator" />);
     return (
-      <div>
+      <div style={styles.root}>
         {children}
       </div>
     );
