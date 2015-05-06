@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+
+import SplitView from './SplitView.react';
 import colors from './colors';
 
 const styles = {
@@ -13,7 +15,10 @@ export default class Corpus extends React.Component {
   render() {
     return (
       <div style={styles.container}>
-        Split view
+        <SplitView>
+          <div>left</div>
+          <div>right</div>
+        </SplitView>
       </div>
     );
   }
