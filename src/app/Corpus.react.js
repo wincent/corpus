@@ -3,7 +3,7 @@
 import React from 'react';
 import colors from './colors';
 
-var styles = {
+const styles = {
   container: {
     border: `1px solid ${colors.border}`,
   },

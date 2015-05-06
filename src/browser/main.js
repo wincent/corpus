@@ -3,7 +3,7 @@
 import BrowserWindow from 'browser-window';
 import app from 'app';
 
-var mainWindow = null; // global reference to avoid premature GC
+let mainWindow = null; // global reference to avoid premature GC
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow({height: 800, show: false, width: 1200});
