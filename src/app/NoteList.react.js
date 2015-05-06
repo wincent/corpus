@@ -11,6 +11,7 @@ const styles = {
   list: {
     border: '5px solid #ff0',
     margin: 0,
+    WebkitUserSelect: 'none',
   }
 };
 
