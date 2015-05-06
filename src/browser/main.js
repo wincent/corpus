@@ -1,6 +1,7 @@
-var BrowserWindow = require('browser-window');
+'use strict';
 
-var app = require('app');
+import BrowserWindow from 'browser-window';
+import app from 'app';
 
 var mainWindow = null; // global reference to avoid premature GC
 
