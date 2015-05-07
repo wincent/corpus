@@ -43,6 +43,7 @@ MINUTIAE
 - [DONE] separator constraints: notes area shouldn't ever be < 50%, but can collapse list side entirely
 - for small windows, should collapse right pane once it shrinks below a certain
   size; heck, do it for big windows too
+- focused and selected styling for NotePreviews
 
 IDEAS
 
