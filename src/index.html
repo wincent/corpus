@@ -23,6 +23,14 @@
       html {
         overflow: hidden;
       }
+
+      /* hover etc (can't do with inline styles) */
+      .separator:hover {
+        cursor: col-resize;
+      }
+      .separator:hover.grabbing {
+        cursor: -webkit-grabbing;
+      }
     </style>
   </head>
   <body>

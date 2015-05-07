@@ -5,6 +5,10 @@ var minifyHTML = require('gulp-minify-html');
 
 var watching = false;
 
+var babelOptions = {
+  optional: ['es7.classProperties', 'es7.objectRestSpread']
+};
+
 // Wrap a stream in an error-handler (needed until Gulp 4).
 function wrap(stream) {
   stream.on('error', function(error) {
@@ -39,6 +43,6 @@ gulp.task('html', function() {
 
 gulp.task('js', function() {
   return gulp.src('src/**/*.js')
-    .pipe(wrap(babel({optional: ['es7.objectRestSpread']})))
+    .pipe(wrap(babel(babelOptions)))
     .pipe(gulp.dest('dist'));
 });
