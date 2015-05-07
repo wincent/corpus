@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import NotePlaceholder from './NotePlaceholder.react';
+
 const styles = {
   root: {
     background: '#ebebeb',
@@ -10,17 +12,19 @@ const styles = {
   },
 };
 
-function getDummyParagraphs(): Array<React.Element> {
-  return Array.apply(null, new Array(100)).map(
-    (_, i) => <p key={i}>Plenty of content for the right pane.</p>
-  );
-}
+export default class NoteView extends React.Component {
+  static propTypes = {
+    note: React.PropTypes.object,
+  };
 
-export default class Note extends React.Component {
   render() {
+    let note = this.props.note;
+    if (!note) {
+      note = <NotePlaceholder />;
+    }
     return (
       <div style={styles.root}>
-        {getDummyParagraphs()}
+        {note}
       </div>
     );
   }

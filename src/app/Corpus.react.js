@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import Note from './Note.react';
+import NoteView from './NoteView.react';
 import NoteList from './NoteList.react';
 import OmniBar from './OmniBar.react';
 import SplitView from './SplitView.react';
@@ -15,7 +15,7 @@ export default class Corpus extends React.Component {
         <OmniBar />
         <SplitView>
           <NoteList />
-          <Note />
+          <NoteView />
         </SplitView>
       </Viewport>
     );
