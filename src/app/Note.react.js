@@ -5,7 +5,8 @@ import React from 'react';
 const styles = {
   root: {
     background: '#ebebeb',
-    flexGrow: 1,
+    margin: '-16px 0', // offset webkit blank space at top and bottom
+    minHeight: 'calc(100vh - 36px)', // hack to ensure full background coverage
   },
 };
 

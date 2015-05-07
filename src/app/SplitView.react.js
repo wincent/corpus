@@ -7,19 +7,16 @@ import Separator from './Separator.react';
 
 const styles = {
   left: {
-    display: 'flex',
     flexBasis: 0,
     flexGrow: 1,
     overflowY: 'scroll',
   },
   right: {
-    display: 'flex',
     flexBasis: 0,
     flexGrow: 2,
     overflow: 'scroll',
   },
   root: {
-    background: '#ebebeb', // smell: SplitView shouldn't care about this
     display: 'flex',
     flexGrow: 1,
   },
