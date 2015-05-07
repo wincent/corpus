@@ -8,9 +8,10 @@ const styles = {
     width: '100%',
   },
   root: {
+    borderBottom: '1px solid #d1d1d1',
     flexGrow: 0,
     padding: '4px 8px',
-    minHeight: '28px',
+    minHeight: '32px',
   },
 };
 

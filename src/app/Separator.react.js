@@ -5,7 +5,9 @@ import cx from 'classnames';
 
 const styles = {
   root: {
-    backgroundColor: '#0f0',
+    background: 'linear-gradient(90deg, #f8f8f8, #e9e9e9)',
+    borderLeft: '1px solid #c3c3c3',
+    borderRight: '1px solid #bebebe',
     flexGrow: 0,
     width: '8px',
   },

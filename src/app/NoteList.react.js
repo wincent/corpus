@@ -4,7 +4,8 @@ import React from 'react';
 
 const styles = {
   root: {
-    border: '5px solid #ff0',
+    background: '#ebebeb',
+    flexGrow: 1,
     margin: 0,
     WebkitUserSelect: 'none',
   }

@@ -35,12 +35,14 @@ MINUTIAE
 - [DONE] add linear gradient to OmniBar to extend window title
 - [DONE] switch OmniBar gradient when window goes into the background
 - [DONE] hook BrowserWindow.toggleDevTools up to a menu item
-- make split view slider draggable
+- [DONE] make split view slider draggable
 - [DONE] figure out how to disable text-selection in the note if we drag over it while dragging separator
 - add Flux to handle data access
 - put linting in Gulp too (probably watching?)
 - integrate Flow
-- separator constraints: notes area shouldn't ever be < 50%, but can collapse list side entirely
+- [DONE] separator constraints: notes area shouldn't ever be < 50%, but can collapse list side entirely
+- for small windows, should collapse right pane once it shrinks below a certain
+  size; heck, do it for big windows too
 
 IDEAS
 
