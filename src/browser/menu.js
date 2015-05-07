@@ -39,6 +39,43 @@ const menu = [
       },
     ],
   },
+    {
+    label: 'Edit',
+    submenu: [
+      {
+        accelerator: 'Command+Z',
+        label: 'Undo',
+        selector: 'undo:',
+      },
+      {
+        accelerator: 'Shift+Command+Z',
+        label: 'Redo',
+        selector: 'redo:',
+      },
+      {type: 'separator'},
+      {
+        accelerator: 'Command+X',
+        label: 'Cut',
+        selector: 'cut:',
+      },
+      {
+        accelerator: 'Command+C',
+        label: 'Copy',
+        selector: 'copy:',
+      },
+      {
+        accelerator: 'Command+V',
+        label: 'Paste',
+        selector: 'paste:',
+      },
+      {type: 'separator',},
+      {
+        accelerator: 'Command+A',
+        label: 'Select All',
+        selector: 'selectAll:',
+      },
+    ]
+  },
   {
     label: 'Debug',
     submenu: [
