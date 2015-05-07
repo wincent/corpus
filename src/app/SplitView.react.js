@@ -21,9 +21,9 @@ export default class SplitView extends React.Component {
     const children = [];
     React.Children.forEach(
       this.props.children,
-      (child, i) => {
+      (child, i) => (
         children.push(React.cloneElement(child, {key: i ? 'right' : 'left'}))
-      }
+      )
     );
     children.splice(1, 0, <Separator key="separator" />);
     return (
