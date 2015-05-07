@@ -39,6 +39,6 @@ gulp.task('html', function() {
 
 gulp.task('js', function() {
   return gulp.src('src/**/*.js')
-    .pipe(wrap(babel()))
+    .pipe(wrap(babel({optional: ['es7.objectRestSpread']})))
     .pipe(gulp.dest('dist'));
 });

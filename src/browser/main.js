@@ -18,7 +18,8 @@ app.on('ready', () => {
     Menu.buildFromTemplate(menu)
   );
 
-  mainWindow.on('closed', () => {
-    mainWindow = null; // allow GC
-  });
+  mainWindow
+    .on('blur', () => mainWindow.webContents.send('blur'))
+    .on('closed', () => mainWindow = null) // allow GC
+    .on('focus', () => mainWindow.webContents.send('focus'));
 });
