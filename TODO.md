@@ -30,10 +30,14 @@ MINUTIAE
 - [DONE] figure out how to bootstrap render processes (require modules etc)
 - [DONE] is it possible to render directly from JS without an intermediate HTML file?
 - [DONE] get basic view layout working (search box up top, list on left, note on right)
-- add linear gradient to OmniBar to extend window title
-- switch OmniBar gradient when window goes into the background
+- [DONE] stop gulp watch task from dying when there's an error (again; I thought I'd done this, but it doesn't seem to catch all errors)
+- [DONE] add JS linting, probably via ESLint (http://eslint.org)
+- [DONE] add linear gradient to OmniBar to extend window title
+- [DONE] switch OmniBar gradient when window goes into the background
+- [DONE] hook BrowserWindow.toggleDevTools up to a menu item
 - add Flux to handle data access
-- stop gulp watch task from dying when there's an error (again; I thought I'd done this, but it doesn't seem to catch all errors)
+- put linting in Gulp too (probably watching?)
+- integrate Flow
 
 IDEAS
 
