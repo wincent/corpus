@@ -90,7 +90,31 @@ const menu = [
         label: 'Toggle Developer Tools',
       },
     ],
-  }
+  },
+  {
+    label: 'Window',
+    submenu: [
+      {
+        accelerator: 'Command+M',
+        label: 'Minimize',
+        selector: 'performMiniaturize:',
+      },
+      {
+        accelerator: 'Command+W',
+        label: 'Close',
+        selector: 'performClose:',
+      },
+      {type: 'separator'},
+      {
+        label: 'Bring All to Front',
+        selector: 'arrangeInFront:',
+      },
+    ]
+  },
+  {
+    label: 'Help',
+    submenu: []
+  },
 ];
 
 export default menu;
