@@ -1,5 +1,6 @@
 'use strict';
 
+import BrowserWindow from 'browser-window';
 import app from 'app';
 
 const menu = [
@@ -38,6 +39,21 @@ const menu = [
       },
     ],
   },
+  {
+    label: 'Debug',
+    submenu: [
+      {
+        accelerator: 'Command+R',
+        click: () => BrowserWindow.getFocusedWindow().reloadIgnoringCache(),
+        label: 'Reload',
+      },
+      {
+        accelerator: 'Alt+Command+I',
+        click: () => BrowserWindow.getFocusedWindow().toggleDevTools(),
+        label: 'Toggle Developer Tools',
+      },
+    ],
+  }
 ];
 
 export default menu;
