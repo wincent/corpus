@@ -10,7 +10,13 @@ import menu from './menu';
 let mainWindow = null; // global reference to avoid premature GC
 
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({height: 800, show: false, width: 1200});
+  mainWindow = new BrowserWindow({
+    height: 800,
+    'min-width': 400,
+    'min-height': 200,
+    show: false,
+    width: 1200,
+  });
   mainWindow.loadUrl('file://' + path.join(__dirname, '/../index.html'));
   mainWindow.webContents.on('did-finish-load', () => mainWindow.show());
 
