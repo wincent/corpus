@@ -8,11 +8,13 @@ import Separator from './Separator.react';
 const styles = {
   left: {
     border: '5px solid #00f',
+    flexBasis: 0,
     flexGrow: 1,
     overflowY: 'scroll',
   },
   right: {
     border: '5px solid #f00',
+    flexBasis: 0,
     flexGrow: 2,
     overflow: 'scroll',
   },
@@ -25,15 +27,24 @@ const styles = {
 export default class SplitView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {leftFlex: 1, rightflex: 2};
+    this.state = {left: 1, right: 2};
   }
 
   _onMouseMove(event) {
     event.preventDefault(); // avoids unwanted selection of note text
     const width = window.innerWidth;
+    const minimumX = 0;
+    const maximumX = width - 200;
+
+    // minimum <= X <= maximum
+    const eventX = Math.min(
+      Math.max(event.clientX, minimumX),
+      maximumX
+    );
+
     this.setState({
-      leftFlex: Math.round(event.clientX),
-      rightFlex: Math.round(width - event.clientX),
+      left: Math.round(eventX),
+      right: Math.round(width - eventX),
     });
   }
 
@@ -44,11 +55,11 @@ export default class SplitView extends React.Component {
     );
     const leftStyles = {
       ...styles.left,
-      flexGrow: this.state.leftFlex,
+      flexGrow: this.state.left,
     };
     const rightStyles = {
       ...styles.right,
-      flexGrow: this.state.rightFlex,
+      flexGrow: this.state.right,
     }
     return (
       <div style={styles.root}>
