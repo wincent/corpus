@@ -51,6 +51,7 @@ MINUTIAE
 - tab from OmniBar should focus current note, or do nothing if there is no current note
 - tab in note should insert a tab; shift-tab should go back to OmniBar
 - tab when NotePreview is focus should shift to current note
+- typing when NotePreview is focused shoudl shift focus to OmniBar and insert
 
 NICE TO HAVES
 

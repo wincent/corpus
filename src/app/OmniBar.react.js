@@ -37,7 +37,7 @@ export default class OmniBar extends React.Component {
     };
     return (
       <div style={rootStyles}>
-        <input style={styles.input} type="search" />
+        <input style={styles.input} tabIndex={0} type="search" />
       </div>
     );
   }

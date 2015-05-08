@@ -23,7 +23,7 @@ export default class NoteList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      focusedNoteIndex: null,
+      focused: false,
       notes: NotesStore.getNotes(),
       selectedNoteIndex: NoteSelectionStore.getCurrentSelectionIndex(),
     };
@@ -49,30 +49,47 @@ export default class NoteList extends React.Component {
     this.setState({notes: NotesStore.getNotes()});
   }
 
+  @autobind
+  _onBlur() {
+    this.setState({focused: false});
+  }
+
   _onClickNotePreview(index) {
     Dispatcher.dispatch({
       type: Actions.NOTE_SELECTED,
       index,
     });
-    this.setState({focusedNoteIndex: index});
+  }
+
+  @autobind
+  _onFocus() {
+    this.setState({focused: true});
   }
 
   _renderNotes() {
-    return this.state.notes.map((note, i) => (
-      <NotePreview
-        focused={i === this.state.focusedNoteIndex}
-        key={i}
-        onClick={this._onClickNotePreview.bind(this, i)}
-        selected={i === this.state.selectedNoteIndex}
-        title={note.title}
-        text={note.text}
-      />
-    ));
+    return this.state.notes.map((note, i) => {
+      const selected = (i === this.state.selectedNoteIndex);
+      return (
+        <NotePreview
+          focused={this.state.focused && selected}
+          key={i}
+          onClick={this._onClickNotePreview.bind(this, i)}
+          selected={selected}
+          title={note.title}
+          text={note.text}
+        />
+      );
+    });
   }
 
   render() {
     return (
-      <ul style={styles.root}>
+      <ul
+        onBlur={this._onBlur}
+        onFocus={this._onFocus}
+        style={styles.root}
+        tabIndex={1}
+      >
         {this._renderNotes()}
       </ul>
     );

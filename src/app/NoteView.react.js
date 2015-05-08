@@ -22,7 +22,7 @@ export default class NoteView extends React.Component {
       note = <NotePlaceholder />;
     }
     return (
-      <div style={styles.root}>
+      <div style={styles.root} tabIndex={2}>
         {note}
       </div>
     );
