@@ -4,5 +4,7 @@
 'use strict';
 
 export default {
+  DOWN: 40,
   RETURN: 13,
+  UP: 38,
 };

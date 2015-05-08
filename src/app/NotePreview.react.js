@@ -107,8 +107,14 @@ export default class NotePreview extends React.Component {
   }
 
   _onKeyDown(event) {
-    if (event.keyCode === Keys.RETURN) {
-      event.currentTarget.blur();
+    switch (event.keyCode) {
+      case Keys.RETURN:
+        event.currentTarget.blur(); // TODO: lose focus on input but not on entire preview
+        break;
+      case Keys.DOWN:
+      case Keys.UP:
+        event.stopPropagation(); // don't actually want to switch notes here
+        break;
     }
   }
 

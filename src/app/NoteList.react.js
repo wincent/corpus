@@ -7,6 +7,7 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 
 import Actions from './Actions';
+import Keys from './Keys';
 import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
@@ -66,6 +67,17 @@ export default class NoteList extends React.Component {
     this.setState({focused: true});
   }
 
+  _onKeyDown(event) {
+    switch (event.keyCode) {
+      case Keys.DOWN:
+        Actions.nextNote()
+        break;
+      case Keys.UP:
+        Actions.previousNote()
+        break;
+    }
+  }
+
   _renderNotes() {
     return this.state.notes.map((note, i) => {
       const selected = (i === this.state.selectedNoteIndex);
@@ -88,6 +100,7 @@ export default class NoteList extends React.Component {
       <ul
         onBlur={this._onBlur}
         onFocus={this._onFocus}
+        onKeyDown={this._onKeyDown}
         style={styles.root}
         tabIndex={1}
       >
