@@ -55,10 +55,7 @@ export default class NoteList extends React.Component {
   }
 
   _onClickNotePreview(index) {
-    Dispatcher.dispatch({
-      type: Actions.NOTE_SELECTED,
-      index,
-    });
+    Actions.noteSelected({index});
   }
 
   @autobind

@@ -47,13 +47,9 @@ Dispatcher.register(payload => {
   }
 });
 
-ipc.on('next', () => (
-  Dispatcher.dispatch({type: Actions.NEXT_NOTE_SELECTED})
-));
+ipc.on('next', () => Actions.nextNote());
 
-ipc.on('previous', () => (
-  Dispatcher.dispatch({type: Actions.PREVIOUS_NOTE_SELECTED})
-));
+ipc.on('previous', () => Actions.previousNote());
 
 const NoteSelectionStore = Object.assign({
   getCurrentSelectionIndex() {
