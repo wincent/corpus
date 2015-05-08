@@ -6,7 +6,11 @@ var minifyHTML = require('gulp-minify-html');
 var watching = false;
 
 var babelOptions = {
-  optional: ['es7.classProperties', 'es7.objectRestSpread']
+  optional: [
+    'es7.classProperties',
+    'es7.decorators',
+    'es7.objectRestSpread',
+  ],
 };
 
 // Wrap a stream in an error-handler (needed until Gulp 4).

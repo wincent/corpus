@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import autobind from 'autobind-decorator';
 
 import NotePreview from './NotePreview.react';
 import NotesStore from './stores/NotesStore';
@@ -19,9 +20,6 @@ export default class NoteList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {notes: NotesStore.getNotes()};
-
-    // TODO: use decorators for this?
-    this.updateNotes = this.updateNotes.bind(this);
   }
 
   componentDidMount() {
@@ -32,6 +30,7 @@ export default class NoteList extends React.Component {
     NotesStore.removeListener('update', this.updateNotes);
   }
 
+  @autobind
   updateNotes() {
     this.setState({notes: NotesStore.getNotes()});
   }
