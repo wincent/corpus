@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import autobind from 'autobind-decorator';
 import invariant from 'react/lib/invariant';
 
 import Separator from './Separator.react';
@@ -28,6 +29,7 @@ export default class SplitView extends React.Component {
     this.state = {left: 1, right: 2};
   }
 
+  @autobind
   _onMouseMove(event) {
     event.preventDefault(); // avoids unwanted selection of note text
     const width = window.innerWidth;
@@ -64,7 +66,7 @@ export default class SplitView extends React.Component {
         <div style={leftStyles}>
           {this.props.children[0]}
         </div>
-        <Separator key="separator" onMouseMove={this._onMouseMove.bind(this)} />
+        <Separator key="separator" onMouseMove={this._onMouseMove} />
         <div style={rightStyles}>
           {this.props.children[1]}
         </div>

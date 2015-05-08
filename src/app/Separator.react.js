@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import autobind from 'autobind-decorator';
 import cx from 'classnames';
 
 const styles = {
@@ -23,6 +24,7 @@ export default class Separator extends React.Component {
     this.state = {grabbing: false};
   }
 
+  @autobind
   _onMouseDown() {
     const onMouseMove = this.props.onMouseMove;
     const onMouseUp = () => {
@@ -47,7 +49,7 @@ export default class Separator extends React.Component {
     return (
       <div
         className={classes}
-        onMouseDown={this._onMouseDown.bind(this)}
+        onMouseDown={this._onMouseDown}
         style={styles.root}
       />
     );
