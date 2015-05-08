@@ -4,6 +4,7 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 
 import NotePreview from './NotePreview.react';
+import NoteSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
 
 const styles = {
@@ -19,15 +20,25 @@ const styles = {
 export default class NoteList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {notes: NotesStore.getNotes()};
+    this.state = {
+      notes: NotesStore.getNotes(),
+      selectedNoteIndex: NoteSelectionStore.getCurrentSelectionIndex(),
+    };
   }
 
   componentDidMount() {
+    NoteSelectionStore.on('change', this._updateNoteSelection);
     NotesStore.on('update', this._updateNotes);
   }
 
   componentWillUnmount() {
+    NoteSelectionStore.removeListener('change', this._updateNoteSelection);
     NotesStore.removeListener('update', this._updateNotes);
+  }
+
+  @autobind
+  _updateNoteSelection() {
+    this.setState({selectedNoteIndex: NoteSelectionStore.getCurrentSelectionIndex()});
   }
 
   @autobind
@@ -38,9 +49,9 @@ export default class NoteList extends React.Component {
   _renderNotes() {
     return this.state.notes.map((note, i) => (
       <NotePreview
-        focused={i === 0}
+        focused={false /* TODO: implement */}
         key={i}
-        selected={i === 1}
+        selected={i === this.state.selectedNoteIndex}
         title={note.title}
         text={note.text}
       />

@@ -37,14 +37,15 @@ MINUTIAE
 - [DONE] hook BrowserWindow.toggleDevTools up to a menu item
 - [DONE] make split view slider draggable
 - [DONE] figure out how to disable text-selection in the note if we drag over it while dragging separator
-- add Flux to handle data access
+- [DONE] separator constraints: notes area shouldn't ever be < 50%, but can collapse list side entirely
+- [DONE] add Flux to handle data access
+- [DONE] focused and selected styling for NotePreviews
+- [DONE] set up "accelerator" short-cuts for next/prev note (nvALT actually has these in the "View" menu)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
-- [DONE] separator constraints: notes area shouldn't ever be < 50%, but can collapse list side entirely
-- for small windows, should collapse right pane once it shrinks below a certain
-  size; heck, do it for big windows too
-- [DONE] focused and selected styling for NotePreviews
+- for small windows, should collapse right pane once it shrinks below a certain size; heck, do it for big windows too
 - get app icon
+- standardize approach to state-based style overrides; I have a few different techniques at play at the moment
 
 NICE TO HAVES
 

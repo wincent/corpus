@@ -39,7 +39,7 @@ const menu = [
       },
     ],
   },
-    {
+  {
     label: 'Edit',
     submenu: [
       {
@@ -75,6 +75,21 @@ const menu = [
         selector: 'selectAll:',
       },
     ]
+  },
+  {
+    label: 'View',
+    submenu: [
+      {
+        accelerator: 'Command+J',
+        click: () => BrowserWindow.getFocusedWindow().webContents.send('next'),
+        label: 'Next Note',
+      },
+      {
+        accelerator: 'Command+K',
+        click: () => BrowserWindow.getFocusedWindow().webContents.send('previous'),
+        label: 'Previous Note',
+      }
+    ],
   },
   {
     label: 'Debug',
