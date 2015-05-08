@@ -79,6 +79,15 @@ export default class OmniBar extends React.Component {
     }
   }
 
+  _onChange() {
+    // Nothing to see here yet; just silencing this React warning:
+    //
+    //   "Warning: Failed propType: You provided a `value` prop to a form field
+    //   without an `onChange` handler. This will render a read-only field. If
+    //   the field should be mutable use `defaultValue`. Otherwise, set either
+    //   `onChange` or `readOnly`. Check the render method of `OmniBar`.
+  }
+
   render() {
     let rootStyles = {
       ...styles.root,
@@ -87,6 +96,7 @@ export default class OmniBar extends React.Component {
     return (
       <div style={rootStyles}>
         <input
+          onChange={this._onChange}
           style={styles.input}
           tabIndex={0}
           type="search"
