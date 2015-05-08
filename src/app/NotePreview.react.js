@@ -37,7 +37,7 @@ export default class NotePreview extends React.Component {
           this.props.selected ? '#4e4e4e' :
           '#4f4f4f'
         ),
-        fontWeight: (this.props.focused ? 'normal' : 'bold'),
+        fontWeight: 'bold',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
@@ -51,7 +51,7 @@ export default class NotePreview extends React.Component {
           '#a3a3a3'
         ),
         display: '-webkit-box',
-        fontWeight: (this.props.focused ? 200 : 'normal'),
+        fontWeight: 'normal',
         overflow: 'hidden',
       },
     };
