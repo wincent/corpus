@@ -25,6 +25,7 @@
     "classnames": "^2.1.1",
     "eslint": "^0.20.0",
     "eslint-plugin-react": "^2.2.0",
+    "flux": "^2.0.3",
     "gulp": "^3.8.11",
     "gulp-babel": "^5.1.0",
     "gulp-minify-html": "^1.0.2",
