@@ -20,10 +20,11 @@ const notes = [
   },
 ];
 
-const NotesStore = Object.assign({
+const NotesStore = {
   get notes() {
     return notes;
-  }
-}, EventEmitter.prototype);
+  },
+  ...EventEmitter.prototype,
+};
 
 export default NotesStore;

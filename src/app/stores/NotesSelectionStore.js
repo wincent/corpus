@@ -50,10 +50,11 @@ Dispatcher.register(payload => {
 ipc.on('next', () => Actions.nextNote());
 ipc.on('previous', () => Actions.previousNote());
 
-const NoteSelectionStore = Object.assign({
+const NoteSelectionStore = {
   get currentSelectionIndex() {
     return currentSelectionIndex;
-  }
-}, EventEmitter.prototype);
+  },
+  ...EventEmitter.prototype,
+};
 
 export default NoteSelectionStore;

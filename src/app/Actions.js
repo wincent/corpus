@@ -34,6 +34,6 @@ const actionCreators = {
   },
 };
 
-const Actions = Object.assign(actionTypes, actionCreators);
+const Actions = {...actionTypes, ...actionCreators};
 
 export default Actions;
