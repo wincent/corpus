@@ -5,6 +5,7 @@ import React from 'react';
 export default class NotePreview extends React.Component {
   static propTypes = {
     focused: React.PropTypes.bool,
+    onClick: React.PropTypes.func.isRequired,
     selected: React.PropTypes.bool,
     text: React.PropTypes.string.isRequired,
     title: React.PropTypes.string.isRequired,
@@ -59,7 +60,7 @@ export default class NotePreview extends React.Component {
   render() {
     const styles = this._getStyles();
     return (
-      <li style={styles.root}>
+      <li onClick={this.props.onClick} style={styles.root}>
         <p style={styles.title}>
           {this.props.title}
         </p>

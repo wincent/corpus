@@ -21,6 +21,7 @@ export default class NoteList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      focusedNoteIndex: null,
       notes: NotesStore.getNotes(),
       selectedNoteIndex: NoteSelectionStore.getCurrentSelectionIndex(),
     };
@@ -46,11 +47,16 @@ export default class NoteList extends React.Component {
     this.setState({notes: NotesStore.getNotes()});
   }
 
+  _onClickNotePreview(index) {
+    this.setState({focusedNoteIndex: index});
+  }
+
   _renderNotes() {
     return this.state.notes.map((note, i) => (
       <NotePreview
-        focused={false /* TODO: implement */}
+        focused={i === this.state.focusedNoteIndex}
         key={i}
+        onClick={this._onClickNotePreview.bind(this, i)}
         selected={i === this.state.selectedNoteIndex}
         title={note.title}
         text={note.text}
