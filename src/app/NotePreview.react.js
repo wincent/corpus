@@ -72,6 +72,7 @@ export default class NotePreview extends React.Component {
       },
       titleInput: {
         margin: '-3px 0', // preserve overall row height
+        width: '100%',
       },
     };
   }
