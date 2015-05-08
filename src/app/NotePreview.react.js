@@ -120,7 +120,7 @@ export default class NotePreview extends React.Component {
           onChange={this._onChange}
           onFocus={this._onFocus}
           onKeyDown={this._onKeyDown}
-          ref={ref => {/*ref.getDOMNode().focus()*/}}
+          ref={input => input && React.findDOMNode(input).focus()}
           style={this._getStyles().titleInput}
           type="text"
           value={this.state.pendingTitle}
