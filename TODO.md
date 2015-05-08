@@ -43,7 +43,7 @@ MINUTIAE
 - [DONE] set up "accelerator" short-cuts for next/prev note (nvALT actually has these in the "View" menu)
 - [DONE] implement click-to-focus on <NotePreview>
 - [DONE] use Immutable.js because it's cool
-- implement double-click-to-edit-title on <NotePreview> (also, switch to `cursor: text` when hovering and editing)
+- [DONE] implement double-click-to-edit-title on <NotePreview> (also, switch to `cursor: text` when hovering and editing)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
 - for small windows, should collapse right pane once it shrinks below a certain size; heck, do it for big windows too
@@ -53,7 +53,7 @@ MINUTIAE
 - implement contextual menu for <NotePreview>
 - tab from OmniBar should focus current note, or do nothing if there is no current note
 - tab in note should insert a tab; shift-tab should go back to OmniBar
-- tab when NotePreview is focus should shift to current note
+- tab when NotePreview is focused should shift to current note
 - typing when NotePreview is focused should shift focus to OmniBar and insert
 
 NICE TO HAVES
