@@ -4,8 +4,9 @@
 'use strict';
 
 import {EventEmitter} from 'events';
+import Immutable from 'immutable';
 
-const notes = [
+const notes = Immutable.fromJS([
   {
     title: 'sample title',
     text: 'sample body',
@@ -17,8 +18,8 @@ const notes = [
   {
     title: 'yet another sample title',
     text: 'and here is another sample body',
-  },
-];
+  }
+]);
 
 const NotesStore = {
   get notes() {

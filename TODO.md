@@ -41,8 +41,8 @@ MINUTIAE
 - [DONE] add Flux to handle data access
 - [DONE] focused and selected styling for NotePreviews
 - [DONE] set up "accelerator" short-cuts for next/prev note (nvALT actually has these in the "View" menu)
-- implement click-to-focus on <NotePreview>
-- implement double-click-to-edit on <NotePreview>
+- [DONE] implement click-to-focus on <NotePreview>
+- implement double-click-to-edit on <NotePreview> (also, switch to `cursor: text` when hovering and editing)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
 - for small windows, should collapse right pane once it shrinks below a certain size; heck, do it for big windows too

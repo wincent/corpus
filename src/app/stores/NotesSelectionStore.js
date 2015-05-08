@@ -19,7 +19,7 @@ function changeCurrentSelectionIndex(index) {
 }
 
 function incrementCurrentSelectionIndex() {
-  const maxSelectionIndex = NotesStore.notes.length - 1;
+  const maxSelectionIndex = NotesStore.notes.size - 1;
   if (currentSelectionIndex < maxSelectionIndex) {
     currentSelectionIndex++;
     NoteSelectionStore.emit('change');

@@ -14,6 +14,7 @@ import NotesStore from './stores/NotesStore';
 const styles = {
   root: {
     background: '#ebebeb',
+    cursor: 'default',
     margin: 0,
     padding: 0,
     minHeight: 'calc(100vh - 36px)', // hack to ensure full background coverage
@@ -74,8 +75,8 @@ export default class NoteList extends React.Component {
           key={i}
           onClick={this._onClickNotePreview.bind(this, i)}
           selected={selected}
-          title={note.title}
-          text={note.text}
+          title={note.get('title')}
+          text={note.get('text')}
         />
       );
     });
