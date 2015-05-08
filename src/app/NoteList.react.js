@@ -23,19 +23,19 @@ export default class NoteList extends React.Component {
   }
 
   componentDidMount() {
-    NotesStore.on('update', this.updateNotes);
+    NotesStore.on('update', this._updateNotes);
   }
 
   componentWillUnmount() {
-    NotesStore.removeListener('update', this.updateNotes);
+    NotesStore.removeListener('update', this._updateNotes);
   }
 
   @autobind
-  updateNotes() {
+  _updateNotes() {
     this.setState({notes: NotesStore.getNotes()});
   }
 
-  renderNotes() {
+  _renderNotes() {
     return this.state.notes.map((note, i) => (
       <NotePreview
         focused={i === 0}
@@ -50,7 +50,7 @@ export default class NoteList extends React.Component {
   render() {
     return (
       <ul style={styles.root}>
-        {this.renderNotes()}
+        {this._renderNotes()}
       </ul>
     );
   }

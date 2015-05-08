@@ -14,7 +14,7 @@ export default class NotePreview extends React.Component {
     selected: false,
   };
 
-  getStyles() {
+  _getStyles() {
     return {
       root: {
         background: (
@@ -57,7 +57,7 @@ export default class NotePreview extends React.Component {
   }
 
   render() {
-    const styles = this.getStyles();
+    const styles = this._getStyles();
     return (
       <li style={styles.root}>
         <p style={styles.title}>
