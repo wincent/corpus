@@ -8,8 +8,8 @@ import autobind from 'autobind-decorator';
 
 import Note from './Note.react';
 import NotePlaceholder from './NotePlaceholder.react';
-import NotesStore from './stores/NotesStore';
 import NotesSelectionStore from './stores/NotesSelectionStore';
+import NotesStore from './stores/NotesStore';
 
 const styles = {
   root: {
@@ -38,6 +38,8 @@ export default class NoteView extends React.Component {
 
   @autobind
   _updateNote() {
+    // TODO: make a convenience method for this, probably on the store, to DRY
+    // this up (we'll be doing it in a few places)
     const selectedIndex = NotesSelectionStore.currentSelectionIndex;
     const note = NotesStore.notes.get(selectedIndex);
     if (this.state.note !== note) {

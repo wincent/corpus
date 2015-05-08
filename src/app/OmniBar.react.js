@@ -4,7 +4,11 @@
 'use strict';
 
 import React from 'react';
+import autobind from 'autobind-decorator';
 import ipc from 'ipc';
+
+import NotesSelectionStore from './stores/NotesSelectionStore';
+import NotesStore from './stores/NotesStore';
 
 const styles = {
   input: {
@@ -18,19 +22,61 @@ const styles = {
   },
 };
 
+function getCurrentNote() {
+  const selectedIndex = NotesSelectionStore.currentSelectionIndex;
+  if (selectedIndex === null) {
+    return null;
+  } else {
+    return NotesStore.notes.get(selectedIndex);
+  }
+}
+
+function getCurrentTitle() {
+  const note = getCurrentNote();
+  if (note === null) {
+    return '';
+  } else {
+    return note.get('title');
+  }
+}
+
 export default class OmniBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {focused: true};
+    const note = getCurrentNote();
+    this.state = {
+      focused: true,
+      note,
+      value: getCurrentTitle(),
+    };
   }
 
   componentDidMount() {
     ipc.on('blur', () => this.setState({focused: false}));
     ipc.on('focus', () => this.setState({focused: true}));
+
+    NotesSelectionStore.on('change', this._updateNote);
+    NotesStore.on('change', this._updateNote);
+  }
+
+  componentWillUnmount() {
+    NotesSelectionStore.removeListener('change', this._updateNote);
+    NotesStore.removeListener('change', this._updateNote);
   }
 
   _getBackgroundStyle() {
     return this.state.focused ? 'linear-gradient(#d3d3d3, #d0d0d0)' : '#f6f6f6';
+  }
+
+  @autobind
+  _updateNote() {
+    const note = getCurrentNote();
+    if (this.state.note !== note) {
+      this.setState({
+        note,
+        value: getCurrentTitle(),
+      });
+    }
   }
 
   render() {
@@ -40,7 +86,12 @@ export default class OmniBar extends React.Component {
     };
     return (
       <div style={rootStyles}>
-        <input style={styles.input} tabIndex={0} type="search" />
+        <input
+          style={styles.input}
+          tabIndex={0}
+          type="search"
+          value={this.state.value}
+        />
       </div>
     );
   }
