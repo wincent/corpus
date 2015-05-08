@@ -3,25 +3,29 @@
 import Dispatcher from './Dispatcher';
 import keyMirror from 'react/lib/keyMirror';
 
-const Actions = keyMirror({
+const actionTypes = keyMirror({
   NEXT_NOTE_SELECTED: null,
   NOTE_SELECTED: null,
   PREVIOUS_NOTE_SELECTED: null,
 });
 
-Actions.nextNote = function() {
-  Dispatcher.dispatch({type: Actions.NEXT_NOTE_SELECTED});
+const actionCreators = {
+  nextNote() {
+    Dispatcher.dispatch({type: Actions.NEXT_NOTE_SELECTED});
+  },
+
+  noteSelected(payload) {
+    Dispatcher.dispatch({
+      ...payload,
+      type: Actions.NOTE_SELECTED,
+    });
+  },
+
+  previousNote() {
+    Dispatcher.dispatch({type: Actions.PREVIOUS_NOTE_SELECTED});
+  },
 };
 
-Actions.noteSelected = function(payload) {
-  Dispatcher.dispatch({
-    ...payload,
-    type: Actions.NOTE_SELECTED,
-  });
-};
-
-Actions.previousNote = function() {
-  Dispatcher.dispatch({type: Actions.PREVIOUS_NOTE_SELECTED});
-};
+const Actions = Object.assign(actionTypes, actionCreators);
 
 export default Actions;
