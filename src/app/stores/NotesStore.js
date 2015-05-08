@@ -18,7 +18,7 @@ const notes = [
 ];
 
 const NotesStore = Object.assign({
-  getNotes() {
+  get notes() {
     return notes;
   }
 }, EventEmitter.prototype);

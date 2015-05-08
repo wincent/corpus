@@ -6,7 +6,7 @@ import autobind from 'autobind-decorator';
 import Actions from './Actions';
 import Dispatcher from './Dispatcher';
 import NotePreview from './NotePreview.react';
-import NoteSelectionStore from './stores/NotesSelectionStore';
+import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
 
 const styles = {
@@ -24,29 +24,29 @@ export default class NoteList extends React.Component {
     super(props);
     this.state = {
       focused: false,
-      notes: NotesStore.getNotes(),
-      selectedNoteIndex: NoteSelectionStore.getCurrentSelectionIndex(),
+      notes: NotesStore.notes,
+      selectedNoteIndex: NotesSelectionStore.currentSelectionIndex,
     };
   }
 
   componentDidMount() {
-    NoteSelectionStore.on('change', this._updateNoteSelection);
+    NotesSelectionStore.on('change', this._updateNoteSelection);
     NotesStore.on('update', this._updateNotes);
   }
 
   componentWillUnmount() {
-    NoteSelectionStore.removeListener('change', this._updateNoteSelection);
+    NotesSelectionStore.removeListener('change', this._updateNoteSelection);
     NotesStore.removeListener('update', this._updateNotes);
   }
 
   @autobind
   _updateNoteSelection() {
-    this.setState({selectedNoteIndex: NoteSelectionStore.getCurrentSelectionIndex()});
+    this.setState({selectedNoteIndex: NotesSelectionStore.currentSelectionIndex});
   }
 
   @autobind
   _updateNotes() {
-    this.setState({notes: NotesStore.getNotes()});
+    this.setState({notes: NotesStore.notes});
   }
 
   @autobind

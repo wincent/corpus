@@ -19,7 +19,7 @@ function changeCurrentSelectionIndex(index) {
 }
 
 function incrementCurrentSelectionIndex() {
-  const maxSelectionIndex = NotesStore.getNotes().length - 1;
+  const maxSelectionIndex = NotesStore.notes.length - 1;
   if (currentSelectionIndex < maxSelectionIndex) {
     currentSelectionIndex++;
     NoteSelectionStore.emit('change');
@@ -48,11 +48,10 @@ Dispatcher.register(payload => {
 });
 
 ipc.on('next', () => Actions.nextNote());
-
 ipc.on('previous', () => Actions.previousNote());
 
 const NoteSelectionStore = Object.assign({
-  getCurrentSelectionIndex() {
+  get currentSelectionIndex() {
     return currentSelectionIndex;
   }
 }, EventEmitter.prototype);
