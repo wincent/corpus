@@ -3,6 +3,8 @@
 import React from 'react';
 import autobind from 'autobind-decorator';
 
+import Actions from './Actions';
+import Dispatcher from './Dispatcher';
 import NotePreview from './NotePreview.react';
 import NoteSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
@@ -48,6 +50,10 @@ export default class NoteList extends React.Component {
   }
 
   _onClickNotePreview(index) {
+    Dispatcher.dispatch({
+      type: Actions.NOTE_SELECTED,
+      index,
+    });
     this.setState({focusedNoteIndex: index});
   }
 

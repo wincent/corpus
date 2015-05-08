@@ -11,6 +11,13 @@ import NotesStore from './NotesStore';
 // TODO: support null selection
 let currentSelectionIndex = 0;
 
+function changeCurrentSelectionIndex(index) {
+  if (index !== currentSelectionIndex) {
+    currentSelectionIndex = index;
+    NoteSelectionStore.emit('change');
+  }
+}
+
 function incrementCurrentSelectionIndex() {
   const maxSelectionIndex = NotesStore.getNotes().length - 1;
   if (currentSelectionIndex < maxSelectionIndex) {
@@ -32,6 +39,7 @@ Dispatcher.register(payload => {
       incrementCurrentSelectionIndex();
       break;
     case Actions.NOTE_SELECTED:
+      changeCurrentSelectionIndex(payload.index);
       break;
     case Actions.PREVIOUS_NOTE_SELECTED:
       decrementCurrentSelectionIndex();

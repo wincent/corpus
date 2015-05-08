@@ -48,6 +48,9 @@ MINUTIAE
 - for small windows, should collapse right pane once it shrinks below a certain size; heck, do it for big windows too
 - get app icon
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
+- tab from OmniBar should focus current note, or do nothing if there is no current note
+- tab in note should insert a tab; shift-tab should go back to OmniBar
+- tab when NotePreview is focus should shift to current note
 
 NICE TO HAVES
 
