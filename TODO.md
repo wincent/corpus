@@ -42,12 +42,15 @@ MINUTIAE
 - [DONE] focused and selected styling for NotePreviews
 - [DONE] set up "accelerator" short-cuts for next/prev note (nvALT actually has these in the "View" menu)
 - [DONE] implement click-to-focus on <NotePreview>
-- implement double-click-to-edit on <NotePreview> (also, switch to `cursor: text` when hovering and editing)
+- [DONE] use Immutable.js because it's cool
+- implement double-click-to-edit-title on <NotePreview> (also, switch to `cursor: text` when hovering and editing)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
 - for small windows, should collapse right pane once it shrinks below a certain size; heck, do it for big windows too
 - get app icon
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
+- implement contextual menu for <NoteView>
+- implement contextual menu for <NotePreview>
 - tab from OmniBar should focus current note, or do nothing if there is no current note
 - tab in note should insert a tab; shift-tab should go back to OmniBar
 - tab when NotePreview is focus should shift to current note
@@ -56,8 +59,8 @@ MINUTIAE
 NICE TO HAVES
 
 - figure out how to detect system color preference (Graphite vs Aqua) and change styles accordingly (eg. selections/focused in notelist, which is #095cdc in nvALT's Aqua mode)
+- implment double-click-to-tag (lower half of <NotePreview>)
 
 IDEAS
 
 - use codemirror to get some stuff for free (syntax highlighting, vim mode)
-- use Immutable.js because it's cool

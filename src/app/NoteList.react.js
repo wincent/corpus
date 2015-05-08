@@ -34,12 +34,12 @@ export default class NoteList extends React.Component {
 
   componentDidMount() {
     NotesSelectionStore.on('change', this._updateNoteSelection);
-    NotesStore.on('update', this._updateNotes);
+    NotesStore.on('change', this._updateNotes);
   }
 
   componentWillUnmount() {
     NotesSelectionStore.removeListener('change', this._updateNoteSelection);
-    NotesStore.removeListener('update', this._updateNotes);
+    NotesStore.removeListener('change', this._updateNotes);
   }
 
   @autobind
@@ -73,6 +73,7 @@ export default class NoteList extends React.Component {
         <NotePreview
           focused={this.state.focused && selected}
           key={i}
+          noteID={i}
           onClick={this._onClickNotePreview.bind(this, i)}
           selected={selected}
           title={note.get('title')}
