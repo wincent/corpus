@@ -43,7 +43,12 @@ MINUTIAE
 - [DONE] separator constraints: notes area shouldn't ever be < 50%, but can collapse list side entirely
 - for small windows, should collapse right pane once it shrinks below a certain
   size; heck, do it for big windows too
-- focused and selected styling for NotePreviews
+- [DONE] focused and selected styling for NotePreviews
+- get app icon
+
+NICE TO HAVES
+
+- figure out how to detect system color preference (Graphite vs Aqua) and change styles accordingly (eg. selections/focused in notelist, which is #095cdc in nvALT's Aqua mode)
 
 IDEAS
 

@@ -17,7 +17,9 @@ const styles = {
 function getDummyNotes(): Array<React.Element> {
   return Array.apply(null, new Array(100)).map((_, i) => (
     <NotePreview
+      focused={i === 0}
       key={i}
+      selected={i === 1}
       title="random title which keeps going on for some time you see"
       text="some body text and some more body text; quite a bit of this too as well of course"
     />
