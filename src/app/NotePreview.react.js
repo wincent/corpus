@@ -27,6 +27,7 @@ export default class NotePreview extends React.Component {
         fontSize: '11px',
         lineHeight: '14px',
         listStyleType: 'none',
+        minHeight: '51px',
         padding: '4px 4px 4px 8px',
       },
       title: {
