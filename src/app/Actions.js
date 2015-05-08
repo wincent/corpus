@@ -14,18 +14,18 @@ const actionTypes = keyMirror({
 
 const actionCreators = {
   nextNote() {
-    Dispatcher.dispatch({type: Actions.NEXT_NOTE_SELECTED});
+    Dispatcher.dispatch({type: actionTypes.NEXT_NOTE_SELECTED});
   },
 
   noteSelected(payload) {
     Dispatcher.dispatch({
       ...payload,
-      type: Actions.NOTE_SELECTED,
+      type: actionTypes.NOTE_SELECTED,
     });
   },
 
   previousNote() {
-    Dispatcher.dispatch({type: Actions.PREVIOUS_NOTE_SELECTED});
+    Dispatcher.dispatch({type: actionTypes.PREVIOUS_NOTE_SELECTED});
   },
 };
 

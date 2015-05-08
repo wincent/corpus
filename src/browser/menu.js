@@ -71,7 +71,7 @@ const menu = [
         label: 'Paste',
         selector: 'paste:',
       },
-      {type: 'separator',},
+      {type: 'separator'},
       {
         accelerator: 'Command+A',
         label: 'Select All',

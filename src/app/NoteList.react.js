@@ -7,7 +7,6 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 
 import Actions from './Actions';
-import Dispatcher from './Dispatcher';
 import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';

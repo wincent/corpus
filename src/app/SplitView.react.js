@@ -63,7 +63,7 @@ export default class SplitView extends React.Component {
     const rightStyles = {
       ...styles.right,
       flexGrow: this.state.right,
-    }
+    };
     return (
       <div style={styles.root}>
         <div style={leftStyles}>

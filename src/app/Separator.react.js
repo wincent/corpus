@@ -40,7 +40,7 @@ export default class Separator extends React.Component {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 
-    global.document.body.style.cursor = '-webkit-grabbing';
+    document.body.style.cursor = '-webkit-grabbing';
     this.setState({grabbing: true});
   }
 
