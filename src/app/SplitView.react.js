@@ -29,19 +29,33 @@ const styles = {
 export default class SplitView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {left: 1, right: 2};
+
+    // These proportions based on initial window dimensions set in main.js.
+    this.state = {left: 400, right: 800};
   }
 
-  @autobind
-  _onMouseMove(event) {
-    event.preventDefault(); // avoids unwanted selection of note text
+  componentDidMount() {
+    window.addEventListener('resize', this._onResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._onResize);
+  }
+
+  _adjustPanes(desiredLeftPaneWidth) {
+    if (desiredLeftPaneWidth < 40) {
+      desiredLeftPaneWidth = 0;
+    } else if (desiredLeftPaneWidth < 75) {
+      desiredLeftPaneWidth = 75;
+    }
+
     const width = window.innerWidth;
     const minimumX = 0;
     const maximumX = Math.min(600, width - 100);
 
     // minimum <= X <= maximum
     const eventX = Math.min(
-      Math.max(event.clientX, minimumX),
+      Math.max(desiredLeftPaneWidth, minimumX),
       maximumX
     );
 
@@ -49,6 +63,18 @@ export default class SplitView extends React.Component {
       left: Math.round(eventX),
       right: Math.round(width - eventX),
     });
+  }
+
+  @autobind
+  _onMouseMove(event) {
+    event.preventDefault(); // avoids unwanted selection of note text
+    this._adjustPanes(event.clientX);
+  }
+
+  @autobind
+  _onResize() {
+    // want to keep "left" the same as it is, unless it violates a constraint
+    requestAnimationFrame(() => this._adjustPanes(this.state.left));
   }
 
   render() {
