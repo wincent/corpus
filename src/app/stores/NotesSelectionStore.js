@@ -30,41 +30,36 @@ let totalDelta = 0;
 // TODO: skip "non-holes" when moving past them (ie. selected 2, 4, 6 -> as you
 // move up from 6 you should select 5 then 3 then 1)
 function adjustSelection(delta) {
-  const mostRecent = selection.last();
-  if (mostRecent == null) {
+  const lastLocation = selection.last();
+  if (lastLocation == null) {
     totalDelta = 0; // reset
-    return delta > 0 ? selectFirst() : selectLast();
+    return delta ? selectFirst() : selectLast();
   } else {
+    const initialLocation = lastLocation - totalDelta;
     const previousDelta = totalDelta;
-    totalDelta += delta;
     totalDelta = clamp(
-      totalDelta,
-
-      mostRecent > 0 ?
-        totalDelta - mostRecent :
-        totalDelta - mostRecent + 1,
-
-      mostRecent < NotesStore.notes.size - 1 ?
-       NotesStore.notes.size - mostRecent - totalDelta + 1:
-       NotesStore.notes.size - mostRecent - totalDelta
+      totalDelta + delta, // desired distance from where we started
+      -initialLocation, // limit of upwards selection
+      NotesStore.notes.size - initialLocation - 1 // limit of downwards selection
     );
 
     if (totalDelta < previousDelta) {
       // We're moving upwards.
       return (
-        totalDelta > 0 ?
-        selection.remove(mostRecent) : // Reducing downwards selection.
-        selection.add(mostRecent - 1) // Extending upwards selection.
+        totalDelta >= 0 ?
+        selection.remove(lastLocation) : // Reducing downwards selection.
+        selection.add(lastLocation - 1) // Extending upwards selection.
       );
     } else if (totalDelta > previousDelta) {
       // We're moving downwards.
       return (
         totalDelta > 0 ?
-        selection.add(mostRecent + 1) :// Extending downwards selection.
-        selection.remove(mostRecent) // Reducing upwards selection.
+        selection.add(lastLocation + 1) :// Extending downwards selection.
+        selection.remove(lastLocation) // Reducing upwards selection.
       );
+    } else {
+      return selection; // nothing to do
     }
-    return selection;
   }
 }
 
