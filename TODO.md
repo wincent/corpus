@@ -22,16 +22,17 @@ MINUTIAE
 
 - make `Store` base class and inherit some functionality from it to DRY up stores
 - fix missing scrollbars (this is intermittent; not sure of cause)
-- optimizing rendering with large numbers of notes (basically at 60fps so ok for now)
-- <NoteList> should scroll when using Command+{J,K}
+- optimize rendering with large numbers of notes (basically at 60fps so ok for now)
+- <NoteList> should scroll when using Command+{J,K} or UP/DOWN to switch notes
 - fix slight <Separator> drift when resizing window
 - add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top)
 - implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
-- for small windows, should collapse right pane once it shrinks below a certain size; heck, do it for big windows too
+- [DONE] for small windows, should collapse left pane once it shrinks below a certain size; heck, do it for big windows too
 - get app icon
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
+- tidy up ugly handling of current-selected-index `null` values
 - implement contextual menu for <NoteView>
 - implement contextual menu for <NotePreview>
 - tab from OmniBar should focus current note, or do nothing if there is no current note

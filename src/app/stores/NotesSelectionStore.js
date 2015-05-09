@@ -32,8 +32,21 @@ function decrementCurrentSelectionIndex() {
   }
 }
 
+function setIndex(newIndex) {
+  if (newIndex !== currentSelectionIndex) {
+    currentSelectionIndex = newIndex;
+    NoteSelectionStore.emit('change');
+  }
+}
+
 Dispatcher.register(payload => {
   switch (payload.type) {
+    case Actions.FIRST_NOTE_SELECTED:
+      setIndex(NotesStore.notes.size ? 0 : null);
+      break;
+    case Actions.LAST_NOTE_SELECTED:
+      setIndex(NotesStore.notes.size ? NotesStore.notes.size - 1 : null);
+      break;
     case Actions.NEXT_NOTE_SELECTED:
       incrementCurrentSelectionIndex();
       break;

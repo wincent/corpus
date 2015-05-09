@@ -70,11 +70,23 @@ export default class NoteList extends React.Component {
   _onKeyDown(event) {
     switch (event.keyCode) {
       case Keys.DOWN:
-        Actions.nextNote();
+        if (event.metaKey) {
+          Actions.lastNote();
+        } else if (event.shiftKey) {
+          // TODO: extend selection
+        } else {
+          Actions.nextNote();
+        }
         event.preventDefault();
         break;
       case Keys.UP:
-        Actions.previousNote();
+        if (event.metaKey) {
+          Actions.firstNote();
+        } else if (event.shiftKey) {
+          // TODO: extend selection
+        } else {
+          Actions.previousNote();
+        }
         event.preventDefault();
         break;
     }
