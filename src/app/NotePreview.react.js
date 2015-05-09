@@ -76,8 +76,7 @@ export default class NotePreview extends React.Component {
     };
   }
 
-  @autobind
-  _onBlurTitle(event) {
+  _endEditing(event) {
     this.setState({
       isEditing: false,
       pendingTitle: null,
@@ -86,6 +85,11 @@ export default class NotePreview extends React.Component {
       noteID: this.props.noteID,
       title: event.currentTarget.value,
     });
+  }
+
+  @autobind
+  _onBlurTitle(event) {
+    this._endEditing(event);
   }
 
   @autobind
@@ -128,6 +132,7 @@ export default class NotePreview extends React.Component {
     input.setSelectionRange(0, input.value.length);
   }
 
+  @autobind
   _onKeyDown(event) {
     switch (event.keyCode) {
       case Keys.RETURN:
@@ -136,6 +141,9 @@ export default class NotePreview extends React.Component {
       case Keys.DOWN:
       case Keys.UP:
         event.stopPropagation(); // don't actually want to switch notes here
+        break;
+      case Keys.ESCAPE:
+        this._endEditing(event);
         break;
     }
   }
