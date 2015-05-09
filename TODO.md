@@ -26,28 +26,9 @@ Nice to haves:
 
 MINUTIAE
 
-- [DONE] get Babel working
-- [DONE] figure out how to bootstrap render processes (require modules etc)
-- [DONE] is it possible to render directly from JS without an intermediate HTML file?
-- [DONE] get basic view layout working (search box up top, list on left, note on right)
-- [DONE] stop gulp watch task from dying when there's an error (again; I thought I'd done this, but it doesn't seem to catch all errors)
-- [DONE] add JS linting, probably via ESLint (http://eslint.org)
-- [DONE] add linear gradient to OmniBar to extend window title
-- [DONE] switch OmniBar gradient when window goes into the background
-- [DONE] hook BrowserWindow.toggleDevTools up to a menu item
-- [DONE] make split view slider draggable
-- [DONE] figure out how to disable text-selection in the note if we drag over it while dragging separator
-- [DONE] separator constraints: notes area shouldn't ever be < 50%, but can collapse list side entirely
-- [DONE] add Flux to handle data access
-- [DONE] focused and selected styling for NotePreviews
-- [DONE] set up "accelerator" short-cuts for next/prev note (nvALT actually has these in the "View" menu)
-- [DONE] implement click-to-focus on <NotePreview>
-- [DONE] use Immutable.js because it's cool
-- [DONE] implement double-click-to-edit-title on <NotePreview> (also, switch to `cursor: text` when hovering and editing)
-- read files off disk instead of using fake data (to decide: load whole files or just snippets and lazy-load the rest)
-- optimizing rendering with large numbers of notes
-- fix missing scrollbars
-- [DONE] fix grabbing cursor during <Separator> drags
+- fix missing scrollbars (this is intermittent; not sure of cause)
+- optimizing rendering with large numbers of notes (basically at 60fps so ok for now)
+- <NoteList> should scroll when using Command+{J,K}
 - fix slight <Separator> drift when resizing window
 - implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
@@ -70,3 +51,27 @@ NICE TO HAVES
 IDEAS
 
 - use codemirror to get some stuff for free (syntax highlighting, vim mode)
+
+ARCHIVES
+
+- [DONE] get Babel working
+- [DONE] figure out how to bootstrap render processes (require modules etc)
+- [DONE] is it possible to render directly from JS without an intermediate HTML file?
+- [DONE] get basic view layout working (search box up top, list on left, note on right)
+- [DONE] stop gulp watch task from dying when there's an error (again; I thought I'd done this, but it doesn't seem to catch all errors)
+- [DONE] add JS linting, probably via ESLint (http://eslint.org)
+- [DONE] add linear gradient to OmniBar to extend window title
+- [DONE] switch OmniBar gradient when window goes into the background
+- [DONE] hook BrowserWindow.toggleDevTools up to a menu item
+- [DONE] make split view slider draggable
+- [DONE] figure out how to disable text-selection in the note if we drag over it while dragging separator
+- [DONE] separator constraints: notes area shouldn't ever be < 50%, but can collapse list side entirely
+- [DONE] add Flux to handle data access
+- [DONE] focused and selected styling for NotePreviews
+- [DONE] set up "accelerator" short-cuts for next/prev note (nvALT actually has these in the "View" menu)
+- [DONE] implement click-to-focus on <NotePreview>
+- [DONE] use Immutable.js because it's cool
+- [DONE] implement double-click-to-edit-title on <NotePreview> (also, switch to `cursor: text` when hovering and editing)
+- [DONE] fix grabbing cursor during <Separator> drags
+- [DONE] read files off disk instead of using fake data (to decide: load whole files or just snippets and lazy-load the rest)
+- [DONE] <NoteView> should never scroll sideways (it is now, which may account for the missing scrollbars)

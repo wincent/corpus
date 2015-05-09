@@ -10,6 +10,8 @@ const styles = {
     padding: '8px',
     fontFamily: 'Monaco',
     fontSize: '12px',
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
 };
 
