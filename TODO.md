@@ -40,6 +40,8 @@ MINUTIAE
 - tab in note should insert a tab; shift-tab should go back to OmniBar
 - tab when NotePreview is focused should shift to current note
 - typing when NotePreview is focused should shift focus to OmniBar and insert
+- [DONE] when no notes are selected, OmniBar should show placeholder text of "Search or Create"
+- OmniBar should have search icon in it whenin search mode (and pen icon when in write mode)
 
 NICE TO HAVES
 
