@@ -12,10 +12,13 @@ import process from 'process';
 
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
+import handleError from '../handleError';
 
 const readdir = Promise.promisify(fs.readdir);
 const readFile = Promise.promisify(fs.readFile);
+const stat = Promise.promisify(fs.stat);
 
+const ignore = () => {};
 const notesDir = path.join(process.env.HOME, 'Documents', 'Notes');
 
 let notes = Immutable.List();
@@ -33,8 +36,14 @@ readdir(notesDir)
       return Promise.join(
         noteID++,
         title,
-        readFile(notePath).catch(() => {}),
-        (id, title, text) => Immutable.Map({id, title, text: text.toString()})
+        readFile(notePath).catch(ignore),
+        stat(notePath).catch(ignore),
+        (id, title, text, stat) => Immutable.Map({
+          id,
+          title,
+          text: text && text.toString(),
+          mtime: stat && stat.mtime.getTime(),
+        })
       );
     },
     {concurrency: 5}
@@ -43,7 +52,7 @@ readdir(notesDir)
     notes = notes.push(...data);
     Actions.notesLoaded();
   })
-  .catch(error => console.log('something went wrong', error));
+  .catch(error => handleError(error, 'Failed to read notes from disk'));
 
 Dispatcher.register(payload => {
   switch (payload.type) {
