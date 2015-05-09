@@ -20,6 +20,10 @@
         margin: 0;
       }
 
+      body.grabbing * {
+        cursor: -webkit-grabbing !important;
+      }
+
       p {
         margin: 0; /* overwrite -webkit-margin-* */
       }
@@ -33,9 +37,6 @@
       /* hover etc (can't do with inline styles) */
       .separator:hover {
         cursor: col-resize;
-      }
-      .separator:hover.grabbing {
-        cursor: -webkit-grabbing;
       }
     </style>
   </head>

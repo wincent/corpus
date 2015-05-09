@@ -22,36 +22,24 @@ export default class Separator extends React.Component {
     onMouseMove: React.PropTypes.func,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {grabbing: false};
-  }
-
   @autobind
   _onMouseDown() {
     const onMouseMove = this.props.onMouseMove;
     const onMouseUp = () => {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      document.body.style.cursor = '';
-      this.setState({grabbing: false});
+      document.body.classList.remove('grabbing');
     };
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-
-    document.body.style.cursor = '-webkit-grabbing';
-    this.setState({grabbing: true});
+    document.body.classList.add('grabbing');
   }
 
   render() {
-    var classes = cx({
-      grabbing: this.state.grabbing,
-      separator: true,
-    });
     return (
       <div
-        className={classes}
+        className="separator"
         onMouseDown={this._onMouseDown}
         style={styles.root}
       />
