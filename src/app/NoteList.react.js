@@ -12,6 +12,10 @@ import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
 
+// Don't want the DOM to contain all the text of all the notes.
+// Truncate to a length that can fill two 600px rows.
+const PREVIEW_LENGTH = 250;
+
 const styles = {
   root: {
     background: '#ebebeb',
@@ -89,7 +93,7 @@ export default class NoteList extends React.Component {
           onClick={this._onClickNotePreview.bind(this, i)}
           selected={selected}
           title={note.get('title')}
-          text={note.get('text')}
+          text={note.get('text').substr(0, PREVIEW_LENGTH)}
         />
       );
     });

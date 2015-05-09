@@ -37,7 +37,7 @@ export default class SplitView extends React.Component {
     event.preventDefault(); // avoids unwanted selection of note text
     const width = window.innerWidth;
     const minimumX = 0;
-    const maximumX = width - 200;
+    const maximumX = Math.min(600, width - 100);
 
     // minimum <= X <= maximum
     const eventX = Math.min(

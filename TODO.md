@@ -45,6 +45,7 @@ MINUTIAE
 - [DONE] use Immutable.js because it's cool
 - [DONE] implement double-click-to-edit-title on <NotePreview> (also, switch to `cursor: text` when hovering and editing)
 - read files off disk instead of using fake data (to decide: load whole files or just snippets and lazy-load the rest)
+- optimizing rendering with large numbers of notes
 - fix missing scrollbars
 - implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
