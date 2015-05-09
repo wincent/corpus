@@ -73,7 +73,7 @@ export default class NoteList extends React.Component {
         if (event.metaKey) {
           Actions.lastNote();
         } else if (event.shiftKey) {
-          // TODO: extend selection
+          Actions.adjustNoteSelectionDown();
         } else {
           Actions.nextNote();
         }
@@ -83,7 +83,7 @@ export default class NoteList extends React.Component {
         if (event.metaKey) {
           Actions.firstNote();
         } else if (event.shiftKey) {
-          // TODO: extend selection
+          Actions.adjustNoteSelectionUp();
         } else {
           Actions.previousNote();
         }

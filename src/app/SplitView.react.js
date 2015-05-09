@@ -8,6 +8,7 @@ import autobind from 'autobind-decorator';
 import invariant from 'react/lib/invariant';
 
 import Separator from './Separator.react';
+import clamp from './clamp';
 
 const styles = {
   left: {
@@ -54,10 +55,7 @@ export default class SplitView extends React.Component {
     const maximumX = Math.min(600, width - 100);
 
     // minimum <= X <= maximum
-    const eventX = Math.min(
-      Math.max(desiredLeftPaneWidth, minimumX),
-      maximumX
-    );
+    const eventX = clamp(desiredLeftPaneWidth, minimumX, maximumX);
 
     this.setState({
       left: Math.round(eventX),

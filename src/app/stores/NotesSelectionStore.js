@@ -7,6 +7,7 @@ import ipc from 'ipc';
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
 import NotesStore from './NotesStore';
+import clamp from '../clamp';
 
 /**
  * We use an OrderedSet to support the "multiple selection followed by
@@ -15,7 +16,65 @@ import NotesStore from './NotesStore';
  */
 let selection = Immutable.OrderedSet();
 
-function change(changer) {
+/**
+ * We keep track of the total delta (how far we've moved up/down) when adjusting
+ * the selection upwards or downwards. Changing direction (decrementing a
+ * positive totalDelta, or incrementing a negative one) and "crossing" past 0
+ * both represent a change of mode (from extending the selection in a particular
+ * direction to reducing it).
+ *
+ * @see adjustSelection
+ */
+let totalDelta = 0;
+
+// TODO: skip "non-holes" when moving past them (ie. selected 2, 4, 6 -> as you
+// move up from 6 you should select 5 then 3 then 1)
+function adjustSelection(delta) {
+  const mostRecent = selection.last();
+  if (mostRecent == null) {
+    totalDelta = 0; // reset
+    return delta > 0 ? selectFirst() : selectLast();
+  } else {
+    const previousDelta = totalDelta;
+    totalDelta += delta;
+    totalDelta = clamp(
+      totalDelta,
+
+      mostRecent > 0 ?
+        totalDelta - mostRecent :
+        totalDelta - mostRecent + 1,
+
+      mostRecent < NotesStore.notes.size - 1 ?
+       NotesStore.notes.size - mostRecent - totalDelta + 1:
+       NotesStore.notes.size - mostRecent - totalDelta
+    );
+
+    if (totalDelta < previousDelta) {
+      // We're moving upwards.
+      return (
+        totalDelta > 0 ?
+        selection.remove(mostRecent) : // Reducing downwards selection.
+        selection.add(mostRecent - 1) // Extending upwards selection.
+      );
+    } else if (totalDelta > previousDelta) {
+      // We're moving downwards.
+      return (
+        totalDelta > 0 ?
+        selection.add(mostRecent + 1) :// Extending downwards selection.
+        selection.remove(mostRecent) // Reducing upwards selection.
+      );
+    }
+    return selection;
+  }
+}
+
+function change(action, changer) {
+  if (
+    action !== Actions.ADJUST_NOTE_SELECTION_DOWN &&
+    action !== Actions.ADJUST_NOTE_SELECTION_UP
+  ) {
+    totalDelta = 0; // reset
+  }
   const previousSelection = selection;
   selection = changer.call();
   if (selection !== previousSelection) {
@@ -24,12 +83,12 @@ function change(changer) {
 }
 
 function selectFirst() {
-  const selection = selection.clear();
+  selection = selection.clear();
   return NotesStore.notes.size ? selection.add(0) : selection;
 }
 
 function selectLast() {
-  const selection = selection.clear();
+  selection = selection.clear();
   if (NotesStore.notes.size) {
     return selection.add(NotesStore.notes.size - 1);
   } else {
@@ -71,20 +130,26 @@ Dispatcher.register(payload => {
       // message when <NoteList> is focused;
       // perhaps we need a store for that too...
       break;
+    case Actions.ADJUST_NOTE_SELECTION_DOWN:
+      change(payload.type, () => adjustSelection(+1));
+      break;
+    case Actions.ADJUST_NOTE_SELECTION_UP:
+      change(payload.type, () => adjustSelection(-1));
+      break;
     case Actions.FIRST_NOTE_SELECTED:
-      change(selectFirst);
+      change(payload.type, selectFirst);
       break;
     case Actions.LAST_NOTE_SELECTED:
-      change(selectLast);
+      change(payload.type, selectLast);
       break;
     case Actions.NEXT_NOTE_SELECTED:
-      change(selectNext);
+      change(payload.type, selectNext);
       break;
     case Actions.NOTE_DESELECTED:
-      change(() => selection.remove(payload.index));
+      change(payload.type, () => selection.remove(payload.index));
       break;
     case Actions.NOTE_SELECTED:
-      change(() => {
+      change(payload.type, () => {
         if (payload.exclusive) {
           selection = selection.clear();
         }
@@ -92,7 +157,7 @@ Dispatcher.register(payload => {
       });
       break;
     case Actions.NOTE_RANGE_SELECTED:
-      change(() => {
+      change(payload.type, () => {
         const start = selection.last() || 0;
         const end = payload.index;
         const range = Immutable.Range(
@@ -103,13 +168,13 @@ Dispatcher.register(payload => {
       });
       break;
     case Actions.NOTES_LOADED:
-      change(() => (
+      change(payload.type, () => (
         // TODO: persist last selection across restarts
         NotesStore.notes.size ? selection.add(0) : selection
       ));
       break;
     case Actions.PREVIOUS_NOTE_SELECTED:
-      change(selectPrevious);
+      change(payload.type, selectPrevious);
       break;
   }
 });

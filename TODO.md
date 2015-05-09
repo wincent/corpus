@@ -41,12 +41,17 @@ MINUTIAE
 - tab when NotePreview is focused should shift to current note
 - typing when NotePreview is focused should shift focus to OmniBar and insert
 - [DONE] when no notes are selected, OmniBar should show placeholder text of "Search or Create"
-- OmniBar should have search icon in it whenin search mode (and pen icon when in write mode)
+- OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
+- Command+L should focus OmniBar
+- Select a note, hold shift, tap up or down; it should do a range selection
+- Select a note, hold command, tap up or down; it should select the first or last note
 
 NICE TO HAVES
 
 - figure out how to detect system color preference (Graphite vs Aqua) and change styles accordingly (eg. selections/focused in notelist, which is #095cdc in nvALT's Aqua mode)
 - implment double-click-to-tag (lower half of <NotePreview>)
+- i18n
+- generated documentation
 
 IDEAS
 
