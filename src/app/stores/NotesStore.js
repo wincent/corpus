@@ -5,10 +5,21 @@
 
 import {EventEmitter} from 'events';
 import Immutable from 'immutable';
+import Promise from 'bluebird';
+import path from 'path';
+import process from 'process';
+import remote from 'remote';
 
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
 
+const fs = remote.require('fs');
+const readdir = Promise.promisify(fs.readdir);
+const readFile = Promise.promisify(fs.readFile);
+
+const notesDir = path.join(process.env.HOME, 'Documents', 'Notes');
+
+// TODO: make sure the rest of the code can handle the no-notes case
 let notes = Immutable.fromJS([
   {
     id: 0,
@@ -26,6 +37,34 @@ let notes = Immutable.fromJS([
     text: 'and here is another sample body',
   }
 ]);
+
+let noteID = 3; // TODO: make this 0 once we no longer need sample data
+
+console.time('reading');
+readdir(notesDir)
+  .filter(
+    fileName => path.extname(fileName) === '.txt',
+    {concurrency: Infinity}
+  )
+  .map(
+    fileName => {
+      const notePath = path.join(notesDir, fileName);
+      const title = path.basename(notePath, '.txt');
+      return Promise.join(
+        noteID++,
+        title,
+        readFile(notePath),
+        (id, title, text) => Immutable.Map({id, title, text: text.toString()})
+      );
+    },
+    {concurrency: 5}
+  )
+  .then(data => {
+    console.timeEnd('reading');
+    notes = notes.push(...data);
+    NotesStore.emit('change');
+  })
+  .catch(error => console.log('something went wrong', error));
 
 Dispatcher.register(payload => {
   switch (payload.type) {
