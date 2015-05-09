@@ -11,7 +11,7 @@ const styles = {
     fontFamily: 'Monaco',
     fontSize: '12px',
     whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
   },
 };
 
