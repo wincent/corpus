@@ -53,7 +53,7 @@ readdir(notesDir)
       return Promise.join(
         noteID++,
         title,
-        readFile(notePath),
+        readFile(notePath).catch(() => {}),
         (id, title, text) => Immutable.Map({id, title, text: text.toString()})
       );
     },
