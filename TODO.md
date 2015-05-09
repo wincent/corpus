@@ -43,8 +43,10 @@ MINUTIAE
 - [DONE] when no notes are selected, OmniBar should show placeholder text of "Search or Create"
 - OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
 - Command+L should focus OmniBar
-- Select a note, hold shift, tap up or down; it should do a range selection
-- Select a note, hold command, tap up or down; it should select the first or last note
+- [DONE] Select a note, hold shift, tap up or down; it should do a range selection
+- Make range adjustment work with multiple selections with gaps between them
+- [DONE] Select a note, hold command, tap up or down; it should select the first or last note
+- Escape should unfocus the NoteList and clear the selection (focus reverts to OmniBar)
 
 NICE TO HAVES
 

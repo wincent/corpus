@@ -120,6 +120,9 @@ function selectPrevious() {
 
 Dispatcher.register(payload => {
   switch (payload.type) {
+    case Actions.ALL_NOTES_DESELECTED:
+      change(payload.type, () => selection.clear());
+      break;
     case Actions.ALL_NOTES_SELECTED:
       // TODO: implement this; will need to be sure that we only get this
       // message when <NoteList> is focused;

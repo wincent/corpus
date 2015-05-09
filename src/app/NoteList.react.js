@@ -79,6 +79,9 @@ export default class NoteList extends React.Component {
         }
         event.preventDefault();
         break;
+      case Keys.ESCAPE:
+        Actions.deselectAll();
+        break;
       case Keys.UP:
         if (event.metaKey) {
           Actions.firstNote();

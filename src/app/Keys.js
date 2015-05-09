@@ -5,6 +5,7 @@
 
 export default {
   DOWN: 40,
+  ESCAPE: 27,
   RETURN: 13,
   UP: 38,
 };

@@ -15,6 +15,7 @@ function dispatch(type: string, payload?: Object): void {
 }
 
 const actionTypes = keyMirror({
+  ALL_NOTES_DESELECTED: null,
   ALL_NOTES_SELECTED: null,
   ADJUST_NOTE_SELECTION_DOWN: null,
   ADJUST_NOTE_SELECTION_UP: null,
@@ -36,6 +37,10 @@ const actionCreators = {
 
   adjustNoteSelectionUp() {
     dispatch(actionTypes.ADJUST_NOTE_SELECTION_UP);
+  },
+
+  deselectAll() {
+    dispatch(actionTypes.ALL_NOTES_DESELECTED);
   },
 
   firstNote() {
@@ -72,6 +77,11 @@ const actionCreators = {
 
   noteTitleChanged(payload) {
     dispatch(actionTypes.NOTE_TITLE_CHANGED, payload);
+  },
+
+  // FIXME: currently unused
+  selectAll() {
+    dispatch(actionTypes.ALL_NOTES_SELECTED);
   },
 };
 
