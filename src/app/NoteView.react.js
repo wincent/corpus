@@ -21,9 +21,10 @@ const styles = {
 export default class NoteView extends React.Component {
   constructor(props) {
     super(props);
-    const selectedNoteIndex = NotesSelectionStore.currentSelectionIndex;
-    const note = selectedNoteIndex !== null ? NotesStore.notes.get(selectedNoteIndex) : null;
-    this.state = {note};
+    const {selection} = NotesSelectionStore;
+    const count = selection.size;
+    const note = count === 1 ? NotesStore.notes.get(selection.first()) : null;
+    this.state = {count, note};
   }
 
   componentDidMount() {
@@ -40,15 +41,21 @@ export default class NoteView extends React.Component {
   _updateNote() {
     // TODO: make a convenience method for this, probably on the store, to DRY
     // this up (we'll be doing it in a few places)
-    const selectedIndex = NotesSelectionStore.currentSelectionIndex;
-    const note = selectedIndex !== null ? NotesStore.notes.get(selectedIndex) : null;
-    if (this.state.note !== note) {
-      this.setState({note});
+    const {selection} = NotesSelectionStore;
+    const count = selection.size;
+    const note = count === 1 ? NotesStore.notes.get(selection.first()) : null;
+    if (this.state.note !== note || this.state.count !== count) {
+      this.setState({count, note});
     }
   }
 
   render() {
-    const note = this.state.note ? <Note note={this.state.note} /> : <NotePlaceholder />;
+    let note;
+    if (this.state.note) {
+      note = <Note note={this.state.note} />;
+    } else {
+      note = <NotePlaceholder count={this.state.count} />;
+    }
     return (
       <div style={styles.root} tabIndex={2}>
         {note}

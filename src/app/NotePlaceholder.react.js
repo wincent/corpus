@@ -22,11 +22,16 @@ const styles = {
 };
 
 export default class NotePlaceholder extends React.Component {
+  static PropTypes = {
+    count: React.PropTypes.number.required,
+  };
+
   render() {
+    const count = this.props.count ? this.props.count : 'No';
     return (
       <div style={styles.root}>
         <div style={styles.notice}>
-          No Note Selected
+          {count} Notes Selected
         </div>
       </div>
     );

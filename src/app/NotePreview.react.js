@@ -101,18 +101,17 @@ export default class NotePreview extends React.Component {
       // to desktop -> copies document
     } else if (event.metaKey) {
       if (this.props.selected) {
-        console.log('GOLD');
         Actions.noteDeselected({index: this.props.noteID});
       } else {
         Actions.noteSelected({index: this.props.noteID});
-        // TODO: support multiple selection; which means our store will need to
-        // get more sophisticated
       }
     } else if (event.shiftKey) {
-      Actions.noteSelected({index: this.props.noteID});
-      // TODO: support range selection via shift
+      Actions.noteRangeSelected({index: this.props.noteID});
     } else {
-      Actions.noteSelected({index: this.props.noteID});
+      Actions.noteSelected({
+        exclusive: true,
+        index: this.props.noteID,
+      });
     }
   }
 

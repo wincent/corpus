@@ -33,7 +33,7 @@ export default class NoteList extends React.Component {
     this.state = {
       focused: false,
       notes: NotesStore.notes,
-      selectedNoteIndex: NotesSelectionStore.currentSelectionIndex,
+      selection: NotesSelectionStore.selection,
     };
   }
 
@@ -49,7 +49,7 @@ export default class NoteList extends React.Component {
 
   @autobind
   _updateNoteSelection() {
-    this.setState({selectedNoteIndex: NotesSelectionStore.currentSelectionIndex});
+    this.setState({selection: NotesSelectionStore.selection});
   }
 
   @autobind
@@ -94,7 +94,7 @@ export default class NoteList extends React.Component {
 
   _renderNotes() {
     return this.state.notes.map((note, i) => {
-      const selected = (i === this.state.selectedNoteIndex);
+      const selected = this.state.selection.has(i);
       return (
         <NotePreview
           focused={this.state.focused && selected}

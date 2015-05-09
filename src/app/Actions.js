@@ -15,11 +15,13 @@ function dispatch(type: string, payload?: Object): void {
 }
 
 const actionTypes = keyMirror({
+  ALL_NOTES_SELECTED: null,
   FIRST_NOTE_SELECTED: null,
   LAST_NOTE_SELECTED: null,
   NEXT_NOTE_SELECTED: null,
   NOTES_LOADED: null,
   NOTE_DESELECTED: null,
+  NOTE_RANGE_SELECTED: null,
   NOTE_SELECTED: null,
   NOTE_TITLE_CHANGED: null,
   PREVIOUS_NOTE_SELECTED: null,
@@ -40,6 +42,10 @@ const actionCreators = {
 
   noteDeselected(payload) {
     dispatch(actionTypes.NOTE_DESELECTED, payload);
+  },
+
+  noteRangeSelected(payload) {
+    dispatch(actionTypes.NOTE_RANGE_SELECTED, payload);
   },
 
   noteSelected(payload) {

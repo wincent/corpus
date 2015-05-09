@@ -23,11 +23,11 @@ const styles = {
 };
 
 function getCurrentNote() {
-  const selectedIndex = NotesSelectionStore.currentSelectionIndex;
-  if (selectedIndex === null) {
-    return null;
+  const selection = NotesSelectionStore.selection;
+  if (selection.size === 1) {
+    return NotesStore.notes.get(selection.first());
   } else {
-    return NotesStore.notes.get(selectedIndex);
+    return null;
   }
 }
 
