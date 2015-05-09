@@ -8,8 +8,7 @@ import Dispatcher from '../Dispatcher';
 import NotesStore from './NotesStore';
 
 // TODO: persist this across restarts
-// TODO: support null selection
-let currentSelectionIndex = 0;
+let currentSelectionIndex = null;
 
 function changeCurrentSelectionIndex(index) {
   if (index !== currentSelectionIndex) {
@@ -40,6 +39,10 @@ Dispatcher.register(payload => {
       break;
     case Actions.NOTE_SELECTED:
       changeCurrentSelectionIndex(payload.index);
+      break;
+    case Actions.NOTES_LOADED:
+      currentSelectionIndex = NotesStore.notes.size ? 0 : null;
+      NoteSelectionStore.emit('change');
       break;
     case Actions.PREVIOUS_NOTE_SELECTED:
       decrementCurrentSelectionIndex();

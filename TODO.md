@@ -1,9 +1,3 @@
-GOALS
-
-- get started with Electron: https://github.com/atom/electron
-- potentially check out: https://github.com/atom/electron-starter
-- get "self-hosted" ASAP
-
 FEATURES
 
 Base features (motivating features):
@@ -26,10 +20,12 @@ Nice to haves:
 
 MINUTIAE
 
+- make `Store` base class and inherit some functionality from it to DRY up stores
 - fix missing scrollbars (this is intermittent; not sure of cause)
 - optimizing rendering with large numbers of notes (basically at 60fps so ok for now)
 - <NoteList> should scroll when using Command+{J,K}
 - fix slight <Separator> drift when resizing window
+- add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top)
 - implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
@@ -54,6 +50,8 @@ IDEAS
 
 ARCHIVES
 
+- [DONE] get started with Electron: https://github.com/atom/electron
+- [DONE] potentially check out: https://github.com/atom/electron-starter
 - [DONE] get Babel working
 - [DONE] figure out how to bootstrap render processes (require modules etc)
 - [DONE] is it possible to render directly from JS without an intermediate HTML file?

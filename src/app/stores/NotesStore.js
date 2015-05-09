@@ -18,26 +18,8 @@ const readFile = Promise.promisify(fs.readFile);
 
 const notesDir = path.join(process.env.HOME, 'Documents', 'Notes');
 
-// TODO: make sure the rest of the code can handle the no-notes case
-let notes = Immutable.fromJS([
-  {
-    id: 0,
-    title: 'sample title',
-    text: 'sample body',
-  },
-  {
-    id: 1,
-    title: 'another sample title',
-    text: 'some more sample body text',
-  },
-  {
-    id: 2,
-    title: 'yet another sample title',
-    text: 'and here is another sample body',
-  }
-]);
-
-let noteID = 3; // TODO: make this 0 once we no longer need sample data
+let notes = Immutable.List();
+let noteID = 0;
 
 readdir(notesDir)
   .filter(
@@ -59,7 +41,7 @@ readdir(notesDir)
   )
   .then(data => {
     notes = notes.push(...data);
-    NotesStore.emit('change');
+    Actions.notesLoaded();
   })
   .catch(error => console.log('something went wrong', error));
 
@@ -70,6 +52,9 @@ Dispatcher.register(payload => {
         [payload.noteID, 'title'],
         note => payload.title
       );
+      NotesStore.emit('change');
+      break;
+    case Actions.NOTES_LOADED:
       NotesStore.emit('change');
       break;
   }
