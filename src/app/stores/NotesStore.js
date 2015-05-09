@@ -6,14 +6,13 @@
 import {EventEmitter} from 'events';
 import Immutable from 'immutable';
 import Promise from 'bluebird';
+import fs from 'fs';
 import path from 'path';
 import process from 'process';
-import remote from 'remote';
 
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
 
-const fs = remote.require('fs');
 const readdir = Promise.promisify(fs.readdir);
 const readFile = Promise.promisify(fs.readFile);
 
@@ -40,7 +39,6 @@ let notes = Immutable.fromJS([
 
 let noteID = 3; // TODO: make this 0 once we no longer need sample data
 
-console.time('reading');
 readdir(notesDir)
   .filter(
     fileName => path.extname(fileName) === '.txt',
@@ -60,7 +58,6 @@ readdir(notesDir)
     {concurrency: 5}
   )
   .then(data => {
-    console.timeEnd('reading');
     notes = notes.push(...data);
     NotesStore.emit('change');
   })
