@@ -62,10 +62,6 @@ export default class NoteList extends React.Component {
     this.setState({focused: false});
   }
 
-  _onClickNotePreview(index) {
-    Actions.noteSelected({index});
-  }
-
   @autobind
   _onFocus() {
     this.setState({focused: true});
@@ -90,7 +86,6 @@ export default class NoteList extends React.Component {
           focused={this.state.focused && selected}
           key={i}
           noteID={i}
-          onClick={this._onClickNotePreview.bind(this, i)}
           selected={selected}
           title={note.get('title')}
           text={note.get('text').substr(0, PREVIEW_LENGTH)}

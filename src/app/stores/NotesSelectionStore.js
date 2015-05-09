@@ -37,6 +37,10 @@ Dispatcher.register(payload => {
     case Actions.NEXT_NOTE_SELECTED:
       incrementCurrentSelectionIndex();
       break;
+    case Actions.NOTE_DESELECTED:
+      currentSelectionIndex = null;
+      NoteSelectionStore.emit('change');
+      break;
     case Actions.NOTE_SELECTED:
       changeCurrentSelectionIndex(payload.index);
       break;

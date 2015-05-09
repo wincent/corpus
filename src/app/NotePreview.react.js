@@ -13,7 +13,6 @@ export default class NotePreview extends React.Component {
   static propTypes = {
     focused: React.PropTypes.bool,
     noteID: React.PropTypes.number.isRequired,
-    onClick: React.PropTypes.func.isRequired,
     selected: React.PropTypes.bool,
     text: React.PropTypes.string.isRequired,
     title: React.PropTypes.string.isRequired,
@@ -95,6 +94,29 @@ export default class NotePreview extends React.Component {
   }
 
   @autobind
+  _onClick(event) {
+    if (event.metaKey && event.shiftKey) {
+      // TODO: in nvALT this is some kind o drag;
+      // eg. to a text document -> copies path
+      // to desktop -> copies document
+    } else if (event.metaKey) {
+      if (this.props.selected) {
+        console.log('GOLD');
+        Actions.noteDeselected({index: this.props.noteID});
+      } else {
+        Actions.noteSelected({index: this.props.noteID});
+        // TODO: support multiple selection; which means our store will need to
+        // get more sophisticated
+      }
+    } else if (event.shiftKey) {
+      Actions.noteSelected({index: this.props.noteID});
+      // TODO: support range selection via shift
+    } else {
+      Actions.noteSelected({index: this.props.noteID});
+    }
+  }
+
+  @autobind
   _onDoubleClick() {
     this.setState({
       isEditing: true,
@@ -136,7 +158,9 @@ export default class NotePreview extends React.Component {
     } else {
       const styles = this._getStyles();
       return (
-        <p onDoubleClick={this._onDoubleClick} style={styles.title}>
+        <p
+          onDoubleClick={this._onDoubleClick}
+          style={styles.title}>
           {this.props.title}
         </p>
       );
@@ -146,7 +170,7 @@ export default class NotePreview extends React.Component {
   render() {
     const styles = this._getStyles();
     return (
-      <li onClick={this.props.onClick} style={styles.root}>
+      <li onClick={this._onClick} style={styles.root}>
         {this._renderTitle()}
         <p style={styles.text}>
           {this.props.text}

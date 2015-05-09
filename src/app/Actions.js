@@ -17,6 +17,7 @@ function dispatch(type: string, payload?: Object): void {
 const actionTypes = keyMirror({
   NEXT_NOTE_SELECTED: null,
   NOTES_LOADED: null,
+  NOTE_DESELECTED: null,
   NOTE_SELECTED: null,
   NOTE_TITLE_CHANGED: null,
   PREVIOUS_NOTE_SELECTED: null,
@@ -25,6 +26,10 @@ const actionTypes = keyMirror({
 const actionCreators = {
   nextNote() {
     dispatch(actionTypes.NEXT_NOTE_SELECTED);
+  },
+
+  noteDeselected(payload) {
+    dispatch(actionTypes.NOTE_DESELECTED, payload);
   },
 
   noteSelected(payload) {
