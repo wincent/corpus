@@ -27,51 +27,62 @@ let selection = Immutable.OrderedSet();
  */
 let totalDelta = 0;
 
+let initialLocation = null;
+
+function resetSelectionTracking() {
+  totalDelta = 0;
+  initialLocation = null;
+}
+
 function adjustSelection(delta) {
   const lastLocation = selection.last();
   if (lastLocation == null) {
-    totalDelta = 0; // reset
     return delta ? selectFirst() : selectLast();
-  } else {
-    const initialLocation = lastLocation - totalDelta;
-    const previousDelta = totalDelta;
-    totalDelta = clamp(
-      totalDelta + delta, // desired distance from where we started
-      -initialLocation, // limit of upwards selection
-      NotesStore.notes.size - initialLocation - 1 // limit of downwards selection
-    );
+  } else if (initialLocation == null) {
+    // Starting selection.
+    resetSelectionTracking();
+    initialLocation = lastLocation;
+  }
 
-    if (totalDelta < previousDelta) {
-      // Moving upwards.
-      if (totalDelta >= 0) {
-        // Reducing downwards selection.
-        return selection.remove(initialLocation + totalDelta + 1);
+  const previousDelta = totalDelta;
+  totalDelta = clamp(
+    totalDelta + delta, // desired distance from where we started
+    -initialLocation, // limit of upwards selection
+    NotesStore.notes.size - initialLocation - 1 // limit of downwards selection
+  );
+
+  if (totalDelta < previousDelta) {
+    // Moving upwards.
+    if (totalDelta >= 0) {
+      // Reducing downwards selection.
+      return selection.remove(initialLocation + totalDelta + 1);
+    } else {
+      // Extending upwards selection.
+      if (selection.has(initialLocation + totalDelta)) {
+        // Need to skip already-selected selection; recurse.
+        totalDelta = previousDelta;
+        return adjustSelection(delta - 1);
       } else {
-        // Extending upwards selection.
-        if (selection.has(lastLocation + delta)) {
-          // Need to skip already-selected selection; recurse.
-          return adjustSelection(delta - 1);
-        } else {
-          return selection.add(lastLocation + delta);
-        }
+        return selection.add(initialLocation + totalDelta);
       }
-    } else if (totalDelta > previousDelta) {
-      // We're moving downwards.
-      if (totalDelta > 0) {
-        // Extending downwards selection.
-        if (selection.has(lastLocation + delta)) {
-          // Need to skip already-selected selection; recurse.
-          return adjustSelection(delta + 1);
-        } else {
-          return selection.add(lastLocation + delta);
-        }
+    }
+  } else if (totalDelta > previousDelta) {
+    // We're moving downwards.
+    if (totalDelta >= 0) {
+      // Extending downwards selection.
+      if (selection.has(initialLocation + totalDelta)) {
+        // Need to skip already-selected selection; recurse.
+        totalDelta = previousDelta;
+        return adjustSelection(delta + 1);
       } else {
-        // Reducing upwards selection.
-        return selection.remove(initialLocation + totalDelta - 1);
+        return selection.add(initialLocation + totalDelta);
       }
     } else {
-      return selection; // nothing to do
+      // Reducing upwards selection.
+      return selection.remove(initialLocation + totalDelta - 1);
     }
+  } else {
+    return selection; // nothing to do
   }
 }
 
@@ -80,7 +91,7 @@ function change(action, changer) {
     action !== Actions.ADJUST_NOTE_SELECTION_DOWN &&
     action !== Actions.ADJUST_NOTE_SELECTION_UP
   ) {
-    totalDelta = 0; // reset
+    resetSelectionTracking();
   }
   const previousSelection = selection;
   selection = changer.call();
