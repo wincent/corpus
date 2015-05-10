@@ -19,11 +19,12 @@ export default class Note extends React.Component {
     return {
       root: {
         WebkitUserSelect: this.state.focused ? 'inherit' : 'none',
-        padding: '8px',
         fontFamily: 'Monaco',
         fontSize: '12px',
-        whiteSpace: 'pre-wrap',
+        outline: 0,
         overflowWrap: 'break-word',
+        padding: '8px',
+        whiteSpace: 'pre-wrap',
       },
     };
   }
