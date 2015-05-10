@@ -13,6 +13,7 @@ const styles = {
     borderLeft: '1px solid #c3c3c3',
     borderRight: '1px solid #bebebe',
     flexGrow: 0,
+    outline: 0,
     width: '8px',
   },
 };
