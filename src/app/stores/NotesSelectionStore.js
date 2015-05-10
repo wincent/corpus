@@ -27,8 +27,6 @@ let selection = Immutable.OrderedSet();
  */
 let totalDelta = 0;
 
-// TODO: skip "non-holes" when moving past them (ie. selected 2, 4, 6 -> as you
-// move up from 6 you should select 5 then 3 then 1)
 function adjustSelection(delta) {
   const lastLocation = selection.last();
   if (lastLocation == null) {
@@ -44,19 +42,33 @@ function adjustSelection(delta) {
     );
 
     if (totalDelta < previousDelta) {
-      // We're moving upwards.
-      return (
-        totalDelta >= 0 ?
-        selection.remove(lastLocation) : // Reducing downwards selection.
-        selection.add(lastLocation - 1) // Extending upwards selection.
-      );
+      // Moving upwards.
+      if (totalDelta >= 0) {
+        // Reducing downwards selection.
+        return selection.remove(lastLocation);
+      } else {
+        // Extending upwards selection.
+        if (selection.has(lastLocation + delta)) {
+          // Need to skip already-selected selection; recurse.
+          return adjustSelection(delta - 1);
+        } else {
+          return selection.add(lastLocation + delta);
+        }
+      }
     } else if (totalDelta > previousDelta) {
       // We're moving downwards.
-      return (
-        totalDelta > 0 ?
-        selection.add(lastLocation + 1) :// Extending downwards selection.
-        selection.remove(lastLocation) // Reducing upwards selection.
-      );
+      if (totalDelta > 0) {
+        // Extending downwards selection.
+        if (selection.has(lastLocation + delta)) {
+          // Need to skip already-selected selection; recurse.
+          return adjustSelection(delta + 1);
+        } else {
+          return selection.add(lastLocation + delta);
+        }
+      } else {
+        // Reducing upwards selection.
+        return selection.remove(lastLocation);
+      }
     } else {
       return selection; // nothing to do
     }

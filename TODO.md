@@ -49,6 +49,7 @@ MINUTIAE
 - Escape should unfocus the NoteList and clear the selection (focus reverts to OmniBar)
 - [DONE] Escape when editing note preview subject should abort editing
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
+- write linter (plugin?) that warns if files don't have license headers
 
 NICE TO HAVES
 
