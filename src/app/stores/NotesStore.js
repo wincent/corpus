@@ -49,7 +49,7 @@ readdir(notesDir)
     {concurrency: 5}
   )
   .then(data => {
-    notes = notes.push(...data);
+    notes = notes.push(...data).sortBy(note => note.get('mtime')).reverse();
     Actions.notesLoaded();
   })
   .catch(error => handleError(error, 'Failed to read notes from disk'));
