@@ -93,7 +93,7 @@ export default class NoteList extends React.Component {
     // positives, we only listen when we're focused, and we use `setTimeout`
     // here because otherwise we wind up with a "selectionchange" event
     // immediately after focusing.
-    setTimeout(this._addListeners, 0);
+    setTimeout(this._addListeners, 200);
     this.setState({focused: true});
   }
 
