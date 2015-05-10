@@ -45,7 +45,7 @@ function adjustSelection(delta) {
       // Moving upwards.
       if (totalDelta >= 0) {
         // Reducing downwards selection.
-        return selection.remove(lastLocation);
+        return selection.remove(initialLocation + totalDelta + 1);
       } else {
         // Extending upwards selection.
         if (selection.has(lastLocation + delta)) {
@@ -67,7 +67,7 @@ function adjustSelection(delta) {
         }
       } else {
         // Reducing upwards selection.
-        return selection.remove(lastLocation);
+        return selection.remove(initialLocation + totalDelta - 1);
       }
     } else {
       return selection; // nothing to do
