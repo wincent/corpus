@@ -5,25 +5,37 @@
 
 import React from 'react';
 
-const styles = {
-  root: {
-    padding: '8px',
-    fontFamily: 'Monaco',
-    fontSize: '12px',
-    whiteSpace: 'pre-wrap',
-    overflowWrap: 'break-word',
-  },
-};
-
 export default class Note extends React.Component {
   static propTypes = {
     note: React.PropTypes.object, // TODO: better shape for this
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {focused: false};
+  }
+
+  _getStyles() {
+    return {
+      root: {
+        WebkitUserSelect: this.state.focused ? 'inherit' : 'none',
+        padding: '8px',
+        fontFamily: 'Monaco',
+        fontSize: '12px',
+        whiteSpace: 'pre-wrap',
+        overflowWrap: 'break-word',
+      },
+    };
+  }
+
   render() {
     if (this.props.note) {
       return (
-        <div style={styles.root}>
+        <div
+          onBlur={() => this.setState({focused: false})}
+          onFocus={() => this.setState({focused: true})}
+          style={this._getStyles().root}
+          tabIndex={3}>
           {this.props.note.get('text')}
         </div>
       );

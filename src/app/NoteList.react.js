@@ -18,18 +18,19 @@ const PREVIEW_LENGTH = 250;
 
 const styles = {
   root: {
+    WebkitUserSelect: 'none',
     background: '#ebebeb',
     cursor: 'default',
     margin: 0,
-    padding: 0,
     minHeight: 'calc(100vh - 36px)', // hack to ensure full background coverage
-    WebkitUserSelect: 'none',
+    padding: 0,
   }
 };
 
 export default class NoteList extends React.Component {
   constructor(props) {
     super(props);
+    this._listening = false;
     this.state = {
       focused: false,
       notes: NotesStore.notes,
@@ -48,6 +49,26 @@ export default class NoteList extends React.Component {
   }
 
   @autobind
+  _addListeners() {
+    if (!this._listening) {
+      document.addEventListener('selectionchange', this._selectionChanged);
+      this._listening = true;
+    }
+  }
+
+  _removeListeners() {
+    if (this._listening) {
+      document.removeEventListener('selectionchange', this._selectionChanged);
+      this._listening = false;
+    }
+  }
+
+  @autobind
+  _selectionChanged() {
+    Actions.allNotesSelected();
+  }
+
+  @autobind
   _updateNoteSelection() {
     this.setState({selection: NotesSelectionStore.selection});
   }
@@ -59,11 +80,20 @@ export default class NoteList extends React.Component {
 
   @autobind
   _onBlur() {
+    this._removeListeners();
     this.setState({focused: false});
   }
 
   @autobind
   _onFocus() {
+    // In order to avoid re-implementing the first-responder wheel, we need to
+    // handle "Select All" especially here. When we're focused, we want to
+    // intercept it. We do this by ensuring that `Note.react` has `user-select:
+    // none`, and we listen for "selectionchange". In order to elimate false
+    // positives, we only listen when we're focused, and we use `setTimeout`
+    // here because otherwise we wind up with a "selectionchange" event
+    // immediately after focusing.
+    setTimeout(this._addListeners, 0);
     this.setState({focused: true});
   }
 
@@ -118,7 +148,7 @@ export default class NoteList extends React.Component {
         onFocus={this._onFocus}
         onKeyDown={this._onKeyDown}
         style={styles.root}
-        tabIndex={1}
+        tabIndex={2}
       >
         {this._renderNotes()}
       </ul>

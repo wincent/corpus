@@ -100,6 +100,12 @@ function change(action, changer) {
   }
 }
 
+function selectAll() {
+  // NOTE: once we support deletion, will need to worry about holes
+  const range = Immutable.Range(0, NotesStore.notes.size);
+  return selection.clear().merge(range);
+}
+
 function selectFirst() {
   selection = selection.clear();
   return NotesStore.notes.size ? selection.add(0) : selection;
@@ -147,9 +153,7 @@ Dispatcher.register(payload => {
       change(payload.type, () => selection.clear());
       break;
     case Actions.ALL_NOTES_SELECTED:
-      // TODO: implement this; will need to be sure that we only get this
-      // message when <NoteList> is focused;
-      // perhaps we need a store for that too...
+      change(payload.type, selectAll);
       break;
     case Actions.ADJUST_NOTE_SELECTION_DOWN:
       change(payload.type, () => adjustSelection(+1));

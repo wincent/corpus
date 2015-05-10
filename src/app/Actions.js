@@ -39,6 +39,10 @@ const actionCreators = {
     dispatch(actionTypes.ADJUST_NOTE_SELECTION_UP);
   },
 
+  allNotesSelected() {
+    dispatch(actionTypes.ALL_NOTES_SELECTED);
+  },
+
   deselectAll() {
     dispatch(actionTypes.ALL_NOTES_DESELECTED);
   },

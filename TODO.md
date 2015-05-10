@@ -47,7 +47,18 @@ MINUTIAE
 - [DONE] fix: start drag in NoteList or NoteView up towards OmniBar and you see unwanted user-select
 - [DONE] fix: text cursor shows up when hovering over "No Notes Selected"
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
-- don't need FocusStore; can just subscribe to Select-All in notes list via ipc and do the action if currently have focus
+- Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
+- "Select All" when NoteList has focus should select all notes:
+  - don't need FocusStore; could subscribe to Select-All in notes list via ipc and do the action if currently have focus
+  - but then, everybody who wants a select all behavior would need to do the same, and figure out whether it has focus or not
+    (currently that's the note view, the OmniBar and the title in the NotePreview)
+  - would be nicer to have an event, though, which we can stopPropagation on;
+    selectionchange works, but by the time we get it it is too late;
+    we can deselect with getSelection().removeAllRanges(), but you get a visible flicker
+  - otherwise we end up having to implement our own first-responder logic for select all, which kind of stinks
+  - thought about have `user-select: none` on Note.react to prevent it getting
+    selected, but then we don't get a selectionchanged event
+- Command-R to rename a note (focuses title in NotePreview)
 
 NICE TO HAVES
 

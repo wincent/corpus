@@ -42,6 +42,7 @@ export default class Separator extends React.Component {
         className="separator"
         onMouseDown={this._onMouseDown}
         style={styles.root}
+        tabIndex={-1}
       />
     );
   }

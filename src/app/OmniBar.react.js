@@ -100,7 +100,7 @@ export default class OmniBar extends React.Component {
           onChange={this._onChange}
           placeholder="Search or Create"
           style={styles.input}
-          tabIndex={0}
+          tabIndex={1}
           type="search"
           value={this.state.value}
         />
