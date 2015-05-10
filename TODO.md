@@ -48,6 +48,7 @@ MINUTIAE
 - [DONE] Select a note, hold command, tap up or down; it should select the first or last note
 - Escape should unfocus the NoteList and clear the selection (focus reverts to OmniBar)
 - [DONE] Escape when editing note preview subject should abort editing
+- write tests for the logic in NotesSelectionStore; it's pretty complicated
 
 NICE TO HAVES
 
