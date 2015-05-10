@@ -45,7 +45,7 @@ MINUTIAE
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
 - write linter (plugin?) that warns if files don't have license headers
 - [DONE] fix: start drag in NoteList or NoteView up towards OmniBar and you see unwanted user-select
-- fix: text cursor shows up when hovering over "No Notes Selected"
+- [DONE] fix: text cursor shows up when hovering over "No Notes Selected"
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
 - don't need FocusStore; can just subscribe to Select-All in notes list via ipc and do the action if currently have focus
 

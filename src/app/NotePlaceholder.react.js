@@ -8,6 +8,7 @@ import React from 'react';
 const styles = {
   root: {
     alignItems: 'center',
+    cursor: 'default',
     display: 'flex',
     justifyContent: 'center',
     minHeight: 'calc(100vh - 36px)',
