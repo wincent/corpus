@@ -89,6 +89,11 @@ export default class OmniBar extends React.Component {
     //   `onChange` or `readOnly`. Check the render method of `OmniBar`.
   }
 
+  _onFocus(event) {
+    var input = event.currentTarget;
+    input.setSelectionRange(0, input.value.length);
+  }
+
   render() {
     let rootStyles = {
       ...styles.root,
@@ -98,6 +103,7 @@ export default class OmniBar extends React.Component {
       <div style={rootStyles}>
         <input
           onChange={this._onChange}
+          onFocus={this._onFocus}
           placeholder="Search or Create"
           style={styles.input}
           tabIndex={1}
