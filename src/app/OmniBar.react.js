@@ -15,6 +15,7 @@ const styles = {
     width: '100%',
   },
   root: {
+    WebkitUserSelect: 'none',
     borderBottom: '1px solid #d1d1d1',
     flexGrow: 0,
     padding: '4px 8px',

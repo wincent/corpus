@@ -26,11 +26,10 @@ MINUTIAE
 - <NoteList> should scroll <NotePreview> intro view using Command+{J,K} or UP/DOWN to switch notes (and {Shift,Commmand}+{Up,DOWN} to jump etc)
 - fix slight <Separator> drift when resizing window
 - implement notes-list ordering based on last-updated timestamp
-- add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top)
+- add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
 - implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
-- [DONE] for small windows, should collapse left pane once it shrinks below a certain size; heck, do it for big windows too
 - get app icon
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
 - tidy up ugly handling of current-selected-index `null` values
@@ -40,16 +39,15 @@ MINUTIAE
 - tab in note should insert a tab; shift-tab should go back to OmniBar
 - tab when NotePreview is focused should shift to current note
 - typing when NotePreview is focused should shift focus to OmniBar and insert
-- [DONE] when no notes are selected, OmniBar should show placeholder text of "Search or Create"
 - OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
 - Command+L should focus OmniBar
-- [DONE] Select a note, hold shift, tap up or down; it should do a range selection
-- Make range adjustment work with multiple selections with gaps between them
-- [DONE] Select a note, hold command, tap up or down; it should select the first or last note
 - Escape should unfocus the NoteList and clear the selection (focus reverts to OmniBar)
-- [DONE] Escape when editing note preview subject should abort editing
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
 - write linter (plugin?) that warns if files don't have license headers
+- [DONE] fix: start drag in NoteList or NoteView up towards OmniBar and you see unwanted user-select
+- fix: text cursor shows up when hovering over "No Notes Selected"
+- option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
+- don't need FocusStore; can just subscribe to Select-All in notes list via ipc and do the action if currently have focus
 
 NICE TO HAVES
 
@@ -57,6 +55,7 @@ NICE TO HAVES
 - implment double-click-to-tag (lower half of <NotePreview>)
 - i18n
 - generated documentation
+- show Git diffs in-app (Might take inspiration from Gundo)
 
 IDEAS
 
@@ -87,3 +86,9 @@ ARCHIVES
 - [DONE] fix grabbing cursor during <Separator> drags
 - [DONE] read files off disk instead of using fake data (to decide: load whole files or just snippets and lazy-load the rest)
 - [DONE] <NoteView> should never scroll sideways (it is now, which may account for the missing scrollbars)
+- [DONE] for small windows, should collapse left pane once it shrinks below a certain size; heck, do it for big windows too
+- [DONE] when no notes are selected, OmniBar should show placeholder text of "Search or Create"
+- [DONE] Select a note, hold shift, tap up or down; it should do a range selection
+- [DONE] Make range adjustment work with multiple selections with gaps between them
+- [DONE] Select a note, hold command, tap up or down; it should select the first or last note
+- [DONE] Escape when editing note preview subject should abort editing
