@@ -60,6 +60,8 @@ export default class NoteList extends React.Component {
   }
 
   _removeListeners() {
+    clearTimeout(this._listenerTimeout);
+    this._listenerTimeout = null;
     if (this._listening) {
       document.removeEventListener('selectionchange', this._selectionChanged);
       this._listening = false;
@@ -83,8 +85,6 @@ export default class NoteList extends React.Component {
 
   @autobind
   _onBlur() {
-    clearTimeout(this._listenerTimeout);
-    this._listenerTimeout = null;
     this._removeListeners();
     this.setState({focused: false});
   }
