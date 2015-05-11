@@ -105,6 +105,7 @@ export default class OmniBar extends React.Component {
           onChange={this._onChange}
           onFocus={this._onFocus}
           placeholder="Search or Create"
+          ref={ref => ref && React.findDOMNode(ref).focus()}
           style={styles.input}
           tabIndex={1}
           type="search"
