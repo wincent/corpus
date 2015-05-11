@@ -11,7 +11,26 @@ import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
 
 const styles = {
+  cancel: {
+    color: '#bfbfbf',
+    fontSize: '14px',
+    position: 'absolute',
+    right: '8px',
+    top: '8px',
+  },
+  icon: {
+    color: '#565656',
+    fontSize: '14px',
+    left: '10px',
+    position: 'absolute',
+    top: '7px',
+  },
   input: {
+    WebkitAppearance: 'none', // only with this can we override padding
+    border: '1px solid #a0a0a0',
+    borderRadius: '4px',
+    lineHeight: '16px',
+    padding: '2px 20px 1px', // room for icons/controls
     width: '100%',
   },
   root: {
@@ -19,6 +38,7 @@ const styles = {
     borderBottom: '1px solid #d1d1d1',
     flexGrow: 0,
     padding: '4px 8px',
+    position: 'relative',
     minHeight: '32px',
   },
 };
@@ -108,6 +128,7 @@ export default class OmniBar extends React.Component {
     };
     return (
       <div style={rootStyles}>
+        <span className="icon-search" style={styles.icon}></span>
         <input
           onChange={this._onChange}
           onFocus={this._onFocus}
@@ -118,6 +139,7 @@ export default class OmniBar extends React.Component {
           type="text"
           value={this.state.value}
         />
+        <span className="icon-cancel-circled" style={styles.cancel}></span>
       </div>
     );
   }
