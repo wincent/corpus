@@ -31,6 +31,7 @@ export default class NoteList extends React.Component {
   constructor(props) {
     super(props);
     this._listening = false;
+    this._listenerTimeout = null;
     this.state = {
       focused: false,
       notes: NotesStore.notes,
@@ -46,6 +47,7 @@ export default class NoteList extends React.Component {
   componentWillUnmount() {
     NotesSelectionStore.removeListener('change', this._updateNoteSelection);
     NotesStore.removeListener('change', this._updateNotes);
+    this._removeListeners();
   }
 
   @autobind
@@ -80,6 +82,8 @@ export default class NoteList extends React.Component {
 
   @autobind
   _onBlur() {
+    clearTimeout(this._listenerTimeout);
+    this._listenerTimeout = null;
     this._removeListeners();
     this.setState({focused: false});
   }
@@ -93,7 +97,8 @@ export default class NoteList extends React.Component {
     // positives, we only listen when we're focused, and we use `setTimeout`
     // here because otherwise we wind up with a "selectionchange" event
     // immediately after focusing.
-    setTimeout(this._addListeners, 200);
+    clearTimeout(this._listenerTimeout);
+    this._listenerTimeout = setTimeout(this._addListeners, 200);
     this.setState({focused: true});
   }
 
