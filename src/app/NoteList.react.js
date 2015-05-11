@@ -5,6 +5,7 @@
 
 import React from 'react';
 import autobind from 'autobind-decorator';
+import shallowEqual from 'react/lib/shallowEqual';
 
 import Actions from './Actions';
 import Keys from './Keys';
@@ -128,6 +129,13 @@ export default class NoteList extends React.Component {
         event.preventDefault();
         break;
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      !shallowEqual(this.props, nextProps) ||
+      !shallowEqual(this.state, nextState)
+    );
   }
 
   _renderNotes() {

@@ -5,6 +5,7 @@
 
 import React from 'react';
 import autobind from 'autobind-decorator';
+import shallowEqual from 'react/lib/shallowEqual';
 
 import Actions from './Actions';
 import Keys from './Keys';
@@ -146,6 +147,13 @@ export default class NotePreview extends React.Component {
         this._endEditing(event);
         break;
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      !shallowEqual(this.props, nextProps) ||
+      !shallowEqual(this.state, nextState)
+    );
   }
 
   _renderTitle() {
