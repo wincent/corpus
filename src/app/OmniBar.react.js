@@ -115,7 +115,7 @@ export default class OmniBar extends React.Component {
           ref={ref => this._inputRef = ref}
           style={styles.input}
           tabIndex={1}
-          type="search"
+          type="text"
           value={this.state.value}
         />
       </div>
