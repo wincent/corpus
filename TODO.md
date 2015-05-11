@@ -20,7 +20,8 @@ Nice to haves:
 
 MINUTIAE
 
-- BUG: Double-clicking NotePreview title performs a "Select All" on NoteList
+- {UP,DOWN} when OmniBar is focused move to next previous note, and highlight note title (overrides default text field behavior)
+- focus ring for Omnibar, to match nvALT
 - make `Store` base class and inherit some functionality from it to DRY up stores
 - fix missing scrollbars (this is intermittent; not sure of cause)
 - optimize rendering with large numbers of notes (basically at 60fps so ok for now)
@@ -45,25 +46,11 @@ MINUTIAE
 - Escape should unfocus the NoteList and clear the selection (focus reverts to OmniBar)
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
 - write linter (plugin?) that warns if files don't have license headers
-- [DONE] fix: start drag in NoteList or NoteView up towards OmniBar and you see unwanted user-select
-- [DONE] fix: text cursor shows up when hovering over "No Notes Selected"
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
 - Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
-- "Select All" when NoteList has focus should select all notes:
-  - don't need FocusStore; could subscribe to Select-All in notes list via ipc and do the action if currently have focus
-  - but then, everybody who wants a select all behavior would need to do the same, and figure out whether it has focus or not
-    (currently that's the note view, the OmniBar and the title in the NotePreview)
-  - would be nicer to have an event, though, which we can stopPropagation on;
-    selectionchange works, but by the time we get it it is too late;
-    we can deselect with getSelection().removeAllRanges(), but you get a visible flicker
-  - otherwise we end up having to implement our own first-responder logic for select all, which kind of stinks
-  - thought about have `user-select: none` on Note.react to prevent it getting
-    selected, but then we don't get a selectionchanged event
 - Command-R to rename a note (focuses title in NotePreview)
-- should focus OmniBar on first load
 - build inverted index to make searching faster
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
-- [DONE] consider throttling note navigation with {UP,DOWN} or better still, speed it up
 - Save/Restore cursor position when moving between notes
 
 NICE TO HAVES
@@ -114,3 +101,9 @@ ARCHIVES
 - [DONE] Make range adjustment work with multiple selections with gaps between them
 - [DONE] Select a note, hold command, tap up or down; it should select the first or last note
 - [DONE] Escape when editing note preview subject should abort editing
+- [DONE] fix: start drag in NoteList or NoteView up towards OmniBar and you see unwanted user-select
+- [DONE] fix: text cursor shows up when hovering over "No Notes Selected"
+- [DONE] BUG: Double-clicking NotePreview title performs a "Select All" on NoteList
+- [DONE] consider throttling note navigation with {UP,DOWN} or better still, speed it up
+- [DONE] should focus OmniBar on first load
+- [DONE] "Select All" when NoteList has focus should select all notes:
