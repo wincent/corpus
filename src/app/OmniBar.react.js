@@ -13,10 +13,10 @@ import NotesStore from './stores/NotesStore';
 const styles = {
   cancel: {
     color: '#bfbfbf',
-    fontSize: '14px',
+    fontSize: '13px',
     position: 'absolute',
     right: '8px',
-    top: '8px',
+    top: '7px',
   },
   icon: {
     color: '#565656',
