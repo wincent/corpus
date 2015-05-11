@@ -20,6 +20,7 @@ Nice to haves:
 
 MINUTIAE
 
+- BUG: Double-clicking NotePreview title performs a "Select All" on NoteList
 - make `Store` base class and inherit some functionality from it to DRY up stores
 - fix missing scrollbars (this is intermittent; not sure of cause)
 - optimize rendering with large numbers of notes (basically at 60fps so ok for now)
@@ -59,6 +60,11 @@ MINUTIAE
   - thought about have `user-select: none` on Note.react to prevent it getting
     selected, but then we don't get a selectionchanged event
 - Command-R to rename a note (focuses title in NotePreview)
+- should focus OmniBar on first load
+- build inverted index to make searching faster
+- Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
+- [DONE] consider throttling note navigation with {UP,DOWN} or better still, speed it up
+- Save/Restore cursor position when moving between notes
 
 NICE TO HAVES
 
@@ -67,6 +73,11 @@ NICE TO HAVES
 - i18n
 - generated documentation
 - show Git diffs in-app (Might take inspiration from Gundo)
+
+BUGS
+
+- clicking on the separator focuses it; you have to tab or shift-tab to remove focus
+- want a three tab cycle (OmniBar -> NoteList -> Note) but we have a four-tab cycle (Body -> OmniBar -> NoteList -> Note); when body is active the focus is invisible
 
 IDEAS
 

@@ -55,7 +55,7 @@ export default class OmniBar extends React.Component {
   componentDidMount() {
     ipc.on('blur', () => this.setState({foreground: false}));
     ipc.on('focus', () => this.setState({foreground: true}));
-
+    React.findDOMNode(this._inputRef).focus();
     NotesSelectionStore.on('change', this._updateNote);
     NotesStore.on('change', this._updateNote);
   }
@@ -73,10 +73,17 @@ export default class OmniBar extends React.Component {
   _updateNote() {
     const note = getCurrentNote();
     if (this.state.note !== note) {
-      this.setState({
-        note,
-        value: getCurrentTitle(),
-      });
+      this.setState(
+        {
+          note,
+          value: getCurrentTitle(),
+        },
+        () => {
+          const input = React.findDOMNode(this._inputRef)
+          if (document.activeElement === input) {
+            input.setSelectionRange(0, input.value.length);
+          }
+        });
     }
   }
 
@@ -105,7 +112,7 @@ export default class OmniBar extends React.Component {
           onChange={this._onChange}
           onFocus={this._onFocus}
           placeholder="Search or Create"
-          ref={ref => ref && React.findDOMNode(ref).focus()}
+          ref={ref => this._inputRef = ref}
           style={styles.input}
           tabIndex={1}
           type="search"
