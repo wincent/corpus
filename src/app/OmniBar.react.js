@@ -39,7 +39,7 @@ const styles = {
     flexGrow: 0,
     padding: '4px 8px',
     position: 'relative',
-    minHeight: '32px',
+    minHeight: '36px',
   },
 };
 
