@@ -60,8 +60,13 @@ function adjustSelection(delta) {
       // Extending upwards selection.
       if (selection.has(initialLocation + totalDelta)) {
         // Need to skip already-selected selection; recurse.
-        totalDelta = previousDelta;
-        return adjustSelection(delta - 1);
+        if (initialLocation + totalDelta === 0) {
+          // Unless we're already at the top.
+          return selection;
+        } else {
+          totalDelta = previousDelta;
+          return adjustSelection(delta - 1);
+        }
       } else {
         return selection.add(initialLocation + totalDelta);
       }
@@ -72,8 +77,13 @@ function adjustSelection(delta) {
       // Extending downwards selection.
       if (selection.has(initialLocation + totalDelta)) {
         // Need to skip already-selected selection; recurse.
-        totalDelta = previousDelta;
-        return adjustSelection(delta + 1);
+        if (initialLocation + totalDelta === NotesStore.notes.size - 1) {
+          // Unless we're already at the bottom.
+          return selection;
+        } else {
+          totalDelta = previousDelta;
+          return adjustSelection(delta + 1);
+        }
       } else {
         return selection.add(initialLocation + totalDelta);
       }

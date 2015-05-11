@@ -21,7 +21,6 @@ Nice to haves:
 MINUTIAE
 
 - {UP,DOWN} when OmniBar is focused move to next previous note, and highlight note title (overrides default text field behavior)
-- focus ring for Omnibar, to match nvALT
 - make `Store` base class and inherit some functionality from it to DRY up stores
 - fix missing scrollbars (this is intermittent; not sure of cause)
 - optimize rendering with large numbers of notes (basically at 60fps so ok for now)
@@ -52,7 +51,6 @@ MINUTIAE
 - build inverted index to make searching faster
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
 - Save/Restore cursor position when moving between notes
-- Make decorator equivalent to PureRenderMixin for ES6 classes
 
 NICE TO HAVES
 
@@ -108,3 +106,6 @@ ARCHIVES
 - [DONE] consider throttling note navigation with {UP,DOWN} or better still, speed it up
 - [DONE] should focus OmniBar on first load
 - [DONE] "Select All" when NoteList has focus should select all notes:
+- [DONE] fix bugs with selection range extension: select top note, select a lower note, shift-up to just before the top note, then up again and enter an infinite loop
+- [DONE] focus ring for Omnibar, to match nvALT
+- [DONE] Make decorator equivalent to PureRenderMixin for ES6 classes
