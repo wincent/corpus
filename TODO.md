@@ -52,6 +52,7 @@ MINUTIAE
 - build inverted index to make searching faster
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
 - Save/Restore cursor position when moving between notes
+- Make decorator equivalent to PureRenderMixin for ES6 classes
 
 NICE TO HAVES
 

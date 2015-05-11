@@ -5,13 +5,13 @@
 
 import React from 'react';
 import autobind from 'autobind-decorator';
-import shallowEqual from 'react/lib/shallowEqual';
 
 import Actions from './Actions';
 import Keys from './Keys';
 import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
+import pure from './pure';
 
 // Don't want the DOM to contain all the text of all the notes.
 // Truncate to a length that can fill two 600px rows.
@@ -28,6 +28,7 @@ const styles = {
   }
 };
 
+@pure
 export default class NoteList extends React.Component {
   constructor(props) {
     super(props);
@@ -133,13 +134,6 @@ export default class NoteList extends React.Component {
         event.preventDefault();
         break;
     }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return (
-      !shallowEqual(this.props, nextProps) ||
-      !shallowEqual(this.state, nextState)
-    );
   }
 
   _renderNotes() {
