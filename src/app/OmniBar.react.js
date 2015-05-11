@@ -46,15 +46,15 @@ export default class OmniBar extends React.Component {
     super(props);
     const note = getCurrentNote();
     this.state = {
-      focused: true,
+      foreground: true,
       note,
       value: getCurrentTitle(),
     };
   }
 
   componentDidMount() {
-    ipc.on('blur', () => this.setState({focused: false}));
-    ipc.on('focus', () => this.setState({focused: true}));
+    ipc.on('blur', () => this.setState({foreground: false}));
+    ipc.on('focus', () => this.setState({foreground: true}));
 
     NotesSelectionStore.on('change', this._updateNote);
     NotesStore.on('change', this._updateNote);
@@ -66,7 +66,7 @@ export default class OmniBar extends React.Component {
   }
 
   _getBackgroundStyle() {
-    return this.state.focused ? 'linear-gradient(#d3d3d3, #d0d0d0)' : '#f6f6f6';
+    return this.state.foreground ? 'linear-gradient(#d3d3d3, #d0d0d0)' : '#f6f6f6';
   }
 
   @autobind
