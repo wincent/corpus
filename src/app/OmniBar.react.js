@@ -7,6 +7,7 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
+import Actions from './Actions';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
 
@@ -116,6 +117,11 @@ export default class OmniBar extends React.Component {
     //   `onChange` or `readOnly`. Check the render method of `OmniBar`.
   }
 
+  _onClick() {
+    // TODO: (focus input if not already focused)
+    Actions.deselectAll();
+  }
+
   _onFocus(event) {
     var input = event.currentTarget;
     input.setSelectionRange(0, input.value.length);
@@ -139,7 +145,11 @@ export default class OmniBar extends React.Component {
           type="text"
           value={this.state.value}
         />
-        <span className="icon-cancel-circled" style={styles.cancel}></span>
+        <span
+          className="icon-cancel-circled"
+          onClick={this._onClick}
+          style={styles.cancel}>
+        </span>
       </div>
     );
   }
