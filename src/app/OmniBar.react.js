@@ -8,6 +8,7 @@ import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
 import Actions from './Actions';
+import FocusStore from './stores/FocusStore';
 import Keys from './Keys';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
@@ -78,17 +79,26 @@ export default class OmniBar extends React.Component {
     ipc.on('blur', () => this.setState({foreground: false}));
     ipc.on('focus', () => this.setState({foreground: true}));
     React.findDOMNode(this._inputRef).focus();
+    FocusStore.on('change', this._updateFocus);
     NotesSelectionStore.on('change', this._updateNote);
     NotesStore.on('change', this._updateNote);
   }
 
   componentWillUnmount() {
+    FocusStore.removeListerner('change', this._updateFocus);
     NotesSelectionStore.removeListener('change', this._updateNote);
     NotesStore.removeListener('change', this._updateNote);
   }
 
   _getBackgroundStyle() {
     return this.state.foreground ? 'linear-gradient(#d3d3d3, #d0d0d0)' : '#f6f6f6';
+  }
+
+  @autobind
+  _updateFocus() {
+    if (FocusStore.focus === 'OmniBar') {
+      React.findDOMNode(this._inputRef).focus();
+    }
   }
 
   @autobind

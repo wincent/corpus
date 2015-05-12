@@ -36,7 +36,7 @@ export default class Note extends React.Component {
     switch (event.keyCode) {
       case Keys.ESCAPE:
         Actions.deselectAll();
-        // TODO: focus OmniBar
+        Actions.focusOmniBar();
         break;
     }
   }

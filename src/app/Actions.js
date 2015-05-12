@@ -27,6 +27,7 @@ const actionTypes = keyMirror({
   NOTE_RANGE_SELECTED: null,
   NOTE_SELECTED: null,
   NOTE_TITLE_CHANGED: null,
+  OMNI_BAR_FOCUS_REQUESTED: null,
   PREVIOUS_NOTE_SELECTED: null,
 });
 
@@ -49,6 +50,10 @@ const actionCreators = {
 
   firstNote() {
     dispatch(actionTypes.FIRST_NOTE_SELECTED);
+  },
+
+  focusOmniBar() {
+    dispatch(actionTypes.OMNI_BAR_FOCUS_REQUESTED);
   },
 
   lastNote() {

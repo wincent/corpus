@@ -122,6 +122,7 @@ export default class NoteList extends React.Component {
         break;
       case Keys.ESCAPE:
         Actions.deselectAll();
+        Actions.focusOmniBar();
         break;
       case Keys.UP:
         if (event.metaKey) {
