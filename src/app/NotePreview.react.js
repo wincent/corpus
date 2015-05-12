@@ -88,9 +88,8 @@ export default class NotePreview extends React.Component {
       isEditing: false,
       pendingTitle: null,
     });
-    // smell here: passing index to "noteID"; rename "noteID"
     Actions.noteTitleChanged({
-      noteID: this.props.index,
+      index: this.props.index,
       title: event.currentTarget.value,
     });
   }

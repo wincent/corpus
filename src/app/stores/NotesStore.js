@@ -65,7 +65,7 @@ Dispatcher.register(payload => {
   switch (payload.type) {
     case Actions.NOTE_TITLE_CHANGED:
       notes = notes.updateIn(
-        [payload.noteID, 'title'],
+        [payload.index, 'title'],
         note => payload.title
       );
       NotesStore.emit('change');
