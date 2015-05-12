@@ -5,6 +5,9 @@
 
 import React from 'react';
 
+import Actions from './Actions';
+import Keys from './Keys';
+
 export default class Note extends React.Component {
   static propTypes = {
     note: React.PropTypes.object, // TODO: better shape for this
@@ -29,12 +32,22 @@ export default class Note extends React.Component {
     };
   }
 
+  _onKeyDown(event) {
+    switch (event.keyCode) {
+      case Keys.ESCAPE:
+        Actions.deselectAll();
+        // TODO: focus OmniBar
+        break;
+    }
+  }
+
   render() {
     if (this.props.note) {
       return (
         <div
           onBlur={() => this.setState({focused: false})}
           onFocus={() => this.setState({focused: true})}
+          onKeyDown={this._onKeyDown}
           style={this._getStyles().root}
           tabIndex={3}>
           {this.props.note.get('text')}
