@@ -117,9 +117,10 @@ export default class OmniBar extends React.Component {
     //   `onChange` or `readOnly`. Check the render method of `OmniBar`.
   }
 
+  @autobind
   _onClick() {
-    // TODO: (focus input if not already focused)
     Actions.deselectAll();
+    React.findDOMNode(this._inputRef).focus();
   }
 
   _onFocus(event) {
