@@ -136,6 +136,38 @@ export default class NoteList extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.selection !== this.state.selection) {
+      if (this.state.notes.size) {
+        const parent = React.findDOMNode(this).parentNode;
+        if (!this.state.selection.size) {
+          // We have notes, but nothing selected; scroll to top.
+          parent.scrollTop = 0;
+        } else {
+          // Maintain last selection within view.
+          const lastIndex = this.state.selection.last();
+          const last = React.findDOMNode(this.refs[lastIndex]);
+          const lastTop = lastIndex * last.offsetHeight;
+          const scrollTop = parent.scrollTop;
+
+          const lowerCutoff =
+            scrollTop + // how far we've scrolled from the top
+            parent.offsetHeight - // how tall the viewport is
+            last.offsetHeight; // how tall each preview is
+          const upperCutoff = parent.scrollTop;
+
+          if (lastTop > lowerCutoff) {
+            // Element overlaps or is below the lower edge.
+            parent.scrollTop = scrollTop + (lastTop - lowerCutoff);
+          } else if (lastTop < upperCutoff) {
+            // Element overlaps or is above the upper edge.
+            parent.scrollTop = scrollTop - (upperCutoff - lastTop);
+          }
+        }
+      }
+    }
+  }
+
   _renderNotes() {
     return this.state.notes.map((note, i) => {
       const selected = this.state.selection.has(i);
@@ -144,6 +176,7 @@ export default class NoteList extends React.Component {
           focused={this.state.focused && selected}
           key={i}
           noteID={i}
+          ref={i}
           selected={selected}
           title={note.get('title')}
           text={note.get('text').substr(0, PREVIEW_LENGTH)}
