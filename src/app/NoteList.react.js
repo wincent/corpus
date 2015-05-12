@@ -13,10 +13,6 @@ import NotesStore from './stores/NotesStore';
 import performKeyboardNavigation from './performKeyboardNavigation';
 import pure from './pure';
 
-// Don't want the DOM to contain all the text of all the notes.
-// Truncate to a length that can fill two 600px rows.
-const PREVIEW_LENGTH = 250;
-
 const styles = {
   root: {
     WebkitUserSelect: 'none',
@@ -150,12 +146,11 @@ export default class NoteList extends React.Component {
       return (
         <NotePreview
           focused={this.state.focused && selected}
-          key={i}
-          noteID={i}
+          index={i}
+          key={note.get('id')}
+          note={note}
           ref={i}
           selected={selected}
-          title={note.get('title')}
-          text={note.get('text').substr(0, PREVIEW_LENGTH)}
         />
       );
     });

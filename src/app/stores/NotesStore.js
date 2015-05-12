@@ -21,7 +21,14 @@ const stat = Promise.promisify(fs.stat);
 const ignore = () => {};
 const notesDir = path.join(process.env.HOME, 'Documents', 'Notes');
 
+/**
+ * Ordered colllection of notes (as they appear in the NoteList).
+ */
 let notes = Immutable.List();
+
+/**
+ * Monotonically increasing, unique ID for each note.
+ */
 let noteID = 0;
 
 readdir(notesDir)

@@ -10,14 +10,19 @@ import Actions from './Actions';
 import Keys from './Keys';
 import pure from './pure';
 
+/**
+ * Don't want the DOM to contain all the text of all the notes.
+ * Truncate to a length that can fill two 600px rows.
+ */
+const PREVIEW_LENGTH = 250;
+
 @pure
 export default class NotePreview extends React.Component {
   static propTypes = {
     focused: React.PropTypes.bool,
-    noteID: React.PropTypes.number.isRequired,
+    index: React.PropTypes.number.isRequired,
+    note: React.PropTypes.object.isRequired, // TODO: better shape here
     selected: React.PropTypes.bool,
-    text: React.PropTypes.string.isRequired,
-    title: React.PropTypes.string.isRequired,
   };
   static defaultProps = {
     focused: false,
@@ -83,8 +88,9 @@ export default class NotePreview extends React.Component {
       isEditing: false,
       pendingTitle: null,
     });
+    // smell here: passing index to "noteID"; rename "noteID"
     Actions.noteTitleChanged({
-      noteID: this.props.noteID,
+      noteID: this.props.index,
       title: event.currentTarget.value,
     });
   }
@@ -107,16 +113,16 @@ export default class NotePreview extends React.Component {
       // to desktop -> copies document
     } else if (event.metaKey) {
       if (this.props.selected) {
-        Actions.noteDeselected({index: this.props.noteID});
+        Actions.noteDeselected({index: this.props.index});
       } else {
-        Actions.noteSelected({index: this.props.noteID});
+        Actions.noteSelected({index: this.props.index});
       }
     } else if (event.shiftKey) {
-      Actions.noteRangeSelected({index: this.props.noteID});
+      Actions.noteRangeSelected({index: this.props.index});
     } else {
       Actions.noteSelected({
         exclusive: true,
-        index: this.props.noteID,
+        index: this.props.index,
       });
     }
   }
@@ -166,11 +172,12 @@ export default class NotePreview extends React.Component {
       );
     } else {
       const styles = this._getStyles();
+      const title = this.props.note.get('title').substr(0, PREVIEW_LENGTH);
       return (
         <p
           onDoubleClick={this._onDoubleClick}
           style={styles.title}>
-          {this.props.title}
+          {title}
         </p>
       );
     }
@@ -182,7 +189,7 @@ export default class NotePreview extends React.Component {
       <li onClick={this._onClick} style={styles.root}>
         {this._renderTitle()}
         <p style={styles.text}>
-          {this.props.text}
+          {this.props.note.get('text')}
         </p>
       </li>
     );

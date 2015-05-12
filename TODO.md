@@ -50,6 +50,7 @@ MINUTIAE
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
 - Save/Restore cursor position when moving between notes
 - Investigate scroll slow-down (press-and-hold DOWN key; observe it slow down the farther you go, but if you release then press-and-hold it again it gets faster once more)
+- in nvALT, when you click on the note placeholder, the OmniBar retains focus
 
 NICE TO HAVES
 
