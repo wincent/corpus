@@ -7,10 +7,10 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 
 import Actions from './Actions';
-import Keys from './Keys';
 import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
+import performKeyboardNavigation from './performKeyboardNavigation';
 import pure from './pure';
 
 // Don't want the DOM to contain all the text of all the notes.
@@ -109,32 +109,7 @@ export default class NoteList extends React.Component {
   }
 
   _onKeyDown(event) {
-    switch (event.keyCode) {
-      case Keys.DOWN:
-        if (event.metaKey) {
-          Actions.lastNote();
-        } else if (event.shiftKey) {
-          Actions.adjustNoteSelectionDown();
-        } else {
-          Actions.nextNote();
-        }
-        event.preventDefault();
-        break;
-      case Keys.ESCAPE:
-        Actions.deselectAll();
-        Actions.focusOmniBar();
-        break;
-      case Keys.UP:
-        if (event.metaKey) {
-          Actions.firstNote();
-        } else if (event.shiftKey) {
-          Actions.adjustNoteSelectionUp();
-        } else {
-          Actions.previousNote();
-        }
-        event.preventDefault();
-        break;
-    }
+    performKeyboardNavigation(event);
   }
 
   componentDidUpdate(prevProps, prevState) {
