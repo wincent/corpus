@@ -8,6 +8,7 @@ import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
 import Actions from './Actions';
+import Keys from './Keys';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
 
@@ -128,6 +129,19 @@ export default class OmniBar extends React.Component {
     input.setSelectionRange(0, input.value.length);
   }
 
+  _onKeyDown(event) {
+    switch (event.keyCode) {
+      case Keys.DOWN:
+        Actions.nextNote();
+        event.preventDefault();
+        break;
+      case Keys.UP:
+        Actions.previousNote();
+        event.preventDefault();
+        break;
+    }
+  }
+
   render() {
     let rootStyles = {
       ...styles.root,
@@ -139,6 +153,7 @@ export default class OmniBar extends React.Component {
         <input
           onChange={this._onChange}
           onFocus={this._onFocus}
+          onKeyDown={this._onKeyDown}
           placeholder="Search or Create"
           ref={ref => this._inputRef = ref}
           style={styles.input}
