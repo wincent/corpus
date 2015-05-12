@@ -20,11 +20,9 @@ Nice to haves:
 
 MINUTIAE
 
-- {UP,DOWN} when OmniBar is focused move to next previous note, and highlight note title (overrides default text field behavior)
 - make `Store` base class and inherit some functionality from it to DRY up stores
 - fix missing scrollbars (this is intermittent; not sure of cause)
 - optimize rendering with large numbers of notes (basically at 60fps so ok for now)
-- <NoteList> should scroll <NotePreview> intro view using Command+{J,K} or UP/DOWN to switch notes (and {Shift,Commmand}+{Up,DOWN} to jump etc)
 - fix slight <Separator> drift when resizing window
 - implement notes-list ordering based on last-updated timestamp
 - add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
@@ -38,11 +36,10 @@ MINUTIAE
 - implement contextual menu for <NotePreview>
 - tab from OmniBar should focus current note, or do nothing if there is no current note
 - tab in note should insert a tab; shift-tab should go back to OmniBar
-- tab when NotePreview is focused should shift to current note
 - typing when NotePreview is focused should shift focus to OmniBar and insert
 - OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
-- Command+L should focus OmniBar
-- Escape should unfocus the NoteList and clear the selection (focus reverts to OmniBar)
+- Command+L should focus OmniBar (note: this will require us to build that focus store? or can we just listen directly via ipc?)
+- Escape should unfocus the NoteList and clear the selection (done) and rever focus to OmniBar (not yet done)
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
 - write linter (plugin?) that warns if files don't have license headers
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
@@ -109,3 +106,7 @@ ARCHIVES
 - [DONE] fix bugs with selection range extension: select top note, select a lower note, shift-up to just before the top note, then up again and enter an infinite loop
 - [DONE] focus ring for Omnibar, to match nvALT
 - [DONE] Make decorator equivalent to PureRenderMixin for ES6 classes
+- [DONE] {UP,DOWN} when OmniBar is focused move to next previous note, and highlight note title (overrides default text field behavior)
+- [DONE] <NoteList> should scroll <NotePreview> intro view using Command+{J,K} or UP/DOWN to switch notes (and {Shift,Commmand}+{Up,DOWN} to jump etc)
+- [DONE] tab when NotePreview is focused should shift to current note
+- [DONE] Clearing (X, or hitting Escape) in OmniBar should scroll NoteList to top
