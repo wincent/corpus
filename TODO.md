@@ -39,7 +39,8 @@ MINUTIAE
 - typing when NotePreview is focused should shift focus to OmniBar and insert
 - OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
 - Command+L should focus OmniBar (note: this will require us to build that focus store? or can we just listen directly via ipc?)
-- Escape should unfocus the NoteList and clear the selection (done) and rever focus to OmniBar (not yet done)
+- Escape should unfocus the NoteList and clear the selection (done) and revert focus to OmniBar (not yet done)
+- Escape should also unfocus Note view, clear the selection and revert focus to OmniBar
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
 - write linter (plugin?) that warns if files don't have license headers
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
@@ -48,6 +49,7 @@ MINUTIAE
 - build inverted index to make searching faster
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
 - Save/Restore cursor position when moving between notes
+- Investigate scroll slow-down (press-and-hold DOWN key; observe it slow down the farther you go, but if you release then press-and-hold it again it gets faster once more)
 
 NICE TO HAVES
 

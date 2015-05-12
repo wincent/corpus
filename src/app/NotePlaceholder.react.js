@@ -10,16 +10,21 @@ const styles = {
     alignItems: 'center',
     cursor: 'default',
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'column',
     minHeight: 'calc(100vh - 36px)',
+  },
+  lowerSpacer: {
+    flexGrow: 2,
   },
   notice: {
     WebkitUserSelect: 'none',
     color: '#a3a3a3',
     fontSize: '18px',
     fontFamily: 'Helvetica',
-    textAlign: 'center',
-  }
+  },
+  upperSpacer: {
+    flexGrow: 1,
+  },
 };
 
 export default class NotePlaceholder extends React.Component {
@@ -31,9 +36,11 @@ export default class NotePlaceholder extends React.Component {
     const count = this.props.count ? this.props.count : 'No';
     return (
       <div style={styles.root}>
+        <div style={styles.upperSpacer}></div>
         <div style={styles.notice}>
           {count} Notes Selected
         </div>
+        <div style={styles.lowerSpacer}></div>
       </div>
     );
   }
