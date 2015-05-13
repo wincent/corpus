@@ -132,7 +132,7 @@ export default class OmniBar extends React.Component {
   }
 
   _onFocus(event) {
-    var input = event.currentTarget;
+    const input = event.currentTarget;
     input.setSelectionRange(0, input.value.length);
   }
 

@@ -5,7 +5,7 @@
 
 jest.dontMock('../clamp');
 
-var clamp = require('../clamp');
+let clamp = require('../clamp');
 
 describe('clamp', () => {
   it('clamps to the minimum when the value is too small', () => {
