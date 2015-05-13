@@ -13,5 +13,11 @@ function shouldComponentUpdate(nextProps, nextState) {
 }
 
 export default function pure(target) {
+  if (target.prototype.hasOwnProperty('shouldComponentUpdate')) {
+    throw new Error(
+      target.name +
+      " already implements shouldComponentUpdate: can't use @pure"
+    );
+  }
   target.prototype.shouldComponentUpdate = shouldComponentUpdate;
 };
