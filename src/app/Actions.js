@@ -25,6 +25,7 @@ const actionTypes = keyMirror({
   NOTES_LOADED: null,
   NOTE_DESELECTED: null,
   NOTE_RANGE_SELECTED: null,
+  NOTE_RENAME_REQUESTED: null,
   NOTE_SELECTED: null,
   NOTE_TITLE_CHANGED: null,
   OMNI_BAR_FOCUS_REQUESTED: null,
@@ -86,6 +87,10 @@ const actionCreators = {
 
   noteTitleChanged(payload) {
     dispatch(actionTypes.NOTE_TITLE_CHANGED, payload);
+  },
+
+  requestRename() {
+    dispatch(actionTypes.NOTE_RENAME_REQUESTED);
   },
 
   // FIXME: currently unused

@@ -3,27 +3,29 @@
 
 'use strict';
 
-import {EventEmitter} from 'events';
-
 import Actions from '../Actions';
-import Dispatcher from '../Dispatcher';
+import Store from './Store';
 
 let focus = 'OmniBar';
 
-Dispatcher.register(payload => {
-  switch (payload.type) {
-    case Actions.OMNI_BAR_FOCUS_REQUESTED:
-      focus = 'OmniBar';
-      FocusStore.emit('change');
-      break;
+// TODO: turn this into a proper focus-manager
+class FocusStore extends Store {
+  handleDispatch(payload) {
+    switch (payload.type) {
+      case Actions.NOTE_RENAME_REQUESTED:
+        focus = 'TitleInput';
+        this.emit('change');
+        break;
+      case Actions.OMNI_BAR_FOCUS_REQUESTED:
+        focus = 'OmniBar';
+        this.emit('change');
+        break;
+    }
   }
-});
 
-const FocusStore = {
   get focus() {
     return focus;
-  },
-  ...EventEmitter.prototype,
-};
+  }
+}
 
-export default FocusStore;
+export default new FocusStore();

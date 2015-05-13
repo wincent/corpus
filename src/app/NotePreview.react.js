@@ -5,10 +5,16 @@
 
 import React from 'react';
 import autobind from 'autobind-decorator';
+import remote from 'remote';
 
 import Actions from './Actions';
+import FocusStore from './stores/FocusStore';
 import Keys from './Keys';
+import NotesSelectionStore from './stores/NotesSelectionStore';
 import pure from './pure';
+
+const Menu = remote.require('menu');
+const MenuItem = remote.require('menu-item');
 
 /**
  * Don't want the DOM to contain all the text of all the notes.
@@ -35,6 +41,14 @@ export default class NotePreview extends React.Component {
       isEditing: false,
       pendingTitle: null,
     };
+  }
+
+  componentDidMount() {
+    FocusStore.addListener('change', this._updateFocus);
+  }
+
+  componentWillUnmount() {
+    FocusStore.removeListener('change', this._updateFocus);
   }
 
   _getStyles() {
@@ -81,6 +95,13 @@ export default class NotePreview extends React.Component {
         width: '100%',
       },
     };
+  }
+
+  _startEditing() {
+    this.setState({
+      isEditing: true,
+      pendingTitle: this.props.note.get('title'),
+    });
   }
 
   _endEditing(event) {
@@ -130,11 +151,27 @@ export default class NotePreview extends React.Component {
   }
 
   @autobind
+  _onContextMenu(event) {
+    if (this.state.isEditing) {
+      return;
+    }
+
+    event.preventDefault();
+    var menu = new Menu();
+    menu.append(
+      new MenuItem({
+        accelerator: 'Command+R',
+        label: 'Rename',
+        click: () => 'you clicked',
+      })
+    );
+
+    menu.popup(remote.getCurrentWindow());
+  }
+
+  @autobind
   _onDoubleClick() {
-    this.setState({
-      isEditing: true,
-      pendingTitle: this.props.note.get('title'),
-    });
+    this._startEditing();
   }
 
   _onFocus(event) {
@@ -155,6 +192,19 @@ export default class NotePreview extends React.Component {
       case Keys.ESCAPE:
         this._endEditing(event);
         break;
+    }
+  }
+
+  @autobind
+  _updateFocus() {
+    if (FocusStore.focus === 'TitleInput') {
+      const selection = NotesSelectionStore.selection;
+      if (selection.size === 1) {
+        if (this.props.selected) {
+          // TODO: might want to scroll into view here, if not already
+          this._startEditing();
+        }
+      }
     }
   }
 
@@ -188,7 +238,10 @@ export default class NotePreview extends React.Component {
   render() {
     const styles = this._getStyles();
     return (
-      <li onClick={this._onClick} style={styles.root}>
+      <li
+        onClick={this._onClick}
+        onContextMenu={this._onContextMenu}
+        style={styles.root}>
         {this._renderTitle()}
         <p style={styles.text}>
           {this.props.note.get('text')}

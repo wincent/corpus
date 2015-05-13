@@ -67,6 +67,7 @@ MINUTIAE
   - and note view should show that note
   - and note list should show that note selected at the top
 - investigate performance regression when dragging separator
+- resolve clash of Command-R accelerators (using it for rename and reload)
 
 NICE TO HAVES
 

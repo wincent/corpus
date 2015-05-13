@@ -43,6 +43,17 @@ const menu = [
     ],
   },
   {
+    label: 'Note',
+    submenu: [
+      {
+        // TODO: figure out how to ghost this when no selection
+        accelerator: 'Command+R',
+        label: 'Rename',
+        click: () => BrowserWindow.getFocusedWindow().webContents.send('rename'),
+      },
+    ],
+  },
+  {
     label: 'Edit',
     submenu: [
       {
