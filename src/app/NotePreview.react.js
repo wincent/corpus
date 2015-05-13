@@ -44,6 +44,7 @@ export default class NotePreview extends React.Component {
   }
 
   componentDidMount() {
+    // TODO: this is regrettable; if I have 500 notes I end up with 500 listeners
     FocusStore.addListener('change', this._updateFocus);
   }
 
@@ -204,7 +205,6 @@ export default class NotePreview extends React.Component {
       const selection = NotesSelectionStore.selection;
       if (selection.size === 1) {
         if (this.props.selected) {
-          // TODO: might want to scroll into view here, if not already
           this._startEditing();
         }
       }
