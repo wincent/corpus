@@ -20,7 +20,7 @@ Nice to haves:
 
 MINUTIAE
 
-- make `Store` base class and inherit some functionality from it to DRY up stores
+- [DONE] make `Store` base class and inherit some functionality from it to DRY up stores
 - fix missing scrollbars (this is intermittent; not sure of cause)
 - optimize rendering with large numbers of notes (basically at 60fps so ok for now)
 - fix slight <Separator> drift when resizing window
@@ -46,11 +46,13 @@ MINUTIAE
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
 - Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
 - Command-R to rename a note (focuses title in NotePreview)
-- build inverted index to make searching faster
+- build inverted index to make searching faster; or use IndexedDB (if Electron supports it, and if it looks like it will be faster); will need an index for title names and also for full-text search (although note: IndexedDB has no equivalent of the SQL "LIKE" keyword, so if I want that, I'll need to store multiple keys as substrings)
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
 - Save/Restore cursor position when moving between notes
 - Investigate scroll slow-down (press-and-hold DOWN key; observe it slow down the farther you go, but if you release then press-and-hold it again it gets faster once more)
 - in nvALT, when you click on the note placeholder, the OmniBar retains focus
+- possibly use dependent FilteredNotesStore (`waitFor` NotesStore) as a basis for filtered view; this ends up being the one that (most) of the app actually cares about)
+- watch filesystem to notice external updates
 
 NICE TO HAVES
 
