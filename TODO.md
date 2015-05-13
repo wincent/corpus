@@ -20,11 +20,9 @@ Nice to haves:
 
 MINUTIAE
 
-- [DONE] make `Store` base class and inherit some functionality from it to DRY up stores
 - fix missing scrollbars (this is intermittent; not sure of cause)
 - optimize rendering with large numbers of notes (basically at 60fps so ok for now)
 - fix slight <Separator> drift when resizing window
-- implement notes-list ordering based on last-updated timestamp
 - add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
 - implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
@@ -38,9 +36,6 @@ MINUTIAE
 - tab in note should insert a tab; shift-tab should go back to OmniBar
 - typing when NotePreview is focused should shift focus to OmniBar and insert
 - OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
-- Command+L should focus OmniBar (note: this will require us to build that focus store? or can we just listen directly via ipc?)
-- Escape should unfocus the NoteList and clear the selection (done) and revert focus to OmniBar (not yet done)
-- Escape should also unfocus Note view, clear the selection and revert focus to OmniBar
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
 - write linter (plugin?) that warns if files don't have license headers
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
@@ -130,3 +125,8 @@ ARCHIVES
 - [DONE] <NoteList> should scroll <NotePreview> intro view using Command+{J,K} or UP/DOWN to switch notes (and {Shift,Commmand}+{Up,DOWN} to jump etc)
 - [DONE] tab when NotePreview is focused should shift to current note
 - [DONE] Clearing (X, or hitting Escape) in OmniBar should scroll NoteList to top
+- [DONE] make `Store` base class and inherit some functionality from it to DRY up stores
+- [DONE] implement notes-list ordering based on last-updated timestamp
+- [DONE] Command+L should focus OmniBar (note: this will require us to build that focus store? or can we just listen directly via ipc?)
+- [DONE] Escape should unfocus the NoteList and clear the selection (done) and revert focus to OmniBar (not yet done)
+- [DONE] Escape should also unfocus Note view, clear the selection and revert focus to OmniBar

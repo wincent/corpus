@@ -51,6 +51,12 @@ const menu = [
         label: 'Rename',
         click: () => BrowserWindow.getFocusedWindow().webContents.send('rename'),
       },
+      {type: 'separator'},
+      {
+        accelerator: 'Command+L',
+        label: 'Search or Create...', // TODO: use a real ellipsis?
+        click: () => BrowserWindow.getFocusedWindow().webContents.send('search'),
+      },
     ],
   },
   {
