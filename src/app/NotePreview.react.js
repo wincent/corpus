@@ -84,13 +84,16 @@ export default class NotePreview extends React.Component {
   }
 
   _endEditing(event) {
+    const title = event.currentTarget.value;
+    if (title !== this.props.note.get('title')) {
+      Actions.noteTitleChanged({
+        index: this.props.index,
+        title,
+      });
+    }
     this.setState({
       isEditing: false,
       pendingTitle: null,
-    });
-    Actions.noteTitleChanged({
-      index: this.props.index,
-      title: event.currentTarget.value,
     });
   }
 
