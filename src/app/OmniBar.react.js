@@ -11,6 +11,7 @@ import Actions from './Actions';
 import FocusStore from './stores/FocusStore';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
+import SearchIndexStore from './stores/SearchIndexStore';
 import performKeyboardNavigation from './performKeyboardNavigation';
 
 const styles = {

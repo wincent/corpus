@@ -66,6 +66,7 @@ MINUTIAE
   - omnibar should show "foo[ bar baz]" ([] indicates selected text)
   - and note view should show that note
   - and note list should show that note selected at the top
+- investigate performance regression when dragging separator
 
 NICE TO HAVES
 
