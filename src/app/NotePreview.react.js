@@ -98,10 +98,13 @@ export default class NotePreview extends React.Component {
   }
 
   _startEditing() {
-    this.setState({
-      isEditing: true,
-      pendingTitle: this.props.note.get('title'),
-    });
+    this.setState(
+      {
+        isEditing: true,
+        pendingTitle: this.props.note.get('title'),
+      },
+      () => React.findDOMNode(this).scrollIntoViewIfNeeded(false)
+    );
   }
 
   _endEditing(event) {
