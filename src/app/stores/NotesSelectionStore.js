@@ -194,6 +194,13 @@ class NotesSelectionStore extends Store {
           return selection.add(payload.index);
         });
         break;
+      case Actions.NOTE_TITLE_CHANGED:
+        this._change(payload.type, () => {
+          // A note was bumped to the top, so select it.
+          // BUG: need waitFor here?
+          return selection.clear().add(0);
+        });
+        break;
       case Actions.NOTES_LOADED:
         this._change(payload.type, () => (
           // TODO: persist last selection across restarts

@@ -76,6 +76,10 @@ class NotesStore extends Store {
             title: payload.title,
           }
         );
+
+        // Bump note to top of list.
+        const note = notes.get(payload.index);
+        notes = notes.delete(payload.index).unshift(note);
         this.emit('change');
         break;
       case Actions.NOTES_LOADED:
