@@ -50,9 +50,9 @@ class NotesStore extends Store {
             stat(notePath).catch(ignore),
             (id, title, text, stat) => Immutable.Map({
               id,
-              title,
-              text: text && text.toString(),
               mtime: stat && stat.mtime.getTime(),
+              text: text && text.toString(),
+              title,
             })
           );
         },
@@ -68,9 +68,13 @@ class NotesStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.NOTE_TITLE_CHANGED:
-        notes = notes.updateIn(
-          [payload.index, 'title'],
-          note => payload.title
+        // Update title.
+        notes = notes.mergeIn(
+          [payload.index],
+          {
+            mtime: Date.now(),
+            title: payload.title,
+          }
         );
         this.emit('change');
         break;
