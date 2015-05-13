@@ -18,4 +18,8 @@ export default class Store extends EventEmitter {
       this.constructor.name + ' does not implement handleDispatch'
     );
   }
+
+  waitFor(...tokens) {
+    Dispatcher.waitFor(tokens);
+  }
 }

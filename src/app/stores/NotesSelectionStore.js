@@ -195,9 +195,9 @@ class NotesSelectionStore extends Store {
         });
         break;
       case Actions.NOTE_TITLE_CHANGED:
+        // A note was bumped to the top, so select it.
+        this.waitFor(NotesStore.dispatchToken);
         this._change(payload.type, () => {
-          // A note was bumped to the top, so select it.
-          // BUG: need waitFor here?
           return selection.clear().add(0);
         });
         break;
