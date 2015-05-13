@@ -175,14 +175,6 @@ class NotesSelectionStore extends Store {
       case Actions.NOTE_DESELECTED:
         this._change(payload.type, () => selection.remove(payload.index));
         break;
-      case Actions.NOTE_SELECTED:
-        this._change(payload.type, () => {
-          if (payload.exclusive) {
-            selection = selection.clear();
-          }
-          return selection.add(payload.index);
-        });
-        break;
       case Actions.NOTE_RANGE_SELECTED:
         this._change(payload.type, () => {
           const start = selection.last() || 0;
@@ -192,6 +184,14 @@ class NotesSelectionStore extends Store {
             Math.max(start, end) + 1
           );
           return selection.union(range);
+        });
+        break;
+      case Actions.NOTE_SELECTED:
+        this._change(payload.type, () => {
+          if (payload.exclusive) {
+            selection = selection.clear();
+          }
+          return selection.add(payload.index);
         });
         break;
       case Actions.NOTES_LOADED:
