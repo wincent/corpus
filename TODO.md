@@ -53,6 +53,19 @@ MINUTIAE
 - in nvALT, when you click on the note placeholder, the OmniBar retains focus
 - possibly use dependent FilteredNotesStore (`waitFor` NotesStore) as a basis for filtered view; this ends up being the one that (most) of the app actually cares about)
 - watch filesystem to notice external updates
+- gracefully handle files going missing (and restoring); use case is mountable filesystems
+- toggle icon-search for icon-pencil
+  - when field empty: search
+  - when field contains title of an existing note: pencil
+  - when field contains text found in notes but not titles: search
+  - when field contains text not found anywhere: search
+  - when editing: pencil
+- on typing, if there is a prefix match, autocomplete
+  - eg. given a note titled "foo bar baz"
+  - if you type "foo"
+  - omnibar should show "foo[ bar baz]" ([] indicates selected text)
+  - and note view should show that note
+  - and note list should show that note selected at the top
 
 NICE TO HAVES
 
