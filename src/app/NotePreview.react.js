@@ -43,13 +43,34 @@ export default class NotePreview extends React.Component {
     };
   }
 
-  componentDidMount() {
-    // TODO: this is regrettable; if I have 500 notes I end up with 500 listeners
-    FocusStore.addListener('change', this._updateFocus);
+  _addListener() {
+    if (!this._listening) {
+      FocusStore.addListener('change', this._updateFocus);
+      this._listening = true;
+    }
+  }
+
+  _removeListener() {
+    if (this._listening) {
+      FocusStore.removeListener('change', this._updateFocus);
+      this._listening = false;
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.focused && NotesSelectionStore.selection.size === 1) {
+      // We are the only selected note. Listen for (input title) focus events.
+      this._addListener();
+      // BUG: if you get focused as the second item in a set, and then the first
+      // item gets removed, we never set up the listeners, even though you
+      // should be eligible to get renamed at this point
+    } else if (this._listening) {
+      this._removeListener();
+    }
   }
 
   componentWillUnmount() {
-    FocusStore.removeListener('change', this._updateFocus);
+    this._removeListener();
   }
 
   _getStyles() {
