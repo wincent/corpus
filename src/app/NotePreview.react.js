@@ -130,7 +130,7 @@ export default class NotePreview extends React.Component {
   _onDoubleClick() {
     this.setState({
       isEditing: true,
-      pendingTitle: this.props.title,
+      pendingTitle: this.props.note.get('title'),
     });
   }
 
