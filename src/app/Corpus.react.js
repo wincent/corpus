@@ -15,8 +15,17 @@ import Viewport from './Viewport.react';
 
 export default class Corpus extends React.Component {
   componentDidMount() {
+    ipc.on('next', () => Actions.nextNote());
+    ipc.on('previous', () => Actions.previousNote());
     ipc.on('rename', () => Actions.requestRename());
     ipc.on('search', () => Actions.focusOmniBar());
+  }
+
+  componentWillUnmount() {
+    ipc.removeAllListeners('next');
+    ipc.removeAllListeners('previous');
+    ipc.removeAllListeners('rename');
+    ipc.removeAllListeners('search');
   }
 
   render() {

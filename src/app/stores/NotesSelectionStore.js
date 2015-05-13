@@ -143,12 +143,6 @@ function selectPrevious() {
 }
 
 class NotesSelectionStore extends Store {
-  constructor() {
-    super();
-    ipc.on('next', () => Actions.nextNote());
-    ipc.on('previous', () => Actions.previousNote());
-  }
-
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.ALL_NOTES_DESELECTED:
