@@ -16,6 +16,10 @@ var babelOptions = {
   ],
 };
 
+function ringBell() {
+  process.stderr.write("\x07");
+}
+
 // Wrap a stream in an error-handler (needed until Gulp 4).
 function wrap(stream) {
   stream.on('error', function(error) {
@@ -28,6 +32,7 @@ function wrap(stream) {
       gutil.log(gutil.colors.yellow('[exiting]'));
       process.exit(1);
     }
+    ringBell();
   });
   return stream;
 }
