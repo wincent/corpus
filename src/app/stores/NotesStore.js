@@ -82,6 +82,7 @@ class NotesStore extends Store {
         notes = notes.delete(payload.index).unshift(note);
         this.emit('change');
         break;
+
       case Actions.NOTES_LOADED:
         this.emit('change');
         break;

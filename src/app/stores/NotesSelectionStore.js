@@ -154,27 +154,35 @@ class NotesSelectionStore extends Store {
       case Actions.ALL_NOTES_DESELECTED:
         this._change(payload.type, () => selection.clear());
         break;
+
       case Actions.ALL_NOTES_SELECTED:
         this._change(payload.type, selectAll);
         break;
+
       case Actions.ADJUST_NOTE_SELECTION_DOWN:
         this._change(payload.type, () => adjustSelection(+1));
         break;
+
       case Actions.ADJUST_NOTE_SELECTION_UP:
         this._change(payload.type, () => adjustSelection(-1));
         break;
+
       case Actions.FIRST_NOTE_SELECTED:
         this._change(payload.type, selectFirst);
         break;
+
       case Actions.LAST_NOTE_SELECTED:
         this._change(payload.type, selectLast);
         break;
+
       case Actions.NEXT_NOTE_SELECTED:
         this._change(payload.type, selectNext);
         break;
+
       case Actions.NOTE_DESELECTED:
         this._change(payload.type, () => selection.remove(payload.index));
         break;
+
       case Actions.NOTE_RANGE_SELECTED:
         this._change(payload.type, () => {
           const start = selection.last() || 0;
@@ -186,6 +194,7 @@ class NotesSelectionStore extends Store {
           return selection.union(range);
         });
         break;
+
       case Actions.NOTE_SELECTED:
         this._change(payload.type, () => {
           if (payload.exclusive) {
@@ -194,6 +203,7 @@ class NotesSelectionStore extends Store {
           return selection.add(payload.index);
         });
         break;
+
       case Actions.NOTE_TITLE_CHANGED:
         // A note was bumped to the top, so select it.
         this.waitFor(NotesStore.dispatchToken);
@@ -201,12 +211,14 @@ class NotesSelectionStore extends Store {
           return selection.clear().add(0);
         });
         break;
+
       case Actions.NOTES_LOADED:
         this._change(payload.type, () => (
           // TODO: persist last selection across restarts
           NotesStore.notes.size ? selection.add(0) : selection
         ));
         break;
+
       case Actions.PREVIOUS_NOTE_SELECTED:
         this._change(payload.type, selectPrevious);
         break;
