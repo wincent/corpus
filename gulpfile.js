@@ -16,11 +16,17 @@ var babelOptions = {
   ],
 };
 
+/**
+ * Ring the terminal bell.
+ */
 function ringBell() {
   process.stderr.write("\x07");
 }
 
-// Wrap a stream in an error-handler (needed until Gulp 4).
+/**
+ * Wrap a stream in an error-handler (until Gulp 4, needed to prevent "watch"
+ * task from dying on error).
+ */
 function wrap(stream) {
   stream.on('error', function(error) {
     gutil.log(gutil.colors.red(error.message));
