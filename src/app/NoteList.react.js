@@ -119,22 +119,7 @@ export default class NoteList extends React.Component {
           // Maintain last selection within view.
           const lastIndex = this.state.selection.last();
           const last = React.findDOMNode(this.refs[lastIndex]);
-          const lastTop = lastIndex * last.offsetHeight;
-          const scrollTop = parent.scrollTop;
-
-          const lowerCutoff =
-            scrollTop + // how far we've scrolled from the top
-            parent.offsetHeight - // how tall the viewport is
-            last.offsetHeight; // how tall each preview is
-          const upperCutoff = parent.scrollTop;
-
-          if (lastTop > lowerCutoff) {
-            // Element overlaps or is below the lower edge.
-            parent.scrollTop = scrollTop + (lastTop - lowerCutoff);
-          } else if (lastTop < upperCutoff) {
-            // Element overlaps or is above the upper edge.
-            parent.scrollTop = scrollTop - (upperCutoff - lastTop);
-          }
+          last.scrollIntoViewIfNeeded(false);
         }
       }
     }
