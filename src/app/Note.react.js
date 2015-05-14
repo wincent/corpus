@@ -7,6 +7,7 @@ import React from 'react';
 
 import Actions from './Actions';
 import Keys from './Keys';
+import performKeyboardNavigation from './performKeyboardNavigation';
 
 export default class Note extends React.Component {
   static propTypes = {
@@ -33,12 +34,21 @@ export default class Note extends React.Component {
   }
 
   _onKeyDown(event) {
+    // Prevent undesired fallthrough to `performKeyboardNavigation` for some
+    // keys.
     switch (event.keyCode) {
-      case Keys.ESCAPE:
-        Actions.deselectAll();
-        Actions.focusOmniBar();
-        break;
+      case Keys.DOWN:
+      case Keys.UP:
+        return;
+
+      case Keys.J:
+      case Keys.K:
+        if (!event.metaKey) {
+          return;
+        }
     }
+
+    performKeyboardNavigation(event);
   }
 
   render() {
