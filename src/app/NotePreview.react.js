@@ -10,6 +10,7 @@ import ipc from 'ipc';
 import Actions from './Actions';
 import FocusStore from './stores/FocusStore';
 import Keys from './Keys';
+import Mouse from './Mouse';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import pure from './pure';
 
@@ -174,26 +175,13 @@ export default class NotePreview extends React.Component {
 
   @autobind
   _onContextMenu(event) {
-    event.preventDefault();
 
     if (this.state.isEditing) {
       return;
     }
 
-    // We get the "contextmenu" event instead of the "click" event, not in
-    // addition to it, so we have to handle the selection behavior here.
-    // TODO: only do this if it is not already the only selection?
-    Actions.noteSelected({
-      exclusive: true,
-      index: this.props.index,
-    });
-    // TODO: disable scrollIntoViewIfNeeded in this case; that would be weird
-
     // Ghastly hack returns...
-    setTimeout(
-      () => ipc.send('context-menu', event.clientX, event.clientY),
-      100
-    );
+    setTimeout(() => ipc.send('context-menu'), 100);
   }
 
   @autobind
@@ -219,6 +207,25 @@ export default class NotePreview extends React.Component {
       case Keys.ESCAPE:
         this._endEditing(event);
         break;
+    }
+  }
+
+  @autobind
+  _onMouseDown(event) {
+    if (this.state.isEditing) {
+      return;
+    }
+
+    if (
+      event.button === Mouse.LEFT_BUTTON && event.ctrlKey ||
+      event.button === Mouse.RIGHT_BUTTON
+    ) {
+      // Context menu is about to appear.
+      Actions.noteSelected({
+        exclusive: true,
+        index: this.props.index,
+      });
+      // TODO: disable scrollIntoViewIfNeeded in this case; that would be weird
     }
   }
 
@@ -267,6 +274,7 @@ export default class NotePreview extends React.Component {
       <li
         onClick={this._onClick}
         onContextMenu={this._onContextMenu}
+        onMouseDown={this._onMouseDown}
         style={styles.root}>
         {this._renderTitle()}
         <p style={styles.text}>

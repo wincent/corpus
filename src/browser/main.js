@@ -34,10 +34,7 @@ app.on('ready', () => {
       label: 'Rename',
     })
   );
-
-  ipc.on('context-menu', (_, x, y) => {
-    contextualMenu.popup(mainWindow, x, y);
-  })
+  ipc.on('context-menu', () => contextualMenu.popup(mainWindow));
 
   Menu.setApplicationMenu(
     Menu.buildFromTemplate(menu)
