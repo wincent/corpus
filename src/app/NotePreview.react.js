@@ -189,7 +189,11 @@ export default class NotePreview extends React.Component {
     });
     // TODO: disable scrollIntoViewIfNeeded in this case; that would be weird
 
-    ipc.send('context-menu', event.clientX, event.clientY);
+    // Ghastly hack returns...
+    setTimeout(
+      () => ipc.send('context-menu', event.clientX, event.clientY),
+      100
+    );
   }
 
   @autobind
