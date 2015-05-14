@@ -5,7 +5,9 @@
 
 import BrowserWindow from 'browser-window';
 import Menu from 'menu';
+import MenuItem from 'menu-item';
 import app from 'app';
+import ipc from 'ipc';
 import path from 'path';
 
 import menu from './menu';
@@ -22,6 +24,20 @@ app.on('ready', () => {
   });
   mainWindow.loadUrl('file://' + path.join(__dirname, '/../index.html'));
   mainWindow.webContents.on('did-finish-load', () => mainWindow.show());
+
+  // TODO: extract this into a better place and make it more flexible
+  var contextualMenu = new Menu();
+  contextualMenu.append(
+    new MenuItem({
+      accelerator: 'Command+R',
+      click: () => console.log('contextual-menu: rename'),
+      label: 'Rename',
+    })
+  );
+
+  ipc.on('context-menu', (_, x, y) => {
+    contextualMenu.popup(mainWindow, x, y);
+  })
 
   Menu.setApplicationMenu(
     Menu.buildFromTemplate(menu)

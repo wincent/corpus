@@ -5,16 +5,13 @@
 
 import React from 'react';
 import autobind from 'autobind-decorator';
-import remote from 'remote';
+import ipc from 'ipc';
 
 import Actions from './Actions';
 import FocusStore from './stores/FocusStore';
 import Keys from './Keys';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import pure from './pure';
-
-const Menu = remote.require('menu');
-const MenuItem = remote.require('menu-item');
 
 /**
  * Don't want the DOM to contain all the text of all the notes.
@@ -185,29 +182,14 @@ export default class NotePreview extends React.Component {
 
     // We get the "contextmenu" event instead of the "click" event, not in
     // addition to it, so we have to handle the selection behavior here.
+    // TODO: only do this if it is not already the only selection?
     Actions.noteSelected({
       exclusive: true,
       index: this.props.index,
     });
+    // TODO: disable scrollIntoViewIfNeeded in this case; that would be weird
 
-    // BUG: We don't see the note selection before the menu shows up.
-    //
-    // There is also an odd lag between right-clicking and the menu showing up
-    // (unlike how fast left-click selection works).
-    //
-    // All event processing appears to be frozen for as long as the menu is
-    // open.
-    var menu = new Menu();
-    menu.append(
-      new MenuItem({
-        accelerator: 'Command+R',
-        click: () => console.log('contextual-menu: rename'),
-        label: 'Rename',
-      })
-    );
-
-    // Ghastly hack; only this way do we get selection then menu.
-    setTimeout(() => menu.popup(remote.getCurrentWindow()), 100);
+    ipc.send('context-menu', event.clientX, event.clientY);
   }
 
   @autobind
