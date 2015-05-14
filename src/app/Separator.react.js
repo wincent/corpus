@@ -37,6 +37,10 @@ export default class Separator extends React.Component {
     document.body.classList.add('grabbing');
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
+  }
+
   render() {
     return (
       <div
