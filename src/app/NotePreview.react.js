@@ -186,8 +186,8 @@ export default class NotePreview extends React.Component {
     menu.append(
       new MenuItem({
         accelerator: 'Command+R',
+        click: () => console.log('contextual-menu: rename'),
         label: 'Rename',
-        click: () => 'you clicked',
       })
     );
 
