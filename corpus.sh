@@ -2,8 +2,13 @@
 # Copyright 2015-present Greg Hurrell. All rights reserved.
 # Licensed under the terms of the MIT license.
 
-ELECTRON_DIST=/usr/local/lib/node_modules/electron-prebuilt/dist
-ELECTRON_EXECUTABLE=Electron.app/Contents/MacOS/Electron
+if [ -d release/Corpus.app ]; then
+  ELECTRON_DIST=release
+  ELECTRON_EXECUTABLE=Corpus.app/Contents/MacOS/Electron
+else
+  ELECTRON_DIST=/usr/local/lib/node_modules/electron-prebuilt/dist
+  ELECTRON_EXECUTABLE=Electron.app/Contents/MacOS/Electron
+fi
 
 # Check if NODE_ENV is set (http://stackoverflow.com/a/13864829/2103996).
 if [ -z ${NODE_ENV+unset} ]; then

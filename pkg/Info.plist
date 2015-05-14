@@ -5,17 +5,17 @@
 	<key>BuildMachineOSBuild</key>
 	<string>14D136</string>
 	<key>CFBundleDisplayName</key>
-	<string>Electron</string>
+	<string>Corpus</string>
 	<key>CFBundleExecutable</key>
 	<string>Electron</string>
 	<key>CFBundleIconFile</key>
-	<string>atom.icns</string>
+	<string>corpus.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.github.electron</string>
+	<string>com.wincent.corpus</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Electron</string>
+	<string>Corpus</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleVersion</key>

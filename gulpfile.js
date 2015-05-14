@@ -2,11 +2,11 @@
 // Licensed under the terms of the MIT license.
 
 var babel = require('gulp-babel');
+var exec = require('child_process').exec;
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var minifyHTML = require('gulp-minify-html');
-
-var watching = false;
+var path = require('path');
 
 var babelOptions = {
   optional: [
@@ -15,6 +15,8 @@ var babelOptions = {
     'es7.objectRestSpread',
   ],
 };
+var electronBase = '/usr/local/lib/node_modules/electron-prebuilt/dist';
+var watching = false;
 
 /**
  * Ring the terminal bell.
@@ -45,12 +47,6 @@ function wrap(stream) {
 
 gulp.task('default', ['watch']);
 
-gulp.task('watch', function() {
-  watching = true;
-  gulp.watch('src/**/*.html', ['html']);
-  gulp.watch('src/**/*.js', ['js']);
-});
-
 gulp.task('build', ['html', 'js']);
 
 gulp.task('html', function() {
@@ -65,17 +61,51 @@ gulp.task('js', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('release', function() {
-  /*
+gulp.task('copy-app', function(callback) {
+  var source = path.join(electronBase, 'Electron.app');
+   exec(
+     'cp -pR ' + source + ' release/',
+     function(error, stdout, stderr) {
+       gutil.log(stdout);
+       gutil.log(stderr);
+       callback(error);
+     }
+   );
+});
 
+gulp.task('rename-app', ['copy-app'], function(callback) {
+   exec(
+     'mv release/Electron.app release/Corpus.app',
+     function(error, stdout, stderr) {
+       gutil.log(stdout);
+       gutil.log(stderr);
+       callback(error);
+     }
+   );
+});
+
+gulp.task('copy-icon', ['rename-app'], function() {
+  return gulp.src('gfx/corpus.icns')
+    .pipe(gulp.dest('release/Corpus.app/Contents/Resources/'));
+});
+
+gulp.task('copy-plist', ['rename-app'], function() {
+  return gulp.src('pkg/Info.plist')
+    .pipe(gulp.dest('release/Corpus.app/Contents/'));
+});
+
+/*
   1. Copy app from /usr/local/lib/node_modules/electron-prebuilt/dist to
      release/Corpus.app
   2. Copy icon
   3. Copy plist
   4. Move app sources into right place under Resources
   5. Bundle node_modules (eg. NODE_ENV=production + uglify for React)
+*/
+gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon']);
 
-  */
-  gutil.log('not yet implemented...');
-  gutil.log(gutil.colors.yellow('[aborting]'));
+gulp.task('watch', function() {
+  watching = true;
+  gulp.watch('src/**/*.html', ['html']);
+  gulp.watch('src/**/*.js', ['js']);
 });
