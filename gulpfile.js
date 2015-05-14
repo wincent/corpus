@@ -64,3 +64,18 @@ gulp.task('js', function() {
     .pipe(wrap(babel(babelOptions)))
     .pipe(gulp.dest('dist'));
 });
+
+gulp.task('release', function() {
+  /*
+
+  1. Copy app from /usr/local/lib/node_modules/electron-prebuilt/dist to
+     release/Corpus.app
+  2. Copy icon
+  3. Copy plist
+  4. Move app sources into right place under Resources
+  5. Bundle node_modules (eg. NODE_ENV=production + uglify for React)
+
+  */
+  gutil.log('not yet implemented...');
+  gutil.log(gutil.colors.yellow('[aborting]'));
+});
