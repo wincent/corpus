@@ -177,11 +177,26 @@ export default class NotePreview extends React.Component {
 
   @autobind
   _onContextMenu(event) {
+    event.preventDefault();
+
     if (this.state.isEditing) {
       return;
     }
 
-    event.preventDefault();
+    // We get the "contextmenu" event instead of the "click" event, not in
+    // addition to it, so we have to handle the selection behavior here.
+    Actions.noteSelected({
+      exclusive: true,
+      index: this.props.index,
+    });
+
+    // BUG: We don't see the note selection before the menu shows up.
+    //
+    // There is also an odd lag between right-clicking and the menu showing up
+    // (unlike how fast left-click selection works).
+    //
+    // All event processing appears to be frozen for as long as the menu is
+    // open.
     var menu = new Menu();
     menu.append(
       new MenuItem({
@@ -191,7 +206,8 @@ export default class NotePreview extends React.Component {
       })
     );
 
-    menu.popup(remote.getCurrentWindow());
+    // Ghastly hack; only this way do we get selection then menu.
+    setTimeout(() => menu.popup(remote.getCurrentWindow()), 100);
   }
 
   @autobind
