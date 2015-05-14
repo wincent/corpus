@@ -19,6 +19,7 @@ import pure from './pure';
  * Truncate to a length that can fill two 600px rows.
  */
 const PREVIEW_LENGTH = 250;
+const TITLE_LENGTH = 125;
 
 @pure
 export default class NotePreview extends React.Component {
@@ -257,7 +258,7 @@ export default class NotePreview extends React.Component {
       );
     } else {
       const styles = this._getStyles();
-      const title = this.props.note.get('title').substr(0, PREVIEW_LENGTH);
+      const title = this.props.note.get('title').substr(0, TITLE_LENGTH);
       return (
         <p
           onDoubleClick={this._onDoubleClick}
@@ -278,7 +279,7 @@ export default class NotePreview extends React.Component {
         style={styles.root}>
         {this._renderTitle()}
         <p style={styles.text}>
-          {this.props.note.get('text')}
+          {this.props.note.get('text').substr(0, PREVIEW_LENGTH)}
         </p>
       </li>
     );

@@ -62,7 +62,7 @@ MINUTIAE
   - omnibar should show "foo[ bar baz]" ([] indicates selected text)
   - and note view should show that note
   - and note list should show that note selected at the top
-- investigate performance regression when dragging separator
+- [DONE] investigate performance regression when dragging separator (or resizing window); profiler shows a lot of time being spent in layout, I suspect flex-box may be the culprit; I should compare it to a non-flexy approach (I did a quick experiment and its still pretty slow)
 - resolve clash of Command-R accelerators (using it for rename and reload)
 
 NICE TO HAVES
