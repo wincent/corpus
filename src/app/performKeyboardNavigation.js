@@ -21,10 +21,30 @@ function performKeyboardNavigation(event) {
       }
       event.preventDefault();
       break;
+
     case Keys.ESCAPE:
       Actions.deselectAll();
       Actions.focusOmniBar();
       break;
+
+    case Keys.J:
+      // Intercept before the menu shortcut gets fired to avoid annoying
+      // flicker and slowdown.
+      if (event.metaKey) {
+        Actions.nextNote();
+        event.preventDefault();
+      }
+      break;
+
+    case Keys.K:
+      // Intercept before the menu shortcut gets fired to avoid annoying
+      // flicker and slowdown.
+      if (event.metaKey) {
+        Actions.previousNote();
+        event.preventDefault();
+      }
+      break;
+
     case Keys.UP:
       if (event.metaKey) {
         Actions.firstNote();

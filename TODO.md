@@ -20,14 +20,15 @@ Nice to haves:
 
 MINUTIAE
 
+- fix contextual menu lag; Atom doesn't have the problem...
+- figure out how to disable menu items conditionally (eg. Rename, Delete tec)
+- add note deletion (contextual menu, menu etc)
 - fix missing scrollbars (this is intermittent; not sure of cause)
-- optimize rendering with large numbers of notes (basically at 60fps so ok for now)
 - fix slight <Separator> drift when resizing window
 - add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
 - implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
-- get app icon
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
 - tidy up ugly handling of current-selected-index `null` values
 - implement contextual menu for <NoteView>
@@ -130,3 +131,6 @@ ARCHIVES
 - [DONE] Command+L should focus OmniBar (note: this will require us to build that focus store? or can we just listen directly via ipc?)
 - [DONE] Escape should unfocus the NoteList and clear the selection (done) and revert focus to OmniBar (not yet done)
 - [DONE] Escape should also unfocus Note view, clear the selection and revert focus to OmniBar
+- [DONE] optimize rendering with large numbers of notes (basically at 60fps so ok for now)
+- [DONE] get app icon
+- [DONE] can we make menu operations faster? (Command-{J,K} is crappily slow; {UP,DOWN} is ultra-fast); note that in nvALT there are menu items with those shortcuts defined, but the menu does not highlight when they are pressed, indicating some kind of bypass is in effect [see NotesTableView.m:922]
