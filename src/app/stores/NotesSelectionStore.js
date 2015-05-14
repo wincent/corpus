@@ -1,7 +1,6 @@
 'use strict';
 
 import Immutable from 'immutable';
-import ipc from 'ipc';
 
 import Actions from '../Actions';
 import Store from './Store';
