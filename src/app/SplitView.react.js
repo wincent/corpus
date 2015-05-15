@@ -59,7 +59,7 @@ export default class SplitView extends React.Component {
 
     this.setState({
       left: Math.round(eventX),
-      right: Math.round(width - eventX),
+      right: Math.round(width - eventX - 8),
     });
   }
 
