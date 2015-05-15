@@ -70,8 +70,7 @@ export default class SplitView extends React.Component {
 
   @autobind
   _onResize() {
-    // want to keep "left" the same as it is, unless it violates a constraint
-    requestAnimationFrame(() => this._adjustPanes(this.state.left));
+    this.setState(this._getPaneDimensions(this.state.left));
   }
 
   render() {
