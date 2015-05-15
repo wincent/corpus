@@ -23,6 +23,7 @@ const TITLE_LENGTH = 125;
 
 @pure
 export default class NotePreview extends React.Component {
+  static ROW_HEIGHT = 51;
   static propTypes = {
     focused: React.PropTypes.bool,
     index: React.PropTypes.number.isRequired,
@@ -85,7 +86,7 @@ export default class NotePreview extends React.Component {
         fontSize: '11px',
         lineHeight: '14px',
         listStyleType: 'none',
-        minHeight: '51px',
+        height: NotePreview.ROW_HEIGHT + 'px',
         padding: '4px 4px 4px 8px',
       },
       text: {

@@ -40,12 +40,32 @@ export default class NoteList extends React.Component {
   componentDidMount() {
     NotesSelectionStore.on('change', this._updateNoteSelection);
     NotesStore.on('change', this._updateNotes);
+
+    const parent = React.findDOMNode(this).parentNode;
+    parent.addEventListener('scroll', this._onScroll);
   }
 
   componentWillUnmount() {
     NotesSelectionStore.removeListener('change', this._updateNoteSelection);
     NotesStore.removeListener('change', this._updateNotes);
     this._removeListeners();
+
+    const parent = React.findDOMNode(this).parentNode;
+    parent.removeEventListener('scroll', this._onScroll);
+  }
+
+  _getStyles() {
+    return {
+      root: {
+        WebkitUserSelect: 'none',
+        background: '#ebebeb',
+        cursor: 'default',
+        height: this.state.notes.size * NotePreview.ROW_HEIGHT,
+        margin: 0,
+        minHeight: 'calc(100vh - 36px)', // ensure full background coverage
+        padding: 0,
+      },
+    };
   }
 
   @autobind
@@ -108,6 +128,11 @@ export default class NoteList extends React.Component {
     performKeyboardNavigation(event);
   }
 
+  @autobind
+  _onScroll(event) {
+    console.log('parent scroll', event.currentTarget.scrollTop);
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevState.selection !== this.state.selection) {
       if (this.state.notes.size) {
@@ -147,7 +172,7 @@ export default class NoteList extends React.Component {
         onBlur={this._onBlur}
         onFocus={this._onFocus}
         onKeyDown={this._onKeyDown}
-        style={styles.root}
+        style={this._getStyles().root}
         tabIndex={2}
       >
         {this._renderNotes()}
