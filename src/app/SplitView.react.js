@@ -9,6 +9,7 @@ import invariant from 'react/lib/invariant';
 
 import Separator from './Separator.react';
 import clamp from './clamp';
+import throttle from './throttle';
 
 const styles = {
   left: {
@@ -26,6 +27,21 @@ const styles = {
 };
 
 export default class SplitView extends React.Component {
+  // Using a property initializer here because I couldn't get my @throttled
+  // decorator to interoperate with @autobind.
+  _onScroll = throttle(
+    (event) => {
+      const target = event.currentTarget;
+      if (target) {
+        // No idea why these events sometimes don't have a target.
+        requestAnimationFrame(() => {
+          this.setState({scrollTop: target.scrollTop});
+        });
+      }
+    },
+    100
+  );
+
   constructor(props) {
     super(props);
 
@@ -88,7 +104,7 @@ export default class SplitView extends React.Component {
     };
     return (
       <div style={styles.root}>
-        <div style={leftStyles}>
+        <div onScroll={this._onScroll} style={leftStyles}>
           {this.props.children[0]}
         </div>
         <Separator key="separator" onMouseMove={this._onMouseMove} />
