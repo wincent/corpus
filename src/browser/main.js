@@ -17,7 +17,7 @@ let mainWindow = null; // global reference to avoid premature GC
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
     height: 800,
-    'min-width': 400,
+    'min-width': 200,
     'min-height': 200,
     show: false,
     width: 1200,
