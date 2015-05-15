@@ -13,16 +13,13 @@ import NotesStore from './stores/NotesStore';
 import performKeyboardNavigation from './performKeyboardNavigation';
 import pure from './pure';
 
-const styles = {
-  root: {
-    WebkitUserSelect: 'none',
-    background: '#ebebeb',
-    cursor: 'default',
-    margin: 0,
-    minHeight: 'calc(100vh - 36px)', // hack to ensure full background coverage
-    padding: 0,
-  }
-};
+/**
+ * How many notes will be rendered beyond the edges of the viewport (above and
+ * below).
+ */
+// BUG: should be able to reduce this, but we lose momentum scrolling
+// (need throttle?)
+const OFF_VIEWPORT_NOTE_BUFFER_COUNT = 20;
 
 @pure
 export default class NoteList extends React.Component {
@@ -33,6 +30,7 @@ export default class NoteList extends React.Component {
     this.state = {
       focused: false,
       notes: NotesStore.notes,
+      scrollTop: 0,
       selection: NotesSelectionStore.selection,
     };
   }
@@ -54,13 +52,69 @@ export default class NoteList extends React.Component {
     parent.removeEventListener('scroll', this._onScroll);
   }
 
+  /**
+   * Returns the index of the first renderable note in the range.
+   */
+  _getFirstRenderedNote() {
+    const topEdge = Math.floor(this.state.scrollTop / NotePreview.ROW_HEIGHT);
+    const first = Math.max(0, topEdge - OFF_VIEWPORT_NOTE_BUFFER_COUNT);
+
+    // Always keep last-selected note in the range, even if it means
+    // over-rendering.
+    const mostRecent = this.state.selection.last();
+    if (mostRecent != null) {
+      return Math.min(mostRecent, first);
+    } else {
+      return first;
+    }
+  }
+
+  /**
+   * Returns the index of the last renderable note in the range.
+   */
+  _getLastRenderedNote() {
+    const visibleHeight = window.innerHeight - 36;
+    const bottomEdge = Math.ceil(
+      (this.state.scrollTop + visibleHeight) / NotePreview.ROW_HEIGHT
+    );
+    const last = Math.min(
+      this.state.notes.size,
+      bottomEdge + OFF_VIEWPORT_NOTE_BUFFER_COUNT
+    );
+
+    // Always keep last-selected note in the range, even if it means
+    // over-rendering.
+    const mostRecent = this.state.selection.last();
+    if (mostRecent != null) {
+      return Math.max(mostRecent, last);
+    } else {
+      return last;
+    }
+  }
+
+  _getSpacerHeights() {
+    const upperNoteCount = this._getFirstRenderedNote();
+    const upper = upperNoteCount * NotePreview.ROW_HEIGHT;
+
+    const lowerNoteCount = this.state.notes.size - this._getLastRenderedNote();
+    const lower = lowerNoteCount * NotePreview.ROW_HEIGHT;
+
+    return [upper, lower];
+  }
+
   _getStyles() {
+    const [upper, lower] = this._getSpacerHeights();
     return {
+      lowerSpacer: {
+        height: lower + 'px',
+      },
+      upperSpacer: {
+        height: upper + 'px',
+      },
       root: {
         WebkitUserSelect: 'none',
         background: '#ebebeb',
         cursor: 'default',
-        height: this.state.notes.size * NotePreview.ROW_HEIGHT,
         margin: 0,
         minHeight: 'calc(100vh - 36px)', // ensure full background coverage
         padding: 0,
@@ -130,7 +184,7 @@ export default class NoteList extends React.Component {
 
   @autobind
   _onScroll(event) {
-    console.log('parent scroll', event.currentTarget.scrollTop);
+    this.setState({scrollTop: event.currentTarget.scrollTop});
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -151,7 +205,12 @@ export default class NoteList extends React.Component {
   }
 
   _renderNotes() {
+    const first = this._getFirstRenderedNote();
+    const last = this._getLastRenderedNote();
     return this.state.notes.map((note, i) => {
+      if (i < first || i > last) {
+        return null;
+      }
       const selected = this.state.selection.has(i);
       return (
         <NotePreview
@@ -167,16 +226,21 @@ export default class NoteList extends React.Component {
   }
 
   render() {
+    const styles = this._getStyles();
     return (
-      <ul
-        onBlur={this._onBlur}
-        onFocus={this._onFocus}
-        onKeyDown={this._onKeyDown}
-        style={this._getStyles().root}
-        tabIndex={2}
-      >
-        {this._renderNotes()}
-      </ul>
+      <div>
+        <div style={styles.upperSpacer}></div>
+        <ul
+          onBlur={this._onBlur}
+          onFocus={this._onFocus}
+          onKeyDown={this._onKeyDown}
+          style={styles.root}
+          tabIndex={2}
+        >
+          {this._renderNotes()}
+        </ul>
+        <div style={styles.lowerSpacer}></div>
+      </div>
     );
   }
 }
