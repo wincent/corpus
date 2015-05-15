@@ -13,13 +13,11 @@ import clamp from './clamp';
 const styles = {
   left: {
     flexBasis: 0,
-    flexGrow: 1,
     overflowY: 'scroll',
   },
   right: {
     flexBasis: 0,
-    flexGrow: 2,
-    overflow: 'scroll',
+    overflowY: 'scroll',
   },
   root: {
     display: 'flex',
@@ -31,8 +29,9 @@ export default class SplitView extends React.Component {
   constructor(props) {
     super(props);
 
-    // These proportions based on initial window dimensions set in main.js.
-    this.state = {left: 400, right: 800};
+    // Initial desired separator location based on initial window dimensions
+    // set in main.js.
+    this.state = this._getPaneDimensions(400);
   }
 
   componentDidMount() {
@@ -43,7 +42,7 @@ export default class SplitView extends React.Component {
     window.removeEventListener('resize', this._onResize);
   }
 
-  _adjustPanes(desiredLeftPaneWidth) {
+  _getPaneDimensions(desiredLeftPaneWidth) {
     if (desiredLeftPaneWidth < 40) {
       desiredLeftPaneWidth = 0;
     } else if (desiredLeftPaneWidth < 75) {
@@ -57,16 +56,16 @@ export default class SplitView extends React.Component {
     // minimum <= X <= maximum
     const eventX = clamp(desiredLeftPaneWidth, minimumX, maximumX);
 
-    this.setState({
+    return {
       left: Math.round(eventX),
       right: Math.round(width - eventX - 8),
-    });
+    };
   }
 
   @autobind
   _onMouseMove(event) {
     event.preventDefault(); // avoids unwanted selection of note text
-    this._adjustPanes(event.clientX);
+    this.setState(this._getPaneDimensions(event.clientX));
   }
 
   @autobind
