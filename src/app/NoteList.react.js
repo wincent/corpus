@@ -98,13 +98,8 @@ export default class NoteList extends React.Component {
     }
   }
 
-  _getSpacerHeight() {
-    const upperNoteCount = this._getFirstRenderedNote();
-    return upperNoteCount * NotePreview.ROW_HEIGHT;
-  }
-
   _getStyles() {
-    const space = this._getSpacerHeight();
+    const space = this._getFirstRenderedNote() * NotePreview.ROW_HEIGHT;
     return {
       list: {
         WebkitUserSelect: 'none',
