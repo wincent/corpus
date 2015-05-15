@@ -18,14 +18,12 @@ import throttle from './throttle';
  * How many notes will be rendered beyond the edges of the viewport (above and
  * below).
  */
-// BUG: should be able to reduce this, but we lose momentum scrolling
-// (need throttle?)
 const OFF_VIEWPORT_NOTE_BUFFER_COUNT = 20;
 
 /**
  * Minimum delay between processing consecutive scroll events.
  */
-const SCROLL_THROTTLE_INTERVAL = 32; // ie. two frames
+const SCROLL_THROTTLE_INTERVAL = 250;
 
 @pure
 export default class NoteList extends React.Component {
