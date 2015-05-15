@@ -178,9 +178,10 @@ export default class NoteList extends React.Component {
     performKeyboardNavigation(event);
   }
 
-  _updateScrollTop = throttle((scrollTop) => {
-    this.setState({scrollTop});
-  }, SCROLL_THROTTLE_INTERVAL);
+  _updateScrollTop = throttle(
+    scrollTop => requestAnimationFrame(() => this.setState({scrollTop})),
+    SCROLL_THROTTLE_INTERVAL
+  );
 
   @autobind
   _onScroll() {
