@@ -10,7 +10,7 @@ const stringFinder = require('../stringFinder');
 describe('stringFinder', () => {
   let haystack;
 
-  function match(needle) {
+  function find(needle) {
     return haystack.search(stringFinder(needle)) !== -1;
   }
 
@@ -23,39 +23,39 @@ describe('stringFinder', () => {
     `;
   });
 
-  it('matches normal strings', () => {
-    expect(match('document')).toBe(true);
+  it('findes normal strings', () => {
+    expect(find('document')).toBe(true);
 
-    expect(match('science')).toBe(false);
+    expect(find('science')).toBe(false);
   });
 
-  it('matches substrings of words', () => {
-    expect(match('eatur')).toBe(true);
-    expect(match('men')).toBe(true);
-    expect(match('H')).toBe(true);
+  it('findes substrings of words', () => {
+    expect(find('eatur')).toBe(true);
+    expect(find('men')).toBe(true);
+    expect(find('H')).toBe(true);
 
-    expect(match('z')).toBe(false);
+    expect(find('z')).toBe(false);
   });
 
-  it('matches multiline strings', () => {
-    expect(match('words')).toBe(true);
+  it('findes multiline strings', () => {
+    expect(find('words')).toBe(true);
   });
 
-  it('matches strings case insensitively', () => {
-    expect(match('MixedCase')).toBe(true);
-    expect(match('mixedcase')).toBe(true);
+  it('findes strings case insensitively', () => {
+    expect(find('MixedCase')).toBe(true);
+    expect(find('mixedcase')).toBe(true);
   });
 
-  it('matches RegExp special characters', () => {
+  it('findes RegExp special characters', () => {
     // Finds literal match.
-    expect(match('\\d+')).toBe(true);
+    expect(find('\\d+')).toBe(true);
 
     // Ignores thing that would be a match if it were used as a RegExp.
-    expect(match('.+')).toBe(false);
+    expect(find('.+')).toBe(false);
   });
 
-  it('matches URLs', () => {
+  it('findes URLs', () => {
     // Testing these because they have literal `/` in them.
-    expect(match('http://example.com')).toBe(true);
+    expect(find('http://example.com')).toBe(true);
   });
 });
