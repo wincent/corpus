@@ -99,7 +99,7 @@ class NotesStore extends Store {
       .map(getStatInfo)
       .then(info => {
         const sorted = info.sort(compareMTime);
-        const preload = sorted.slice(0, PRELOAD_COUNT);
+        const preload = sorted.splice(0, PRELOAD_COUNT);
         return new Promise((resolve, reject) => (
           Promise.map(preload, readContents, {concurrency: 5})
             .then(appendResults)

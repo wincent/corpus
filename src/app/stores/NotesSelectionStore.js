@@ -206,10 +206,14 @@ class NotesSelectionStore extends Store {
         break;
 
       case Actions.NOTES_LOADED:
-        this._change(payload.type, () => (
+        this._change(payload.type, () => {
           // TODO: persist last selection across restarts
-          NotesStore.notes.size ? selection.add(0) : selection
-        ));
+          if (selection.size) {
+            return selection;
+          } else {
+            return NotesStore.notes.size ? selection.add(0) : selection;
+          }
+        });
         break;
 
       case Actions.PREVIOUS_NOTE_SELECTED:

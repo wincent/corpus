@@ -83,7 +83,7 @@ export default class NoteList extends React.Component {
       (this.state.scrollTop + visibleHeight) / NotePreview.ROW_HEIGHT
     );
     const last = Math.min(
-      this.state.notes.size,
+      this.state.notes.size - 1,
       bottomEdge + OFF_VIEWPORT_NOTE_BUFFER_COUNT
     );
 
@@ -104,6 +104,7 @@ export default class NoteList extends React.Component {
         WebkitUserSelect: 'none',
         cursor: 'default',
         margin: 0,
+        outline: 0,
         padding: 0,
         position: 'absolute',
         top: space + 'px',
@@ -224,12 +225,11 @@ export default class NoteList extends React.Component {
   _renderNotes() {
     const first = this._getFirstRenderedNote();
     const last = this._getLastRenderedNote();
-    return this.state.notes.map((note, i) => {
-      if (i < first || i > last) {
-        return null;
-      }
+    const notes = [];
+    for (var i = first; i <= last; i++) {
       const selected = this.state.selection.has(i);
-      return (
+      const note = this.state.notes.get(i);
+      notes.push(
         <NotePreview
           focused={this.state.focused && selected}
           index={i}
@@ -239,7 +239,8 @@ export default class NoteList extends React.Component {
           selected={selected}
         />
       );
-    });
+    }
+    return notes;
   }
 
   render() {
