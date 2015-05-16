@@ -45,7 +45,6 @@ MINUTIAE
 - build inverted index to make searching faster; or use IndexedDB (if Electron supports it, and if it looks like it will be faster); will need an index for title names and also for full-text search (although note: IndexedDB has no equivalent of the SQL "LIKE" keyword, so if I want that, I'll need to store multiple keys as substrings)
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
 - Save/Restore cursor position when moving between notes
-- Investigate scroll slow-down (press-and-hold DOWN key; observe it slow down the farther you go, but if you release then press-and-hold it again it gets faster once more)
 - in nvALT, when you click on the note placeholder, the OmniBar retains focus
 - possibly use dependent FilteredNotesStore (`waitFor` NotesStore) as a basis for filtered view; this ends up being the one that (most) of the app actually cares about)
 - watch filesystem to notice external updates
@@ -62,7 +61,6 @@ MINUTIAE
   - omnibar should show "foo[ bar baz]" ([] indicates selected text)
   - and note view should show that note
   - and note list should show that note selected at the top
-- [DONE] investigate performance regression when dragging separator (or resizing window); profiler shows a lot of time being spent in layout, I suspect flex-box may be the culprit; I should compare it to a non-flexy approach (I did a quick experiment and its still pretty slow)
 - resolve clash of Command-R accelerators (using it for rename and reload)
 
 NICE TO HAVES
@@ -134,3 +132,10 @@ ARCHIVES
 - [DONE] optimize rendering with large numbers of notes (basically at 60fps so ok for now)
 - [DONE] get app icon
 - [DONE] can we make menu operations faster? (Command-{J,K} is crappily slow; {UP,DOWN} is ultra-fast); note that in nvALT there are menu items with those shortcuts defined, but the menu does not highlight when they are pressed, indicating some kind of bypass is in effect [see NotesTableView.m:922]
+- [DONE] investigate performance regression when dragging separator (or resizing window); profiler shows a lot of time being spent in layout, I suspect flex-box may be the culprit; I should compare it to a non-flexy approach (I did a quick experiment and its still pretty slow)
+- [DONE] "Select All" scrolls to bottom of NotesList
+- [DONE] "Select All" is broken (or rather, doesn't work when the note list is focus)
+- [DONE] bug: when you deselect the last note in a selection, we scroll to the top
+- [DONE] update separator and resizing behavior to match nvALT
+- [DONE] resizing is slow, and you can see white background in the window in the interim (not even a background color on body/html fixes this....); reducing the number of notes in the `NoteList` does fix it, however (as does reducing the amount of text in each preview...)... which suggests I need a fixed-data-table-like thing
+- [DONE] Investigate scroll slow-down (press-and-hold DOWN key; observe it slow down the farther you go, but if you release then press-and-hold it again it gets faster once more)
