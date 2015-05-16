@@ -175,7 +175,10 @@ export default class NoteList extends React.Component {
     this.setState({focused: true});
   }
 
+  @autobind
   _onKeyDown(event) {
+    this._lastKeyDown = event.keyCode; // teh hax!
+
     switch (event.keyCode) {
       case Keys.A:
         if (event.metaKey) {
@@ -204,19 +207,18 @@ export default class NoteList extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.selection !== this.state.selection) {
-      if (this.state.notes.size) {
+      if (this.state.selection.size) {
+        // Maintain last selection within view.
+        const lastIndex = this.state.selection.last();
+        const last = React.findDOMNode(this.refs[lastIndex]);
+        last.scrollIntoViewIfNeeded(false);
+      } else if (this._lastKeyDown === Keys.ESCAPE) {
+        // If we cleared selection by pressing Escape, we want to scroll to top.
         const parent = React.findDOMNode(this).parentNode;
-        if (!this.state.selection.size) {
-          // We have notes, but nothing selected; scroll to top.
-          parent.scrollTop = 0;
-        } else {
-          // Maintain last selection within view.
-          const lastIndex = this.state.selection.last();
-          const last = React.findDOMNode(this.refs[lastIndex]);
-          last.scrollIntoViewIfNeeded(false);
-        }
+        parent.scrollTop = 0;
       }
     }
+    this._lastKeyDown = null;
   }
 
   _renderNotes() {
