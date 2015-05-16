@@ -4,6 +4,7 @@
 'use strict';
 
 export default {
+  A: 65,
   DOWN: 40,
   ESCAPE: 27,
   J: 74,

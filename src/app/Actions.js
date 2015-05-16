@@ -93,7 +93,6 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_RENAME_REQUESTED);
   },
 
-  // FIXME: currently unused
   selectAll() {
     dispatch(actionTypes.ALL_NOTES_SELECTED);
   },

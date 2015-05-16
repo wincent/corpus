@@ -7,6 +7,7 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 
 import Actions from './Actions';
+import Keys from './Keys';
 import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
@@ -175,6 +176,15 @@ export default class NoteList extends React.Component {
   }
 
   _onKeyDown(event) {
+    switch (event.keyCode) {
+      case Keys.A:
+        if (event.metaKey) {
+          Actions.selectAll();
+          event.preventDefault();
+        }
+        return;
+    }
+
     performKeyboardNavigation(event);
   }
 
