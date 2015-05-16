@@ -12,6 +12,7 @@ import FocusStore from './stores/FocusStore';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import NotesStore from './stores/NotesStore';
 import performKeyboardNavigation from './performKeyboardNavigation';
+import stringFinder from './stringFinder';
 
 const styles = {
   cancel: {
@@ -123,7 +124,23 @@ export default class OmniBar extends React.Component {
 
   @autobind
   _onChange(event) {
-    this.setState({value: event.currentTarget.value});
+    const value = event.currentTarget.value;
+    this.setState({value});
+
+    const regexen = value.trim().split(/\s+/).map(stringFinder);
+    if (regexen.length) {
+      console.time('search ' + value);
+      const filtered = NotesStore.notes.filter(note => (
+        regexen.every(regexp => (
+          note.get('title').search(regexp) !== -1 ||
+          note.get('text').search(regexp) !== -1
+        ))
+      ));
+      console.log('HITS', filtered.size);
+      filtered.forEach(hit => console.log(hit.get('title')));
+      console.timeEnd('search ' + value);
+      console.log('------------');
+    }
   }
 
   @autobind
