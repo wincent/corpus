@@ -96,7 +96,7 @@ function adjustSelection(delta) {
 
 function selectAll() {
   // NOTE: once we support deletion, will need to worry about holes
-  const range = Immutable.Range(0, NotesStore.notes.size);
+  const range = Immutable.Range(NotesStore.notes.size, -1);
   return selection.clear().merge(range);
 }
 
