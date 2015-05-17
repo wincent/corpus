@@ -9,6 +9,7 @@ import ipc from 'ipc';
 
 import Actions from './Actions';
 import FocusStore from './stores/FocusStore';
+import Keys from './Keys';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import FilteredNotesStore from './stores/FilteredNotesStore';
 import performKeyboardNavigation from './performKeyboardNavigation';
@@ -140,7 +141,17 @@ export default class OmniBar extends React.Component {
     input.setSelectionRange(0, input.value.length);
   }
 
+  @autobind
   _onKeyDown(event) {
+    switch (event.keyCode) {
+      case Keys.ESCAPE:
+        this.setState({value: ''});
+        Actions.deselectAll();
+        Actions.searchRequested({value: ''});
+        Actions.focusOmniBar();
+        return;
+    }
+
     performKeyboardNavigation(event);
   }
 
