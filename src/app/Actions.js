@@ -30,6 +30,7 @@ const actionTypes = keyMirror({
   NOTE_TITLE_CHANGED: null,
   OMNI_BAR_FOCUS_REQUESTED: null,
   PREVIOUS_NOTE_SELECTED: null,
+  SEARCH_REQUESTED: null,
 });
 
 const actionCreators = {
@@ -91,6 +92,10 @@ const actionCreators = {
 
   requestRename() {
     dispatch(actionTypes.NOTE_RENAME_REQUESTED);
+  },
+
+  searchRequested(payload) {
+    dispatch(actionTypes.SEARCH_REQUESTED, payload);
   },
 
   selectAll() {

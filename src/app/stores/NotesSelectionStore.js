@@ -3,8 +3,8 @@
 import Immutable from 'immutable';
 
 import Actions from '../Actions';
+import FilteredNotesStore from './FilteredNotesStore';
 import Store from './Store';
-import NotesStore from './NotesStore';
 import clamp from '../clamp';
 
 /**
@@ -46,7 +46,7 @@ function adjustSelection(delta) {
   totalDelta = clamp(
     totalDelta + delta, // desired distance from where we started
     -initialLocation, // limit of upwards selection
-    NotesStore.notes.size - initialLocation - 1 // limit of downwards selection
+    FilteredNotesStore.notes.size - initialLocation - 1 // limit of downwards selection
   );
 
   if (totalDelta < previousDelta) {
@@ -75,7 +75,7 @@ function adjustSelection(delta) {
       // Extending downwards selection.
       if (selection.has(initialLocation + totalDelta)) {
         // Need to skip already-selected selection; recurse.
-        if (initialLocation + totalDelta === NotesStore.notes.size - 1) {
+        if (initialLocation + totalDelta === FilteredNotesStore.notes.size - 1) {
           // Unless we're already at the bottom.
           return selection;
         } else {
@@ -96,19 +96,19 @@ function adjustSelection(delta) {
 
 function selectAll() {
   // NOTE: once we support deletion, will need to worry about holes
-  const range = Immutable.Range(NotesStore.notes.size, -1);
+  const range = Immutable.Range(FilteredNotesStore.notes.size, -1);
   return selection.clear().merge(range);
 }
 
 function selectFirst() {
   selection = selection.clear();
-  return NotesStore.notes.size ? selection.add(0) : selection;
+  return FilteredNotesStore.notes.size ? selection.add(0) : selection;
 }
 
 function selectLast() {
   selection = selection.clear();
-  if (NotesStore.notes.size) {
-    return selection.add(NotesStore.notes.size - 1);
+  if (FilteredNotesStore.notes.size) {
+    return selection.add(FilteredNotesStore.notes.size - 1);
   } else {
     return selection;
   }
@@ -119,7 +119,7 @@ function selectNext() {
   if (mostRecent == null) {
     return selectFirst();
   } else {
-    const maxSelectionIndex = NotesStore.notes.size - 1;
+    const maxSelectionIndex = FilteredNotesStore.notes.size - 1;
     if (mostRecent < maxSelectionIndex) {
       return selection.clear().add(mostRecent + 1);
     } else {
@@ -199,25 +199,31 @@ class NotesSelectionStore extends Store {
 
       case Actions.NOTE_TITLE_CHANGED:
         // A note was bumped to the top, so select it.
-        this.waitFor(NotesStore.dispatchToken);
+        this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, () => {
           return selection.clear().add(0);
         });
         break;
 
       case Actions.NOTES_LOADED:
+        this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, () => {
           // TODO: persist last selection across restarts
           if (selection.size) {
             return selection;
           } else {
-            return NotesStore.notes.size ? selection.add(0) : selection;
+            return FilteredNotesStore.notes.size ? selection.add(0) : selection;
           }
         });
         break;
 
       case Actions.PREVIOUS_NOTE_SELECTED:
         this._change(payload.type, selectPrevious);
+        break;
+
+      case Actions.SEARCH_REQUESTED:
+        this.waitFor(FilteredNotesStore.dispatchToken);
+        // TODO: implement
         break;
     }
   }

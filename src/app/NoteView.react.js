@@ -9,7 +9,7 @@ import autobind from 'autobind-decorator';
 import Note from './Note.react';
 import NotePlaceholder from './NotePlaceholder.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
-import NotesStore from './stores/NotesStore';
+import FilteredNotesStore from './stores/FilteredNotesStore';
 
 const styles = {
   root: {
@@ -23,18 +23,18 @@ export default class NoteView extends React.Component {
     super(props);
     const {selection} = NotesSelectionStore;
     const count = selection.size;
-    const note = count === 1 ? NotesStore.notes.get(selection.first()) : null;
+    const note = count === 1 ? FilteredNotesStore.notes.get(selection.first()) : null;
     this.state = {count, note};
   }
 
   componentDidMount() {
     NotesSelectionStore.on('change', this._updateNote);
-    NotesStore.on('change', this._updateNote);
+    FilteredNotesStore.on('change', this._updateNote);
   }
 
   componentWillUnmount() {
     NotesSelectionStore.removeListener('change', this._updateNote);
-    NotesStore.removeListener('change', this._updateNote);
+    FilteredNotesStore.removeListener('change', this._updateNote);
   }
 
   @autobind
@@ -43,7 +43,7 @@ export default class NoteView extends React.Component {
     // this up (we'll be doing it in a few places)
     const {selection} = NotesSelectionStore;
     const count = selection.size;
-    const note = count === 1 ? NotesStore.notes.get(selection.first()) : null;
+    const note = count === 1 ? FilteredNotesStore.notes.get(selection.first()) : null;
     if (this.state.note !== note || this.state.count !== count) {
       this.setState({count, note});
     }

@@ -10,7 +10,7 @@ import Actions from './Actions';
 import Keys from './Keys';
 import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
-import NotesStore from './stores/NotesStore';
+import FilteredNotesStore from './stores/FilteredNotesStore';
 import performKeyboardNavigation from './performKeyboardNavigation';
 import pure from './pure';
 import throttle from './throttle';
@@ -34,7 +34,7 @@ export default class NoteList extends React.Component {
     this._listenerTimeout = null;
     this.state = {
       focused: false,
-      notes: NotesStore.notes,
+      notes: FilteredNotesStore.notes,
       scrollTop: 0,
       selection: NotesSelectionStore.selection,
     };
@@ -42,7 +42,7 @@ export default class NoteList extends React.Component {
 
   componentDidMount() {
     NotesSelectionStore.on('change', this._updateNoteSelection);
-    NotesStore.on('change', this._updateNotes);
+    FilteredNotesStore.on('change', this._updateNotes);
 
     const parent = React.findDOMNode(this).parentNode;
     parent.addEventListener('scroll', this._onScroll);
@@ -50,7 +50,7 @@ export default class NoteList extends React.Component {
 
   componentWillUnmount() {
     NotesSelectionStore.removeListener('change', this._updateNoteSelection);
-    NotesStore.removeListener('change', this._updateNotes);
+    FilteredNotesStore.removeListener('change', this._updateNotes);
     this._removeListeners();
 
     const parent = React.findDOMNode(this).parentNode;
@@ -113,7 +113,7 @@ export default class NoteList extends React.Component {
       },
       root: {
         background: '#ebebeb',
-        height: NotesStore.notes.size * NotePreview.ROW_HEIGHT,
+        height: FilteredNotesStore.notes.size * NotePreview.ROW_HEIGHT,
         minHeight: 'calc(100vh - 36px)', // ensure full background coverage
         position: 'relative',
       },
@@ -153,7 +153,7 @@ export default class NoteList extends React.Component {
 
   @autobind
   _updateNotes() {
-    this.setState({notes: NotesStore.notes});
+    this.setState({notes: FilteredNotesStore.notes});
   }
 
   @autobind

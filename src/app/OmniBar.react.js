@@ -10,7 +10,7 @@ import ipc from 'ipc';
 import Actions from './Actions';
 import FocusStore from './stores/FocusStore';
 import NotesSelectionStore from './stores/NotesSelectionStore';
-import NotesStore from './stores/NotesStore';
+import FilteredNotesStore from './stores/FilteredNotesStore';
 import performKeyboardNavigation from './performKeyboardNavigation';
 import stringFinder from './stringFinder';
 
@@ -50,7 +50,7 @@ const styles = {
 function getCurrentNote() {
   const selection = NotesSelectionStore.selection;
   if (selection.size === 1) {
-    return NotesStore.notes.get(selection.first());
+    return FilteredNotesStore.notes.get(selection.first());
   } else {
     return null;
   }
@@ -82,7 +82,7 @@ export default class OmniBar extends React.Component {
     React.findDOMNode(this._inputRef).focus();
     FocusStore.on('change', this._updateFocus);
     NotesSelectionStore.on('change', this._updateNote);
-    NotesStore.on('change', this._updateNote);
+    FilteredNotesStore.on('change', this._updateNote);
   }
 
   componentWillUnmount() {
@@ -90,7 +90,7 @@ export default class OmniBar extends React.Component {
     ipc.removeAllListeners('focus');
     FocusStore.removeListerner('change', this._updateFocus);
     NotesSelectionStore.removeListener('change', this._updateNote);
-    NotesStore.removeListener('change', this._updateNote);
+    FilteredNotesStore.removeListener('change', this._updateNote);
   }
 
   _getBackgroundStyle() {
@@ -126,21 +126,7 @@ export default class OmniBar extends React.Component {
   _onChange(event) {
     const value = event.currentTarget.value;
     this.setState({value});
-
-    const regexen = value.trim().split(/\s+/).map(stringFinder);
-    if (regexen.length) {
-      console.time('search ' + value);
-      const filtered = NotesStore.notes.filter(note => (
-        regexen.every(regexp => (
-          note.get('title').search(regexp) !== -1 ||
-          note.get('text').search(regexp) !== -1
-        ))
-      ));
-      console.log('HITS', filtered.size);
-      filtered.forEach(hit => console.log(hit.get('title')));
-      console.timeEnd('search ' + value);
-      console.log('------------');
-    }
+    Actions.searchRequested({value});
   }
 
   @autobind
