@@ -20,11 +20,11 @@ Nice to haves:
 
 MINUTIAE
 
+- possibly use dependent FilteredNotesStore (`waitFor` NotesStore) as a basis for filtered view; this ends up being the one that (most) of the app actually cares about)
 - fix contextual menu lag; Atom doesn't have the problem...
 - figure out how to disable menu items conditionally (eg. Rename, Delete tec)
 - add note deletion (contextual menu, menu etc)
 - fix missing scrollbars (this is intermittent; not sure of cause)
-- fix slight <Separator> drift when resizing window
 - add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
 - implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
@@ -42,11 +42,9 @@ MINUTIAE
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
 - Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
 - Command-R to rename a note (focuses title in NotePreview)
-- build inverted index to make searching faster; or use IndexedDB (if Electron supports it, and if it looks like it will be faster); will need an index for title names and also for full-text search (although note: IndexedDB has no equivalent of the SQL "LIKE" keyword, so if I want that, I'll need to store multiple keys as substrings)
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
 - Save/Restore cursor position when moving between notes
 - in nvALT, when you click on the note placeholder, the OmniBar retains focus
-- possibly use dependent FilteredNotesStore (`waitFor` NotesStore) as a basis for filtered view; this ends up being the one that (most) of the app actually cares about)
 - watch filesystem to notice external updates
 - gracefully handle files going missing (and restoring); use case is mountable filesystems
 - toggle icon-search for icon-pencil
@@ -61,7 +59,8 @@ MINUTIAE
   - omnibar should show "foo[ bar baz]" ([] indicates selected text)
   - and note view should show that note
   - and note list should show that note selected at the top
-- resolve clash of Command-R accelerators (using it for rename and reload)
+- resolve clash of Command-R accelerators (using it for rename and reload); reloading shouldn't be too easy for users to do accidentally
+- show pie chart indicator showing file reading/indexing progress
 
 NICE TO HAVES
 
@@ -79,6 +78,8 @@ BUGS
 IDEAS
 
 - use codemirror to get some stuff for free (syntax highlighting, vim mode)
+- note that scroll jank is most noticeable when we prepend or delete from the front of the note list; so, we could make a point of not doing that (ie. when scrolling down, always only extend down; when scrolling up, insert everything in one go); the main reason we want to hide the non-visible bits is to make separator drags and window resizing fast, so we could actually do the hiding when idle, after scrolling stops.
+- alternatively, make scrolling cheaper for React by getting it to do fewer DOM operations (probably smarter use of keys); I notice that appending is (relatively) fast; perhaps we can re-number keys to make it look like we're never appending, just reshuffling?
 
 ARCHIVES
 
@@ -139,3 +140,4 @@ ARCHIVES
 - [DONE] update separator and resizing behavior to match nvALT
 - [DONE] resizing is slow, and you can see white background in the window in the interim (not even a background color on body/html fixes this....); reducing the number of notes in the `NoteList` does fix it, however (as does reducing the amount of text in each preview...)... which suggests I need a fixed-data-table-like thing
 - [DONE] Investigate scroll slow-down (press-and-hold DOWN key; observe it slow down the farther you go, but if you release then press-and-hold it again it gets faster once more)
+- [DONE] fix slight <Separator> drift when resizing window
