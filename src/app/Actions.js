@@ -46,7 +46,7 @@ const actionCreators = {
     dispatch(actionTypes.ALL_NOTES_SELECTED);
   },
 
-  deselectAll() {
+  allNotesDeselected() {
     dispatch(actionTypes.ALL_NOTES_DESELECTED);
   },
 

@@ -128,11 +128,12 @@ export default class OmniBar extends React.Component {
     const value = event.currentTarget.value;
     this.setState({value});
     Actions.searchRequested({value});
+    // TODO: may want to check selected region, if this is a title prefix match.
   }
 
   @autobind
   _onClick() {
-    Actions.deselectAll();
+    Actions.allNotesDeselected();
     React.findDOMNode(this._inputRef).focus();
   }
 
@@ -146,7 +147,7 @@ export default class OmniBar extends React.Component {
     switch (event.keyCode) {
       case Keys.ESCAPE:
         this.setState({value: ''});
-        Actions.deselectAll();
+        Actions.allNotesDeselected();
         Actions.searchRequested({value: ''});
         Actions.focusOmniBar();
         return;
