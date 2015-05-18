@@ -106,8 +106,8 @@ export default class OmniBar extends React.Component {
   }
 
   @autobind
-  _onNotesChange(query: string) {
-    this._query = query;
+  _onNotesChange(query: ?string) {
+    this._query = query || '';
   }
 
   @autobind
@@ -134,11 +134,13 @@ export default class OmniBar extends React.Component {
           }
         });
     }
+    this._query = null;
   }
 
   @autobind
   _onChange(event) {
     const value = event.currentTarget.value;
+    this.setState({value});
     Actions.searchRequested({value});
     // TODO: may want to check selected region, if this is a title prefix match.
   }
