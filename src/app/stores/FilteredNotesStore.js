@@ -21,7 +21,7 @@ function filter(value: string): Immutable.List {
     const filtered = NotesStore.notes.filter(note => {
       if (
         titleMatch != null &&
-        note.get('title').startsWith(value)
+        note.get('title').toLowerCase().startsWith(value.toLowerCase())
       ) {
         // First seen prefix match on title; remember where we saw it.
         titleMatch = count;

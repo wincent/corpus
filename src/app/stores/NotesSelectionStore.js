@@ -229,7 +229,10 @@ class NotesSelectionStore extends Store {
             return selection.clear();
           } else {
             const firstNote = FilteredNotesStore.notes.first();
-            if (firstNote && firstNote.get('title').startsWith(payload.value)) {
+            if (
+              firstNote &&
+              firstNote.get('title').toLowerCase().startsWith(payload.value.toLowerCase())
+            ) {
               return selectFirst();
             } else {
               return selection.clear();
