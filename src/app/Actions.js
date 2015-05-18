@@ -97,10 +97,6 @@ const actionCreators = {
   searchRequested(payload) {
     dispatch(actionTypes.SEARCH_REQUESTED, payload);
   },
-
-  selectAll() {
-    dispatch(actionTypes.ALL_NOTES_SELECTED);
-  },
 };
 
 const Actions = {...actionTypes, ...actionCreators};

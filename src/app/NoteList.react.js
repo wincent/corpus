@@ -183,7 +183,7 @@ export default class NoteList extends React.Component {
     switch (event.keyCode) {
       case Keys.A:
         if (event.metaKey) {
-          Actions.selectAll();
+          Actions.allNotesSelected();
           event.preventDefault();
         }
         return;
