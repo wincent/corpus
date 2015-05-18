@@ -17,7 +17,7 @@ export default class Corpus extends React.Component {
   componentDidMount() {
     ipc.on('next', Actions.nextNote);
     ipc.on('previous', Actions.previousNote);
-    ipc.on('rename', Actions.requestRename);
+    ipc.on('rename', Actions.renameRequested);
     ipc.on('search', Actions.focusOmniBar);
   }
 

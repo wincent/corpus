@@ -90,7 +90,7 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_TITLE_CHANGED, payload);
   },
 
-  requestRename() {
+  renameRequested() {
     dispatch(actionTypes.NOTE_RENAME_REQUESTED);
   },
 
