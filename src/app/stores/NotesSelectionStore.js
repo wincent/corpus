@@ -101,16 +101,18 @@ function selectAll() {
 }
 
 function selectFirst() {
-  selection = selection.clear();
-  return FilteredNotesStore.notes.size ? selection.add(0) : selection;
+  if (FilteredNotesStore.notes.size) {
+    return selection.clear().add(0);
+  } else {
+    return selection.clear();
+  }
 }
 
 function selectLast() {
-  selection = selection.clear();
   if (FilteredNotesStore.notes.size) {
-    return selection.add(FilteredNotesStore.notes.size - 1);
+    return selection.clear().add(FilteredNotesStore.notes.size - 1);
   } else {
-    return selection;
+    return selection.clear();
   }
 }
 
@@ -191,18 +193,17 @@ class NotesSelectionStore extends Store {
       case Actions.NOTE_SELECTED:
         this._change(payload.type, () => {
           if (payload.exclusive) {
-            selection = selection.clear();
+            return selection.clear().add(payload.index);
+          } else {
+            return selection.add(payload.index);
           }
-          return selection.add(payload.index);
         });
         break;
 
       case Actions.NOTE_TITLE_CHANGED:
         // A note was bumped to the top, so select it.
         this.waitFor(FilteredNotesStore.dispatchToken);
-        this._change(payload.type, () => {
-          return selection.clear().add(0);
-        });
+        this._change(payload.type, selectFirst);
         break;
 
       case Actions.NOTES_LOADED:
