@@ -228,7 +228,12 @@ class NotesSelectionStore extends Store {
           if (payload.value === '') {
             return selection.clear();
           } else {
-            return selectFirst();
+            const firstNote = FilteredNotesStore.notes.first();
+            if (firstNote && firstNote.get('title').startsWith(payload.value)) {
+              return selectFirst();
+            } else {
+              return selection.clear();
+            }
           }
         });
         break;
