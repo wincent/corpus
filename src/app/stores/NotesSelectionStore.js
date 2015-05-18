@@ -223,9 +223,14 @@ class NotesSelectionStore extends Store {
         break;
 
       case Actions.SEARCH_REQUESTED:
-        // Reset our selection to the first item in the list.
         this.waitFor(FilteredNotesStore.dispatchToken);
-        this._change(payload.type, selectFirst);
+        this._change(payload.type, () => {
+          if (payload.value === '') {
+            return selection.clear();
+          } else {
+            return selectFirst();
+          }
+        });
         break;
     }
   }
