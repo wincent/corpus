@@ -108,24 +108,33 @@ export default class OmniBar extends React.Component {
   @autobind
   _updateNote() {
     const note = getCurrentNote();
-    if (this.state.note !== note) {
+    const title = note && note.get('title').toLowerCase();
+    const previousValue = this._pendingValue && this._pendingValue.toLowerCase();
+    if (
+      this.state.note !== note ||
+      previousValue !== title
+    ) {
       this.setState(
         {
           note,
-          value: getCurrentTitle(),
+          value: getCurrentTitle() || this._pendingValue || '',
         },
         () => {
           const input = React.findDOMNode(this._inputRef)
           if (document.activeElement === input) {
-            input.setSelectionRange(0, input.value.length);
+            if (title && title.startsWith(previousValue)) {
+              input.setSelectionRange(previousValue.length, input.value.length);
+            }
           }
         });
     }
+    this._pendingValue = null;
   }
 
   @autobind
   _onChange(event) {
     const value = event.currentTarget.value;
+    this._pendingValue = value;
     this.setState({value});
     Actions.searchRequested({value});
     // TODO: may want to check selected region, if this is a title prefix match.
