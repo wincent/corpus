@@ -228,12 +228,16 @@ class NotesSelectionStore extends Store {
           if (payload.value === '') {
             return selection.clear();
           } else {
-            const firstNote = FilteredNotesStore.notes.first();
-            if (
-              firstNote &&
-              firstNote.get('title').toLowerCase().startsWith(payload.value.toLowerCase())
-            ) {
-              return selectFirst();
+            // Find first matching title and select it, if there is one.
+            let matchingIndex = null;
+            FilteredNotesStore.notes.find((note, index) => {
+              if (note.get('title').toLowerCase().startsWith(payload.value.toLowerCase())) {
+                matchingIndex = index;
+                return true;
+              }
+            });
+            if (matchingIndex !== null) {
+              return selection.clear().add(matchingIndex);
             } else {
               return selection.clear();
             }
