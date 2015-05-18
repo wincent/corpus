@@ -149,7 +149,7 @@ export default class OmniBar extends React.Component {
         this.setState({value: ''});
         Actions.allNotesDeselected();
         Actions.searchRequested({value: ''});
-        Actions.focusOmniBar();
+        Actions.omniBarFocused();
         return;
     }
 

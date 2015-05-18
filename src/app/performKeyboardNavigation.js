@@ -13,25 +13,25 @@ function performKeyboardNavigation(event) {
   switch (event.keyCode) {
     case Keys.DOWN:
       if (event.metaKey) {
-        Actions.lastNote();
+        Actions.lastNoteSelected();
       } else if (event.shiftKey) {
         Actions.adjustNoteSelectionDown();
       } else {
-        Actions.nextNote();
+        Actions.nextNoteSelected();
       }
       event.preventDefault();
       break;
 
     case Keys.ESCAPE:
       Actions.allNotesDeselected();
-      Actions.focusOmniBar();
+      Actions.omniBarFocused();
       break;
 
     case Keys.J:
       // Intercept before the menu shortcut gets fired to avoid annoying
       // flicker and slowdown.
       if (event.metaKey) {
-        Actions.nextNote();
+        Actions.nextNoteSelected();
         event.preventDefault();
       }
       break;
@@ -40,18 +40,18 @@ function performKeyboardNavigation(event) {
       // Intercept before the menu shortcut gets fired to avoid annoying
       // flicker and slowdown.
       if (event.metaKey) {
-        Actions.previousNote();
+        Actions.previousNoteSelected();
         event.preventDefault();
       }
       break;
 
     case Keys.UP:
       if (event.metaKey) {
-        Actions.firstNote();
+        Actions.firstNoteSelected();
       } else if (event.shiftKey) {
         Actions.adjustNoteSelectionUp();
       } else {
-        Actions.previousNote();
+        Actions.previousNoteSelected();
       }
       event.preventDefault();
       break;

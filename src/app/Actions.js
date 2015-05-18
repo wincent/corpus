@@ -50,19 +50,19 @@ const actionCreators = {
     dispatch(actionTypes.ALL_NOTES_DESELECTED);
   },
 
-  firstNote() {
+  firstNoteSelected() {
     dispatch(actionTypes.FIRST_NOTE_SELECTED);
   },
 
-  focusOmniBar() {
+  omniBarFocused() {
     dispatch(actionTypes.OMNI_BAR_FOCUS_REQUESTED);
   },
 
-  lastNote() {
+  lastNoteSelected() {
     dispatch(actionTypes.LAST_NOTE_SELECTED);
   },
 
-  nextNote() {
+  nextNoteSelected() {
     dispatch(actionTypes.NEXT_NOTE_SELECTED);
   },
 
@@ -82,7 +82,7 @@ const actionCreators = {
     dispatch(actionTypes.NOTES_LOADED);
   },
 
-  previousNote() {
+  previousNoteSelected() {
     dispatch(actionTypes.PREVIOUS_NOTE_SELECTED);
   },
 
