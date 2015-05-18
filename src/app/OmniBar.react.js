@@ -82,16 +82,16 @@ export default class OmniBar extends React.Component {
     ipc.on('focus', () => this.setState({foreground: true}));
     React.findDOMNode(this._inputRef).focus();
     FocusStore.on('change', this._updateFocus);
-    NotesSelectionStore.on('change', this._updateNote);
-    FilteredNotesStore.on('change', this._updateNote);
+    NotesSelectionStore.on('change', this._onSelectionChange);
+    FilteredNotesStore.on('change', this._onNotesChange);
   }
 
   componentWillUnmount() {
     ipc.removeAllListeners('blur');
     ipc.removeAllListeners('focus');
     FocusStore.removeListerner('change', this._updateFocus);
-    NotesSelectionStore.removeListener('change', this._updateNote);
-    FilteredNotesStore.removeListener('change', this._updateNote);
+    NotesSelectionStore.removeListener('change', this._onSelectionChange);
+    FilteredNotesStore.removeListener('change', this._onNotesChange);
   }
 
   _getBackgroundStyle() {
@@ -106,36 +106,39 @@ export default class OmniBar extends React.Component {
   }
 
   @autobind
-  _updateNote() {
+  _onNotesChange(query: string) {
+    this._query = query;
+  }
+
+  @autobind
+  _onSelectionChange() {
     const note = getCurrentNote();
-    const title = note && note.get('title').toLowerCase();
-    const previousValue = this._pendingValue && this._pendingValue.toLowerCase();
+    const currentValue = note ? note.get('title').toLowerCase() : '';
+    const previousValue = this.state.value.toLowerCase();
+    const pendingValue = this._query ? this._query.toLowerCase() : '';
     if (
       this.state.note !== note ||
-      previousValue !== title
+      pendingValue !== currentValue
     ) {
       this.setState(
         {
           note,
-          value: getCurrentTitle() || this._pendingValue || '',
+          value: getCurrentTitle() || this._query || '',
         },
         () => {
           const input = React.findDOMNode(this._inputRef)
           if (document.activeElement === input) {
-            if (title && title.startsWith(previousValue)) {
-              input.setSelectionRange(previousValue.length, input.value.length);
+            if (currentValue && currentValue.startsWith(pendingValue)) {
+              input.setSelectionRange(pendingValue.length, input.value.length);
             }
           }
         });
     }
-    this._pendingValue = null;
   }
 
   @autobind
   _onChange(event) {
     const value = event.currentTarget.value;
-    this._pendingValue = value;
-    this.setState({value});
     Actions.searchRequested({value});
     // TODO: may want to check selected region, if this is a title prefix match.
   }

@@ -79,7 +79,7 @@ class FilteredNotesStore extends Store {
     const previous = notes;
     notes = changer.call();
     if (notes !== previous) {
-      this.emit('change');
+      this.emit('change', query);
     }
   }
 
