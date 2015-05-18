@@ -16,33 +16,12 @@ let query = null;
 function filter(value: string): Immutable.List {
   const regexen = value.trim().split(/\s+/).map(stringFinder);
   if (regexen.length) {
-    let titleMatch;
-    let count = 0;
-    const filtered = NotesStore.notes.filter(note => {
-      if (
-        titleMatch != null &&
-        note.get('title').toLowerCase().startsWith(value.toLowerCase())
-      ) {
-        // First seen prefix match on title; remember where we saw it.
-        titleMatch = count;
-      }
-      const match = regexen.every(regexp => (
+    return NotesStore.notes.filter(note => (
+      regexen.every(regexp => (
         note.get('title').search(regexp) !== -1 ||
         note.get('text').search(regexp) !== -1
-      ));
-      if (match) {
-        count++;
-      }
-      return match;
-    });
-
-    // If we found an exact title match, bump first found to the top.
-    if (titleMatch != null) {
-      const note = filtered.get(titleMatch);
-      return filtered.delete(titleMatch).unshift(note);
-    } else {
-      return filtered;
-    }
+      ))
+    ));
   } else {
     return notes;
   }
