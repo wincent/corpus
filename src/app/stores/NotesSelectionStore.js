@@ -223,8 +223,9 @@ class NotesSelectionStore extends Store {
         break;
 
       case Actions.SEARCH_REQUESTED:
+        // Reset our selection to the first item in the list.
         this.waitFor(FilteredNotesStore.dispatchToken);
-        // TODO: implement
+        this._change(payload.type, selectFirst);
         break;
     }
   }
