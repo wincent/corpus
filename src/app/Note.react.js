@@ -26,10 +26,18 @@ export default class Note extends React.Component {
     };
   }
 
+  componentDidMount() {
+    FocusStore.on('change', this._updateFocus);
+  }
+
   componentWillReceiveProps(nextProps) {
     this.setState({
       value: nextProps.note ? nextProps.note.get('text') : '',
     });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    FocusStore.on('change', this._updateFocus);
   }
 
   _getStyles() {
@@ -55,6 +63,16 @@ export default class Note extends React.Component {
   }
 
   @autobind
+  _updateFocus() {
+    if (FocusStore.focus === 'Note') {
+      this.setState(
+        {focused: true},
+        () => React.findDOMNode(this._textareaRef).focus()
+      );
+    }
+  }
+
+  @autobind
   _onBlur(event) {
     this.setState({focused: false});
     // Ugh, would like to do this without a linear scan.
@@ -72,6 +90,14 @@ export default class Note extends React.Component {
       text: event.currentTarget.value,
     });
     // TODO: persist changes properly (to disk/git)
+  }
+
+  @autobind
+  _onFocus() {
+    this.setState(
+      {focused: true},
+      () => React.findDOMNode(this._textareaRef).focus()
+    );
   }
 
   @autobind
@@ -115,6 +141,7 @@ export default class Note extends React.Component {
           <textarea
             onBlur={this._onBlur}
             onChange={this._onChange}
+            ref={ref => this._textareaRef = ref}
             style={this._getStyles().active}
             tabIndex={3}
             value={this.state.value}
@@ -123,7 +150,7 @@ export default class Note extends React.Component {
       } else {
         return (
           <div
-            onFocus={() => this.setState({focused: true})}
+            onFocus={this._onFocus}
             onKeyDown={this._onKeyDown}
             style={this._getStyles().inactive}
             tabIndex={3}>

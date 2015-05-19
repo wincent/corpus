@@ -20,27 +20,27 @@ Nice to haves:
 
 MINUTIAE
 
+- tab from OmniBar should focus current note, or do nothing if there is no current note
+- tab in note should insert a tab; shift-tab should go back to OmniBar
+- Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
+- remember and restore cursor position when focusing Note textarea
+- LEFT/RIGHT when NoteList has focus should move cursor to beginning end in OmniBar (and focus it, obviously)
 - note creation when hitting Enter on a title that doesn't exist yet
 - fix contextual menu lag; Atom doesn't have the problem...
 - figure out how to disable menu items conditionally (eg. Rename, Delete tec)
 - add note deletion (contextual menu, menu etc)
 - fix missing scrollbars (this is intermittent; not sure of cause)
 - add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
-- [DONE] implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
 - tidy up ugly handling of current-selected-index `null` values
 - implement contextual menu for <NoteView>
 - implement contextual menu for <NotePreview>
-- tab from OmniBar should focus current note, or do nothing if there is no current note
-- tab in note should insert a tab; shift-tab should go back to OmniBar
 - typing when NotePreview is focused should shift focus to OmniBar and insert (search)
-- [DONE] OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
 - write linter (plugin?) that warns if files don't have license headers
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
-- Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
 - Command-R to rename a note (focuses title in NotePreview)
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
 - Save/Restore cursor position when moving between notes
@@ -143,5 +143,8 @@ ARCHIVES
   - when editing: pencil
 - [DONE] clicking on the separator focuses it; you have to tab or shift-tab to remove focus
 - [DONE] in nvALT, when you click on the note placeholder, the OmniBar retains focus
+- [DONE] textarea focus doesn't seem to be working; where is the cursor? I have to click to edit (and I have to click twice...)
+- [DONE] implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
+- [DONE] OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
 
 # vim: set nowrap:
