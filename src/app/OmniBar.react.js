@@ -173,7 +173,8 @@ export default class OmniBar extends React.Component {
             if (selectionStart !== selectionEnd) {
               // Selection deletion.
               this._pendingDeletion = value.substr(0, selectionStart);
-            } else if (selectionStart) {
+            } else if (selectionStart && event.keyCode === Keys.BACKSPACE) {
+              // Delete last character in field.
               this._pendingDeletion = value.substr(0, selectionStart - 1);
             } else {
               return; // Nothing to do (already at start of input field).
@@ -196,13 +197,16 @@ export default class OmniBar extends React.Component {
   }
 
   render() {
-    let rootStyles = {
+    const rootStyles = {
       ...styles.root,
       background: this._getBackgroundStyle(),
     };
+    const iconClass = NotesSelectionStore.selection.size === 1 ?
+      'icon-pencil' :
+      'icon-search';
     return (
       <div style={rootStyles}>
-        <span className="icon-search" style={styles.icon}></span>
+        <span className={iconClass} style={styles.icon}></span>
         <input
           onChange={this._onChange}
           onFocus={this._onFocus}

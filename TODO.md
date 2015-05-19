@@ -20,7 +20,6 @@ Nice to haves:
 
 MINUTIAE
 
-- possibly use dependent FilteredNotesStore (`waitFor` NotesStore) as a basis for filtered view; this ends up being the one that (most) of the app actually cares about)
 - fix contextual menu lag; Atom doesn't have the problem...
 - figure out how to disable menu items conditionally (eg. Rename, Delete tec)
 - add note deletion (contextual menu, menu etc)
@@ -47,18 +46,6 @@ MINUTIAE
 - in nvALT, when you click on the note placeholder, the OmniBar retains focus
 - watch filesystem to notice external updates
 - gracefully handle files going missing (and restoring); use case is mountable filesystems
-- toggle icon-search for icon-pencil
-  - when field empty: search
-  - when field contains title of an existing note: pencil
-  - when field contains text found in notes but not titles: search
-  - when field contains text not found anywhere: search
-  - when editing: pencil
-- on typing, if there is a prefix match, autocomplete
-  - eg. given a note titled "foo bar baz"
-  - if you type "foo"
-  - omnibar should show "foo[ bar baz]" ([] indicates selected text)
-  - and note view should show that note
-  - and note list should show that note selected at the top
 - resolve clash of Command-R accelerators (using it for rename and reload); reloading shouldn't be too easy for users to do accidentally
 - show pie chart indicator showing file reading/indexing progress
 
@@ -73,7 +60,7 @@ NICE TO HAVES
 BUGS
 
 - clicking on the separator focuses it; you have to tab or shift-tab to remove focus
-- want a three tab cycle (OmniBar -> NoteList -> Note) but we have a four-tab cycle (Body -> OmniBar -> NoteList -> Note); when body is active the focus is invisible
+- want a three-tab cycle (OmniBar -> NoteList -> Note) but we have a four-tab cycle (Body -> OmniBar -> NoteList -> Note); when body is active the focus is invisible [but curiously, when the NoteList has no selection, we _do_ have a three-tab cycle]
 
 IDEAS
 
@@ -141,3 +128,16 @@ ARCHIVES
 - [DONE] resizing is slow, and you can see white background in the window in the interim (not even a background color on body/html fixes this....); reducing the number of notes in the `NoteList` does fix it, however (as does reducing the amount of text in each preview...)... which suggests I need a fixed-data-table-like thing
 - [DONE] Investigate scroll slow-down (press-and-hold DOWN key; observe it slow down the farther you go, but if you release then press-and-hold it again it gets faster once more)
 - [DONE] fix slight <Separator> drift when resizing window
+- [DONE] possibly use dependent FilteredNotesStore (`waitFor` NotesStore) as a basis for filtered view; this ends up being the one that (most) of the app actually cares about)
+- [DONE] on typing, if there is a prefix match, autocomplete
+  - eg. given a note titled "foo bar baz"
+  - if you type "foo"
+  - omnibar should show "foo[ bar baz]" ([] indicates selected text)
+  - and note view should show that note
+  - and note list should show that note selected at the top
+- [DONE] toggle icon-search for icon-pencil
+  - when field empty: search
+  - when field contains title of an existing note: pencil
+  - when field contains text found in notes but not titles: search
+  - when field contains text not found anywhere: search
+  - when editing: pencil
