@@ -33,19 +33,23 @@ export default class Note extends React.Component {
   }
 
   _getStyles() {
+    const baseStyles = {
+      WebkitUserSelect: this.state.focused ? 'inherit' : 'none',
+      fontFamily: 'Monaco',
+      fontSize: '12px',
+      outline: 0,
+      overflowWrap: 'break-word',
+      padding: '8px',
+      whiteSpace: 'pre-wrap',
+    };
     return {
-      root: {
-        WebkitUserSelect: this.state.focused ? 'inherit' : 'none',
-        background: colors.background, // for textarea
-        border: 0, // for textarea
-        fontFamily: 'Monaco',
-        fontSize: '12px',
-        minHeight: 'calc(100vh - 36px)', // for textarea
-        outline: 0,
-        overflowWrap: 'break-word',
-        padding: '8px',
-        whiteSpace: 'pre-wrap',
-        width: '100%', // for textarea
+      inactive: baseStyles,
+      active: {
+        ...baseStyles,
+        background: colors.background,
+        border: 0,
+        minHeight: 'calc(100vh - 36px)',
+        width: '100%',
       },
     };
   }
@@ -111,7 +115,7 @@ export default class Note extends React.Component {
           <textarea
             onBlur={this._onBlur}
             onChange={this._onChange}
-            style={this._getStyles().root}
+            style={this._getStyles().active}
             tabIndex={3}
             value={this.state.value}
           />
@@ -121,7 +125,7 @@ export default class Note extends React.Component {
           <div
             onFocus={() => this.setState({focused: true})}
             onKeyDown={this._onKeyDown}
-            style={this._getStyles().root}
+            style={this._getStyles().inactive}
             tabIndex={3}>
             {this.state.value}
           </div>
