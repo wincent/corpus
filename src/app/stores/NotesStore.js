@@ -113,20 +113,26 @@ class NotesStore extends Store {
 
   handleDispatch(payload) {
     switch (payload.type) {
+      case Actions.NOTE_TEXT_CHANGED:
       case Actions.NOTE_TITLE_CHANGED:
-        // Update title.
-        notes = notes.mergeIn(
-          [payload.index],
-          {
-            mtime: Date.now(),
-            title: payload.title,
+        {
+          const update = {mtime: Date.now()};
+          if (payload.text) {
+            update.text = payload.text;
           }
-        );
+          if (payload.title) {
+            update.title = payload.title;
+          }
+          notes = notes.mergeIn(
+            [payload.index],
+            update
+          );
 
-        // Bump note to top of list.
-        const note = notes.get(payload.index);
-        notes = notes.delete(payload.index).unshift(note);
-        this.emit('change');
+          // Bump note to top of list.
+          const note = notes.get(payload.index);
+          notes = notes.delete(payload.index).unshift(note);
+          this.emit('change');
+        }
         break;
 
       case Actions.NOTES_LOADED:

@@ -20,12 +20,13 @@ Nice to haves:
 
 MINUTIAE
 
+- note creation when hitting Enter on a title that doesn't exist yet
 - fix contextual menu lag; Atom doesn't have the problem...
 - figure out how to disable menu items conditionally (eg. Rename, Delete tec)
 - add note deletion (contextual menu, menu etc)
 - fix missing scrollbars (this is intermittent; not sure of cause)
 - add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
-- implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
+- [DONE] implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
@@ -34,8 +35,8 @@ MINUTIAE
 - implement contextual menu for <NotePreview>
 - tab from OmniBar should focus current note, or do nothing if there is no current note
 - tab in note should insert a tab; shift-tab should go back to OmniBar
-- typing when NotePreview is focused should shift focus to OmniBar and insert
-- OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
+- typing when NotePreview is focused should shift focus to OmniBar and insert (search)
+- [DONE] OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
 - write linter (plugin?) that warns if files don't have license headers
 - option-drag from NoteList to TextEdit etc should drag path(s); to Finder should copy actual file(s)
@@ -65,6 +66,7 @@ IDEAS
 - use codemirror to get some stuff for free (syntax highlighting, vim mode)
 - note that scroll jank is most noticeable when we prepend or delete from the front of the note list; so, we could make a point of not doing that (ie. when scrolling down, always only extend down; when scrolling up, insert everything in one go); the main reason we want to hide the non-visible bits is to make separator drags and window resizing fast, so we could actually do the hiding when idle, after scrolling stops.
 - alternatively, make scrolling cheaper for React by getting it to do fewer DOM operations (probably smarter use of keys); I notice that appending is (relatively) fast; perhaps we can re-number keys to make it look like we're never appending, just reshuffling?
+- use Uglify to remove dead code etc, including from node_modules dependencies
 
 ARCHIVES
 
@@ -141,3 +143,5 @@ ARCHIVES
   - when editing: pencil
 - [DONE] clicking on the separator focuses it; you have to tab or shift-tab to remove focus
 - [DONE] in nvALT, when you click on the note placeholder, the OmniBar retains focus
+
+# vim: set nowrap:

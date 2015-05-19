@@ -4,6 +4,7 @@
 'use strict';
 
 import React from 'react';
+import autobind from 'autobind-decorator';
 
 import Actions from './Actions';
 import FocusStore from './stores/FocusStore';
@@ -12,12 +13,22 @@ import performKeyboardNavigation from './performKeyboardNavigation';
 
 export default class Note extends React.Component {
   static propTypes = {
-    note: React.PropTypes.object, // TODO: better shape for this
+    // TODO: better shape for this
+    note: React.PropTypes.object,
   };
 
   constructor(props) {
     super(props);
-    this.state = {focused: false};
+    this.state = {
+      focused: false,
+      value: this.props.note ? this.props.note.get('text') : '',
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      value: nextProps.note ? nextProps.note.get('text') : '',
+    });
   }
 
   _getStyles() {
@@ -32,6 +43,33 @@ export default class Note extends React.Component {
         whiteSpace: 'pre-wrap',
       },
     };
+  }
+
+  @autobind
+  _onBlur(event) {
+    this.setState({focused: false});
+    // Ugh, would like to do this without a linear scan.
+    let matchingIndex = null;
+    // For some reason, eager `import` up top breaks things.
+    const NotesStore = require('./stores/NotesStore');
+    const index = NotesStore.notes.find((note, index) => {
+      if (note.get('id') === this.props.note.get('id')) {
+        matchingIndex = index;
+        return true;
+      }
+    });
+    Actions.noteTextChanged({
+      index: matchingIndex,
+      text: event.currentTarget.value,
+    });
+    // TODO: persist changes properly (to disk/git)
+  }
+
+  @autobind
+  _onChange(event) {
+    this.setState({value: event.currentTarget.value});
+    // TODO: persist changes after an interval has passed, or a set number of
+    // changes (or size of changes)
   }
 
   _onKeyDown(event) {
@@ -63,16 +101,27 @@ export default class Note extends React.Component {
 
   render() {
     if (this.props.note) {
-      return (
-        <div
-          onBlur={() => this.setState({focused: false})}
-          onFocus={() => this.setState({focused: true})}
-          onKeyDown={this._onKeyDown}
-          style={this._getStyles().root}
-          tabIndex={3}>
-          {this.props.note.get('text')}
-        </div>
-      );
+      if (this.state.focused) {
+        return (
+          <textarea
+            onBlur={this._onBlur}
+            onChange={this._onChange}
+            style={this._getStyles().root}
+            tabIndex={3}
+            value={this.state.value}
+          />
+        );
+      } else {
+        return (
+          <div
+            onFocus={() => this.setState({focused: true})}
+            onKeyDown={this._onKeyDown}
+            style={this._getStyles().root}
+            tabIndex={3}>
+            {this.state.value}
+          </div>
+        );
+      }
     }
 
     return null;

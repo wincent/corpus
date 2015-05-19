@@ -30,6 +30,7 @@ const actionTypes = keyMirror({
   NOTE_RENAME_REQUESTED: null,
   NOTE_SELECTED: null,
   NOTE_TITLE_CHANGED: null,
+  NOTE_TEXT_CHANGED: null,
   OMNI_BAR_FOCUS_REQUESTED: null,
   PREVIOUS_NOTE_SELECTED: null,
   SEARCH_REQUESTED: null,
@@ -62,6 +63,10 @@ const actionCreators = {
 
   noteListFocused() {
     dispatch(actionTypes.NOTE_LIST_FOCUS_REQUESTED);
+  },
+
+  noteTextChanged(payload) {
+    dispatch(actionTypes.NOTE_TEXT_CHANGED, payload);
   },
 
   omniBarFocused() {
