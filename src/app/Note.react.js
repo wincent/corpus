@@ -35,12 +35,16 @@ export default class Note extends React.Component {
     return {
       root: {
         WebkitUserSelect: this.state.focused ? 'inherit' : 'none',
+        background: '#ebebeb', // for textarea
+        border: 0, // for textarea
         fontFamily: 'Monaco',
         fontSize: '12px',
+        minHeight: 'calc(100vh - 36px)', // for textarea
         outline: 0,
         overflowWrap: 'break-word',
         padding: '8px',
         whiteSpace: 'pre-wrap',
+        width: '100%', // for textarea
       },
     };
   }
