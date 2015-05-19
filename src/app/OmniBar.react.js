@@ -159,6 +159,21 @@ export default class OmniBar extends React.Component {
   @autobind
   _onKeyDown(event) {
     switch (event.keyCode) {
+      case Keys.BACKSPACE:
+      case Keys.DELETE:
+        {
+          const {selectionStart, selectionEnd, value} = event.currentTarget;
+          if (
+            selectionStart !== selectionEnd &&
+            selectionEnd === value.length
+          ) {
+            // Deletion at end of the input.
+            this.setState({value: value.substr(0, selectionStart)});
+            event.preventDefault();
+          }
+        }
+        break;
+
       case Keys.ESCAPE:
         this.setState({value: ''});
         Actions.allNotesDeselected();
