@@ -45,32 +45,16 @@ const actionCreators = {
     dispatch(actionTypes.ADJUST_NOTE_SELECTION_UP);
   },
 
-  allNotesSelected() {
-    dispatch(actionTypes.ALL_NOTES_SELECTED);
-  },
-
   allNotesDeselected() {
     dispatch(actionTypes.ALL_NOTES_DESELECTED);
   },
 
+  allNotesSelected() {
+    dispatch(actionTypes.ALL_NOTES_SELECTED);
+  },
+
   firstNoteSelected() {
     dispatch(actionTypes.FIRST_NOTE_SELECTED);
-  },
-
-  noteFocused() {
-    dispatch(actionTypes.NOTE_FOCUS_REQUESTED);
-  },
-
-  noteListFocused() {
-    dispatch(actionTypes.NOTE_LIST_FOCUS_REQUESTED);
-  },
-
-  noteTextChanged(payload) {
-    dispatch(actionTypes.NOTE_TEXT_CHANGED, payload);
-  },
-
-  omniBarFocused() {
-    dispatch(actionTypes.OMNI_BAR_FOCUS_REQUESTED);
   },
 
   lastNoteSelected() {
@@ -85,6 +69,14 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_DESELECTED, payload);
   },
 
+  noteFocused() {
+    dispatch(actionTypes.NOTE_FOCUS_REQUESTED);
+  },
+
+  noteListFocused() {
+    dispatch(actionTypes.NOTE_LIST_FOCUS_REQUESTED);
+  },
+
   noteRangeSelected(payload) {
     dispatch(actionTypes.NOTE_RANGE_SELECTED, payload);
   },
@@ -93,16 +85,24 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_SELECTED, payload);
   },
 
-  notesLoaded() {
-    dispatch(actionTypes.NOTES_LOADED);
-  },
-
-  previousNoteSelected() {
-    dispatch(actionTypes.PREVIOUS_NOTE_SELECTED);
+  noteTextChanged(payload) {
+    dispatch(actionTypes.NOTE_TEXT_CHANGED, payload);
   },
 
   noteTitleChanged(payload) {
     dispatch(actionTypes.NOTE_TITLE_CHANGED, payload);
+  },
+
+  notesLoaded() {
+    dispatch(actionTypes.NOTES_LOADED);
+  },
+
+  omniBarFocused() {
+    dispatch(actionTypes.OMNI_BAR_FOCUS_REQUESTED);
+  },
+
+  previousNoteSelected() {
+    dispatch(actionTypes.PREVIOUS_NOTE_SELECTED);
   },
 
   renameRequested() {
