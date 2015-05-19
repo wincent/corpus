@@ -24,7 +24,7 @@ export default class Separator extends React.Component {
   };
 
   @autobind
-  _onMouseDown() {
+  _onMouseDown(event) {
     const onMouseMove = this.props.onMouseMove;
     const onMouseUp = () => {
       document.removeEventListener('mousemove', onMouseMove);
@@ -35,6 +35,9 @@ export default class Separator extends React.Component {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
     document.body.classList.add('grabbing');
+
+    // Don't let the browser focus us. We're a div, after all.
+    event.preventDefault();
   }
 
   shouldComponentUpdate(nextProps, nextState) {

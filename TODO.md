@@ -43,7 +43,6 @@ MINUTIAE
 - Command-R to rename a note (focuses title in NotePreview)
 - Command-Delete to delete a note (shows confirmation dialog, and is undoable with Command-Z)
 - Save/Restore cursor position when moving between notes
-- in nvALT, when you click on the note placeholder, the OmniBar retains focus
 - watch filesystem to notice external updates
 - gracefully handle files going missing (and restoring); use case is mountable filesystems
 - resolve clash of Command-R accelerators (using it for rename and reload); reloading shouldn't be too easy for users to do accidentally
@@ -59,7 +58,6 @@ NICE TO HAVES
 
 BUGS
 
-- clicking on the separator focuses it; you have to tab or shift-tab to remove focus
 - want a three-tab cycle (OmniBar -> NoteList -> Note) but we have a four-tab cycle (Body -> OmniBar -> NoteList -> Note); when body is active the focus is invisible [but curiously, when the NoteList has no selection, we _do_ have a three-tab cycle]
 
 IDEAS
@@ -141,3 +139,5 @@ ARCHIVES
   - when field contains text found in notes but not titles: search
   - when field contains text not found anywhere: search
   - when editing: pencil
+- [DONE] clicking on the separator focuses it; you have to tab or shift-tab to remove focus
+- [DONE] in nvALT, when you click on the note placeholder, the OmniBar retains focus

@@ -32,10 +32,14 @@ export default class NotePlaceholder extends React.Component {
     count: React.PropTypes.number.required,
   };
 
+  _onMouseDown(event) {
+    event.preventDefault(); // Disallow focus.
+  }
+
   render() {
     const count = this.props.count ? this.props.count : 'No';
     return (
-      <div style={styles.root}>
+      <div onMouseDown={this._onMouseDown} style={styles.root}>
         <div style={styles.upperSpacer}></div>
         <div style={styles.notice}>
           {count} Notes Selected
