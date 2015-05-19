@@ -120,11 +120,15 @@ export default class OmniBar extends React.Component {
       this.state.note !== note ||
       pendingValue !== currentValue
     ) {
+      let value;
+      if (this._pendingDeletion != null) {
+        value = this._pendingDeletion;
+        this._pendingDeletion = null;
+      } else {
+        value = getCurrentTitle() || this._query || '';
+      }
       this.setState(
-        {
-          note,
-          value: getCurrentTitle() || this._query || '',
-        },
+        {note, value},
         () => {
           const input = React.findDOMNode(this._inputRef)
           if (document.activeElement === input) {
@@ -132,7 +136,8 @@ export default class OmniBar extends React.Component {
               input.setSelectionRange(pendingValue.length, input.value.length);
             }
           }
-        });
+        }
+      );
     }
     this._query = null;
   }
@@ -142,7 +147,6 @@ export default class OmniBar extends React.Component {
     const value = event.currentTarget.value;
     this.setState({value});
     Actions.searchRequested({value});
-    // TODO: may want to check selected region, if this is a title prefix match.
   }
 
   @autobind
@@ -163,13 +167,19 @@ export default class OmniBar extends React.Component {
       case Keys.DELETE:
         {
           const {selectionStart, selectionEnd, value} = event.currentTarget;
-          if (
-            selectionStart !== selectionEnd &&
-            selectionEnd === value.length
-          ) {
+          if (selectionEnd === value.length) {
             // Deletion at end of the input.
-            this.setState({value: value.substr(0, selectionStart)});
             event.preventDefault();
+            if (selectionStart !== selectionEnd) {
+              // Selection deletion.
+              this._pendingDeletion = value.substr(0, selectionStart);
+            } else if (selectionStart) {
+              this._pendingDeletion = value.substr(0, selectionStart - 1);
+            } else {
+              return; // Nothing to do (already at start of input field).
+            }
+            this.setState({value: this._pendingDeletion});
+            Actions.searchRequested({value: this._pendingDeletion});
           }
         }
         break;
