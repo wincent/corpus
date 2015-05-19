@@ -12,6 +12,7 @@ import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import FilteredNotesStore from './stores/FilteredNotesStore';
 import FocusStore from './stores/FocusStore';
+import colors from './colors';
 import performKeyboardNavigation from './performKeyboardNavigation';
 import pure from './pure';
 import throttle from './throttle';
@@ -115,7 +116,7 @@ export default class NoteList extends React.Component {
         right: 0,
       },
       root: {
-        background: '#ebebeb',
+        background: colors.background,
         height: FilteredNotesStore.notes.size * NotePreview.ROW_HEIGHT,
         minHeight: 'calc(100vh - 36px)', // ensure full background coverage
         position: 'relative',

@@ -10,10 +10,11 @@ import Note from './Note.react';
 import NotePlaceholder from './NotePlaceholder.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import FilteredNotesStore from './stores/FilteredNotesStore';
+import colors from './colors';
 
 const styles = {
   root: {
-    background: '#ebebeb',
+    background: colors.background,
     minHeight: 'calc(100vh - 36px)', // hack to ensure full background coverage
   },
 };

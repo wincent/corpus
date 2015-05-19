@@ -4,7 +4,7 @@
 'use strict';
 
 const colors = {
-  border: '#eee',
+  background: '#ebebeb',
 };
 
 export default colors;

@@ -9,6 +9,7 @@ import autobind from 'autobind-decorator';
 import Actions from './Actions';
 import FocusStore from './stores/FocusStore';
 import Keys from './Keys';
+import colors from './colors';
 import performKeyboardNavigation from './performKeyboardNavigation';
 
 export default class Note extends React.Component {
@@ -35,7 +36,7 @@ export default class Note extends React.Component {
     return {
       root: {
         WebkitUserSelect: this.state.focused ? 'inherit' : 'none',
-        background: '#ebebeb', // for textarea
+        background: colors.background, // for textarea
         border: 0, // for textarea
         fontFamily: 'Monaco',
         fontSize: '12px',
