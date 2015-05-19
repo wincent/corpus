@@ -11,6 +11,7 @@ import Keys from './Keys';
 import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import FilteredNotesStore from './stores/FilteredNotesStore';
+import FocusStore from './stores/FocusStore';
 import performKeyboardNavigation from './performKeyboardNavigation';
 import pure from './pure';
 import throttle from './throttle';
@@ -43,6 +44,7 @@ export default class NoteList extends React.Component {
   componentDidMount() {
     NotesSelectionStore.on('change', this._updateNoteSelection);
     FilteredNotesStore.on('change', this._updateNotes);
+    FocusStore.on('change', this._updateFocus);
 
     const parent = React.findDOMNode(this).parentNode;
     parent.addEventListener('scroll', this._onScroll);
@@ -51,6 +53,7 @@ export default class NoteList extends React.Component {
   componentWillUnmount() {
     NotesSelectionStore.removeListener('change', this._updateNoteSelection);
     FilteredNotesStore.removeListener('change', this._updateNotes);
+    FocusStore.removeListener('change', this._updateFocus);
     this._removeListeners();
 
     const parent = React.findDOMNode(this).parentNode;
@@ -143,6 +146,13 @@ export default class NoteList extends React.Component {
     // changes.
     if (document.activeElement === React.findDOMNode(this)) {
       Actions.allNotesSelected();
+    }
+  }
+
+  @autobind
+  _updateFocus() {
+    if (FocusStore.focus === 'NoteList') {
+      React.findDOMNode(this._ulRef).focus();
     }
   }
 
@@ -251,6 +261,7 @@ export default class NoteList extends React.Component {
           onBlur={this._onBlur}
           onFocus={this._onFocus}
           onKeyDown={this._onKeyDown}
+          ref={ref => this._ulRef = ref}
           style={styles.list}
           tabIndex={2}
         >

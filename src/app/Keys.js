@@ -12,5 +12,6 @@ export default {
   J: 74,
   K: 75,
   RETURN: 13,
+  TAB: 9,
   UP: 38,
 };

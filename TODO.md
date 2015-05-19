@@ -58,7 +58,7 @@ NICE TO HAVES
 
 BUGS
 
-- want a three-tab cycle (OmniBar -> NoteList -> Note) but we have a four-tab cycle (Body -> OmniBar -> NoteList -> Note); when body is active the focus is invisible [but curiously, when the NoteList has no selection, we _do_ have a three-tab cycle]
+- want a three-tab cycle (OmniBar -> NoteList -> Note) but we have a four-tab cycle (Body -> OmniBar -> NoteList -> Note); when body is active the focus is invisible [but curiously, when the NoteList has no selection, we _do_ have a three-tab cycle; but some CSS debugging shows the third item is still the body...]
 
 IDEAS
 

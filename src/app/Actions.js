@@ -24,6 +24,8 @@ const actionTypes = keyMirror({
   NEXT_NOTE_SELECTED: null,
   NOTES_LOADED: null,
   NOTE_DESELECTED: null,
+  NOTE_FOCUS_REQUESTED: null,
+  NOTE_LIST_FOCUS_REQUESTED: null,
   NOTE_RANGE_SELECTED: null,
   NOTE_RENAME_REQUESTED: null,
   NOTE_SELECTED: null,
@@ -52,6 +54,14 @@ const actionCreators = {
 
   firstNoteSelected() {
     dispatch(actionTypes.FIRST_NOTE_SELECTED);
+  },
+
+  noteFocused() {
+    dispatch(actionTypes.NOTE_FOCUS_REQUESTED);
+  },
+
+  noteListFocused() {
+    dispatch(actionTypes.NOTE_LIST_FOCUS_REQUESTED);
   },
 
   omniBarFocused() {

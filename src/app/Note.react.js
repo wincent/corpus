@@ -6,6 +6,7 @@
 import React from 'react';
 
 import Actions from './Actions';
+import FocusStore from './stores/FocusStore';
 import Keys from './Keys';
 import performKeyboardNavigation from './performKeyboardNavigation';
 
@@ -46,6 +47,15 @@ export default class Note extends React.Component {
         if (!event.metaKey) {
           return;
         }
+        break;
+
+       case Keys.TAB:
+        // Prevent the <body> from becoming `document.activeElement`.
+        if (!event.shiftKey) {
+          event.preventDefault();
+          Actions.omniBarFocused();
+        }
+        break;
     }
 
     performKeyboardNavigation(event);

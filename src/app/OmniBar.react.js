@@ -191,6 +191,14 @@ export default class OmniBar extends React.Component {
         Actions.searchRequested({value: ''});
         Actions.omniBarFocused();
         return;
+
+      case Keys.TAB:
+        // Prevent the <body> from becoming `document.activeElement`.
+        if (event.shiftKey) {
+          event.preventDefault();
+          Actions.noteFocused(); // TODO: not yet implemented
+        }
+        break;
     }
 
     performKeyboardNavigation(event);
