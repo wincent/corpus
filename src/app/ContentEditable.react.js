@@ -7,6 +7,7 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 
 import Actions from './Actions';
+import Dispatcher from './Dispatcher';
 import FocusStore from './stores/FocusStore';
 import Keys from './Keys';
 // import NotesStore from './stores/NotesStore';
@@ -16,7 +17,6 @@ import performKeyboardNavigation from './performKeyboardNavigation';
 export default class ContentEditable extends React.Component {
   static propTypes = {
     note: React.PropTypes.object,
-    onBlur: React.PropTypes.func.isRequired,
     value: React.PropTypes.text,
   };
 
@@ -84,11 +84,14 @@ export default class ContentEditable extends React.Component {
         text,
       });
     }
+    // TODO: persist changes properly (to disk/git)
   }
 
   @autobind
   _onBlur(event) {
-    // TODO: may need to persist here; beware dispatcher might be dispatching...
+    if (!Dispatcher.isDispatching()) {
+      this._persistChanges();
+    }
   }
 
 
