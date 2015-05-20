@@ -7,6 +7,7 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 
 import Actions from './Actions';
+import Constants from './Constants';
 import Keys from './Keys';
 import NotePreview from './NotePreview.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
@@ -65,7 +66,7 @@ export default class NoteList extends React.Component {
    * Returns the index of the first renderable note in the range.
    */
   _getFirstRenderedNote() {
-    const topEdge = Math.floor(this.state.scrollTop / NotePreview.ROW_HEIGHT);
+    const topEdge = Math.floor(this.state.scrollTop / Constants.PREVIEW_ROW_HEIGHT);
     const first = Math.max(0, topEdge - OFF_VIEWPORT_NOTE_BUFFER_COUNT);
 
     // Always keep last-selected note in the range, even if it means
@@ -84,7 +85,7 @@ export default class NoteList extends React.Component {
   _getLastRenderedNote() {
     const visibleHeight = window.innerHeight - 36;
     const bottomEdge = Math.ceil(
-      (this.state.scrollTop + visibleHeight) / NotePreview.ROW_HEIGHT
+      (this.state.scrollTop + visibleHeight) / Constants.PREVIEW_ROW_HEIGHT
     );
     const last = Math.min(
       this.state.notes.size - 1,
@@ -102,7 +103,7 @@ export default class NoteList extends React.Component {
   }
 
   _getStyles() {
-    const space = this._getFirstRenderedNote() * NotePreview.ROW_HEIGHT;
+    const space = this._getFirstRenderedNote() * Constants.PREVIEW_ROW_HEIGHT;
     return {
       list: {
         WebkitUserSelect: 'none',
@@ -117,7 +118,7 @@ export default class NoteList extends React.Component {
       },
       root: {
         background: colors.background,
-        height: FilteredNotesStore.notes.size * NotePreview.ROW_HEIGHT,
+        height: FilteredNotesStore.notes.size * Constants.PREVIEW_ROW_HEIGHT,
         minHeight: 'calc(100vh - 36px)', // ensure full background coverage
         position: 'relative',
       },

@@ -10,7 +10,7 @@ import Actions from './Actions';
 import Dispatcher from './Dispatcher';
 import FocusStore from './stores/FocusStore';
 import Keys from './Keys';
-// import NotesStore from './stores/NotesStore';
+import NotesStore from './stores/NotesStore';
 import colors from './colors';
 import performKeyboardNavigation from './performKeyboardNavigation';
 
@@ -69,8 +69,6 @@ export default class ContentEditable extends React.Component {
 
     // Ugh, would like to do this without a linear scan.
     let matchingIndex = null;
-    // For some reason, eager `import` up top breaks things.
-    const NotesStore = require('./stores/NotesStore');
     const index = NotesStore.notes.find((note, index) => {
       if (note.get('id') === this.props.note.get('id')) {
         matchingIndex = index;

@@ -8,6 +8,7 @@ import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
 import Actions from './Actions';
+import Constants from './Constants';
 import FocusStore from './stores/FocusStore';
 import Keys from './Keys';
 import Mouse from './Mouse';
@@ -23,7 +24,6 @@ const TITLE_LENGTH = 125;
 
 @pure
 export default class NotePreview extends React.Component {
-  static ROW_HEIGHT = 51;
   static propTypes = {
     focused: React.PropTypes.bool,
     index: React.PropTypes.number.isRequired,
@@ -86,7 +86,7 @@ export default class NotePreview extends React.Component {
         fontSize: '11px',
         lineHeight: '14px',
         listStyleType: 'none',
-        height: NotePreview.ROW_HEIGHT + 'px',
+        height: Constants.PREVIEW_ROW_HEIGHT + 'px',
         padding: '4px 4px 4px 8px',
       },
       text: {

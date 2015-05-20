@@ -10,7 +10,7 @@ import path from 'path';
 import process from 'process';
 
 import Actions from '../Actions';
-import NotePreview from '../NotePreview.react'; // smell: getting constant from view
+import Constants from '../Constants';
 import Store from './Store';
 import handleError from '../handleError';
 
@@ -24,7 +24,7 @@ const stat = Promise.promisify(fs.stat);
  *
  * Intended to increase perceived responsiveness.
  */
-const PRELOAD_COUNT = Math.floor(window.innerHeight / NotePreview.ROW_HEIGHT) + 5;
+const PRELOAD_COUNT = Math.floor(window.innerHeight / Constants.PREVIEW_ROW_HEIGHT) + 5;
 
 /**
  * Ordered colllection of notes (as they appear in the NoteList).
