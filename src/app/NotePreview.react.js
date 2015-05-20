@@ -161,17 +161,14 @@ export default class NotePreview extends React.Component {
       // to desktop -> copies document
     } else if (event.metaKey) {
       if (this.props.selected) {
-        Actions.noteDeselected({index: this.props.index});
+        Actions.noteDeselected(this.props.index);
       } else {
-        Actions.noteSelected({index: this.props.index});
+        Actions.noteSelected(this.props.index);
       }
     } else if (event.shiftKey) {
-      Actions.noteRangeSelected({index: this.props.index});
+      Actions.noteRangeSelected(this.props.index);
     } else {
-      Actions.noteSelected({
-        exclusive: true,
-        index: this.props.index,
-      });
+      Actions.noteSelected(this.props.index, true);
     }
   }
 
@@ -223,10 +220,7 @@ export default class NotePreview extends React.Component {
       event.button === Mouse.RIGHT_BUTTON
     ) {
       // Context menu is about to appear.
-      Actions.noteSelected({
-        exclusive: true,
-        index: this.props.index,
-      });
+      Actions.noteSelected(this.props.index, true);
       // TODO: disable scrollIntoViewIfNeeded in this case; that would be weird
     }
   }

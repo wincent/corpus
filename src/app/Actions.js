@@ -65,8 +65,8 @@ const actionCreators = {
     dispatch(actionTypes.NEXT_NOTE_SELECTED);
   },
 
-  noteDeselected(payload) {
-    dispatch(actionTypes.NOTE_DESELECTED, payload);
+  noteDeselected(index: number) {
+    dispatch(actionTypes.NOTE_DESELECTED, {index});
   },
 
   noteFocused() {
@@ -77,19 +77,19 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_LIST_FOCUS_REQUESTED);
   },
 
-  noteRangeSelected(payload) {
-    dispatch(actionTypes.NOTE_RANGE_SELECTED, payload);
+  noteRangeSelected(index: number) {
+    dispatch(actionTypes.NOTE_RANGE_SELECTED, {index});
   },
 
-  noteSelected(payload) {
-    dispatch(actionTypes.NOTE_SELECTED, payload);
+  noteSelected(index: number, exclusive=false: boolean) {
+    dispatch(actionTypes.NOTE_SELECTED, {exclusive, index});
   },
 
-  noteTextChanged(payload) {
+  noteTextChanged(payload: {index: number, text: string}) {
     dispatch(actionTypes.NOTE_TEXT_CHANGED, payload);
   },
 
-  noteTitleChanged(payload) {
+  noteTitleChanged(payload: {index: number, title: string}) {
     dispatch(actionTypes.NOTE_TITLE_CHANGED, payload);
   },
 
@@ -109,8 +109,8 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_RENAME_REQUESTED);
   },
 
-  searchRequested(payload) {
-    dispatch(actionTypes.SEARCH_REQUESTED, payload);
+  searchRequested(value: string) {
+    dispatch(actionTypes.SEARCH_REQUESTED, {value});
   },
 };
 

@@ -110,7 +110,7 @@ export default class ContentEditable extends React.Component {
 
       case Keys.ESCAPE:
         event.preventDefault();
-        Actions.searchRequested({value: ''});
+        Actions.searchRequested('');
         Actions.omniBarFocused();
         Actions.allNotesDeselected();
         return;

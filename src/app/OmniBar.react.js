@@ -146,7 +146,7 @@ export default class OmniBar extends React.Component {
   _onChange(event) {
     const value = event.currentTarget.value;
     this.setState({value});
-    Actions.searchRequested({value});
+    Actions.searchRequested(value);
   }
 
   @autobind
@@ -180,14 +180,14 @@ export default class OmniBar extends React.Component {
               return; // Nothing to do (already at start of input field).
             }
             this.setState({value: this._pendingDeletion});
-            Actions.searchRequested({value: this._pendingDeletion});
+            Actions.searchRequested(this._pendingDeletion);
           }
         }
         break;
 
       case Keys.ESCAPE:
         Actions.allNotesDeselected();
-        Actions.searchRequested({value: ''});
+        Actions.searchRequested('');
         Actions.omniBarFocused();
         return;
 
