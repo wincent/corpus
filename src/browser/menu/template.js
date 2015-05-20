@@ -6,7 +6,7 @@
 import BrowserWindow from 'browser-window';
 import app from 'app';
 
-const menu = [
+export default [
   {
     label: 'Corpus',
     submenu: [
@@ -48,8 +48,15 @@ const menu = [
       {
         // TODO: figure out how to ghost this when no selection
         accelerator: 'Command+R',
-        label: 'Rename',
         click: () => BrowserWindow.getFocusedWindow().webContents.send('rename'),
+        enabled: false,
+        label: 'Rename',
+      },
+      {
+        accelerator: 'Command+Backspace',
+        click: () => console.log('delete!'),
+        enabled: false,
+        label: 'Delete...',
       },
       {type: 'separator'},
       {
@@ -151,5 +158,3 @@ const menu = [
     submenu: []
   },
 ];
-
-export default menu;

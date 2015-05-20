@@ -10,9 +10,14 @@ import app from 'app';
 import ipc from 'ipc';
 import path from 'path';
 
-import menu from './menu';
+import template from './menu/template';
 
-let mainWindow = null; // global reference to avoid premature GC
+// Global references to avoid premature GC.
+let menu = null;
+let mainWindow = null;
+
+let deleteEnabled = false;
+let renameEnabled = false;
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
@@ -26,22 +31,55 @@ app.on('ready', () => {
   mainWindow.webContents.on('did-finish-load', () => mainWindow.show());
 
   // TODO: extract this into a better place and make it more flexible
-  var contextualMenu = new Menu();
-  contextualMenu.append(
-    new MenuItem({
-      accelerator: 'Command+R',
-      click: () => console.log('contextual-menu: rename'),
-      label: 'Rename',
-    })
-  );
-  ipc.on('context-menu', () => contextualMenu.popup(mainWindow));
+  ipc.on('context-menu', () => {
+    const contextualMenu = new Menu();
+    contextualMenu.append(
+      new MenuItem({
+        accelerator: 'Command+R',
+        click: () => console.log('contextual-menu: rename'),
+        enabled: renameEnabled,
+        label: 'Rename',
+      })
+    );
+    contextualMenu.append(
+      new MenuItem({
+        accelerator: 'Command+Backspace',
+        click: () => console.log('contextual-menu: delete'),
+        enabled: deleteEnabled,
+        label: 'Delete...',
+      })
+    );
+    contextualMenu.popup(mainWindow);
+  });
 
-  Menu.setApplicationMenu(
-    Menu.buildFromTemplate(menu)
-  );
+  menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu);
+
+  ipc.on('selection-count-changed', (event, newCount) => {
+    if (newCount === 0) {
+      deleteEnabled = false;
+      menu.items[1].submenu.items[1].enabled = false;
+      renameEnabled = false;
+      menu.items[1].submenu.items[0].enabled = false;
+    } else if (newCount === 1) {
+      deleteEnabled = true;
+      menu.items[1].submenu.items[1].enabled = true;
+      renameEnabled = true;
+      menu.items[1].submenu.items[0].enabled = true;
+    } else {
+      deleteEnabled = true;
+      menu.items[1].submenu.items[1].enabled = true;
+      renameEnabled = false;
+      menu.items[1].submenu.items[0].enabled = false;
+    }
+  });
 
   mainWindow
     .on('blur', () => mainWindow.webContents.send('blur'))
-    .on('closed', () => mainWindow = null) // allow GC
+    .on('closed', () => {
+      // Allow GC;
+      mainWindow = null;
+      menu = null;
+    })
     .on('focus', () => mainWindow.webContents.send('focus'));
 });
