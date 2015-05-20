@@ -49,6 +49,11 @@ export default class Note extends React.Component {
     };
   }
 
+  @autobind
+  _onMouseDown() {
+    this.setState({focused: true});
+  }
+
   render() {
     if (this.props.note) {
       if (this.state.focused) {
@@ -60,7 +65,7 @@ export default class Note extends React.Component {
         );
       } else {
         return (
-          <div style={this._getStyles().root}>
+          <div onMouseDown={this._onMouseDown} style={this._getStyles().root}>
             {this.props.note.get('text')}
           </div>
         );
