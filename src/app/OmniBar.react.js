@@ -192,14 +192,19 @@ export default class OmniBar extends React.Component {
         return;
 
       case Keys.TAB:
-        // Prevent the <body> from becoming `document.activeElement`.
-        event.preventDefault();
+        {
+          // Prevent the <body> from becoming `document.activeElement`.
+          event.preventDefault();
 
-        if (NotesSelectionStore.selection.size === 1) {
-          Actions.noteFocused();
-        } else {
-          Actions.noteListFocused();
-          Actions.firstNoteSelected();
+          const size = NotesSelectionStore.selection.size;
+          if (size === 0) {
+            Actions.noteListFocused();
+            Actions.firstNoteSelected();
+          } else if (size === 1) {
+            Actions.noteFocused();
+          } else {
+            Actions.noteListFocused();
+          }
         }
         break;
     }

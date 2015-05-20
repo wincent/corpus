@@ -6,11 +6,8 @@
 import React from 'react';
 import autobind from 'autobind-decorator';
 
-import Actions from './Actions';
+import ContentEditable from './ContentEditable.react';
 import FocusStore from './stores/FocusStore';
-import Keys from './Keys';
-import colors from './colors';
-import performKeyboardNavigation from './performKeyboardNavigation';
 
 export default class Note extends React.Component {
   static propTypes = {
@@ -20,151 +17,51 @@ export default class Note extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      focused: false,
-      value: this.props.note ? this.props.note.get('text') : '',
-    };
+    this.state = {focused: false};
   }
 
   componentDidMount() {
     FocusStore.on('change', this._updateFocus);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      value: nextProps.note ? nextProps.note.get('text') : '',
-    });
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    FocusStore.on('change', this._updateFocus);
-  }
-
-  _getStyles() {
-    const baseStyles = {
-      WebkitUserSelect: this.state.focused ? 'inherit' : 'none',
-      fontFamily: 'Monaco',
-      fontSize: '12px',
-      outline: 0,
-      overflowWrap: 'break-word',
-      padding: '8px',
-      whiteSpace: 'pre-wrap',
-    };
-    return {
-      inactive: baseStyles,
-      active: {
-        ...baseStyles,
-        background: colors.background,
-        border: 0,
-        minHeight: 'calc(100vh - 36px)',
-        width: '100%',
-      },
-    };
+  componentWillUnmount() {
+    FocusStore.removeListener('change', this._updateFocus);
   }
 
   @autobind
   _updateFocus() {
     if (FocusStore.focus === 'Note') {
-      this.setState(
-        {focused: true},
-        () => React.findDOMNode(this._textareaRef).focus()
-      );
+      this.setState({focused: true});
     }
   }
 
-  @autobind
-  _onBlur(event) {
-    this.setState(
-      {focused: false},
-      () => {
-        // TODO: do this without a linear scan.
-        let matchingIndex = null;
-        // For some reason, eager `import` up top breaks things.
-        const NotesStore = require('./stores/NotesStore');
-        const index = NotesStore.notes.find((note, index) => {
-          if (note.get('id') === this.props.note.get('id')) {
-            matchingIndex = index;
-            return true;
-          }
-        });
-        Actions.noteTextChanged({
-          index: matchingIndex,
-          text: event.currentTarget.value,
-        });
+  _getStyles() {
+    return {
+      root: {
+        WebkitUserSelect: this.state.focused ? 'inherit' : 'none',
+        fontFamily: 'Monaco',
+        fontSize: '12px',
+        outline: 0,
+        overflowWrap: 'break-word',
+        padding: '8px',
+        whiteSpace: 'pre-wrap',
       }
-    );
-  }
-
-  @autobind
-  _onFocus() {
-    this.setState(
-      {focused: true},
-      () => React.findDOMNode(this._textareaRef).focus()
-    );
-  }
-
-  @autobind
-  _onChange(event) {
-    this.setState({value: event.currentTarget.value});
-    // TODO: persist changes after an interval has passed, or a set number of
-    // changes (or size of changes)
-  }
-
-  _onKeyDown(event) {
-    // Prevent undesired fallthrough to `performKeyboardNavigation` for some
-    // keys.
-    switch (event.keyCode) {
-      case Keys.DOWN:
-      case Keys.UP:
-        return;
-
-      case Keys.ESCAPE:
-        Actions.allNotesDeselected();
-        Actions.searchRequested({value: ''});
-        Actions.omniBarFocused();
-        return;
-
-      case Keys.J:
-      case Keys.K:
-        if (!event.metaKey) {
-          return;
-        }
-        break;
-
-       case Keys.TAB:
-        // Prevent the <body> from becoming `document.activeElement`.
-        if (!event.shiftKey) {
-          event.preventDefault();
-          Actions.omniBarFocused();
-        }
-        break;
-    }
-
-    performKeyboardNavigation(event);
+    };
   }
 
   render() {
     if (this.props.note) {
       if (this.state.focused) {
         return (
-          <textarea
-            onBlur={this._onBlur}
-            onChange={this._onChange}
-            onKeyDown={this._onKeyDown}
-            ref={ref => this._textareaRef = ref}
-            style={this._getStyles().active}
+          <ContentEditable
+            note={this.props.note}
             tabIndex={3}
-            value={this.state.value}
           />
         );
       } else {
         return (
-          <div
-            onFocus={this._onFocus}
-            onKeyDown={this._onKeyDown}
-            style={this._getStyles().inactive}
-            tabIndex={3}>
-            {this.state.value}
+          <div style={this._getStyles().root}>
+            {this.props.note.get('text')}
           </div>
         );
       }
