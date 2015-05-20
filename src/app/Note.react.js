@@ -74,22 +74,25 @@ export default class Note extends React.Component {
 
   @autobind
   _onBlur(event) {
-    this.setState({focused: false});
-    // Ugh, would like to do this without a linear scan.
-    let matchingIndex = null;
-    // For some reason, eager `import` up top breaks things.
-    const NotesStore = require('./stores/NotesStore');
-    const index = NotesStore.notes.find((note, index) => {
-      if (note.get('id') === this.props.note.get('id')) {
-        matchingIndex = index;
-        return true;
+    this.setState(
+      {focused: false},
+      () => {
+        // TODO: do this without a linear scan.
+        let matchingIndex = null;
+        // For some reason, eager `import` up top breaks things.
+        const NotesStore = require('./stores/NotesStore');
+        const index = NotesStore.notes.find((note, index) => {
+          if (note.get('id') === this.props.note.get('id')) {
+            matchingIndex = index;
+            return true;
+          }
+        });
+        Actions.noteTextChanged({
+          index: matchingIndex,
+          text: event.currentTarget.value,
+        });
       }
-    });
-    Actions.noteTextChanged({
-      index: matchingIndex,
-      text: event.currentTarget.value,
-    });
-    // TODO: persist changes properly (to disk/git)
+    );
   }
 
   @autobind
@@ -113,6 +116,12 @@ export default class Note extends React.Component {
     switch (event.keyCode) {
       case Keys.DOWN:
       case Keys.UP:
+        return;
+
+      case Keys.ESCAPE:
+        Actions.allNotesDeselected();
+        Actions.searchRequested({value: ''});
+        Actions.omniBarFocused();
         return;
 
       case Keys.J:
@@ -141,6 +150,7 @@ export default class Note extends React.Component {
           <textarea
             onBlur={this._onBlur}
             onChange={this._onChange}
+            onKeyDown={this._onKeyDown}
             ref={ref => this._textareaRef = ref}
             style={this._getStyles().active}
             tabIndex={3}

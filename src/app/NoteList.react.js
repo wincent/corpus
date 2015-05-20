@@ -159,7 +159,15 @@ export default class NoteList extends React.Component {
 
   @autobind
   _updateNoteSelection() {
-    this.setState({selection: NotesSelectionStore.selection});
+    this.setState(
+      {selection: NotesSelectionStore.selection},
+      () => {
+        if (!NotesSelectionStore.selection.size) {
+          Actions.searchRequested({value: ''});
+          Actions.omniBarFocused();
+        }
+      }
+    );
   }
 
   @autobind
@@ -196,6 +204,21 @@ export default class NoteList extends React.Component {
         if (event.metaKey) {
           Actions.allNotesSelected();
           event.preventDefault();
+        }
+        return;
+
+      case Keys.TAB:
+        event.preventDefault();
+
+        if (event.shiftKey) {
+          Actions.omniBarFocused();
+        } else {
+          if (NotesSelectionStore.selection.size === 1) {
+            Actions.noteFocused();
+          } else {
+            // Multiple notes are selected, otherwise we wouldn't have focus.
+            Actions.omniBarFocused();
+          }
         }
         return;
     }

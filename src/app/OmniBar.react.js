@@ -186,7 +186,6 @@ export default class OmniBar extends React.Component {
         break;
 
       case Keys.ESCAPE:
-        this.setState({value: ''});
         Actions.allNotesDeselected();
         Actions.searchRequested({value: ''});
         Actions.omniBarFocused();
@@ -194,9 +193,13 @@ export default class OmniBar extends React.Component {
 
       case Keys.TAB:
         // Prevent the <body> from becoming `document.activeElement`.
-        if (event.shiftKey) {
-          event.preventDefault();
-          Actions.noteFocused(); // TODO: not yet implemented
+        event.preventDefault();
+
+        if (NotesSelectionStore.selection.size === 1) {
+          Actions.noteFocused();
+        } else {
+          Actions.noteListFocused();
+          Actions.firstNoteSelected();
         }
         break;
     }
