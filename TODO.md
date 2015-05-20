@@ -20,9 +20,9 @@ Nice to haves:
 
 MINUTIAE
 
-- tab from OmniBar should focus current note, or do nothing if there is no current note
+- make `ContentEditable` agnostic (no stores, no actions)
+- can I use setState((state, props) => {}) to clean up some of my gnarly logic?
 - tab in note should insert a tab; shift-tab should go back to OmniBar
-- Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
 - remember and restore cursor position when focusing Note textarea
 - LEFT/RIGHT when NoteList has focus should move cursor to beginning end in OmniBar (and focus it, obviously)
 - note creation when hitting Enter on a title that doesn't exist yet
@@ -30,7 +30,6 @@ MINUTIAE
 - figure out how to disable menu items conditionally (eg. Rename, Delete tec)
 - add note deletion (contextual menu, menu etc)
 - fix missing scrollbars (this is intermittent; not sure of cause)
-- add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
 - put linting in Gulp too (probably watching?)
 - integrate Flow
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
@@ -56,10 +55,6 @@ NICE TO HAVES
 - i18n
 - generated documentation
 - show Git diffs in-app (Might take inspiration from Gundo)
-
-BUGS
-
-- want a three-tab cycle (OmniBar -> NoteList -> Note) but we have a four-tab cycle (Body -> OmniBar -> NoteList -> Note); when body is active the focus is invisible [but curiously, when the NoteList has no selection, we _do_ have a three-tab cycle; but some CSS debugging shows the third item is still the body...]
 
 IDEAS
 
@@ -146,5 +141,10 @@ ARCHIVES
 - [DONE] textarea focus doesn't seem to be working; where is the cursor? I have to click to edit (and I have to click twice...)
 - [DONE] implement OmniBar search (note this is a full-text search; still need to decide whether to delegate to `git grep`, but for now we'll start with the in-memory store, and no index)
 - [DONE] OmniBar should have search icon in it whenin search mode (and pen icon when in write mode) [can we build a Font Awesome subset?]
+- [DONE] want a three-tab cycle (OmniBar -> NoteList -> Note) but we have a four-tab cycle (Body -> OmniBar -> NoteList -> Note); when body is active the focus is invisible [but curiously, when the NoteList has no selection, we _do_ have a three-tab cycle; but some CSS debugging shows the third item is still the body...]
+- [DONE] click on note doesn't always focus it...
+- [DONE] tab from OmniBar should focus current note, or do nothing if there is no current note
+- [DONE] Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
+- [DONE] add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
 
 # vim: set nowrap:
