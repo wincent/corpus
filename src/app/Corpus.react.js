@@ -8,6 +8,7 @@ import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
 import Actions from './Actions';
+import FilteredNotesStore from './stores/FilteredNotesStore';
 import NoteView from './NoteView.react';
 import NoteList from './NoteList.react';
 import NotesSelectionStore from './stores/NotesSelectionStore';
@@ -22,6 +23,8 @@ export default class Corpus extends React.Component {
   }
 
   componentDidMount() {
+    // TODO: implement confirmtion dialog
+    ipc.on('delete', this._deleteSelectedNotes);
     ipc.on('next', Actions.nextNoteSelected);
     ipc.on('previous', Actions.previousNoteSelected);
     ipc.on('rename', Actions.renameRequested);
@@ -30,11 +33,23 @@ export default class Corpus extends React.Component {
   }
 
   componentWillUnmount() {
+    ipc.removeAllListeners('delete');
     ipc.removeAllListeners('next');
     ipc.removeAllListeners('previous');
     ipc.removeAllListeners('rename');
     ipc.removeAllListeners('search');
     NotesSelectionStore.removeListener('change', this._updateSelection);
+  }
+
+  _deleteSelectedNotes() {
+    // Convert selection indices within the FilteredNotesStore to
+    // canonical indices within the NotesStore.
+    Actions.selectedNotesDeleted(
+      NotesSelectionStore.selection
+        .map(index => FilteredNotesStore.notes.get(index))
+        .map(note => note.get('index'))
+        .toSet()
+    );
   }
 
   @autobind

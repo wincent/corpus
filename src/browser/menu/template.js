@@ -54,7 +54,7 @@ export default [
       },
       {
         accelerator: 'Command+Backspace',
-        click: () => console.log('delete!'),
+        click: () => BrowserWindow.getFocusedWindow().webContents.send('delete'),
         enabled: false,
         label: 'Delete...',
       },

@@ -36,7 +36,7 @@ app.on('ready', () => {
     contextualMenu.append(
       new MenuItem({
         accelerator: 'Command+R',
-        click: () => console.log('contextual-menu: rename'),
+        click: () => mainWindow.webContents.send('rename'),
         enabled: renameEnabled,
         label: 'Rename',
       })
@@ -44,7 +44,7 @@ app.on('ready', () => {
     contextualMenu.append(
       new MenuItem({
         accelerator: 'Command+Backspace',
-        click: () => console.log('contextual-menu: delete'),
+        click: () => mainWindow.webContents.send('delete'),
         enabled: deleteEnabled,
         label: 'Delete...',
       })
@@ -56,28 +56,24 @@ app.on('ready', () => {
   Menu.setApplicationMenu(menu);
 
   ipc.on('selection-count-changed', (event, newCount) => {
+    const deleteItem = menu.items[1].submenu.items[1];
+    const renameItem = menu.items[1].submenu.items[0];
     if (newCount === 0) {
-      deleteEnabled = false;
-      menu.items[1].submenu.items[1].enabled = false;
-      renameEnabled = false;
-      menu.items[1].submenu.items[0].enabled = false;
+      deleteItem.enabled = deleteEnabled = false;
+      renameItem.enabled = renameEnabled = false;
     } else if (newCount === 1) {
-      deleteEnabled = true;
-      menu.items[1].submenu.items[1].enabled = true;
-      renameEnabled = true;
-      menu.items[1].submenu.items[0].enabled = true;
+      deleteItem.enabled = deleteEnabled = true;
+      renameItem.enabled = renameEnabled = true;
     } else {
-      deleteEnabled = true;
-      menu.items[1].submenu.items[1].enabled = true;
-      renameEnabled = false;
-      menu.items[1].submenu.items[0].enabled = false;
+      deleteItem.enabled = deleteEnabled = true;
+      renameItem.enabled = renameEnabled = false;
     }
   });
 
   mainWindow
     .on('blur', () => mainWindow.webContents.send('blur'))
     .on('closed', () => {
-      // Allow GC;
+      // Allow GC:
       mainWindow = null;
       menu = null;
     })

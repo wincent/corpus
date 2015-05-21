@@ -34,6 +34,7 @@ const actionTypes = keyMirror({
   OMNI_BAR_FOCUS_REQUESTED: null,
   PREVIOUS_NOTE_SELECTED: null,
   SEARCH_REQUESTED: null,
+  SELECTED_NOTES_DELETED: null,
 });
 
 const actionCreators = {
@@ -111,6 +112,10 @@ const actionCreators = {
 
   searchRequested(value: string) {
     dispatch(actionTypes.SEARCH_REQUESTED, {value});
+  },
+
+  selectedNotesDeleted(ids) {
+    dispatch(actionTypes.SELECTED_NOTES_DELETED, {ids});
   },
 };
 

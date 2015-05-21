@@ -98,6 +98,10 @@ function adjustSelection(delta) {
   }
 }
 
+function clearSelection() {
+  return selection.clear();
+}
+
 function selectAll() {
   // NOTE: once we support deletion, will need to worry about holes
   const range = ImmutableRange(FilteredNotesStore.notes.size, -1);
@@ -106,17 +110,17 @@ function selectAll() {
 
 function selectFirst() {
   if (FilteredNotesStore.notes.size) {
-    return selection.clear().add(0);
+    return clearSelection().add(0);
   } else {
-    return selection.clear();
+    return clearSelection();
   }
 }
 
 function selectLast() {
   if (FilteredNotesStore.notes.size) {
-    return selection.clear().add(FilteredNotesStore.notes.size - 1);
+    return clearSelection().add(FilteredNotesStore.notes.size - 1);
   } else {
-    return selection.clear();
+    return clearSelection();
   }
 }
 
@@ -127,7 +131,7 @@ function selectNext() {
   } else {
     const maxSelectionIndex = FilteredNotesStore.notes.size - 1;
     if (mostRecent < maxSelectionIndex) {
-      return selection.clear().add(mostRecent + 1);
+      return clearSelection().add(mostRecent + 1);
     } else {
       return selection;
     }
@@ -140,7 +144,7 @@ function selectPrevious() {
     return selectLast();
   } else {
     if (mostRecent > 0) {
-      return selection.clear().add(mostRecent - 1);
+      return clearSelection().add(mostRecent - 1);
     } else {
       return selection;
     }
@@ -151,7 +155,7 @@ class NotesSelectionStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.ALL_NOTES_DESELECTED:
-        this._change(payload.type, () => selection.clear());
+        this._change(payload.type, clearSelection);
         break;
 
       case Actions.ALL_NOTES_SELECTED:
@@ -230,7 +234,7 @@ class NotesSelectionStore extends Store {
         this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, () => {
           if (payload.value === '') {
-            return selection.clear();
+            return clearSelection();
           } else {
             // Find first matching title and select it, if there is one.
             let matchingIndex = null;
@@ -241,12 +245,17 @@ class NotesSelectionStore extends Store {
               }
             });
             if (matchingIndex !== null) {
-              return selection.clear().add(matchingIndex);
+              return clearSelection().add(matchingIndex);
             } else {
-              return selection.clear();
+              return clearSelection();
             }
           }
         });
+        break;
+
+      case Actions.SELECTED_NOTES_DELETED:
+        this.waitFor(FilteredNotesStore.dispatchToken);
+        this._change(payload.type, clearSelection);
         break;
     }
   }

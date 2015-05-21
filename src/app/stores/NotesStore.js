@@ -143,6 +143,11 @@ class NotesStore extends Store {
       case Actions.NOTES_LOADED:
         this.emit('change');
         break;
+
+      case Actions.SELECTED_NOTES_DELETED:
+        notes = notes.filterNot((note, index) => payload.ids.has(index));
+        this.emit('change');
+        break;
     }
   }
 

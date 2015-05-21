@@ -14,15 +14,37 @@ import stringFinder from '../stringFinder';
 let notes = NotesStore.notes;
 let query = null;
 
-function filter(value: string): ImmutableList {
+function filter(value: ?string): ImmutableList {
+  if (value === null) {
+    return NotesStore.notes.map((note, index) => (
+      // Augment note with its index within the NoteStore.
+      note.set('index', index)
+    ));
+  }
+
   const regexen = value.trim().split(/\s+/).map(stringFinder);
   if (regexen.length) {
-    return NotesStore.notes.filter(note => (
-      regexen.every(regexp => (
-        note.get('title').search(regexp) !== -1 ||
-        note.get('text').search(regexp) !== -1
+    const indices = [];
+    return NotesStore.notes
+      .filter((note, index) => {
+        if ((regexen.every(regexp => (
+          note.get('title').search(regexp) !== -1 ||
+          note.get('text').search(regexp) !== -1
+        )))) {
+          // If I had transducer functionality here I'd do a natural map ->
+          // filter, but instead have to do filter -> map and some manual
+          // book-keeping to avoid double-iteration and creating a bunch of
+          // intermediate objects.
+          indices.push(index);
+          return true;
+        }
+        return false;
+      })
+      .map((note, index) => (
+        // Augment note with its index within the NotesStore.
+        note.set('index', indices[index])
       ))
-    ));
+      .toList();
   } else {
     return notes;
   }
@@ -40,17 +62,17 @@ class FilteredNotesStore extends Store {
         break;
 
       case Actions.NOTES_LOADED:
-        this._change(() => {
-          if (query !== null) {
-            return filter(query);
-          } else {
-            return NotesStore.notes;
-          }
-        });
+        this._change(() => filter(query));
         break;
 
       case Actions.SEARCH_REQUESTED:
         query = payload.value;
+        this._change(() => filter(query));
+        break;
+
+      case Actions.SELECTED_NOTES_DELETED:
+        // Keep and re-run the query, if we have one
+        this.waitFor(NotesStore.dispatchToken);
         this._change(() => filter(query));
         break;
     }

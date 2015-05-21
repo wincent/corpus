@@ -26,16 +26,11 @@ MINUTIAE
 - remember and restore cursor position when focusing Note textarea
 - LEFT/RIGHT when NoteList has focus should move cursor to beginning end in OmniBar (and focus it, obviously)
 - note creation when hitting Enter on a title that doesn't exist yet
-- fix contextual menu lag; Atom doesn't have the problem...
-- figure out how to disable menu items conditionally (eg. Rename, Delete tec)
-- add note deletion (contextual menu, menu etc)
 - fix missing scrollbars (this is intermittent; not sure of cause)
-- put linting in Gulp too (probably watching?)
 - integrate Flow
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
 - tidy up ugly handling of current-selected-index `null` values
 - implement contextual menu for <NoteView>
-- implement contextual menu for <NotePreview>
 - typing when NotePreview is focused should shift focus to OmniBar and insert (search)
 - write tests for the logic in NotesSelectionStore; it's pretty complicated
 - write linter (plugin?) that warns if files don't have license headers
@@ -147,5 +142,10 @@ ARCHIVES
 - [DONE] Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
 - [DONE] add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
 - [DONE] update babel-lint (current master visits decorators, which means no more spurious unused variable warnings)
+- [DONE] fix contextual menu lag; Atom doesn't have the problem... [update: yes it does, in the tree view...]
+- [DONE] figure out how to disable menu items conditionally (eg. Rename, Delete tec)
+- [DONE] put linting in Gulp too (probably watching?)
+- [DONE] add note deletion (contextual menu, menu etc)
+- [DONE] implement contextual menu for <NotePreview>
 
 # vim: set nowrap:
