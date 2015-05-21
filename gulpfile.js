@@ -2,6 +2,7 @@
 // Licensed under the terms of the MIT license.
 
 var babel = require('gulp-babel');
+var eslint = require('gulp-eslint');
 var exec = require('child_process').exec;
 var gulp = require('gulp');
 var gutil = require('gulp-util');
@@ -59,6 +60,13 @@ gulp.task('js', function() {
   return gulp.src('src/**/*.js')
     .pipe(wrap(babel(babelOptions)))
     .pipe(gulp.dest('dist'));
+});
+
+gulp.task('lint', function() {
+  return gulp.src('src/**/*.js')
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 });
 
 gulp.task('copy-app', function(callback) {
