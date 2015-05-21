@@ -115,5 +115,5 @@ gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon']);
 gulp.task('watch', function() {
   watching = true;
   gulp.watch('src/**/*.html', ['html']);
-  gulp.watch('src/**/*.js', ['js']);
+  gulp.watch('src/**/*.js', ['js', 'lint']);
 });
