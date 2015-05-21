@@ -143,7 +143,7 @@ export default class NoteList extends React.Component {
   }
 
   @autobind
-  _selectionChanged(event) {
+  _selectionChanged() {
     // Don't want to trigger on descdendant (eg. NotePreview title) selection
     // changes.
     if (document.activeElement === React.findDOMNode(this)) {

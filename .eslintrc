@@ -4,6 +4,7 @@
     // key: 0 = allow, 1 = warn, 2 = error
     "comma-dangle": [0],
     "global-strict": [2, "always"],
+    "no-alert": [0],
     "no-underscore-dangle": [0],
     "quotes": [1, "single", "avoid-escape"]
   }

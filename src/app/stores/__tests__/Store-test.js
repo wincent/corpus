@@ -19,7 +19,7 @@ describe('Store', () => {
   });
 
   it("registers the class's handleDispatch method", () => {
-    new Store();
+    new Store(); // eslint-disable-line no-new
     expect(Dispatcher.register).toBeCalled();
   });
 

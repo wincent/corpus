@@ -40,7 +40,7 @@ const notesDir = path.join(process.env.HOME, 'Documents', 'Notes');
 
 function ignore(): void {
   return;
-};
+}
 
 function filterFilenames(filenames: Array<string>): Array<string> {
   return filenames.filter(fileName => path.extname(fileName) === '.txt');
@@ -73,7 +73,7 @@ function compareMTime(a, b) {
   } else {
     return 0;
   }
-};
+}
 
 function readContents(info) {
   return Promise.join(

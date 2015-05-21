@@ -69,7 +69,7 @@ export default class ContentEditable extends React.Component {
 
     // Ugh, would like to do this without a linear scan.
     let matchingIndex = null;
-    const index = NotesStore.notes.find((note, index) => {
+    NotesStore.notes.find((note, index) => {
       if (note.get('id') === this.props.note.get('id')) {
         matchingIndex = index;
         return true;
@@ -86,7 +86,7 @@ export default class ContentEditable extends React.Component {
   }
 
   @autobind
-  _onBlur(event) {
+  _onBlur() {
     if (!Dispatcher.isDispatching()) {
       this._persistChanges();
     }

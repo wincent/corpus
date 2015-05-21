@@ -3,7 +3,7 @@
 
 'use strict';
 
-import Immutable from 'immutable';
+import type {Immutable} from 'immutable';
 
 import Actions from '../Actions';
 import NotesStore from './NotesStore';
@@ -41,7 +41,7 @@ class FilteredNotesStore extends Store {
       case Actions.NOTES_LOADED:
         this._change(() => {
           if (query !== null) {
-            return filter(query)
+            return filter(query);
           } else {
             return NotesStore.notes;
           }

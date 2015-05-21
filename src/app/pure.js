@@ -36,7 +36,7 @@ export default function pure(target) {
     } else {
       return false;
     }
-  };
+  }
 
   target.prototype.shouldComponentUpdate = shouldComponentUpdate;
 }

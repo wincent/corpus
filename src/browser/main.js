@@ -52,7 +52,7 @@ app.on('ready', () => {
     contextualMenu.popup(mainWindow);
   });
 
-  menu = Menu.buildFromTemplate(template)
+  menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
   ipc.on('selection-count-changed', (event, newCount) => {

@@ -57,7 +57,7 @@ export default class NotePreview extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     if (this.props.focused && NotesSelectionStore.selection.size === 1) {
       // We are the only selected note. Listen for (input title) focus events.
       this._addListener();
@@ -156,7 +156,7 @@ export default class NotePreview extends React.Component {
   @autobind
   _onClick(event) {
     if (event.metaKey && event.shiftKey) {
-      // TODO: in nvALT this is some kind o drag;
+      // TODO: in nvALT this is some kind of drag;
       // eg. to a text document -> copies path
       // to desktop -> copies document
     } else if (event.metaKey) {
@@ -173,13 +173,12 @@ export default class NotePreview extends React.Component {
   }
 
   @autobind
-  _onContextMenu(event) {
-
+  _onContextMenu() {
     if (this.state.isEditing) {
       return;
     }
 
-    // Ghastly hack returns...
+    // Ghastly hack...
     setTimeout(() => ipc.send('context-menu'), 100);
   }
 

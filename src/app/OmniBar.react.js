@@ -13,7 +13,6 @@ import Keys from './Keys';
 import NotesSelectionStore from './stores/NotesSelectionStore';
 import FilteredNotesStore from './stores/FilteredNotesStore';
 import performKeyboardNavigation from './performKeyboardNavigation';
-import stringFinder from './stringFinder';
 
 const styles = {
   cancel: {
@@ -114,7 +113,6 @@ export default class OmniBar extends React.Component {
   _onSelectionChange() {
     const note = getCurrentNote();
     const currentValue = note ? note.get('title').toLowerCase() : '';
-    const previousValue = this.state.value.toLowerCase();
     const pendingValue = this._query ? this._query.toLowerCase() : '';
     if (
       this.state.note !== note ||
@@ -130,7 +128,7 @@ export default class OmniBar extends React.Component {
       this.setState(
         {note, value},
         () => {
-          const input = React.findDOMNode(this._inputRef)
+          const input = React.findDOMNode(this._inputRef);
           if (document.activeElement === input) {
             if (currentValue && currentValue.startsWith(pendingValue)) {
               input.setSelectionRange(pendingValue.length, input.value.length);

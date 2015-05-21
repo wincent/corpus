@@ -20,6 +20,7 @@ Nice to haves:
 
 MINUTIAE
 
+- [DONE] update babel-lint (current master visits decorators, which means no more spurious unused variable warnings)
 - make `ContentEditable` agnostic (no stores, no actions)
 - can I use setState((state, props) => {}) to clean up some of my gnarly logic?
 - tab in note should insert a tab; shift-tab should go back to OmniBar

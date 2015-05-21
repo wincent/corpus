@@ -5,7 +5,6 @@
 
 import React from 'react';
 import autobind from 'autobind-decorator';
-import cx from 'classnames';
 
 const styles = {
   root: {
@@ -40,7 +39,7 @@ export default class Separator extends React.Component {
     event.preventDefault();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate() {
     return false;
   }
 
