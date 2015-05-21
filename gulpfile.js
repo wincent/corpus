@@ -58,6 +58,8 @@ gulp.task('html', function() {
 
 gulp.task('js', function() {
   return gulp.src('src/**/*.js')
+    .pipe(eslint())
+    .pipe(eslint.format())
     .pipe(wrap(babel(babelOptions)))
     .pipe(gulp.dest('dist'));
 });
@@ -66,7 +68,6 @@ gulp.task('lint', function() {
   return gulp.src('src/**/*.js')
     .pipe(eslint())
     .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
 });
 
 gulp.task('copy-app', function(callback) {
@@ -115,5 +116,5 @@ gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon']);
 gulp.task('watch', function() {
   watching = true;
   gulp.watch('src/**/*.html', ['html']);
-  gulp.watch('src/**/*.js', ['js', 'lint']);
+  gulp.watch('src/**/*.js', ['js']);
 });
