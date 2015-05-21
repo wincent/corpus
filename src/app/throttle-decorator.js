@@ -5,8 +5,6 @@
 
 import throttle from './throttle';
 
-const DEFAULT_INTERVAL = 15;
-
 export default function(interval: number) {
   return function(target, key, descriptor) {
     // Other decorators (eg. @autobind) may have set a getter on the descriptor
