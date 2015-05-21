@@ -59,10 +59,10 @@ function getStatInfo(fileName: string): ImmutableMap {
     title,
     notePath,
     stat(notePath).catch(ignore),
-    (id, title, path, stat) => ImmutableMap({
+    (id, _, __, statResult) => ImmutableMap({
       id,
-      mtime: stat && stat.mtime.getTime(),
-      path,
+      mtime: statResult && statResult.mtime.getTime(),
+      path: notePath,
       title,
     })
   );
@@ -84,7 +84,7 @@ function readContents(info) {
   return Promise.join(
     info,
     readFile(info.get('path')).catch(ignore),
-    (info, text) => info.set('text', text.toString())
+    (_, text) => info.set('text', text.toString())
   );
 }
 
@@ -105,7 +105,7 @@ class NotesStore extends Store {
       .then(info => {
         const sorted = info.sort(compareMTime);
         const preload = sorted.splice(0, PRELOAD_COUNT);
-        return new Promise((resolve, reject) => (
+        return new Promise(resolve => (
           Promise.map(preload, readContents, {concurrency: 5})
             .then(appendResults)
             .then(() => Promise.map(sorted, readContents, {concurrency: 5}))
