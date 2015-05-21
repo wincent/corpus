@@ -20,7 +20,6 @@ Nice to haves:
 
 MINUTIAE
 
-- [DONE] update babel-lint (current master visits decorators, which means no more spurious unused variable warnings)
 - make `ContentEditable` agnostic (no stores, no actions)
 - can I use setState((state, props) => {}) to clean up some of my gnarly logic?
 - tab in note should insert a tab; shift-tab should go back to OmniBar
@@ -147,5 +146,6 @@ ARCHIVES
 - [DONE] tab from OmniBar should focus current note, or do nothing if there is no current note
 - [DONE] Fix tab-index stuff; I want a three-step cycle, but there are some hidden elements getting focus (body, for example becomes document.activeElement)
 - [DONE] add "NOTE_TOUCHED" action whenever a note is modified (bubbles it to the top); note that we can assume this will only happen to one note at once (single selection)
+- [DONE] update babel-lint (current master visits decorators, which means no more spurious unused variable warnings)
 
 # vim: set nowrap:

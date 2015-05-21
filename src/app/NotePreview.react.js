@@ -219,8 +219,11 @@ export default class NotePreview extends React.Component {
       event.button === Mouse.RIGHT_BUTTON
     ) {
       // Context menu is about to appear.
-      Actions.noteSelected(this.props.index, true);
-      // TODO: disable scrollIntoViewIfNeeded in this case; that would be weird
+      const selection = NotesSelectionStore.selection;
+      if (!selection.has(this.props.index)) {
+        // We weren't selected (or among a multiple selection); change that.
+        Actions.noteSelected(this.props.index, true);
+      }
     }
   }
 
