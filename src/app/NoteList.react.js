@@ -163,10 +163,14 @@ export default class NoteList extends React.Component {
     this.setState(
       {selection: NotesSelectionStore.selection},
       () => {
-        if (!NotesSelectionStore.selection.size) {
-          Actions.searchRequested('');
-          Actions.omniBarFocused();
-        }
+        // Ugh... A deletion may cause us to get here during dispatch, so we
+        // need to defer execution until the next loop.
+        setImmediate(() => {
+          if (!NotesSelectionStore.selection.size) {
+            Actions.searchRequested('');
+            Actions.omniBarFocused();
+          }
+        });
       }
     );
   }

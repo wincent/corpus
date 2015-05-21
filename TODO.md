@@ -20,6 +20,7 @@ Nice to haves:
 
 MINUTIAE
 
+- make Command-Delete and Command-R work when OmniBar or Note are focused, like nvALT
 - make `ContentEditable` agnostic (no stores, no actions)
 - can I use setState((state, props) => {}) to clean up some of my gnarly logic?
 - tab in note should insert a tab; shift-tab should go back to OmniBar
