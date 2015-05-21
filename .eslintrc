@@ -7,11 +7,11 @@
     "new-cap": [
       2,
       {
-        // for Immutable
         "capIsNewExceptions": [
-          "List",
-          "OrderedSet",
-          "Range"
+          "ImmutableList",
+          "ImmutableMap",
+          "ImmutableOrderedSet",
+          "ImmutableRange"
         ]
       }
     ],

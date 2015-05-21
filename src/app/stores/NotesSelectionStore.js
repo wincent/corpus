@@ -1,6 +1,10 @@
 'use strict';
 
-import Immutable from 'immutable';
+// https://github.com/eslint/eslint/issues/2584
+import {
+  OrderedSet as ImmutableOrderedSet,
+  Range as ImmutableRange,
+} from 'immutable';
 
 import Actions from '../Actions';
 import FilteredNotesStore from './FilteredNotesStore';
@@ -12,7 +16,7 @@ import clamp from '../clamp';
  * {next,previous}-note action"; in this case the "next" note is defined as the
  * note after the last note added to the set.
  */
-let selection = Immutable.OrderedSet();
+let selection = ImmutableOrderedSet();
 
 /**
  * We keep track of the total delta (how far we've moved up/down) when adjusting
@@ -96,7 +100,7 @@ function adjustSelection(delta) {
 
 function selectAll() {
   // NOTE: once we support deletion, will need to worry about holes
-  const range = Immutable.Range(FilteredNotesStore.notes.size, -1);
+  const range = ImmutableRange(FilteredNotesStore.notes.size, -1);
   return selection.clear().merge(range);
 }
 
@@ -182,7 +186,7 @@ class NotesSelectionStore extends Store {
         this._change(payload.type, () => {
           const start = selection.last() || 0;
           const end = payload.index;
-          const range = Immutable.Range(
+          const range = ImmutableRange(
             Math.min(start, end),
             Math.max(start, end) + 1
           );

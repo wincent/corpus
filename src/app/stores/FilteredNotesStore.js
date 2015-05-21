@@ -3,7 +3,8 @@
 
 'use strict';
 
-import type {Immutable} from 'immutable';
+// babel-eslint issue: https://github.com/babel/babel-eslint/issues/108
+import type {List as ImmutableList} from 'immutable'; // eslint-disable-line no-unused-vars
 
 import Actions from '../Actions';
 import NotesStore from './NotesStore';
@@ -13,7 +14,7 @@ import stringFinder from '../stringFinder';
 let notes = NotesStore.notes;
 let query = null;
 
-function filter(value: string): Immutable.List {
+function filter(value: string): ImmutableList {
   const regexen = value.trim().split(/\s+/).map(stringFinder);
   if (regexen.length) {
     return NotesStore.notes.filter(note => (

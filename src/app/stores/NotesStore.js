@@ -3,7 +3,12 @@
 
 'use strict';
 
-import Immutable from 'immutable';
+// https://github.com/eslint/eslint/issues/2584
+import {
+  List as ImmutableList,
+  Map as ImmutableMap,
+} from 'immutable';
+
 import Promise from 'bluebird';
 import fs from 'fs';
 import path from 'path';
@@ -29,7 +34,7 @@ const PRELOAD_COUNT = Math.floor(window.innerHeight / Constants.PREVIEW_ROW_HEIG
 /**
  * Ordered colllection of notes (as they appear in the NoteList).
  */
-let notes = Immutable.List();
+let notes = ImmutableList();
 
 /**
  * Monotonically increasing, unique ID for each note.
@@ -46,7 +51,7 @@ function filterFilenames(filenames: Array<string>): Array<string> {
   return filenames.filter(fileName => path.extname(fileName) === '.txt');
 }
 
-function getStatInfo(fileName: string): Immutable.Map {
+function getStatInfo(fileName: string): ImmutableMap {
   const notePath = path.join(notesDir, fileName);
   const title = path.basename(notePath, '.txt');
   return Promise.join(
@@ -54,7 +59,7 @@ function getStatInfo(fileName: string): Immutable.Map {
     title,
     notePath,
     stat(notePath).catch(ignore),
-    (id, title, path, stat) => Immutable.Map({
+    (id, title, path, stat) => ImmutableMap({
       id,
       mtime: stat && stat.mtime.getTime(),
       path,
