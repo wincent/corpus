@@ -27,7 +27,6 @@ export default class Corpus extends React.Component {
   }
 
   componentDidMount() {
-    // TODO: implement confirmtion dialog
     ipc.on('delete', this._deleteSelectedNotes);
     ipc.on('next', Actions.nextNoteSelected);
     ipc.on('previous', Actions.previousNoteSelected);
@@ -46,10 +45,22 @@ export default class Corpus extends React.Component {
   }
 
   _deleteSelectedNotes() {
+    const selection = NotesSelectionStore.selection;
+    let warning;
+    if (selection.size === 1) {
+      const note = FilteredNotesStore.notes.get(selection.first());
+      warning = `Delete the note titled "${note.get('title')}"?`;
+    } else {
+      warning = 'Delete 2 notes?';
+    }
+    if (!confirm(warning)) {
+      return;
+    }
+
     // Convert selection indices within the FilteredNotesStore to
     // canonical indices within the NotesStore.
     Actions.selectedNotesDeleted(
-      NotesSelectionStore.selection
+      selection
         .map(index => FilteredNotesStore.notes.get(index))
         .map(note => note.get('index'))
         .toSet()
