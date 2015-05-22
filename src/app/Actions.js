@@ -23,6 +23,7 @@ const actionTypes = keyMirror({
   ALL_NOTES_SELECTED: null,
   ADJUST_NOTE_SELECTION_DOWN: null,
   ADJUST_NOTE_SELECTION_UP: null,
+  CONFIG_LOADED: null,
   FIRST_NOTE_SELECTED: null,
   LAST_NOTE_SELECTED: null,
   NEXT_NOTE_SELECTED: null,
@@ -56,6 +57,10 @@ const actionCreators = {
 
   allNotesSelected() {
     dispatch(actionTypes.ALL_NOTES_SELECTED);
+  },
+
+  configLoaded() {
+    dispatch(actionTypes.CONFIG_LOADED);
   },
 
   firstNoteSelected() {

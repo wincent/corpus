@@ -15,14 +15,17 @@ import {
 
 import Promise from 'bluebird';
 import fs from 'fs';
+import mkdirp from 'mkdirp';
 import path from 'path';
 import process from 'process';
 
 import Actions from '../Actions';
+import ConfigStore from './ConfigStore';
 import Constants from '../Constants';
 import Store from './Store';
 import handleError from '../handleError';
 
+const mkdir = Promise.promisify(mkdirp);
 const readdir = Promise.promisify(fs.readdir);
 const readFile = Promise.promisify(fs.readFile);
 const stat = Promise.promisify(fs.stat);
@@ -45,7 +48,7 @@ let notes = ImmutableList();
  */
 let noteID = 0;
 
-const notesDir = path.join(process.env.HOME, 'Documents', 'Notes');
+let notesDirectory;
 
 function ignore(): void {
   return;
@@ -56,7 +59,7 @@ function filterFilenames(filenames: Array<string>): Array<string> {
 }
 
 function getStatInfo(fileName: string): ImmutableMap {
-  const notePath = path.join(notesDir, fileName);
+  const notePath = path.join(notesDirectory, fileName);
   const title = path.basename(notePath, '.txt');
   return Promise.join(
     noteID++,
@@ -100,10 +103,14 @@ function appendResults(results) {
 }
 
 class NotesStore extends Store {
-  constructor() {
-    super();
+  _loadNotes() {
+    notesDirectory = ConfigStore
+      .config
+      .get('notesDirectory')
+      .replace(/^~/, process.env.HOME);
 
-    readdir(notesDir)
+    mkdir(notesDirectory)
+      .then(() => readdir(notesDirectory))
       .then(filterFilenames)
       .map(getStatInfo)
       .then(info => {
@@ -122,6 +129,11 @@ class NotesStore extends Store {
 
   handleDispatch(payload) {
     switch (payload.type) {
+      case Actions.CONFIG_LOADED:
+        // Can't load notes without config telling us where to look.
+        this._loadNotes();
+        break;
+
       case Actions.NOTE_TEXT_CHANGED:
       case Actions.NOTE_TITLE_CHANGED:
         {

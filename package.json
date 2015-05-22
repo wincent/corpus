@@ -42,6 +42,7 @@
     "gulp-util": "^3.0.4",
     "immutable": "^3.7.2",
     "jest-cli": "^0.4.2",
+    "mkdirp": "^0.5.1",
     "react": "^0.13.2"
   }
 }
