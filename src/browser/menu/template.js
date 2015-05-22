@@ -19,7 +19,7 @@ export default [
         selector: 'orderFrontStandardAboutPanel:',
       },
       {type: 'separator'},
-         {
+      {
         label: 'Services',
         submenu: [],
       },
