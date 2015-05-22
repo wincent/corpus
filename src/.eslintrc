@@ -3,7 +3,7 @@
     "browser": true
   },
   "globals": {
-    "setImmediate": true
+    "setImmediate": false
   },
   "plugins": [
     "react"

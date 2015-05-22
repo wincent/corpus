@@ -4,6 +4,6 @@
     "node": true
   },
   "globals": {
-    "jest": true
+    "jest": false
   }
 }
