@@ -4,6 +4,7 @@
 var babel = require('gulp-babel');
 var eslint = require('gulp-eslint');
 var exec = require('child_process').exec;
+var flow = require('gulp-flowtype');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var minifyHTML = require('gulp-minify-html');
@@ -50,6 +51,8 @@ gulp.task('default', ['watch']);
 
 gulp.task('build', ['html', 'js']);
 
+gulp.task('flow', ['typecheck']);
+
 gulp.task('html', function() {
   return gulp.src('src/**/*.html')
     .pipe(wrap(minifyHTML()))
@@ -68,6 +71,11 @@ gulp.task('lint', function() {
   return gulp.src('src/**/*.js')
     .pipe(eslint())
     .pipe(eslint.format())
+});
+
+gulp.task('typecheck', function() {
+  return gulp.src('src/**/*.js')
+    .pipe(flow())
 });
 
 gulp.task('copy-app', function(callback) {
