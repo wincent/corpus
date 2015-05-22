@@ -11,7 +11,6 @@ import React from 'react';
 
 const styles = {
   root: {
-    alignItems: 'center',
     cursor: 'default',
     display: 'flex',
     flexDirection: 'column',
@@ -25,6 +24,7 @@ const styles = {
     color: '#a3a3a3',
     fontSize: '18px',
     fontFamily: 'Helvetica',
+    textAlign: 'center',
   },
   upperSpacer: {
     flexGrow: 1,
