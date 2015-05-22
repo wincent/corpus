@@ -43,6 +43,7 @@ MINUTIAE
 - gracefully handle files going missing (and restoring); use case is mountable filesystems
 - resolve clash of Command-R accelerators (using it for rename and reload); reloading shouldn't be too easy for users to do accidentally
 - show pie chart indicator showing file reading/indexing progress
+- implement "Show in Finder"
 
 NICE TO HAVES
 
@@ -54,6 +55,7 @@ NICE TO HAVES
 
 IDEAS
 
+- to avoid building a proper prefs UI (yet), use a dotfile for config
 - use codemirror to get some stuff for free (syntax highlighting, vim mode)
 - note that scroll jank is most noticeable when we prepend or delete from the front of the note list; so, we could make a point of not doing that (ie. when scrolling down, always only extend down; when scrolling up, insert everything in one go); the main reason we want to hide the non-visible bits is to make separator drags and window resizing fast, so we could actually do the hiding when idle, after scrolling stops.
 - alternatively, make scrolling cheaper for React by getting it to do fewer DOM operations (probably smarter use of keys); I notice that appending is (relatively) fast; perhaps we can re-number keys to make it look like we're never appending, just reshuffling?
