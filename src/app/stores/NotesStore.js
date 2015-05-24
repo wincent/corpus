@@ -112,32 +112,32 @@ function createNote(title) {
   }));
 }
 
-class NotesStore extends Store {
-  _loadNotes() {
-    notesDirectory = ConfigStore.config.get('notesDirectory');
-    mkdir(notesDirectory)
-      .then(() => readdir(notesDirectory))
-      .then(filterFilenames)
-      .map(getStatInfo)
-      .then(info => {
-        const sorted = info.sort(compareMTime);
-        const preload = sorted.splice(0, PRELOAD_COUNT);
-        return new Promise(resolve => (
-          Promise.map(preload, readContents, {concurrency: 5})
-            .then(appendResults)
-            .then(() => Promise.map(sorted, readContents, {concurrency: 5}))
-            .then(appendResults)
-            .then(resolve)
-        ));
-      })
-      .catch(error => handleError(error, 'Failed to read notes from disk'));
-  }
+function loadNotes() {
+  notesDirectory = ConfigStore.config.get('notesDirectory');
+  mkdir(notesDirectory)
+    .then(() => readdir(notesDirectory))
+    .then(filterFilenames)
+    .map(getStatInfo)
+    .then(info => {
+      const sorted = info.sort(compareMTime);
+      const preload = sorted.splice(0, PRELOAD_COUNT);
+      return new Promise(resolve => (
+        Promise.map(preload, readContents, {concurrency: 5})
+          .then(appendResults)
+          .then(() => Promise.map(sorted, readContents, {concurrency: 5}))
+          .then(appendResults)
+          .then(resolve)
+      ));
+    })
+    .catch(error => handleError(error, 'Failed to read notes from disk'));
+}
 
+class NotesStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.CONFIG_LOADED:
         // Can't load notes without config telling us where to look.
-        this._loadNotes();
+        loadNotes();
         break;
 
       case Actions.NOTE_CREATED:
