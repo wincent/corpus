@@ -40,7 +40,7 @@ function requireString(maybeString, defaultValue, key) {
   if (Object.prototype.toString.call(maybeString) === '[object String]') {
     return maybeString;
   } else {
-    warn(`Expected string value for key: ${key}`);
+    warn(`Reading ${configFile}: expected string value for key: ${key}`);
     return defaultValue;
   }
 }
@@ -54,13 +54,13 @@ function merger(previousValue, nextValue, key) {
   }
 }
 
+const configFile = path.join(process.env.HOME, '.corpusrc');
 let config = ImmutableMap(defaults);
 
 class ConfigStore extends Store {
   constructor() {
     super();
 
-    const configFile = path.join(process.env.HOME, '.corpusrc');
     readFile(configFile)
       .then(data => (
         config = config.mergeWith(merger, JSON.parse(data.toString()))
