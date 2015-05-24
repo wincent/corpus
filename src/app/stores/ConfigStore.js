@@ -29,6 +29,31 @@ const defaults = {
   ),
 };
 
+const mergerConfig = {
+  notesDirectory(previousValue, nextValue, key) {
+    const value = requireString(nextValue, previousValue, key);
+    return value.replace(/^~/, process.env.HOME);
+  },
+};
+
+function requireString(maybeString, defaultValue, key) {
+  if (Object.prototype.toString.call(maybeString) === '[object String]') {
+    return maybeString;
+  } else {
+    warn(`Expected string value for key: ${key}`);
+    return defaultValue;
+  }
+}
+
+function merger(previousValue, nextValue, key) {
+  if (key in mergerConfig) {
+    return mergerConfig[key](previousValue, nextValue, key);
+  } else {
+    // Superfluous key.
+    return null;
+  }
+}
+
 let config = ImmutableMap(defaults);
 
 class ConfigStore extends Store {
@@ -37,7 +62,9 @@ class ConfigStore extends Store {
 
     const configFile = path.join(process.env.HOME, '.corpusrc');
     readFile(configFile)
-      .then(data => config = config.merge(JSON.parse(data.toString())))
+      .then(data => (
+        config = config.mergeWith(merger, JSON.parse(data.toString()))
+      ))
       .catch(error => warn(`Reading ${configFile}: ${error.message}`))
       .finally(Actions.configLoaded);
   }

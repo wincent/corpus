@@ -104,11 +104,7 @@ function appendResults(results) {
 
 class NotesStore extends Store {
   _loadNotes() {
-    notesDirectory = ConfigStore
-      .config
-      .get('notesDirectory')
-      .replace(/^~/, process.env.HOME);
-
+    notesDirectory = ConfigStore.config.get('notesDirectory');
     mkdir(notesDirectory)
       .then(() => readdir(notesDirectory))
       .then(filterFilenames)
