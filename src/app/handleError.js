@@ -11,6 +11,12 @@ import remote from 'remote';
 
 const app = remote.require('app');
 
+/**
+ * Show an error to the user.
+ *
+ * This function is intended for handling serious errors, because it prompts the
+ * user to exit.
+ */
 function handleError(error, context) {
   const result = confirm(
     `${context}\n\n${error}\n\nDo you want to exit?`

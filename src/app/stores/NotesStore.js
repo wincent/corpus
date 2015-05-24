@@ -123,9 +123,7 @@ function createNote(title) {
       }));
       Actions.noteCreationCompleted();
     })
-    .catch(error => {
-      throw new Error(`Failed to open ${notePath} for writing: ${error}`);
-    });
+    .catch(error => handleError(error, `Failed to open ${notePath} for writing`));
 }
 
 function loadNotes() {
