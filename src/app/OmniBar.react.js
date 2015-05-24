@@ -204,7 +204,7 @@ export default class OmniBar extends React.Component {
               Actions.noteCreated(this.state.value);
             }
           } else {
-            // TODO: empty OmniBar; create "Untitled Note"
+            Actions.noteCreated('Untitled Note');
           }
           Actions.noteFocused();
         }

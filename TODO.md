@@ -52,6 +52,7 @@ NICE TO HAVES
 - i18n
 - generated documentation
 - show Git diffs in-app (Might take inspiration from Gundo)
+- handle notes with duplicate titles (nvALT does this with suffixes eg. "foo.txt", "foo.1.txt", "foo.2.txt" etc)
 
 IDEAS
 
