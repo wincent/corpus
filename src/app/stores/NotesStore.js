@@ -25,7 +25,10 @@ import Constants from '../Constants';
 import Store from './Store';
 import handleError from '../handleError';
 
+const close = Promise.promisify(fs.close);
+const fsync = Promise.promisify(fs.fsync);
 const mkdir = Promise.promisify(mkdirp);
+const open = Promise.promisify(fs.open);
 const readdir = Promise.promisify(fs.readdir);
 const readFile = Promise.promisify(fs.readFile);
 const stat = Promise.promisify(fs.stat);
@@ -103,13 +106,26 @@ function appendResults(results) {
 }
 
 function createNote(title) {
-  notes = notes.unshift(ImmutableMap({
-    id: noteID++,
-    mtime: Date.now(),
-    path: path.join(notesDirectory, title + '.txt'),
-    text: '',
-    title,
-  }));
+  // TODO: munge filenames with illegal characters in their names
+  const notePath = path.join(notesDirectory, title + '.txt');
+  open(notePath, 'wx')
+    .then(fd => (
+      new Promise((resolve, reject) => fsync(fd).then(() => resolve(fd)))
+    ))
+    .then(fd => close(fd))
+    .then(() => {
+      notes = notes.unshift(ImmutableMap({
+        id: noteID++,
+        mtime: Date.now(),
+        path: notePath,
+        text: '',
+        title,
+      }));
+      Actions.noteCreationCompleted();
+    })
+    .catch(error => {
+      throw new Error(`Failed to open ${notePath} for writing: ${error}`);
+    });
 }
 
 function loadNotes() {
@@ -140,9 +156,12 @@ class NotesStore extends Store {
         loadNotes();
         break;
 
-      case Actions.NOTE_CREATED:
-        createNote(payload.title);
+      case Actions.NOTE_CREATION_COMPLETED:
         this.emit('change');
+        break;
+
+      case Actions.NOTE_CREATION_REQUESTED:
+        createNote(payload.title);
         break;
 
       case Actions.NOTE_TEXT_CHANGED:

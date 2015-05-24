@@ -18,8 +18,13 @@ let focus = 'OmniBar';
 class FocusStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
-      case Actions.NOTE_FOCUS_REQUESTED:
+      case Actions.NOTE_CREATION_COMPLETED:
         this.waitFor(NotesSelectionStore.dispatchToken);
+        focus = 'Note';
+        this.emit('change');
+        break;
+
+      case Actions.NOTE_FOCUS_REQUESTED:
         focus = 'Note';
         this.emit('change');
         break;

@@ -28,7 +28,8 @@ const actionTypes = keyMirror({
   LAST_NOTE_SELECTED: null,
   NEXT_NOTE_SELECTED: null,
   NOTES_LOADED: null,
-  NOTE_CREATED: null,
+  NOTE_CREATION_COMPLETED: null,
+  NOTE_CREATION_REQUESTED: null,
   NOTE_DESELECTED: null,
   NOTE_FOCUS_REQUESTED: null,
   NOTE_LIST_FOCUS_REQUESTED: null,
@@ -76,8 +77,12 @@ const actionCreators = {
     dispatch(actionTypes.NEXT_NOTE_SELECTED);
   },
 
-  noteCreated(title: string) {
-    dispatch(actionTypes.NOTE_CREATED, {title});
+  noteCreationRequested(title: string) {
+    dispatch(actionTypes.NOTE_CREATION_REQUESTED, {title});
+  },
+
+  noteCreationCompleted() {
+    dispatch(actionTypes.NOTE_CREATION_COMPLETED);
   },
 
   noteDeselected(index: number) {

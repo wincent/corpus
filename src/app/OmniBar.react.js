@@ -200,13 +200,14 @@ export default class OmniBar extends React.Component {
 
           if (this.state.value) {
             const title = getCurrentTitle();
-            if (this.state.value !== title) {
-              Actions.noteCreated(this.state.value);
+            if (this.state.value === title) {
+              Actions.noteFocused();
+            } else {
+              Actions.noteCreationRequested(this.state.value);
             }
           } else {
-            Actions.noteCreated('Untitled Note');
+            Actions.noteCreationRequested('Untitled Note');
           }
-          Actions.noteFocused();
         }
         return;
 

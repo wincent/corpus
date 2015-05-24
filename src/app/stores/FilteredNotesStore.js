@@ -57,7 +57,7 @@ function filter(value: ?string): ImmutableList {
 class FilteredNotesStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
-      case Actions.NOTE_CREATED:
+      case Actions.NOTE_CREATION_COMPLETED:
         this.waitFor(NotesStore.dispatchToken);
         this._change(() => filter(query));
         break;
