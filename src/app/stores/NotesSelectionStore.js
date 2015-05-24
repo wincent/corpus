@@ -182,6 +182,11 @@ class NotesSelectionStore extends Store {
         this._change(payload.type, selectNext);
         break;
 
+      case Actions.NOTE_CREATED:
+        this.waitFor(FilteredNotesStore.dispatchToken);
+        this._change(payload.type, selectFirst);
+        break;
+
       case Actions.NOTE_DESELECTED:
         this._change(payload.type, () => selection.remove(payload.index));
         break;

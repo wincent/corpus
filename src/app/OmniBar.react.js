@@ -193,6 +193,23 @@ export default class OmniBar extends React.Component {
         Actions.omniBarFocused();
         return;
 
+      case Keys.RETURN:
+        {
+          // Don't insert newline into Note view when it focuses.
+          event.preventDefault();
+
+          if (this.state.value) {
+            const title = getCurrentTitle();
+            if (this.state.value !== title) {
+              Actions.noteCreated(this.state.value);
+            }
+          } else {
+            // TODO: empty OmniBar; create "Untitled Note"
+          }
+          Actions.noteFocused();
+        }
+        return;
+
       case Keys.TAB:
         {
           // Prevent the <body> from becoming `document.activeElement`.

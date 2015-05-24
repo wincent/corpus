@@ -102,6 +102,16 @@ function appendResults(results) {
   }
 }
 
+function createNote(title) {
+  notes = notes.unshift(ImmutableMap({
+    id: noteID++,
+    mtime: Date.now(),
+    path: path.join(notesDirectory, title + '.txt'),
+    text: '',
+    title,
+  }));
+}
+
 class NotesStore extends Store {
   _loadNotes() {
     notesDirectory = ConfigStore.config.get('notesDirectory');
@@ -128,6 +138,11 @@ class NotesStore extends Store {
       case Actions.CONFIG_LOADED:
         // Can't load notes without config telling us where to look.
         this._loadNotes();
+        break;
+
+      case Actions.NOTE_CREATED:
+        createNote(payload.title);
+        this.emit('change');
         break;
 
       case Actions.NOTE_TEXT_CHANGED:

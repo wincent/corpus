@@ -57,6 +57,11 @@ function filter(value: ?string): ImmutableList {
 class FilteredNotesStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
+      case Actions.NOTE_CREATED:
+        this.waitFor(NotesStore.dispatchToken);
+        this._change(() => filter(query));
+        break;
+
       case Actions.NOTE_TEXT_CHANGED:
       case Actions.NOTE_TITLE_CHANGED:
         // Forget the query; the note will be bumped to the top.

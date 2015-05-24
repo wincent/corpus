@@ -8,6 +8,7 @@
 'use strict';
 
 import Actions from '../Actions';
+import NotesSelectionStore from './NotesSelectionStore';
 import Store from './Store';
 
 // TODO: use Flow enum here
@@ -18,6 +19,7 @@ class FocusStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.NOTE_FOCUS_REQUESTED:
+        this.waitFor(NotesSelectionStore.dispatchToken);
         focus = 'Note';
         this.emit('change');
         break;
