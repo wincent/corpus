@@ -133,7 +133,7 @@ function createNote(title) {
 
 function updateNote(note) {
   const notePath = note.get('path');
-  const time = Date.now();
+  const time = new Date();
   open(notePath, 'w') // w = write
     .then(fd => new Promise(resolve => write(fd, note.get('text')).then(() => resolve(fd))))
     .then(fd => new Promise(resolve => utimes(notePath, time, time).then(resolve(fd))))
@@ -143,7 +143,7 @@ function updateNote(note) {
 }
 
 function renameNote(oldPath, newPath) {
-  const time = Date.now();
+  const time = new Date();
   rename(oldPath, newPath)
     .then(() => new Promise(resolve => utimes(newPath, time, time).then(resolve)))
     .then(() => {
