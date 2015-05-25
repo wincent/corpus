@@ -33,6 +33,7 @@ const readdir = Promise.promisify(fs.readdir);
 const readFile = Promise.promisify(fs.readFile);
 const rename = Promise.promisify(fs.rename);
 const stat = Promise.promisify(fs.stat);
+const utimes = Promise.promisify(fs.utimes);
 const write = Promise.promisify(fs.write);
 
 /**
@@ -132,17 +133,19 @@ function createNote(title) {
 
 function updateNote(note) {
   const notePath = note.get('path');
+  const time = Date.now();
   open(notePath, 'w') // w = write
-    .then(fd => (
-      new Promise(resolve => write(fd, note.get('text')).then(() => resolve(fd)))
-    ))
+    .then(fd => new Promise(resolve => write(fd, note.get('text')).then(() => resolve(fd))))
+    .then(fd => new Promise(resolve => utimes(notePath, time, time).then(resolve(fd))))
     .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
     .then(fd => close(fd))
     .catch(error => handleError(error, `Failed to write ${notePath}`));
 }
 
 function renameNote(oldPath, newPath) {
+  const time = Date.now();
   rename(oldPath, newPath)
+    .then(() => new Promise(resolve => utimes(newPath, time, time).then(resolve)))
     .then(() => {
       // TODO: Fire an action here advising Git to commit; ditto above
     })
