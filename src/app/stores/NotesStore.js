@@ -186,20 +186,37 @@ class NotesStore extends Store {
         break;
 
       case Actions.NOTE_TEXT_CHANGED:
-      case Actions.NOTE_TITLE_CHANGED:
         // NOTE: At the moment, we don't fire NOTE_TEXT_CHANGED for every text
         // change (only when we've lost textarea focus); this will eventually
         // change, because we probably want to save more often than that.
         {
-          const update = {mtime: Date.now()};
+          const update = {
+            mtime: Date.now(),
+            text: payload.text,
+          };
+          notes = notes.mergeIn(
+            [payload.index],
+            update
+          );
+
+          // Bump note to top of list.
+          const note = notes.get(payload.index);
+          notes = notes.delete(payload.index).unshift(note);
+
+          // Persist changes to disk.
+          updateNote(note);
+          this.emit('change');
+        }
+        break;
+
+      case Actions.NOTE_TITLE_CHANGED:
+        {
+          const update = {
+            mtime: Date.now(),
+            path: getPathForTitle(payload.title),
+            title: payload.title,
+          };
           const originalNote = notes.get(payload.index);
-          if (payload.text) {
-            update.text = payload.text;
-          }
-          if (payload.title) {
-            update.title = payload.title;
-            update.path = getPathForTitle(payload.title);
-          }
           notes = notes.mergeIn(
             [payload.index],
             update
@@ -210,11 +227,7 @@ class NotesStore extends Store {
           notes = notes.delete(payload.index).unshift(newNote);
 
           // Persist changes to disk.
-          if (payload.type === Actions.NOTE_TEXT_CHANGED) {
-            updateNote(note);
-          } else {
-            renameNote(originalNote.get('path'), newNote.get('path'));
-          }
+          renameNote(originalNote.get('path'), newNote.get('path'));
           this.emit('change');
         }
         break;
