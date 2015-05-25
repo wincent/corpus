@@ -32,6 +32,7 @@ const open = Promise.promisify(fs.open);
 const readdir = Promise.promisify(fs.readdir);
 const readFile = Promise.promisify(fs.readFile);
 const stat = Promise.promisify(fs.stat);
+const write = Promise.promisify(fs.write);
 
 /**
  * The number of notes to load immediately on start-up. Remaining notes are
@@ -108,10 +109,8 @@ function appendResults(results) {
 function createNote(title) {
   // TODO: munge filenames with illegal characters in their names
   const notePath = path.join(notesDirectory, title + '.txt');
-  open(notePath, 'wx')
-    .then(fd => (
-      new Promise((resolve, reject) => fsync(fd).then(() => resolve(fd)))
-    ))
+  open(notePath, 'wx') // w = write, x = fail if already exists
+    .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
     .then(fd => close(fd))
     .then(() => {
       notes = notes.unshift(ImmutableMap({
@@ -124,6 +123,17 @@ function createNote(title) {
       Actions.noteCreationCompleted();
     })
     .catch(error => handleError(error, `Failed to open ${notePath} for writing`));
+}
+
+function updateNote(note) {
+  const notePath = note.get('path');
+  open(notePath, 'w') // w = write
+    .then(fd => (
+      new Promise(resolve => write(fd, note.get('text')).then(() => resolve(fd)))
+    ))
+    .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
+    .then(fd => close(fd))
+    .catch(error => handleError(error, `Failed to write ${notePath}`));
 }
 
 function loadNotes() {
@@ -164,6 +174,9 @@ class NotesStore extends Store {
 
       case Actions.NOTE_TEXT_CHANGED:
       case Actions.NOTE_TITLE_CHANGED:
+        // NOTE: At the moment, we don't fire NOTE_TEXT_CHANGED for every text
+        // change (only when we've lost textarea focus); this will eventually
+        // change, because we probably want to save more often than that.
         {
           const update = {mtime: Date.now()};
           if (payload.text) {
@@ -180,6 +193,13 @@ class NotesStore extends Store {
           // Bump note to top of list.
           const note = notes.get(payload.index);
           notes = notes.delete(payload.index).unshift(note);
+
+          // Persist changes to disk.
+          if (payload.type === Actions.NOTE_TEXT_CHANGED) {
+            updateNote(note);
+          } else {
+            // TODO: implement renames on disk
+          }
           this.emit('change');
         }
         break;
