@@ -31,6 +31,7 @@ const mkdir = Promise.promisify(mkdirp);
 const open = Promise.promisify(fs.open);
 const readdir = Promise.promisify(fs.readdir);
 const readFile = Promise.promisify(fs.readFile);
+const rename = Promise.promisify(fs.rename);
 const stat = Promise.promisify(fs.stat);
 const write = Promise.promisify(fs.write);
 
@@ -106,9 +107,13 @@ function appendResults(results) {
   }
 }
 
+// TODO: munge filenames with illegal characters in their names
+function getPathForTitle(title: string): string {
+  return path.join(notesDirectory, title + '.txt');
+}
+
 function createNote(title) {
-  // TODO: munge filenames with illegal characters in their names
-  const notePath = path.join(notesDirectory, title + '.txt');
+  const notePath = getPathForTitle(title);
   open(notePath, 'wx') // w = write, x = fail if already exists
     .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
     .then(fd => close(fd))
@@ -134,6 +139,14 @@ function updateNote(note) {
     .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
     .then(fd => close(fd))
     .catch(error => handleError(error, `Failed to write ${notePath}`));
+}
+
+function renameNote(oldPath, newPath) {
+  rename(oldPath, newPath)
+    .then(() => {
+      // TODO: Fire an action here advising Git to commit; ditto above
+    })
+    .catch(error => handleError(error, `Failed to rename ${oldPath} to ${newPath}`));
 }
 
 function loadNotes() {
@@ -179,11 +192,13 @@ class NotesStore extends Store {
         // change, because we probably want to save more often than that.
         {
           const update = {mtime: Date.now()};
+          const originalNote = notes.get(payload.index);
           if (payload.text) {
             update.text = payload.text;
           }
           if (payload.title) {
             update.title = payload.title;
+            update.path = getPathForTitle(payload.title);
           }
           notes = notes.mergeIn(
             [payload.index],
@@ -191,14 +206,14 @@ class NotesStore extends Store {
           );
 
           // Bump note to top of list.
-          const note = notes.get(payload.index);
-          notes = notes.delete(payload.index).unshift(note);
+          const newNote = notes.get(payload.index);
+          notes = notes.delete(payload.index).unshift(newNote);
 
           // Persist changes to disk.
           if (payload.type === Actions.NOTE_TEXT_CHANGED) {
             updateNote(note);
           } else {
-            // TODO: implement renames on disk
+            renameNote(originalNote.get('path'), newNote.get('path'));
           }
           this.emit('change');
         }
