@@ -5,32 +5,36 @@
 
 'use strict';
 
-const queue = [];
-let isRunning = false;
+import {EventEmitter} from 'events';
 
+class OperationsQueue extends EventEmitter {
+  constructor() {
+    super();
+    this._isRunning = false;
+    this._queue = [];
+  }
 
-function run(operation) {
-  isRunning = true;
-  operation(() => {
-    isRunning = false;
-    setImmediate(OperationsQueue.dequeue);
-  });
-}
-
-const OperationsQueue = {
   dequeue() {
-    if (queue.length && !isRunning) {
-      run(queue.shift());
+    if (this._queue.length && !this._isRunning) {
+      this._run(this._queue.shift());
     }
-  },
+  }
 
   enqueue(operation) {
-    if (!queue.length && !isRunning) {
-      run(operation);
+    if (!this._queue.length && !this._isRunning) {
+      this._run(operation);
     } else {
-      queue.push(operation);
+      this._queue.push(operation);
     }
-  },
-};
+  }
 
-export default OperationsQueue;
+  _run(operation) {
+    this._isRunning = true;
+    operation(() => {
+      this._isRunning = false;
+      setImmediate(() => this.dequeue());
+    });
+  }
+}
+
+export default new OperationsQueue();
