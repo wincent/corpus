@@ -17,11 +17,11 @@ import Promise from 'bluebird';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
-import process from 'process';
 
 import Actions from '../Actions';
 import ConfigStore from './ConfigStore';
 import Constants from '../Constants';
+import OperationsQueue from '../OperationsQueue';
 import Store from './Store';
 import handleError from '../handleError';
 
@@ -114,62 +114,75 @@ function getPathForTitle(title: string): string {
 }
 
 function createNote(title) {
-  const notePath = getPathForTitle(title);
-  open(notePath, 'wx') // w = write, x = fail if already exists
-    .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
-    .then(fd => close(fd))
-    .then(() => {
-      notes = notes.unshift(ImmutableMap({
-        id: noteID++,
-        mtime: Date.now(),
-        path: notePath,
-        text: '',
-        title,
-      }));
-      Actions.noteCreationCompleted();
-    })
-    .catch(error => handleError(error, `Failed to open ${notePath} for writing`));
+  OperationsQueue.enqueue(done => {
+    const notePath = getPathForTitle(title);
+    open(notePath, 'wx') // w = write, x = fail if already exists
+      .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
+      .then(fd => close(fd))
+      .then(() => {
+        notes = notes.unshift(ImmutableMap({
+          id: noteID++,
+          mtime: Date.now(),
+          path: notePath,
+          text: '',
+          title,
+        }));
+        Actions.noteCreationCompleted();
+      })
+      .then(Actions.changePersisted)
+      .catch(error => handleError(error, `Failed to open ${notePath} for writing`))
+      .finally(done);
+  });
 }
 
 function updateNote(note) {
-  const notePath = note.get('path');
-  const time = new Date();
-  open(notePath, 'w') // w = write
-    .then(fd => new Promise(resolve => write(fd, note.get('text')).then(() => resolve(fd))))
-    .then(fd => new Promise(resolve => utimes(notePath, time, time).then(resolve(fd))))
-    .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
-    .then(fd => close(fd))
-    .catch(error => handleError(error, `Failed to write ${notePath}`));
+  OperationsQueue.enqueue(done => {
+    const notePath = note.get('path');
+    const time = new Date();
+    open(notePath, 'w') // w = write
+      .then(fd => new Promise(resolve => write(fd, note.get('text')).then(() => resolve(fd))))
+      .then(fd => new Promise(resolve => utimes(notePath, time, time).then(resolve(fd))))
+      .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
+      .then(fd => close(fd))
+      .then(Actions.changePersisted)
+      .catch(error => handleError(error, `Failed to write ${notePath}`))
+      .finally(done);
+  });
 }
 
 function renameNote(oldPath, newPath) {
-  const time = new Date();
-  rename(oldPath, newPath)
-    .then(() => new Promise(resolve => utimes(newPath, time, time).then(resolve)))
-    .then(() => {
-      // TODO: Fire an action here advising Git to commit; ditto above
-    })
-    .catch(error => handleError(error, `Failed to rename ${oldPath} to ${newPath}`));
+  OperationsQueue.enqueue(done => {
+    const time = new Date();
+    // TODO: don't overwrite existing names; use suffixes
+    rename(oldPath, newPath)
+      .then(() => new Promise(resolve => utimes(newPath, time, time).then(resolve)))
+      .then(Actions.changePersisted)
+      .catch(error => handleError(error, `Failed to rename ${oldPath} to ${newPath}`))
+      .finally(done);
+  });
 }
 
 function loadNotes() {
-  notesDirectory = ConfigStore.config.get('notesDirectory');
-  mkdir(notesDirectory)
-    .then(() => readdir(notesDirectory))
-    .then(filterFilenames)
-    .map(getStatInfo)
-    .then(info => {
-      const sorted = info.sort(compareMTime);
-      const preload = sorted.splice(0, PRELOAD_COUNT);
-      return new Promise(resolve => (
-        Promise.map(preload, readContents, {concurrency: 5})
-          .then(appendResults)
-          .then(() => Promise.map(sorted, readContents, {concurrency: 5}))
-          .then(appendResults)
-          .then(resolve)
-      ));
-    })
-    .catch(error => handleError(error, 'Failed to read notes from disk'));
+  OperationsQueue.enqueue(done => {
+    notesDirectory = ConfigStore.config.get('notesDirectory');
+    mkdir(notesDirectory)
+      .then(() => readdir(notesDirectory))
+      .then(filterFilenames)
+      .map(getStatInfo)
+      .then(info => {
+        const sorted = info.sort(compareMTime);
+        const preload = sorted.splice(0, PRELOAD_COUNT);
+        return new Promise(resolve => (
+          Promise.map(preload, readContents, {concurrency: 5})
+            .then(appendResults)
+            .then(() => Promise.map(sorted, readContents, {concurrency: 5}))
+            .then(appendResults)
+            .then(resolve)
+        ));
+      })
+      .catch(error => handleError(error, 'Failed to read notes from disk'))
+      .finally(done);
+  });
 }
 
 class NotesStore extends Store {

@@ -23,6 +23,7 @@ const actionTypes = keyMirror({
   ALL_NOTES_SELECTED: null,
   ADJUST_NOTE_SELECTION_DOWN: null,
   ADJUST_NOTE_SELECTION_UP: null,
+  CHANGE_PERSISTED: null,
   CONFIG_LOADED: null,
   FIRST_NOTE_SELECTED: null,
   LAST_NOTE_SELECTED: null,
@@ -59,6 +60,10 @@ const actionCreators = {
 
   allNotesSelected() {
     dispatch(actionTypes.ALL_NOTES_SELECTED);
+  },
+
+  changePersisted() {
+    dispatch(actionTypes.CHANGE_PERSISTED);
   },
 
   configLoaded() {
