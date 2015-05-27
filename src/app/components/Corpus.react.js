@@ -13,6 +13,7 @@ import ipc from 'ipc';
 
 import Actions from '../Actions';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
+import GitStore from '../stores/GitStore';
 import NoteView from './NoteView.react';
 import NoteList from './NoteList.react';
 import NotesSelectionStore from '../stores/NotesSelectionStore';

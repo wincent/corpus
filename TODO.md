@@ -20,6 +20,7 @@ Nice to haves:
 
 MINUTIAE
 
+- deal with boot-time races (ie. order of initialization of ConfigStore, GitStore etc)
 - make Command-Delete and Command-R work when OmniBar or Note are focused, like nvALT
 - make `ContentEditable` agnostic (no stores, no actions)
 - can I use setState((state, props) => {}) to clean up some of my gnarly logic?
@@ -44,6 +45,7 @@ MINUTIAE
 - resolve clash of Command-R accelerators (using it for rename and reload); reloading shouldn't be too easy for users to do accidentally
 - show pie chart indicator showing file reading/indexing progress
 - implement "Show in Finder"
+- add some more structure: "components" (React components), "util[?]" (data structures, reusable stuff?)
 
 NICE TO HAVES
 

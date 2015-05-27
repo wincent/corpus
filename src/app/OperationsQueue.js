@@ -7,17 +7,20 @@
 
 import Heap from './Heap';
 
+const DEFAULT_PRIORITY = 20;
 const queue = new Heap(value => value.priority);
 let isRunning = false;
 
 const OperationsQueue = {
+  DEFAULT_PRIORITY,
+
   dequeue() {
     if (queue.size() && !isRunning) {
       OperationsQueue._run(queue.extract().operation);
     }
   },
 
-  enqueue(operation, priority = 20) {
+  enqueue(operation, priority = DEFAULT_PRIORITY) {
     if (!queue.size() && !isRunning) {
       OperationsQueue._run(operation);
     } else {

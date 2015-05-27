@@ -10,20 +10,20 @@
 import Promise from 'bluebird';
 import {spawn} from 'child_process';
 
-function run(subcommand, ...args) {
+function git(...args: Array<string>): Promise {
   const promise = new Promise((resolve, reject) => {
-    const git = spawn('git', [subcommand, ...args]);
+    const child = spawn('git', args);
     let stdout = '';
 
-    git.stdout.on('data', data => stdout += data);
+    child.stdout.on('data', data => stdout += data);
 
-    git.on('error', error => {
+    child.on('error', error => {
       if (promise.isPending()) {
         reject(error);
       }
     });
 
-    git.on('close', code => {
+    child.on('close', code => {
       if (code) {
         if (promise.isPending()) {
           reject(code);
@@ -37,11 +37,5 @@ function run(subcommand, ...args) {
 
   return promise;
 }
-
-const git = {
-  init(...args) {
-    return run('init', ...args);
-  },
-};
 
 export default git;
