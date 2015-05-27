@@ -25,9 +25,7 @@ export default class Heap {
     let childIndex = this._emptySlot;
     let parentIndex = this._parentIndex(childIndex);
     while (!this._respectsHeapProperty(parentIndex, childIndex)) {
-      const swapValue = this._storage[childIndex];
-      this._storage[childIndex] = this._storage[parentIndex];
-      this._storage[parentIndex] = swapValue;
+      this._swap(childIndex, parentIndex);
       childIndex = parentIndex;
       parentIndex = this._parentIndex(childIndex);
     }
@@ -50,6 +48,12 @@ export default class Heap {
     }
   }
 
+  _swap(index: number, otherIndex: number): void {
+    const value = this._storage[index];
+    this._storage[index] = this._storage[otherIndex];
+    this._storage[otherIndex] = value;
+  }
+
   _trickleDown(parentIndex: number): void {
     // trickle down until heap property is restored
     const [leftChildIndex, rightChildIndex] = this._childIndices(parentIndex);
@@ -58,9 +62,7 @@ export default class Heap {
         !this._respectsHeapProperty(parentIndex, rightChildIndex)) {
       // min heaps: will swap with smallest child;
       const preferredChildIndex = this._preferredChildIndex(parentIndex);
-      const swapValue = this._storage[preferredChildIndex];
-      this._storage[preferredChildIndex] = this._storage[parentIndex];
-      this._storage[parentIndex] = swapValue;
+      this._swap(preferredChildIndex, parentIndex);
       this._trickleDown(preferredChildIndex);
     }
   }
