@@ -21,6 +21,7 @@ Nice to haves:
 MINUTIAE
 
 - deal with boot-time races (ie. order of initialization of ConfigStore, GitStore etc)
+- take additional snapshots after certain amount of idle time without an FS write
 - make Command-Delete and Command-R work when OmniBar or Note are focused, like nvALT
 - make `ContentEditable` agnostic (no stores, no actions)
 - can I use setState((state, props) => {}) to clean up some of my gnarly logic?

@@ -22,6 +22,7 @@ import Actions from '../Actions';
 import ConfigStore from './ConfigStore';
 import Constants from '../Constants';
 import OperationsQueue from '../OperationsQueue';
+import Repo from '../Repo';
 import Store from './Store';
 import handleError from '../handleError';
 
@@ -33,6 +34,7 @@ const readdir = Promise.promisify(fs.readdir);
 const readFile = Promise.promisify(fs.readFile);
 const rename = Promise.promisify(fs.rename);
 const stat = Promise.promisify(fs.stat);
+const unlink = Promise.promisify(fs.unlink);
 const utimes = Promise.promisify(fs.utimes);
 const write = Promise.promisify(fs.write);
 
@@ -132,6 +134,32 @@ function createNote(title) {
       .then(Actions.changePersisted)
       .catch(error => handleError(error, `Failed to open ${notePath} for writing`))
       .finally(done);
+  });
+}
+
+function deleteNotes(deletedNotes) {
+  // Ideally, we'd have the GitStore do this, but I can't introduce a
+  // `waitFor(GitStore.dispatchToken` here without adding a circular dependency.
+  // TODO: make this force a write for unsaved changes in active text area
+  const repo = new Repo(ConfigStore.config.get('notesDirectory'));
+  OperationsQueue.enqueue(
+    done => {
+      repo
+        .add('*.txt')
+        .then(() => repo.commit('Corpus (pre-deletion) snapshot'))
+        .catch(error => handleError(error, 'Failed to create Git commit'))
+        .finally(done);
+    },
+    OperationsQueue.DEFAULT_PRIORITY - 20
+  );
+
+  deletedNotes.forEach(note => {
+    OperationsQueue.enqueue(done => {
+      const notePath = note.get('path');
+      unlink(notePath)
+        .catch(error => handleError(error, `Failed to delete ${notePath}`))
+        .finally(done);
+    });
   });
 }
 
@@ -253,9 +281,15 @@ class NotesStore extends Store {
         break;
 
       case Actions.SELECTED_NOTES_DELETED:
-        // TODO: actually delete them, but make sure Git repo has a snapshot
-        // first
-        notes = notes.filterNot((note, index) => payload.ids.has(index));
+        const deletedNotes = [];
+        notes = notes.filterNot((note, index) => {
+          if (payload.ids.has(index)) {
+            deletedNotes.push(note);
+            return true;
+          }
+          return false;
+        });
+        deleteNotes(deletedNotes);
         this.emit('change');
         break;
     }

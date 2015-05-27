@@ -31,8 +31,7 @@ export default class Repo {
   /**
    * Create a new commit
    */
-  commit(): Promise {
-    const message = 'Corpus snapshot';
+  commit(message: string): Promise {
     return git('-C', this._path, 'commit', '--allow-empty', '-m', message);
   }
 

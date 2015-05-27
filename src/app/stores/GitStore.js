@@ -40,7 +40,7 @@ class GitStore extends Store {
           done => {
             this._repo
               .add('*.txt')
-              .then(() => this._repo.commit())
+              .then(() => this._repo.commit('Corpus (post-change) snapshot'))
               .catch(error => handleError(error, 'Failed to create Git commit'))
               .finally(done);
           },
