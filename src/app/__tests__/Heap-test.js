@@ -35,5 +35,16 @@ describe('Heap', () => {
       expect(heap.extract()).toBe(12);
       expect(heap.extract()).toBe(undefined);
     });
+
+    it('accepts a key getter function', () => {
+      heap = new Heap(value => value.weight);
+      heap.insert({weight: 0, value: 'foo'});
+      heap.insert({weight: -10, value: 'bar'});
+      heap.insert({weight: 5, value: 'baz'});
+      expect(heap.extract()).toEqual({weight: -10, value: 'bar'});
+      expect(heap.extract()).toEqual({weight: 0, value: 'foo'});
+      expect(heap.extract()).toEqual({weight: 5, value: 'baz'});
+      expect(heap.extract()).toBe(undefined);
+    });
   });
 });

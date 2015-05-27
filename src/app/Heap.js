@@ -8,12 +8,13 @@
 'use strict';
 
 export default class Heap {
-  constructor() {
-    this._storage = [];
+  constructor(keyGetter: ?(value: mixed) => number) {
     this._emptySlot = 0;
+    this._keyGetter = keyGetter || (x => x);
+    this._storage = [];
   }
 
-  insert(value: number): void {
+  insert(value: mixed): void {
     // insert into first empty slot
     this._storage[this._emptySlot] = value;
 
@@ -31,7 +32,7 @@ export default class Heap {
     this._emptySlot++;
   }
 
-  extract(): number {
+  extract(): mixed {
     if (this._emptySlot) {
       // grab root
       const extracted = this._storage[0];
@@ -100,6 +101,9 @@ export default class Heap {
       return true;
     }
 
-    return this._storage[parentIndex] <= this._storage[childIndex];
+    return (
+      this._keyGetter(this._storage[parentIndex]) <=
+      this._keyGetter(this._storage[childIndex])
+    );
   }
 }
