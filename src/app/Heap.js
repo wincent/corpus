@@ -16,12 +16,12 @@ export default class Heap {
     this._storage[this._emptySlot] = value;
 
     // bubble upwards until heap property is restored
-    var childIndex  = this._emptySlot,
-        parentIndex = this._parentIndex(childIndex),
-        parent    = this._storage[parentIndex];
+    var childIndex  = this._emptySlot;
+    var parentIndex = this._parentIndex(childIndex);
+    var parent = this._storage[parentIndex];
     while (!this._respectsHeapProperty(parentIndex, childIndex)) {
-      var swapValue           = this._storage[childIndex];
-      this._storage[childIndex]  = this._storage[parentIndex];
+      var swapValue = this._storage[childIndex];
+      this._storage[childIndex] = this._storage[parentIndex];
       this._storage[parentIndex] = swapValue;
       childIndex = parentIndex;
       parentIndex = this._parentIndex(childIndex);
@@ -49,19 +49,19 @@ export default class Heap {
 
   _trickleDown(fromIndex) {
     // trickle down until heap property is restored
-    var parentIndex     = fromIndex,
-        childIndices  = this_childIndices(parentIndex),
-        leftChildIndex  = childIndices[0],
-        rightChildIndex = childIndices[1],
-        leftChild     = this._storage[leftChildIndex],
-        rightChild    = this._storage[rightChildIndex];
+    var parentIndex = fromIndex;
+    var childIndices = this_childIndices(parentIndex);
+    var leftChildIndex = childIndices[0];
+    var rightChildIndex = childIndices[1];
+    var leftChild = this._storage[leftChildIndex];
+    var rightChild = this._storage[rightChildIndex];
 
     if (!this._respectsHeapProperty(parentIndex, leftChildIndex) ||
         !this._respectsHeapProperty(parentIndex, rightChildIndex)) {
       // min heaps: will swap with smallest child;
-      var preferredChild = this._preferredChild(parentIndex),
-          swapIndex        = preferredChild[0],
-          swapChild      = preferredChild[1];
+      var preferredChild = this._preferredChild(parentIndex);
+      var swapIndex = preferredChild[0];
+      var swapChild = preferredChild[1];
       this._storage[swapIndex] = this._storage[parentIndex];
       this._storage[parentIndex] = swapChild;
       this._trickleDown(swapIndex);
@@ -69,11 +69,11 @@ export default class Heap {
   }
 
   _preferredChild(index) {
-    var childIndices  = this_childIndices(index),
-        leftChildIndex  = childIndices[0],
-        rightChildIndex = childIndices[1],
-        leftChild     = this._storage[leftChildIndex],
-        rightChild    = this._storage[rightChildIndex];
+    var childIndices = this_childIndices(index);
+    var leftChildIndex = childIndices[0];
+    var rightChildIndex = childIndices[1];
+    var leftChild = this._storage[leftChildIndex];
+    var rightChild = this._storage[rightChildIndex];
 
     if (leftChild === undefined) {
       return [rightChildIndex, rightChild];
@@ -100,7 +100,7 @@ export default class Heap {
   _respectsHeapProperty(parentIndex, childIndex) {
     if (this._storage[parentIndex] === undefined || // child is root
         this._storage[childIndex] === undefined) {  // parent is leaf
-          return true;
+      return true;
     }
 
     return this._storage[parentIndex] <= this._storage[childIndex];
@@ -111,8 +111,8 @@ export default class Heap {
 var assert = require('assert');
 
 function extractAll(heap) {
-  var result = [],
-      extracted;
+  var result = [];
+  var extracted;
   while (extracted = heap.extract()) {
     result.push(extracted);
   }
