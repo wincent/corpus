@@ -8,28 +8,27 @@
 const queue = [];
 let isRunning = false;
 
-
-function run(operation) {
-  isRunning = true;
-  operation(() => {
-    isRunning = false;
-    setImmediate(OperationsQueue.dequeue);
-  });
-}
-
 const OperationsQueue = {
   dequeue() {
     if (queue.length && !isRunning) {
-      run(queue.shift());
+      OperationsQueue._run(queue.shift());
     }
   },
 
   enqueue(operation) {
     if (!queue.length && !isRunning) {
-      run(operation);
+      OperationsQueue._run(operation);
     } else {
       queue.push(operation);
     }
+  },
+
+  _run(operation) {
+    isRunning = true;
+    operation(() => {
+      isRunning = false;
+      setImmediate(OperationsQueue.dequeue);
+    });
   },
 };
 
