@@ -9,7 +9,7 @@
 
 export default class Heap {
   constructor() {
-    this._storage   = [];
+    this._storage = [];
     this._emptySlot = 0;
   }
 
@@ -18,9 +18,8 @@ export default class Heap {
     this._storage[this._emptySlot] = value;
 
     // bubble upwards until heap property is restored
-    var childIndex  = this._emptySlot;
+    var childIndex = this._emptySlot;
     var parentIndex = this._parentIndex(childIndex);
-    var parent = this._storage[parentIndex];
     while (!this._respectsHeapProperty(parentIndex, childIndex)) {
       var swapValue = this._storage[childIndex];
       this._storage[childIndex] = this._storage[parentIndex];
@@ -33,30 +32,26 @@ export default class Heap {
   }
 
   extract(): number {
-    if (!this._emptySlot) {
-      return; // heap is empty
+    if (this._emptySlot) {
+      // grab root
+      var extracted = this._storage[0];
+      this._emptySlot--;
+
+      // move last item to root
+      this._storage[0] = this._storage[this._emptySlot];
+      this._storage.pop();
+      this._trickleDown(0);
+
+      return extracted;
     }
-
-    // grab root
-    var extracted = this._storage[0];
-    this._emptySlot--;
-
-    // move last item to root
-    this._storage[0] = this._storage[this._emptySlot];
-    this._storage.pop();
-    this._trickleDown(0);
-
-    return extracted;
   }
 
   _trickleDown(fromIndex: number): void {
     // trickle down until heap property is restored
     var parentIndex = fromIndex;
-    var childIndices = this_childIndices(parentIndex);
+    var childIndices = this._childIndices(parentIndex);
     var leftChildIndex = childIndices[0];
     var rightChildIndex = childIndices[1];
-    var leftChild = this._storage[leftChildIndex];
-    var rightChild = this._storage[rightChildIndex];
 
     if (!this._respectsHeapProperty(parentIndex, leftChildIndex) ||
         !this._respectsHeapProperty(parentIndex, rightChildIndex)) {
@@ -71,7 +66,7 @@ export default class Heap {
   }
 
   _preferredChild(index: number): [number, number] {
-    var childIndices = this_childIndices(index);
+    var childIndices = this._childIndices(index);
     var leftChildIndex = childIndices[0];
     var rightChildIndex = childIndices[1];
     var leftChild = this._storage[leftChildIndex];
