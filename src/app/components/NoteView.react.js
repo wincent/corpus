@@ -12,9 +12,9 @@ import autobind from 'autobind-decorator';
 
 import Note from './Note.react';
 import NotePlaceholder from './NotePlaceholder.react';
-import NotesSelectionStore from './stores/NotesSelectionStore';
-import FilteredNotesStore from './stores/FilteredNotesStore';
-import colors from './colors';
+import NotesSelectionStore from '../stores/NotesSelectionStore';
+import FilteredNotesStore from '../stores/FilteredNotesStore';
+import colors from '../colors';
 
 const styles = {
   root: {

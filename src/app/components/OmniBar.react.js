@@ -11,12 +11,12 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
-import Actions from './Actions';
-import FocusStore from './stores/FocusStore';
-import Keys from './Keys';
-import NotesSelectionStore from './stores/NotesSelectionStore';
-import FilteredNotesStore from './stores/FilteredNotesStore';
-import performKeyboardNavigation from './performKeyboardNavigation';
+import Actions from '../Actions';
+import FocusStore from '../stores/FocusStore';
+import Keys from '../Keys';
+import NotesSelectionStore from '../stores/NotesSelectionStore';
+import FilteredNotesStore from '../stores/FilteredNotesStore';
+import performKeyboardNavigation from '../performKeyboardNavigation';
 
 const styles = {
   cancel: {

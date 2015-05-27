@@ -10,13 +10,13 @@
 import React from 'react';
 import autobind from 'autobind-decorator';
 
-import Actions from './Actions';
-import Dispatcher from './Dispatcher';
-import FocusStore from './stores/FocusStore';
-import Keys from './Keys';
-import NotesStore from './stores/NotesStore';
-import colors from './colors';
-import performKeyboardNavigation from './performKeyboardNavigation';
+import Actions from '../Actions';
+import Dispatcher from '../Dispatcher';
+import FocusStore from '../stores/FocusStore';
+import Keys from '../Keys';
+import NotesStore from '../stores/NotesStore';
+import colors from '../colors';
+import performKeyboardNavigation from '../performKeyboardNavigation';
 
 export default class ContentEditable extends React.Component {
   static propTypes = {

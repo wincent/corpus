@@ -11,11 +11,11 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
-import Actions from './Actions';
-import FilteredNotesStore from './stores/FilteredNotesStore';
+import Actions from '../Actions';
+import FilteredNotesStore from '../stores/FilteredNotesStore';
 import NoteView from './NoteView.react';
 import NoteList from './NoteList.react';
-import NotesSelectionStore from './stores/NotesSelectionStore';
+import NotesSelectionStore from '../stores/NotesSelectionStore';
 import OmniBar from './OmniBar.react';
 import SplitView from './SplitView.react';
 import Viewport from './Viewport.react';

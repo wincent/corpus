@@ -11,13 +11,13 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
-import Actions from './Actions';
-import Constants from './Constants';
-import FocusStore from './stores/FocusStore';
-import Keys from './Keys';
-import Mouse from './Mouse';
-import NotesSelectionStore from './stores/NotesSelectionStore';
-import pure from './pure';
+import Actions from '../Actions';
+import Constants from '../Constants';
+import FocusStore from '../stores/FocusStore';
+import Keys from '../Keys';
+import Mouse from '../Mouse';
+import NotesSelectionStore from '../stores/NotesSelectionStore';
+import pure from '../pure';
 
 /**
  * Don't want the DOM to contain all the text of all the notes.

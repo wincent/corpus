@@ -10,17 +10,17 @@
 import React from 'react';
 import autobind from 'autobind-decorator';
 
-import Actions from './Actions';
-import Constants from './Constants';
-import Keys from './Keys';
+import Actions from '../Actions';
+import Constants from '../Constants';
+import Keys from '../Keys';
 import NotePreview from './NotePreview.react';
-import NotesSelectionStore from './stores/NotesSelectionStore';
-import FilteredNotesStore from './stores/FilteredNotesStore';
-import FocusStore from './stores/FocusStore';
-import colors from './colors';
-import performKeyboardNavigation from './performKeyboardNavigation';
-import pure from './pure';
-import throttle from './throttle';
+import NotesSelectionStore from '../stores/NotesSelectionStore';
+import FilteredNotesStore from '../stores/FilteredNotesStore';
+import FocusStore from '../stores/FocusStore';
+import colors from '../colors';
+import performKeyboardNavigation from '../performKeyboardNavigation';
+import pure from '../pure';
+import throttle from '../throttle';
 
 /**
  * How many notes will be rendered beyond the edges of the viewport (above and

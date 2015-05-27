@@ -8,7 +8,7 @@
 'use strict';
 
 import React from 'react';
-import Corpus from './app/Corpus.react';
+import Corpus from './app/components/Corpus.react';
 
 const root = document.getElementById('app-root');
 React.render(<Corpus />, root);

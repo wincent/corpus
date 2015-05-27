@@ -12,7 +12,7 @@ import autobind from 'autobind-decorator';
 import invariant from 'react/lib/invariant';
 
 import Separator from './Separator.react';
-import clamp from './clamp';
+import clamp from '../clamp';
 
 const styles = {
   left: {

@@ -11,7 +11,7 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 
 import ContentEditable from './ContentEditable.react';
-import FocusStore from './stores/FocusStore';
+import FocusStore from '../stores/FocusStore';
 
 export default class Note extends React.Component {
   static propTypes = {
