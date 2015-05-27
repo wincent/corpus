@@ -1,6 +1,8 @@
 /**
  * Copyright 2015-present Greg Hurrell. All rights reserved.
  * Licensed under the terms of the MIT license.
+ *
+ * @flow
  */
 
 'use strict';
@@ -11,7 +13,7 @@ export default class Heap {
     this._emptySlot = 0;
   }
 
-  insert(value) {
+  insert(value: number): void {
     // insert into first empty slot
     this._storage[this._emptySlot] = value;
 
@@ -30,7 +32,7 @@ export default class Heap {
     this._emptySlot++;
   }
 
-  extract() {
+  extract(): number {
     if (!this._emptySlot) {
       return; // heap is empty
     }
@@ -47,7 +49,7 @@ export default class Heap {
     return extracted;
   }
 
-  _trickleDown(fromIndex) {
+  _trickleDown(fromIndex: number): void {
     // trickle down until heap property is restored
     var parentIndex = fromIndex;
     var childIndices = this_childIndices(parentIndex);
@@ -68,7 +70,7 @@ export default class Heap {
     }
   }
 
-  _preferredChild(index) {
+  _preferredChild(index: number): [number, number] {
     var childIndices = this_childIndices(index);
     var leftChildIndex = childIndices[0];
     var rightChildIndex = childIndices[1];
@@ -86,18 +88,18 @@ export default class Heap {
     }
   }
 
-  _parentIndex(index) {
+  _parentIndex(index: number): number {
     return Math.floor((index - 1) / 2);
   }
 
-  _childIndices(index) {
+  _childIndices(index: number): [number, number] {
     return [
       2 * (index + 1) - 1, // left child
       2 * (index + 1)      // right child
     ];
   }
 
-  _respectsHeapProperty(parentIndex, childIndex) {
+  _respectsHeapProperty(parentIndex: number, childIndex: number): boolean {
     if (this._storage[parentIndex] === undefined || // child is root
         this._storage[childIndex] === undefined) {  // parent is leaf
       return true;
