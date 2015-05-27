@@ -103,30 +103,3 @@ export default class Heap {
     return this._storage[parentIndex] <= this._storage[childIndex];
   }
 }
-
-// Tests.
-var assert = require('assert');
-
-function extractAll(heap) {
-  var result = [];
-  var extracted;
-  while (extracted = heap.extract()) {
-    result.push(extracted);
-  }
-  return result;
-};
-
-console.log("Running tests");
-
-var h = new Heap();
-assert.equal(h.extract(), undefined, "extract() returns nothing if heap is empty");
-h.insert(1);
-assert.equal(h.extract(), 1, "extract() returns a value");
-assert.equal(h.extract(), undefined, "extract() removes values from the heap");
-h.insert(10);
-h.insert(3);
-h.insert(12);
-var result = extractAll(h);
-assert.deepEqual(result, [3, 10, 12], "extract() always returns the minimum value");
-
-console.log("Done");
