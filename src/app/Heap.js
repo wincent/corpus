@@ -7,6 +7,9 @@
 
 'use strict';
 
+/**
+ * Binary min-heap implementation, for use as a priority queue.
+ */
 export default class Heap {
   constructor(keyGetter: ?(value: mixed) => number) {
     this._emptySlot = 0;
@@ -47,40 +50,34 @@ export default class Heap {
     }
   }
 
-  _trickleDown(fromIndex: number): void {
+  _trickleDown(parentIndex: number): void {
     // trickle down until heap property is restored
-    const parentIndex = fromIndex;
-    const childIndices = this._childIndices(parentIndex);
-    const leftChildIndex = childIndices[0];
-    const rightChildIndex = childIndices[1];
+    const [leftChildIndex, rightChildIndex] = this._childIndices(parentIndex);
 
     if (!this._respectsHeapProperty(parentIndex, leftChildIndex) ||
         !this._respectsHeapProperty(parentIndex, rightChildIndex)) {
       // min heaps: will swap with smallest child;
-      const preferredChild = this._preferredChild(parentIndex);
-      const swapIndex = preferredChild[0];
-      const swapChild = preferredChild[1];
-      this._storage[swapIndex] = this._storage[parentIndex];
-      this._storage[parentIndex] = swapChild;
-      this._trickleDown(swapIndex);
+      const preferredChildIndex = this._preferredChildIndex(parentIndex);
+      const swapValue = this._storage[preferredChildIndex];
+      this._storage[preferredChildIndex] = this._storage[parentIndex];
+      this._storage[parentIndex] = swapValue;
+      this._trickleDown(preferredChildIndex);
     }
   }
 
-  _preferredChild(index: number): [number, number] {
-    const childIndices = this._childIndices(index);
-    const leftChildIndex = childIndices[0];
-    const rightChildIndex = childIndices[1];
+  _preferredChildIndex(index: number): number {
+    const [leftChildIndex, rightChildIndex] = this._childIndices(index);
     const leftChild = this._storage[leftChildIndex];
     const rightChild = this._storage[rightChildIndex];
 
     if (leftChild === undefined) {
-      return [rightChildIndex, rightChild];
+      return rightChildIndex;
     } else if (rightChild === undefined) {
-      return [leftChildIndex, leftChild];
+      return leftChildIndex;
     } else if (rightChild < leftChild) {
-      return [rightChildIndex, rightChild];
+      return rightChildIndex;
     } else {
-      return [leftChildIndex, leftChild];
+      return leftChildIndex;
     }
   }
 
