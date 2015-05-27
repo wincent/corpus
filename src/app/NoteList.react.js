@@ -235,6 +235,8 @@ export default class NoteList extends React.Component {
     performKeyboardNavigation(event);
   }
 
+  // TODO: if I can figure out how to get @autobind and @throttle to play
+  // nicely, use them...
   _updateScrollTop = throttle(
     scrollTop => requestAnimationFrame(() => this.setState({scrollTop})),
     SCROLL_THROTTLE_INTERVAL

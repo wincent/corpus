@@ -191,6 +191,8 @@ export default class NotePreview extends React.Component {
     this._startEditing();
   }
 
+  // TODO: the input is getting complicated enough to pull out into a separate
+  // component?
   _onFocus(event) {
     const input = event.currentTarget;
     input.setSelectionRange(0, input.value.length);

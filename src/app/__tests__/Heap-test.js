@@ -48,6 +48,8 @@ describe('Heap', () => {
     });
   });
 
+  // TODO: test duplicate values
+
   describe('size()', () => {
     it('returns 0 for an empty heap', () => {
       expect(heap.size()).toBe(0);

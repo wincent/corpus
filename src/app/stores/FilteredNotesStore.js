@@ -57,6 +57,8 @@ function filter(value: ?string): ImmutableList {
 class FilteredNotesStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
+      // TODO: may need some events here to reset query
+
       case Actions.NOTE_CREATION_COMPLETED:
         this.waitFor(NotesStore.dispatchToken);
         this._change(() => filter(query));
@@ -87,6 +89,8 @@ class FilteredNotesStore extends Store {
     }
   }
 
+  // TODO: can we move a general version of this up to the Store for re-use?
+  // (probably not)
   _change(changer) {
     const previous = notes;
     notes = changer.call();

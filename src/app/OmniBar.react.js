@@ -140,6 +140,9 @@ export default class OmniBar extends React.Component {
           }
         }
       );
+      // TODO: need to handle case where i type "cheatsheet", then back cursor
+      // to start and prefix "jest space"; at that point we jump to the end,
+      // but nvALT selects the remaining part
     }
     this._query = null;
   }

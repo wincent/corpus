@@ -253,6 +253,8 @@ class NotesStore extends Store {
         break;
 
       case Actions.SELECTED_NOTES_DELETED:
+        // TODO: actually delete them, but make sure Git repo has a snapshot
+        // first
         notes = notes.filterNot((note, index) => payload.ids.has(index));
         this.emit('change');
         break;
