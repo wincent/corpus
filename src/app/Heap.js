@@ -45,19 +45,6 @@
     return extracted;
   };
 
-  // Batch insert values into the heap in O(n) time.
-  Heap.prototype.heapify = function(values) {
-    // insert all values into array
-    this.storage = this.storage.concat(values);
-    this.emptySlot = this.storage.length;
-
-    // starting at last non-leaf node, bubble root of subtree downward (as in
-    // extraction) until heap property restored
-    for (var i = Math.floor(this.emptySlot / 2) - 1; i >= 0; i--) {
-      this.trickleDown(i);
-    }
-  };
-
   // Low-level support methods
 
   Heap.prototype.trickleDown = function(fromIdx) {
@@ -145,10 +132,6 @@
       h.insert(12);
       var result = extractAll(h);
       assert.deepEqual(result, [3, 10, 12], "extract() always returns the minimum value");
-
-      h.heapify([13, 4, 6, 8, 7]);
-      result = extractAll(h);
-      assert.deepEqual(result, [4, 6, 7, 8, 13], "values inserted with heapify() can be extracted");
 
       console.log("Done");
     })();
