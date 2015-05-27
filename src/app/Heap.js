@@ -1,79 +1,79 @@
-(function(window) {
-  "use strict";
+/**
+ * Copyright 2015-present Greg Hurrell. All rights reserved.
+ * Licensed under the terms of the MIT license.
+ */
 
-  // Constructor
-  window.Heap = function Heap() {
-    this.storage   = [];
-    this.emptySlot = 0;
-  };
+'use strict';
 
-  // Operations
+export default class Heap {
+  constructor() {
+    this._storage   = [];
+    this._emptySlot = 0;
+  }
 
-  Heap.prototype.insert = function(value) {
+  insert(value) {
     // insert into first empty slot
-    this.storage[this.emptySlot] = value;
+    this._storage[this._emptySlot] = value;
 
     // bubble upwards until heap property is restored
-    var childIdx  = this.emptySlot,
-        parentIdx = this.parentIdx(childIdx),
-        parent    = this.storage[parentIdx];
-    while (!this.respectsHeapProperty(parentIdx, childIdx)) {
-      var swapValue           = this.storage[childIdx];
-      this.storage[childIdx]  = this.storage[parentIdx];
-      this.storage[parentIdx] = swapValue;
+    var childIdx  = this._emptySlot,
+        parentIdx = this._parentIndex(childIdx),
+        parent    = this._storage[parentIdx];
+    while (!this._respectsHeapProperty(parentIdx, childIdx)) {
+      var swapValue           = this._storage[childIdx];
+      this._storage[childIdx]  = this._storage[parentIdx];
+      this._storage[parentIdx] = swapValue;
       childIdx = parentIdx;
-      parentIdx = this.parentIdx(childIdx);
+      parentIdx = this._parentIndex(childIdx);
     }
 
-    this.emptySlot++;
-  };
+    this._emptySlot++;
+  }
 
-  Heap.prototype.extract = function() {
-    if (!this.emptySlot) {
+  extract() {
+    if (!this._emptySlot) {
       return; // heap is empty
     }
 
     // grab root
-    var extracted = this.storage[0];
-    this.emptySlot--;
+    var extracted = this._storage[0];
+    this._emptySlot--;
 
     // move last item to root
-    this.storage[0] = this.storage[this.emptySlot];
-    this.storage.pop();
-    this.trickleDown(0);
+    this._storage[0] = this._storage[this._emptySlot];
+    this._storage.pop();
+    this._trickleDown(0);
 
     return extracted;
-  };
+  }
 
-  // Low-level support methods
-
-  Heap.prototype.trickleDown = function(fromIdx) {
+  _trickleDown(fromIdx) {
     // trickle down until heap property is restored
     var parentIdx     = fromIdx,
-        childIndices  = this.childIndices(parentIdx),
+        childIndices  = this_childIndices(parentIdx),
         leftChildIdx  = childIndices[0],
         rightChildIdx = childIndices[1],
-        leftChild     = this.storage[leftChildIdx],
-        rightChild    = this.storage[rightChildIdx];
+        leftChild     = this._storage[leftChildIdx],
+        rightChild    = this._storage[rightChildIdx];
 
-    if (!this.respectsHeapProperty(parentIdx, leftChildIdx) ||
-        !this.respectsHeapProperty(parentIdx, rightChildIdx)) {
+    if (!this._respectsHeapProperty(parentIdx, leftChildIdx) ||
+        !this._respectsHeapProperty(parentIdx, rightChildIdx)) {
       // min heaps: will swap with smallest child;
-      var preferredChild = this.preferredChild(parentIdx),
+      var preferredChild = this._preferredChild(parentIdx),
           swapIdx        = preferredChild[0],
           swapChild      = preferredChild[1];
-      this.storage[swapIdx] = this.storage[parentIdx];
-      this.storage[parentIdx] = swapChild;
-      this.trickleDown(swapIdx);
+      this._storage[swapIdx] = this._storage[parentIdx];
+      this._storage[parentIdx] = swapChild;
+      this._trickleDown(swapIdx);
     }
-  };
+  }
 
-  Heap.prototype.preferredChild = function(idx) {
-    var childIndices  = this.childIndices(idx),
+  _preferredChild(idx) {
+    var childIndices  = this_childIndices(idx),
         leftChildIdx  = childIndices[0],
         rightChildIdx = childIndices[1],
-        leftChild     = this.storage[leftChildIdx],
-        rightChild    = this.storage[rightChildIdx];
+        leftChild     = this._storage[leftChildIdx],
+        rightChild    = this._storage[rightChildIdx];
 
     if (typeof leftChild === "undefined") {
       return [rightChildIdx, rightChild];
@@ -84,56 +84,52 @@
     } else {
       return [leftChildIdx, leftChild];
     }
-  };
+  }
 
-  Heap.prototype.parentIdx = function(idx) {
+  _parentIndex(idx) {
     return Math.floor((idx - 1) / 2);
-  };
+  }
 
-  Heap.prototype.childIndices = function(idx) {
+  _childIndices(idx) {
     return [
       2 * (idx + 1) - 1, // left child
       2 * (idx + 1)      // right child
     ];
-  };
+  }
 
-  Heap.prototype.respectsHeapProperty = function(parentIdx, childIdx) {
-    if (typeof this.storage[parentIdx] === "undefined" || // child is root
-        typeof this.storage[childIdx] === "undefined") {  // parent is leaf
+  _respectsHeapProperty(parentIdx, childIdx) {
+    if (typeof this._storage[parentIdx] === "undefined" || // child is root
+        typeof this._storage[childIdx] === "undefined") {  // parent is leaf
           return true;
     }
 
-    return this.storage[parentIdx] <= this.storage[childIdx];
-  };
-
-  // Tests.
-  if (typeof require === "function") {
-    (function() {
-      var assert = require('assert');
-
-      function extractAll(heap) {
-        var result = [],
-            extracted;
-        while (extracted = heap.extract()) {
-          result.push(extracted);
-        }
-        return result;
-      };
-
-      console.log("Running tests");
-
-      var h = new Heap();
-      assert.equal(h.extract(), undefined, "extract() returns nothing if heap is empty");
-      h.insert(1);
-      assert.equal(h.extract(), 1, "extract() returns a value");
-      assert.equal(h.extract(), undefined, "extract() removes values from the heap");
-      h.insert(10);
-      h.insert(3);
-      h.insert(12);
-      var result = extractAll(h);
-      assert.deepEqual(result, [3, 10, 12], "extract() always returns the minimum value");
-
-      console.log("Done");
-    })();
+    return this._storage[parentIdx] <= this._storage[childIdx];
   }
-})(typeof window === "undefined" ? global : window);
+}
+
+// Tests.
+var assert = require('assert');
+
+function extractAll(heap) {
+  var result = [],
+      extracted;
+  while (extracted = heap.extract()) {
+    result.push(extracted);
+  }
+  return result;
+};
+
+console.log("Running tests");
+
+var h = new Heap();
+assert.equal(h.extract(), undefined, "extract() returns nothing if heap is empty");
+h.insert(1);
+assert.equal(h.extract(), 1, "extract() returns a value");
+assert.equal(h.extract(), undefined, "extract() removes values from the heap");
+h.insert(10);
+h.insert(3);
+h.insert(12);
+var result = extractAll(h);
+assert.deepEqual(result, [3, 10, 12], "extract() always returns the minimum value");
+
+console.log("Done");
