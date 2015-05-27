@@ -2,11 +2,7 @@
   "use strict";
 
   // Constructor
-  window.Heap = function Heap(type) {
-    if (type !== "min" && type !== "max") {
-      throw new Error("type must be one of 'min' or 'max'");
-    }
-    this.type      = type;
+  window.Heap = function Heap() {
     this.storage   = [];
     this.emptySlot = 0;
   };
@@ -75,8 +71,7 @@
 
     if (!this.respectsHeapProperty(parentIdx, leftChildIdx) ||
         !this.respectsHeapProperty(parentIdx, rightChildIdx)) {
-      // for min heaps, will swap with smallest child;
-      // for max heaps, will swap with largest child
+      // min heaps: will swap with smallest child;
       var preferredChild = this.preferredChild(parentIdx),
           swapIdx        = preferredChild[0],
           swapChild      = preferredChild[1];
@@ -97,8 +92,7 @@
       return [rightChildIdx, rightChild];
     } else if (typeof rightChild === "undefined") {
       return [leftChildIdx, leftChild];
-    } else if (this.type === 'min' && rightChild < leftChild ||
-               this.type === 'max' && rightChild > leftChild) {
+    } else if (rightChild < leftChild) {
       return [rightChildIdx, rightChild];
     } else {
       return [leftChildIdx, leftChild];
@@ -122,11 +116,7 @@
           return true;
     }
 
-    if (this.type === 'max') {
-      return this.storage[parentIdx] >= this.storage[childIdx];
-    } else {
-      return this.storage[parentIdx] <= this.storage[childIdx];
-    }
+    return this.storage[parentIdx] <= this.storage[childIdx];
   };
 
   // Tests.
@@ -145,13 +135,7 @@
 
       console.log("Running tests");
 
-      assert.throws(function() { new Heap(); },
-                    /min.+max/,
-                    "requires a 'min' or 'max' argument");
-      assert.throws(function() { new Heap("fibonacci"); },
-                    /min.+max/,
-                    "rejects unrecognized arguments");
-      var h = new Heap("min");
+      var h = new Heap();
       assert.equal(h.extract(), undefined, "extract() returns nothing if heap is empty");
       h.insert(1);
       assert.equal(h.extract(), 1, "extract() returns a value");
@@ -165,16 +149,6 @@
       h.heapify([13, 4, 6, 8, 7]);
       result = extractAll(h);
       assert.deepEqual(result, [4, 6, 7, 8, 13], "values inserted with heapify() can be extracted");
-
-      h = new Heap("max");
-      h.heapify([1, 3, 9, 4, 9, 2]);
-      result = extractAll(h);
-      assert.deepEqual(result, [9, 9, 4, 3, 2, 1], "'max' heaps work as well");
-
-      h.heapify([6, 8]);
-      h.heapify([9, 1]);
-      result = extractAll(h);
-      assert.deepEqual(result, [9, 8, 6, 1], "consecutive calls to heapify() have an additive effect");
 
       console.log("Done");
     })();
