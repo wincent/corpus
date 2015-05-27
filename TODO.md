@@ -151,5 +151,6 @@ ARCHIVES
 - [DONE] put linting in Gulp too (probably watching?)
 - [DONE] add note deletion (contextual menu, menu etc)
 - [DONE] implement contextual menu for <NotePreview>
+- [DONE] note possibility of file-system races with all my async code; I am assuming writes finish before I try to do subsequent dependent writes; I should make the dependency explicit
 
 # vim: set nowrap:

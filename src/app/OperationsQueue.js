@@ -5,21 +5,23 @@
 
 'use strict';
 
-const queue = [];
+import Heap from './Heap';
+
+const queue = new Heap(value => value.priority);
 let isRunning = false;
 
 const OperationsQueue = {
   dequeue() {
-    if (queue.length && !isRunning) {
-      OperationsQueue._run(queue.shift());
+    if (queue.size() && !isRunning) {
+      OperationsQueue._run(queue.extract().operation);
     }
   },
 
-  enqueue(operation) {
-    if (!queue.length && !isRunning) {
+  enqueue(operation, priority = 20) {
+    if (!queue.size() && !isRunning) {
       OperationsQueue._run(operation);
     } else {
-      queue.push(operation);
+      queue.insert({priority, operation});
     }
   },
 
@@ -27,7 +29,7 @@ const OperationsQueue = {
     isRunning = true;
     operation(() => {
       isRunning = false;
-      setImmediate(OperationsQueue.dequeue);
+      OperationsQueue.dequeue();
     });
   },
 };

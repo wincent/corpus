@@ -48,6 +48,10 @@ export default class Heap {
     }
   }
 
+  size(): number {
+    return this._emptySlot;
+  }
+
   _swap(index: number, otherIndex: number): void {
     const value = this._storage[index];
     this._storage[index] = this._storage[otherIndex];
