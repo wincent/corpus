@@ -16,15 +16,15 @@ export default class Heap {
     this._storage[this._emptySlot] = value;
 
     // bubble upwards until heap property is restored
-    var childIdx  = this._emptySlot,
-        parentIdx = this._parentIndex(childIdx),
-        parent    = this._storage[parentIdx];
-    while (!this._respectsHeapProperty(parentIdx, childIdx)) {
-      var swapValue           = this._storage[childIdx];
-      this._storage[childIdx]  = this._storage[parentIdx];
-      this._storage[parentIdx] = swapValue;
-      childIdx = parentIdx;
-      parentIdx = this._parentIndex(childIdx);
+    var childIndex  = this._emptySlot,
+        parentIndex = this._parentIndex(childIndex),
+        parent    = this._storage[parentIndex];
+    while (!this._respectsHeapProperty(parentIndex, childIndex)) {
+      var swapValue           = this._storage[childIndex];
+      this._storage[childIndex]  = this._storage[parentIndex];
+      this._storage[parentIndex] = swapValue;
+      childIndex = parentIndex;
+      parentIndex = this._parentIndex(childIndex);
     }
 
     this._emptySlot++;
@@ -47,63 +47,63 @@ export default class Heap {
     return extracted;
   }
 
-  _trickleDown(fromIdx) {
+  _trickleDown(fromIndex) {
     // trickle down until heap property is restored
-    var parentIdx     = fromIdx,
-        childIndices  = this_childIndices(parentIdx),
-        leftChildIdx  = childIndices[0],
-        rightChildIdx = childIndices[1],
-        leftChild     = this._storage[leftChildIdx],
-        rightChild    = this._storage[rightChildIdx];
+    var parentIndex     = fromIndex,
+        childIndices  = this_childIndices(parentIndex),
+        leftChildIndex  = childIndices[0],
+        rightChildIndex = childIndices[1],
+        leftChild     = this._storage[leftChildIndex],
+        rightChild    = this._storage[rightChildIndex];
 
-    if (!this._respectsHeapProperty(parentIdx, leftChildIdx) ||
-        !this._respectsHeapProperty(parentIdx, rightChildIdx)) {
+    if (!this._respectsHeapProperty(parentIndex, leftChildIndex) ||
+        !this._respectsHeapProperty(parentIndex, rightChildIndex)) {
       // min heaps: will swap with smallest child;
-      var preferredChild = this._preferredChild(parentIdx),
-          swapIdx        = preferredChild[0],
+      var preferredChild = this._preferredChild(parentIndex),
+          swapIndex        = preferredChild[0],
           swapChild      = preferredChild[1];
-      this._storage[swapIdx] = this._storage[parentIdx];
-      this._storage[parentIdx] = swapChild;
-      this._trickleDown(swapIdx);
+      this._storage[swapIndex] = this._storage[parentIndex];
+      this._storage[parentIndex] = swapChild;
+      this._trickleDown(swapIndex);
     }
   }
 
-  _preferredChild(idx) {
-    var childIndices  = this_childIndices(idx),
-        leftChildIdx  = childIndices[0],
-        rightChildIdx = childIndices[1],
-        leftChild     = this._storage[leftChildIdx],
-        rightChild    = this._storage[rightChildIdx];
+  _preferredChild(index) {
+    var childIndices  = this_childIndices(index),
+        leftChildIndex  = childIndices[0],
+        rightChildIndex = childIndices[1],
+        leftChild     = this._storage[leftChildIndex],
+        rightChild    = this._storage[rightChildIndex];
 
     if (typeof leftChild === "undefined") {
-      return [rightChildIdx, rightChild];
+      return [rightChildIndex, rightChild];
     } else if (typeof rightChild === "undefined") {
-      return [leftChildIdx, leftChild];
+      return [leftChildIndex, leftChild];
     } else if (rightChild < leftChild) {
-      return [rightChildIdx, rightChild];
+      return [rightChildIndex, rightChild];
     } else {
-      return [leftChildIdx, leftChild];
+      return [leftChildIndex, leftChild];
     }
   }
 
-  _parentIndex(idx) {
-    return Math.floor((idx - 1) / 2);
+  _parentIndex(index) {
+    return Math.floor((index - 1) / 2);
   }
 
-  _childIndices(idx) {
+  _childIndices(index) {
     return [
-      2 * (idx + 1) - 1, // left child
-      2 * (idx + 1)      // right child
+      2 * (index + 1) - 1, // left child
+      2 * (index + 1)      // right child
     ];
   }
 
-  _respectsHeapProperty(parentIdx, childIdx) {
-    if (typeof this._storage[parentIdx] === "undefined" || // child is root
-        typeof this._storage[childIdx] === "undefined") {  // parent is leaf
+  _respectsHeapProperty(parentIndex, childIndex) {
+    if (typeof this._storage[parentIndex] === "undefined" || // child is root
+        typeof this._storage[childIndex] === "undefined") {  // parent is leaf
           return true;
     }
 
-    return this._storage[parentIdx] <= this._storage[childIdx];
+    return this._storage[parentIndex] <= this._storage[childIndex];
   }
 }
 
