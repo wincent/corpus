@@ -75,9 +75,9 @@ export default class Heap {
         leftChild     = this._storage[leftChildIndex],
         rightChild    = this._storage[rightChildIndex];
 
-    if (typeof leftChild === "undefined") {
+    if (leftChild === undefined) {
       return [rightChildIndex, rightChild];
-    } else if (typeof rightChild === "undefined") {
+    } else if (rightChild === undefined) {
       return [leftChildIndex, leftChild];
     } else if (rightChild < leftChild) {
       return [rightChildIndex, rightChild];
@@ -98,8 +98,8 @@ export default class Heap {
   }
 
   _respectsHeapProperty(parentIndex, childIndex) {
-    if (typeof this._storage[parentIndex] === "undefined" || // child is root
-        typeof this._storage[childIndex] === "undefined") {  // parent is leaf
+    if (this._storage[parentIndex] === undefined || // child is root
+        this._storage[childIndex] === undefined) {  // parent is leaf
           return true;
     }
 
