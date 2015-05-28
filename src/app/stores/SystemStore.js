@@ -14,6 +14,7 @@ import run from '../run';
 import Actions from '../Actions';
 import ConfigStore from './ConfigStore';
 import Store from './Store';
+import warn from '../warn';
 
 const defaults = {
   nameMax: 255,
@@ -22,16 +23,21 @@ const defaults = {
 
 let values = ImmutableMap(defaults);
 
+function parseValue(value: string) {
+  return parseInt(value.trim(), 10);
+}
+
 function load(): Promise {
   const notesDirectory = ConfigStore.config.get('notesDirectory');
   return Promise
-    .all(
-      run('getconf', 'NAME_MAX', notesDirectory),
-      run('getconf', 'PATH_MAX', notesDirectory)
-    )
+    .all([
+      run('getconf', 'NAME_MAX', notesDirectory).then(parseValue),
+      run('getconf', 'PATH_MAX', notesDirectory).then(parseValue),
+    ])
     .then(([nameMax, pathMax]) => {
       values = values.merge({nameMax, pathMax});
-    });
+    })
+    .catch(warn);
 }
 
 /**
