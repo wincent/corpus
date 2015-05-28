@@ -161,5 +161,6 @@ ARCHIVES
 - [DONE] make HACKING.md
 - [DONE] deal with path sanitization ("/" should become "-")
 - [DONE] creating a new note with RETURN should focus note view (regression)
+- [DONE] add guard against too-long filenames (MAX_PATH_LEN) (see `getconf PATH_MAX /`, also `NAME_MAX`)
 
 # vim: set nowrap:tw=0

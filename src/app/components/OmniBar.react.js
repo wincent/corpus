@@ -16,6 +16,7 @@ import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
+import SystemStore from '../stores/SystemStore';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
 const styles = {
@@ -69,12 +70,28 @@ function getCurrentTitle() {
   }
 }
 
+/**
+ * Returns the maximum note title length.
+ */
+function getMaxLength(): number {
+  const maxLength =
+    SystemStore.values.get('nameMax') -
+    '.txt'.length -
+    '.000'.length; // room to disambiguate up to 1,000 duplicate titles
+
+  return Math.max(
+    0, // sanity: never return a negative number
+    maxLength
+  );
+}
+
 export default class OmniBar extends React.Component {
   constructor(props) {
     super(props);
     const note = getCurrentNote();
     this.state = {
       foreground: true,
+      maxLength: getMaxLength(),
       note,
       value: getCurrentTitle(),
     };
@@ -87,6 +104,7 @@ export default class OmniBar extends React.Component {
     FocusStore.on('change', this._updateFocus);
     NotesSelectionStore.on('change', this._onSelectionChange);
     FilteredNotesStore.on('change', this._onNotesChange);
+    SystemStore.on('change', this._onSystemChange);
   }
 
   componentWillUnmount() {
@@ -95,6 +113,7 @@ export default class OmniBar extends React.Component {
     FocusStore.removeListerner('change', this._updateFocus);
     NotesSelectionStore.removeListener('change', this._onSelectionChange);
     FilteredNotesStore.removeListener('change', this._onNotesChange);
+    SystemStore.removeListener('change', this._onSystemChange);
   }
 
   _getBackgroundStyle() {
@@ -145,6 +164,11 @@ export default class OmniBar extends React.Component {
       // but nvALT selects the remaining part
     }
     this._query = null;
+  }
+
+  @autobind
+  _onSystemChange() {
+    this.setState({maxLength: getMaxLength()});
   }
 
   @autobind
@@ -247,6 +271,7 @@ export default class OmniBar extends React.Component {
       <div style={rootStyles}>
         <span className={iconClass} style={styles.icon}></span>
         <input
+          maxLength={this.state.maxLength}
           onChange={this._onChange}
           onFocus={this._onFocus}
           onKeyDown={this._onKeyDown}
