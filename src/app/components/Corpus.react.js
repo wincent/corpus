@@ -52,7 +52,7 @@ export default class Corpus extends React.Component {
       const note = FilteredNotesStore.notes.get(selection.first());
       warning = `Delete the note titled "${note.get('title')}"?`;
     } else {
-      warning = 'Delete 2 notes?';
+      warning = `Delete ${selection.size} notes?`;
     }
     if (!confirm(warning)) {
       return;
