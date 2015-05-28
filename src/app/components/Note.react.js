@@ -8,7 +8,6 @@
 'use strict';
 
 import React from 'react';
-import autobind from 'autobind-decorator';
 
 import ContentEditable from './ContentEditable.react';
 
