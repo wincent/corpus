@@ -203,7 +203,7 @@ function loadNotes() {
             .then(resolve)
         ));
       })
-      .catch(error => handleError(error, 'Failed to read notes from disk'))
+      .catch(error => handleError(error, 'Failed to read notes from disk'));
   });
 }
 
