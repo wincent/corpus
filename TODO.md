@@ -21,7 +21,7 @@ Nice to haves:
 MINUTIAE
 
 - figure out why Jest is suddenly crashing
-- fix pre-delete snaphots
+- fix pre-delete snaphots (we don't actually flush unpersisted changes from a note that is currently being edited)
 - take additional snapshots after certain amount of idle time without an FS write
 - make Command-Delete and Command-R work when OmniBar or Note are focused, like nvALT
 - make `ContentEditable` agnostic (no stores, no actions)
@@ -31,7 +31,7 @@ MINUTIAE
 - LEFT/RIGHT when NoteList has focus should move cursor to beginning end in OmniBar (and focus it, obviously)
 - note creation when hitting Enter on a title that doesn't exist yet
 - fix missing scrollbars (this is intermittent; not sure of cause)
-- integrate Flow
+- integrate Flow (currently blocked due to missing Flow support for many ES6 features)
 - standardize approach to state-based style overrides; I have a few different techniques at play at the moment
 - tidy up ugly handling of current-selected-index `null` values
 - implement contextual menu for <NoteView>
