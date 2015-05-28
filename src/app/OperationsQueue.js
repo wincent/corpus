@@ -11,29 +11,29 @@ const DEFAULT_PRIORITY = 20;
 const queue = new Heap(value => value.priority);
 let isRunning = false;
 
+function _run(operation) {
+  isRunning = true;
+  operation(() => {
+    isRunning = false;
+    OperationsQueue.dequeue();
+  });
+}
+
 const OperationsQueue = {
   DEFAULT_PRIORITY,
 
   dequeue() {
     if (queue.size() && !isRunning) {
-      OperationsQueue._run(queue.extract().operation);
+      _run(queue.extract().operation);
     }
   },
 
   enqueue(operation, priority = DEFAULT_PRIORITY) {
     if (!queue.size() && !isRunning) {
-      OperationsQueue._run(operation);
+      _run(operation);
     } else {
       queue.insert({priority, operation});
     }
-  },
-
-  _run(operation) {
-    isRunning = true;
-    operation(() => {
-      isRunning = false;
-      OperationsQueue.dequeue();
-    });
   },
 };
 
