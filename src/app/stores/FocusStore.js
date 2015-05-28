@@ -21,7 +21,12 @@ class FocusStore extends Store {
       case Actions.NOTE_CREATION_COMPLETED:
         this.waitFor(NotesSelectionStore.dispatchToken);
         focus = 'Note';
-        this.emit('change');
+
+        // Due to batched updates, we have to delay actually firing the change
+        // event here, otherwise it will fire before the Note view has even
+        // rendered and started listening to this store, which means that focus
+        // won't actually transfer.
+        setImmediate(() => this.emit('change'));
         break;
 
       case Actions.NOTE_FOCUS_REQUESTED:

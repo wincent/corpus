@@ -160,5 +160,6 @@ ARCHIVES
 - [DONE] fix console error after some kinds of deletion (multiple selection, then any subsequent delete)
 - [DONE] make HACKING.md
 - [DONE] deal with path sanitization ("/" should become "-")
+- [DONE] creating a new note with RETURN should focus note view (regression)
 
 # vim: set nowrap:tw=0
