@@ -110,9 +110,9 @@ function appendResults(results) {
   }
 }
 
-// TODO: munge filenames with illegal characters in their names
 function getPathForTitle(title: string): string {
-  return path.join(notesDirectory, title + '.txt');
+  const sanitizedTitle = title.replace('/', '-');
+  return path.join(notesDirectory, sanitizedTitle + '.txt');
 }
 
 function createNote(title) {

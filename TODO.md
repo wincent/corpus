@@ -20,7 +20,11 @@ Nice to haves:
 
 MINUTIAE
 
-- deal with boot-time races (ie. order of initialization of ConfigStore, GitStore etc)
+- [DONE] deal with boot-time races (ie. order of initialization of ConfigStore, GitStore etc) [I think we're ok actually]
+- fix pre-delete snaphots
+- fix console error after some kinds of deletion
+- make HACKING.md
+- [DONE] deal with path sanitization ("/" should become "-")
 - take additional snapshots after certain amount of idle time without an FS write
 - make Command-Delete and Command-R work when OmniBar or Note are focused, like nvALT
 - make `ContentEditable` agnostic (no stores, no actions)
