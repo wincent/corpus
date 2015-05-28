@@ -10,8 +10,8 @@
 import {Dispatcher} from 'flux';
 import {batchedUpdates} from 'react/lib/ReactUpdates';
 
-export default new (class extends Dispatcher {
+export default new class extends Dispatcher {
   dispatch(payload) {
     batchedUpdates(() => super.dispatch(payload));
   }
-})();
+}();
