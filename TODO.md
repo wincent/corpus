@@ -20,11 +20,8 @@ Nice to haves:
 
 MINUTIAE
 
-- [DONE] deal with boot-time races (ie. order of initialization of ConfigStore, GitStore etc) [I think we're ok actually]
+- figure out why Jest is suddenly crashing
 - fix pre-delete snaphots
-- [DONE] fix console error after some kinds of deletion (multiple selection, then any subsequent delete)
-- [DONE] make HACKING.md
-- [DONE] deal with path sanitization ("/" should become "-")
 - take additional snapshots after certain amount of idle time without an FS write
 - make Command-Delete and Command-R work when OmniBar or Note are focused, like nvALT
 - make `ContentEditable` agnostic (no stores, no actions)
@@ -159,5 +156,9 @@ ARCHIVES
 - [DONE] add note deletion (contextual menu, menu etc)
 - [DONE] implement contextual menu for <NotePreview>
 - [DONE] note possibility of file-system races with all my async code; I am assuming writes finish before I try to do subsequent dependent writes; I should make the dependency explicit
+- [DONE] deal with boot-time races (ie. order of initialization of ConfigStore, GitStore etc) [I think we're ok actually]
+- [DONE] fix console error after some kinds of deletion (multiple selection, then any subsequent delete)
+- [DONE] make HACKING.md
+- [DONE] deal with path sanitization ("/" should become "-")
 
-# vim: set nowrap:
+# vim: set nowrap:tw=0
