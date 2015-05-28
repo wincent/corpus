@@ -32,21 +32,7 @@ export default class ContentEditable extends React.Component {
   }
 
   componentDidMount() {
-    setImmediate(() => {
-      // FIXME: abusing setImmediate here because otherwise we immediately lose
-      // focus after this (focus goes to the body element); it's not clear why
-      // this is happening, as FocusStore isn't trying to change focus and none
-      // of the other places where we call `focus()` are being invoked (nor to
-      // we have any other blur handles firing and doing odd stuff). I may be
-      // able to work around this by always rendering <ContentEditable> even
-      // when not in editing mode; this would also fix the selection issue where
-      // the cursor appears at the beginning of the textarea irrespective of
-      // where I clicked.
-      const node = React.findDOMNode(this);
-      if (node) {
-        node.focus();
-      }
-    });
+    React.findDOMNode(this).focus();
     FocusStore.on('change', this._updateFocus);
   }
 
@@ -67,7 +53,6 @@ export default class ContentEditable extends React.Component {
   _getStyles() {
     return {
       root: {
-        WebkitUserSelect: this.state.focused ? 'inherit' : 'none',
         background: colors.background,
         border: 0,
         fontFamily: 'Monaco',
