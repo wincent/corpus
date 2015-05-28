@@ -116,9 +116,9 @@ function getPathForTitle(title: string): string {
 }
 
 function createNote(title) {
-  OperationsQueue.enqueue(done => {
+  OperationsQueue.enqueue(() => {
     const notePath = getPathForTitle(title);
-    open(notePath, 'wx') // w = write, x = fail if already exists
+    return open(notePath, 'wx') // w = write, x = fail if already exists
       .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
       .then(fd => close(fd))
       .then(() => {
@@ -132,8 +132,7 @@ function createNote(title) {
         Actions.noteCreationCompleted();
       })
       .then(Actions.changePersisted)
-      .catch(error => handleError(error, `Failed to open ${notePath} for writing`))
-      .finally(done);
+      .catch(error => handleError(error, `Failed to open ${notePath} for writing`));
   });
 }
 
@@ -143,57 +142,53 @@ function deleteNotes(deletedNotes) {
   // TODO: make this force a write for unsaved changes in active text area
   const repo = new Repo(ConfigStore.config.get('notesDirectory'));
   OperationsQueue.enqueue(
-    done => {
+    () => (
       repo
         .add('*.txt')
         .then(() => repo.commit('Corpus (pre-deletion) snapshot'))
         .catch(error => handleError(error, 'Failed to create Git commit'))
-        .finally(done);
-    },
+    ),
     OperationsQueue.DEFAULT_PRIORITY - 20
   );
 
   deletedNotes.forEach(note => {
-    OperationsQueue.enqueue(done => {
+    OperationsQueue.enqueue(() => {
       const notePath = note.get('path');
-      unlink(notePath)
-        .catch(error => handleError(error, `Failed to delete ${notePath}`))
-        .finally(done);
+      return unlink(notePath)
+        .catch(error => handleError(error, `Failed to delete ${notePath}`));
     });
   });
 }
 
 function updateNote(note) {
-  OperationsQueue.enqueue(done => {
+  OperationsQueue.enqueue(() => {
     const notePath = note.get('path');
     const time = new Date();
-    open(notePath, 'w') // w = write
+    return open(notePath, 'w') // w = write
       .then(fd => new Promise(resolve => write(fd, note.get('text')).then(() => resolve(fd))))
       .then(fd => new Promise(resolve => utimes(notePath, time, time).then(resolve(fd))))
       .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
       .then(fd => close(fd))
       .then(Actions.changePersisted)
-      .catch(error => handleError(error, `Failed to write ${notePath}`))
-      .finally(done);
+      .catch(error => handleError(error, `Failed to write ${notePath}`));
   });
 }
 
 function renameNote(oldPath, newPath) {
-  OperationsQueue.enqueue(done => {
+  OperationsQueue.enqueue(() => {
     const time = new Date();
     // TODO: don't overwrite existing names; use suffixes
-    rename(oldPath, newPath)
+    return rename(oldPath, newPath)
       .then(() => new Promise(resolve => utimes(newPath, time, time).then(resolve)))
       .then(Actions.changePersisted)
-      .catch(error => handleError(error, `Failed to rename ${oldPath} to ${newPath}`))
-      .finally(done);
+      .catch(error => handleError(error, `Failed to rename ${oldPath} to ${newPath}`));
   });
 }
 
 function loadNotes() {
-  OperationsQueue.enqueue(done => {
+  OperationsQueue.enqueue(() => {
     notesDirectory = ConfigStore.config.get('notesDirectory');
-    mkdir(notesDirectory)
+    return mkdir(notesDirectory)
       .then(() => readdir(notesDirectory))
       .then(filterFilenames)
       .map(getStatInfo)
@@ -209,7 +204,6 @@ function loadNotes() {
         ));
       })
       .catch(error => handleError(error, 'Failed to read notes from disk'))
-      .finally(done);
   });
 }
 

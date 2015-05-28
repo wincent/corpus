@@ -17,7 +17,7 @@ let isRunning = false;
 
 function _run(operation: Operation) {
   isRunning = true;
-  operation(() => {
+  operation().finally(() => {
     isRunning = false;
     OperationsQueue.dequeue();
   });

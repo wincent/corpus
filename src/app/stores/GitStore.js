@@ -25,25 +25,23 @@ class GitStore extends Store {
         this.waitFor(NotesStore.dispatchToken); // creates directory if needed
         this._repo = new Repo(ConfigStore.config.get('notesDirectory'));
         OperationsQueue.enqueue(
-          done => {
+          () => (
             this._repo
               .init()
               .catch(error => handleError(error, 'Failed to initialize Git repository'))
-              .finally(done);
-          },
+          ),
           GIT_PRIORITY
         );
         break;
 
       case Actions.CHANGE_PERSISTED:
         OperationsQueue.enqueue(
-          done => {
+          () => (
             this._repo
               .add('*.txt')
               .then(() => this._repo.commit('Corpus (post-change) snapshot'))
               .catch(error => handleError(error, 'Failed to create Git commit'))
-              .finally(done);
-          },
+          ),
           GIT_PRIORITY
         );
         break;
