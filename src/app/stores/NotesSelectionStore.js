@@ -103,8 +103,7 @@ function clearSelection() {
 }
 
 function selectAll() {
-  // NOTE: once we support deletion, will need to worry about holes
-  const range = ImmutableRange(FilteredNotesStore.notes.size, -1);
+  const range = ImmutableRange(0, FilteredNotesStore.notes.size);
   return selection.clear().merge(range);
 }
 
