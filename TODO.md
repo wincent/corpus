@@ -65,4 +65,4 @@
 - alternatively, make scrolling cheaper for React by getting it to do fewer DOM operations (probably smarter use of keys); I notice that appending is (relatively) fast; perhaps we can re-number keys to make it look like we're never appending, just reshuffling?
 - use Uglify to remove dead code etc, including from node_modules dependencies
 
-<!--- vim: set nowrap:tw=0 -->
+<!--- vim: set nowrap tw=0: -->
