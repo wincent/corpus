@@ -39,6 +39,10 @@ const unlink = Promise.promisify(fs.unlink);
 const utimes = Promise.promisify(fs.utimes);
 const write = Promise.promisify(fs.write);
 
+type PathMap = {
+  [path: string]: boolean;
+};
+
 /**
  * The number of notes to load immediately on start-up. Remaining notes are
  * retrieved in a second pass.
@@ -59,6 +63,19 @@ let noteID = 0;
 
 let notesDirectory;
 
+/**
+ * Map of note paths on disk to a boolean (`true`) indicating the path is in
+ * use.
+ *
+ * Duplicate titles are disambiguated using a numeric prefix before the '.txt'
+ * extension; eg: `foo.txt`, `foo.1.txt`, `foo.2.txt` etc.
+ */
+const pathMap: PathMap = {};
+
+// TODO: handle edge case where notes directory has a long filename in it (not
+// created by Corpus), which would overflow NAME_MAX or PATH_MAX if we end up
+// appending .999 to the name...
+
 function ignore(): void {
   return;
 }
@@ -69,7 +86,7 @@ function filterFilenames(filenames: Array<string>): Array<string> {
 
 function getStatInfo(fileName: string): ImmutableMap {
   const notePath = path.join(notesDirectory, fileName);
-  const title = path.basename(notePath, '.txt');
+  const title = getTitleFromPath(notePath);
   return Promise.join(
     noteID++,
     title,
@@ -107,13 +124,30 @@ function readContents(info) {
 function appendResults(results) {
   if (results.length) {
     notes = notes.push(...results);
+    results.forEach(note => pathMap[note.get('path')] = true);
     Actions.notesLoaded();
   }
 }
 
+// TODO: make this a separate module so it can be tested separately
+function getTitleFromPath(notePath: string): string {
+  const title = path.basename(notePath, '.txt');
+  return title.replace(/\.\d{1,3}$/, '');
+}
+
 function getPathForTitle(title: string): string {
   const sanitizedTitle = title.replace('/', '-');
-  return path.join(notesDirectory, sanitizedTitle + '.txt');
+
+  for (var ii = 0; ii <= 999; ii++) {
+    const number = ii ? `.${ii}` : '';
+    const notePath = path.join(notesDirectory, sanitizedTitle + number + '.txt');
+    if (!(notePath in pathMap)) {
+      return notePath;
+    }
+  }
+
+  // TODO: decide on better strategy here
+  throw new Error(`Failed to find unique path name for title "${title}"`);
 }
 
 function createNote(title) {
@@ -130,6 +164,7 @@ function createNote(title) {
           text: '',
           title,
         }));
+        pathMap[notePath] = true;
         Actions.noteCreationCompleted();
       })
       .then(Actions.changePersisted)
@@ -156,6 +191,7 @@ function deleteNotes(deletedNotes) {
     OperationsQueue.enqueue(() => {
       const notePath = note.get('path');
       return unlink(notePath)
+        .then(() => delete pathMap[notePath])
         .catch(error => handleError(error, `Failed to delete ${notePath}`));
     });
   });
@@ -182,6 +218,10 @@ function renameNote(oldPath, newPath) {
     // TODO: don't overwrite existing names; use suffixes
     return rename(oldPath, newPath)
       .then(() => new Promise(resolve => utimes(newPath, time, time).then(resolve)))
+      .then(() => {
+        delete pathMap[oldPath];
+        pathMap[newPath] = true;
+      })
       .then(Actions.changePersisted)
       .catch(error => handleError(error, `Failed to rename ${oldPath} to ${newPath}`));
   });
