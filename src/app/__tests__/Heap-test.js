@@ -102,4 +102,54 @@ describe('Heap', () => {
       heap.extract();
     });
   });
+
+  describe('smallest child bug', () => {
+    // In this bug, we were comparing wrapped values with wrapped values when
+    // trying to determine the smallest value. In JS, `object < otherObject`
+    // will always return `false`, which effectively meant we were always
+    // swapping with the left child instead of the smallest.
+    //
+    // Even prior to the introduction of wrapping, this bug would have existed
+    // when storing objects in the heap and using custom key getters, which is
+    // exactly what we do in Corpus. This is why I repeat the tests below with a
+    // custom getter.
+    it('actually swaps with the smallest child when trickling down', () => {
+      // Build up heap:
+      //
+      //      [1]
+      //     /  \
+      //   [10] [5]
+      //   /
+      // [12]
+      heap.insert(1);
+      heap.insert(10);
+      heap.insert(5);
+      heap.insert(12);
+
+      // Extract, which should produce:
+      //
+      //    [5]
+      //   /  \
+      // [12] [10]
+      //
+      // But due to the bug was producing:
+      //
+      //    [10]
+      //   /   \
+      // [12]  [5]
+      expect(heap.extract()).toBe(1);
+
+      // We were returning 10 here instead of 5.
+      expect(heap.extract()).toBe(5);
+
+      // Same test, but using a custom getter.
+      heap = new Heap(value => value.weight);
+      heap.insert({weight: 1, value: 'foo'});
+      heap.insert({weight: 10, value: 'bar'});
+      heap.insert({weight: 5, value: 'baz'});
+      heap.insert({weight: 12, value: 'abc'});
+      expect(heap.extract()).toEqual({weight: 1, value: 'foo'});
+      expect(heap.extract()).toEqual({weight: 5, value: 'baz'});
+    });
+  });
 });

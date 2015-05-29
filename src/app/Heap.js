@@ -113,7 +113,7 @@ export default class Heap {
       return rightChildIndex;
     } else if (rightChild === undefined) {
       return leftChildIndex;
-    } else if (rightChild < leftChild) {
+    } else if (this._compare(rightChild, leftChild) === -1) {
       return rightChildIndex;
     } else {
       return leftChildIndex;
@@ -131,23 +131,37 @@ export default class Heap {
     ];
   }
 
+  /**
+   * Returns the relative ordering of wrapped values `a` and `b`. That is:
+   *
+   * Returns -1 if `a` comes before `b`.
+   * Returns 1 if `a` comes after `b`.
+   *
+   * Note that we can never return 0 because `a` can never be ordered "the same"
+   * as `b` thanks to our use of the `insertionIndex` tie-breaker.
+   */
+  _compare(a: WrappedValue, b: WrappedValue): number {
+    const aKey = this._keyGetter(unwrapValue(a));
+    const bKey = this._keyGetter(unwrapValue(b));
+    if (aKey === bKey) {
+      return a.insertionIndex < b.insertionIndex ? -1 : 1;
+    } else {
+      return aKey < bKey ? -1 : 1;
+    }
+  }
+
+  /**
+   * Returns `true` when the item at `parentIndex` is "smaller" than the one at
+   * `childIndex`.
+   */
   _respectsHeapProperty(parentIndex: number, childIndex: number): boolean {
     if (this._storage[parentIndex] === undefined || // child is root
         this._storage[childIndex] === undefined) {  // parent is leaf
       return true;
     }
 
-    // Use key getter to extract sorting key.
     const parent = this._storage[parentIndex];
     const child = this._storage[childIndex];
-    const parentKey = this._keyGetter(unwrapValue(parent));
-    const childKey = this._keyGetter(unwrapValue(child));
-
-    // Use insertion index as a tiebreaker for equal keys.
-    if (parentKey === childKey) {
-      return parent.insertionIndex < child.insertionIndex;
-    } else {
-      return parentKey < childKey;
-    }
+    return this._compare(parent, child) === -1;
   }
 }
