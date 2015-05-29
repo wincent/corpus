@@ -1,6 +1,6 @@
-FEATURES
+# Features
 
-Base features (motivating features):
+## Base features (motivating features):
 
 - plain-text (Markdown) storage format
 - Git-backed versioning
@@ -8,21 +8,22 @@ Base features (motivating features):
 - Vim mode
 - note search (bonus points if it's fuzzy)
 
-Parity with nvALT:
+## Parity with nvALT:
 
 - tagging
 - linking between articles
 
-Nice to haves:
+## Nice to haves:
 
 - syntax highlighting of source markdown (markdown is assumed everywhere)
 - incremental search
 
-MINUTIAE
+# Minutiae
 
 - figure out why Jest is suddenly crashing
 - fix pre-delete snaphots (we don't actually flush unpersisted changes from a note that is currently being edited)
 - take additional snapshots after certain amount of idle time without an FS write
+- make sure all note files have a newline at the end (to make Git diffs look clean)
 - make Command-Delete and Command-R work when OmniBar or Note are focused, like nvALT
 - make `ContentEditable` agnostic (no stores, no actions)
 - can I use setState((state, props) => {}) to clean up some of my gnarly logic?
@@ -49,7 +50,7 @@ MINUTIAE
 - implement "Show in Finder"
 - add some more structure: "components" (React components), "util[?]" (data structures, reusable stuff?)
 
-NICE TO HAVES
+# Nice-to-haves
 
 - figure out how to detect system color preference (Graphite vs Aqua) and change styles accordingly (eg. selections/focused in notelist, which is #095cdc in nvALT's Aqua mode)
 - implment double-click-to-tag (lower half of <NotePreview>)
@@ -58,7 +59,7 @@ NICE TO HAVES
 - show Git diffs in-app (Might take inspiration from Gundo)
 - handle notes with duplicate titles (nvALT does this with suffixes eg. "foo.txt", "foo.1.txt", "foo.2.txt" etc)
 
-IDEAS
+# Ideas
 
 - to avoid building a proper prefs UI (yet), use a dotfile for config
 - use codemirror to get some stuff for free (syntax highlighting, vim mode)
@@ -66,7 +67,7 @@ IDEAS
 - alternatively, make scrolling cheaper for React by getting it to do fewer DOM operations (probably smarter use of keys); I notice that appending is (relatively) fast; perhaps we can re-number keys to make it look like we're never appending, just reshuffling?
 - use Uglify to remove dead code etc, including from node_modules dependencies
 
-ARCHIVES
+# Archives
 
 - [DONE] get started with Electron: https://github.com/atom/electron
 - [DONE] potentially check out: https://github.com/atom/electron-starter
@@ -163,4 +164,4 @@ ARCHIVES
 - [DONE] creating a new note with RETURN should focus note view (regression)
 - [DONE] add guard against too-long filenames (MAX_PATH_LEN) (see `getconf PATH_MAX /`, also `NAME_MAX`)
 
-# vim: set nowrap:tw=0
+<!--- vim: set nowrap:tw=0 -->
