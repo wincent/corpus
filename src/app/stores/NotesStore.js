@@ -215,7 +215,6 @@ function updateNote(note) {
 function renameNote(oldPath, newPath) {
   OperationsQueue.enqueue(() => {
     const time = new Date();
-    // TODO: don't overwrite existing names; use suffixes
     return rename(oldPath, newPath)
       .then(() => new Promise(resolve => utimes(newPath, time, time).then(resolve)))
       .then(() => {
