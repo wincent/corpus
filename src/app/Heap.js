@@ -7,8 +7,41 @@
 
 'use strict';
 
+type WrappedValue = {
+  value: mixed;
+  insertionCounter: number;
+};
+
 /**
- * Binary min-heap implementation, for use as a priority queue.
+ * Given two equally-valued keys, we use this counter to track insertion order
+ * and serve as a tie-breaker; this allows us to maintain FIFO behavior for
+ * equal-priority items.
+ *
+ * @see http://stackoverflow.com/a/20022710/2103996
+ */
+let insertionIndex = 0;
+
+/**
+ * Annotate `value` with insertion order information.
+ */
+function wrapValue(value: mixed): WrappedValue {
+  return {
+    value,
+    insertionIndex: insertionIndex++,
+  };
+}
+
+/**
+ * Retrieve the original wrapped value from an item previously annotated with
+ * insertion order information.
+ */
+function unwrapValue(value: WrappedValue): mixed {
+  return value.value;
+}
+
+/**
+ * Binary min-heap implementation with FIFO behavior for equal-priority items,
+ * for use as a priority queue.
  */
 export default class Heap {
   constructor(keyGetter: ?(value: mixed) => number) {
@@ -18,10 +51,10 @@ export default class Heap {
   }
 
   insert(value: mixed): void {
-    // insert into first empty slot
-    this._storage[this._emptySlot] = value;
+    // Insert into first empty slot.
+    this._storage[this._emptySlot] = wrapValue(value);
 
-    // bubble upwards until heap property is restored
+    // Bubble upwards until heap property is restored.
     let childIndex = this._emptySlot;
     let parentIndex = this._parentIndex(childIndex);
     while (!this._respectsHeapProperty(parentIndex, childIndex)) {
@@ -35,16 +68,16 @@ export default class Heap {
 
   extract(): mixed {
     if (this._emptySlot) {
-      // grab root
+      // Grab root.
       const extracted = this._storage[0];
       this._emptySlot--;
 
-      // move last item to root
+      // Move last item to root.
       this._storage[0] = this._storage[this._emptySlot];
       this._storage.pop();
       this._trickleDown(0);
 
-      return extracted;
+      return unwrapValue(extracted);
     }
   }
 
@@ -59,12 +92,12 @@ export default class Heap {
   }
 
   _trickleDown(parentIndex: number): void {
-    // trickle down until heap property is restored
+    // Trickle down until heap property is restored.
     const [leftChildIndex, rightChildIndex] = this._childIndices(parentIndex);
 
     if (!this._respectsHeapProperty(parentIndex, leftChildIndex) ||
         !this._respectsHeapProperty(parentIndex, rightChildIndex)) {
-      // min heaps: will swap with smallest child;
+      // Will swap with smallest child.
       const preferredChildIndex = this._preferredChildIndex(parentIndex);
       this._swap(preferredChildIndex, parentIndex);
       this._trickleDown(preferredChildIndex);
@@ -104,9 +137,17 @@ export default class Heap {
       return true;
     }
 
-    return (
-      this._keyGetter(this._storage[parentIndex]) <=
-      this._keyGetter(this._storage[childIndex])
-    );
+    // Use key getter to extract sorting key.
+    const parent = this._storage[parentIndex];
+    const child = this._storage[childIndex];
+    const parentKey = this._keyGetter(unwrapValue(parent));
+    const childKey = this._keyGetter(unwrapValue(child));
+
+    // Use insertion index as a tiebreaker for equal keys.
+    if (parentKey === childKey) {
+      return parent.insertionIndex < child.insertionIndex;
+    } else {
+      return parentKey < childKey;
+    }
   }
 }
