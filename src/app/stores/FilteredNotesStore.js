@@ -13,7 +13,7 @@ import type {List as ImmutableList} from 'immutable'; // eslint-disable-line no-
 import Actions from '../Actions';
 import NotesStore from './NotesStore';
 import Store from './Store';
-import stringFinder from '../stringFinder';
+import stringFinder from '../util/stringFinder';
 
 let notes = NotesStore.notes;
 let query = null;
