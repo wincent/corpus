@@ -1,23 +1,3 @@
-# Features
-
-## Base features (motivating features):
-
-- plain-text (Markdown) storage format
-- Git-backed versioning
-- toggleable editing mode: rich text editor -> preview as Formatted Markdown
-- Vim mode
-- note search (bonus points if it's fuzzy)
-
-## Parity with nvALT:
-
-- tagging
-- linking between articles
-
-## Nice to haves:
-
-- syntax highlighting of source markdown (markdown is assumed everywhere)
-- incremental search
-
 # Minutiae
 
 - make `ContentEditable` actually "contenteditable"
@@ -54,10 +34,6 @@
 # Nice-to-haves
 
 - figure out how to detect system color preference (Graphite vs Aqua) and change styles accordingly (eg. selections/focused in notelist, which is #095cdc in nvALT's Aqua mode)
-- implment double-click-to-tag (lower half of <NotePreview>)
-- i18n
-- generated documentation
-- show Git diffs in-app (Might take inspiration from Gundo)
 
 # Ideas
 
