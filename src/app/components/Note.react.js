@@ -21,8 +21,8 @@ export default class Note extends React.Component {
     if (this.props.note) {
       return (
         <ContentEditable
-        note={this.props.note}
-        tabIndex={3}
+          note={this.props.note}
+          tabIndex={3}
         />
       );
     }
