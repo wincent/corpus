@@ -25,6 +25,7 @@ import OperationsQueue from '../OperationsQueue';
 import Repo from '../Repo';
 import Store from './Store';
 import handleError from '../handleError';
+import normalizeText from '../util/normalizeText';
 
 const close = Promise.promisify(fs.close);
 const fsync = Promise.promisify(fs.fsync);
@@ -64,15 +65,6 @@ function ignore(): void {
 
 function filterFilenames(filenames: Array<string>): Array<string> {
   return filenames.filter(fileName => path.extname(fileName) === '.txt');
-}
-
-/**
- * Prepares a normalized version of `text` suitable for writing to the
- * file-system.
- */
-function normalizeText(text: string): string {
-  // Ensure trailing newline at end of file.
-  return text.replace(/([^\n])$/, '$1\n');
 }
 
 function getStatInfo(fileName: string): ImmutableMap {
