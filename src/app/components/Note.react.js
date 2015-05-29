@@ -26,7 +26,6 @@ export default class Note extends React.Component {
     if (this.props.note) {
       const position = event.currentTarget.selectionStart;
       cursorPositions[this.props.note.get('id')] = position;
-      console.log('recorded (i)', position);
     }
   }
 
@@ -37,7 +36,6 @@ export default class Note extends React.Component {
       if (id in cursorPositions) {
         const textarea = event.currentTarget;
         textarea.selectionStart = textarea.selectionEnd = cursorPositions[id];
-        console.log('restored (i)', cursorPositions[id]);
       }
     }
   }
@@ -47,7 +45,6 @@ export default class Note extends React.Component {
       const textarea = React.findDOMNode(this);
       const position = textarea.selectionStart;
       cursorPositions[this.props.note.get('id')] = position;
-      console.log('recorded (ii)', position);
     }
   }
 
@@ -58,7 +55,6 @@ export default class Note extends React.Component {
         if (id in cursorPositions) {
           const textarea = React.findDOMNode(this);
           textarea.selectionStart = textarea.selectionEnd = cursorPositions[id];
-          console.log('restored (ii)', cursorPositions[id]);
         }
       }
     }
