@@ -86,7 +86,6 @@ export default class ContentEditable extends React.Component {
         text,
       });
     }
-    // TODO: persist changes properly (to disk/git)
   }
 
   @autobind
