@@ -66,6 +66,15 @@ function filterFilenames(filenames: Array<string>): Array<string> {
   return filenames.filter(fileName => path.extname(fileName) === '.txt');
 }
 
+/**
+ * Prepares a normalized version of `text` suitable for writing to the
+ * file-system.
+ */
+function normalizeText(text: string): string {
+  // Ensure trailing newline at end of file.
+  return text.replace(/([^\n])$/, '$1\n');
+}
+
 function getStatInfo(fileName: string): ImmutableMap {
   const notePath = path.join(notesDirectory, fileName);
   const title = path.basename(notePath, '.txt');
@@ -164,8 +173,9 @@ function updateNote(note) {
   OperationsQueue.enqueue(() => {
     const notePath = note.get('path');
     const time = new Date();
+    const noteText = normalizeText(note.get('text'));
     return open(notePath, 'w') // w = write
-      .then(fd => new Promise(resolve => write(fd, note.get('text')).then(() => resolve(fd))))
+      .then(fd => new Promise(resolve => write(fd, noteText).then(() => resolve(fd))))
       .then(fd => new Promise(resolve => utimes(notePath, time, time).then(resolve(fd))))
       .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
       .then(fd => close(fd))
