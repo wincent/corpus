@@ -20,43 +20,41 @@ export default class Note extends React.Component {
     note: React.PropTypes.object,
   };
 
-  // TODO: DRY this up
-  @autobind
-  _onBlur(event) {
+  _recordCursorPosition(element) {
     if (this.props.note) {
-      const position = event.currentTarget.selectionStart;
+      const position = element.selectionStart;
       cursorPositions[this.props.note.get('id')] = position;
     }
   }
 
-  @autobind
-  _onFocus(event) {
+  _restoreCursorPosition(element) {
     if (this.props.note) {
       const id = this.props.note.get('id');
       if (id in cursorPositions) {
-        const textarea = event.currentTarget;
-        textarea.selectionStart = textarea.selectionEnd = cursorPositions[id];
+        element.selectionStart = element.selectionEnd = cursorPositions[id];
       }
     }
   }
 
+  @autobind
+  _onBlur(event) {
+    this._recordCursorPosition(event.currentTarget);
+  }
+
+  @autobind
+  _onFocus(event) {
+    this._restoreCursorPosition(event.currentTarget);
+  }
+
   componentWillUpdate(nextProps) {
-    if (this.props.note) {
-      const textarea = React.findDOMNode(this);
-      const position = textarea.selectionStart;
-      cursorPositions[this.props.note.get('id')] = position;
+    if (this.props.note !== nextProps.note) {
+      this._recordCursorPosition(React.findDOMNode(this));
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.note !== prevProps.note) {
-      if (this.props.note) {
-        const id = this.props.note.get('id');
-        if (id in cursorPositions) {
-          const textarea = React.findDOMNode(this);
-          textarea.selectionStart = textarea.selectionEnd = cursorPositions[id];
-        }
-      }
+      this._restoreCursorPosition(React.findDOMNode(this));
     }
   }
 
