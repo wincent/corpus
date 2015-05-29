@@ -28,7 +28,7 @@
 - make `ContentEditable` agnostic (no stores, no actions)
 - can I use setState((state, props) => {}) to clean up some of my gnarly logic?
 - tab in note should insert a tab; shift-tab should go back to OmniBar
-- remember and restore cursor position when focusing Note textarea
+- [DONE] remember and restore cursor position when focusing Note textarea (CursorStore would be overkill; just hide a map in the Note component module closure)
 - LEFT/RIGHT when NoteList has focus should move cursor to beginning end in OmniBar (and focus it, obviously)
 - note creation when hitting Enter on a title that doesn't exist yet
 - fix missing scrollbars (this is intermittent; not sure of cause)

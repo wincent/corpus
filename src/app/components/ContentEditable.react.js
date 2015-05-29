@@ -21,6 +21,7 @@ import performKeyboardNavigation from '../performKeyboardNavigation';
 export default class ContentEditable extends React.Component {
   static propTypes = {
     note: React.PropTypes.object,
+    onBlur: React.PropTypes.func,
     value: React.PropTypes.text,
   };
 
@@ -89,7 +90,8 @@ export default class ContentEditable extends React.Component {
   }
 
   @autobind
-  _onBlur() {
+  _onBlur(event) {
+    this.props.onBlur && this.props.onBlur(event);
     if (!Dispatcher.isDispatching()) {
       this._persistChanges();
     }
