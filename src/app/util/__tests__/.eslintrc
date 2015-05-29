@@ -1,0 +1,9 @@
+{
+  "env": {
+    "jasmine": true,
+    "node": true
+  },
+  "globals": {
+    "jest": false
+  }
+}

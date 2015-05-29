@@ -40,7 +40,7 @@ export default class Note extends React.Component {
     }
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  componentWillUpdate(nextProps) {
     if (this.props.note) {
       const textarea = React.findDOMNode(this);
       const position = textarea.selectionStart;

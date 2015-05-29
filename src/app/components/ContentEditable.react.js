@@ -91,7 +91,9 @@ export default class ContentEditable extends React.Component {
 
   @autobind
   _onBlur(event) {
-    this.props.onBlur && this.props.onBlur(event);
+    if (this.props.onBlur) {
+      this.props.onBlur(event);
+    }
     if (!Dispatcher.isDispatching()) {
       this._persistChanges();
     }
