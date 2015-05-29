@@ -97,14 +97,14 @@ export default class Heap {
 
     if (!this._respectsHeapProperty(parentIndex, leftChildIndex) ||
         !this._respectsHeapProperty(parentIndex, rightChildIndex)) {
-      // Will swap with smallest child.
-      const preferredChildIndex = this._preferredChildIndex(parentIndex);
-      this._swap(preferredChildIndex, parentIndex);
-      this._trickleDown(preferredChildIndex);
+      // Swap with smallest child.
+      const smallestChildIndex = this._smallestChildIndex(parentIndex);
+      this._swap(smallestChildIndex, parentIndex);
+      this._trickleDown(smallestChildIndex);
     }
   }
 
-  _preferredChildIndex(index: number): number {
+  _smallestChildIndex(index: number): number {
     const [leftChildIndex, rightChildIndex] = this._childIndices(index);
     const leftChild = this._storage[leftChildIndex];
     const rightChild = this._storage[rightChildIndex];
