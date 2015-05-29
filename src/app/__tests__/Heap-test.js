@@ -60,6 +60,19 @@ describe('Heap', () => {
       expect(heap.extract()).toEqual({weight: 20, value: 'baz'});
       expect(heap.extract()).toEqual({weight: 20, value: 'xyz'});
       expect(heap.extract()).toBe(undefined);
+
+      // Same, but with some alternation of insertion and extraction.
+      heap.insert({weight: 20, value: 'foo'});
+      heap.insert({weight: 0, value: 'bar'});
+      expect(heap.extract()).toEqual({weight: 0, value: 'bar'});
+      expect(heap.extract()).toEqual({weight: 20, value: 'foo'});
+      heap.insert({weight: 20, value: 'baz'});
+      heap.insert({weight: 0, value: 'abc'});
+      heap.insert({weight: 20, value: 'xyz'});
+      expect(heap.extract()).toEqual({weight: 0, value: 'abc'});
+      expect(heap.extract()).toEqual({weight: 20, value: 'baz'});
+      expect(heap.extract()).toEqual({weight: 20, value: 'xyz'});
+      expect(heap.extract()).toBe(undefined);
     });
   });
 
