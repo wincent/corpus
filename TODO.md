@@ -20,7 +20,7 @@
 
 # Minutiae
 
-- figure out why Jest is suddenly crashing
+- figure out why Jest is suddenly crashing (commenting out batchedUpdates import in Dispatcher makes the crash go away)
 - fix pre-delete snaphots (we don't actually flush unpersisted changes from a note that is currently being edited)
 - take additional snapshots after certain amount of idle time without an FS write
 - make sure all note files have a newline at the end (to make Git diffs look clean)
