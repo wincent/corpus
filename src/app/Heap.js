@@ -155,13 +155,16 @@ export default class Heap {
    * `childIndex`.
    */
   _respectsHeapProperty(parentIndex: number, childIndex: number): boolean {
-    if (this._storage[parentIndex] === undefined || // child is root
-        this._storage[childIndex] === undefined) {  // parent is leaf
+    const parent = this._storage[parentIndex];
+    const child = this._storage[childIndex];
+
+    if (
+      parent === undefined || // child is root
+      child === undefined // parent is leaf
+    ) {
       return true;
     }
 
-    const parent = this._storage[parentIndex];
-    const child = this._storage[childIndex];
     return this._compare(parent, child) === -1;
   }
 }
