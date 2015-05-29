@@ -25,13 +25,13 @@ describe('stringFinder', () => {
     `;
   });
 
-  it('findes normal strings', () => {
+  it('finds normal strings', () => {
     expect(find('document')).toBe(true);
 
     expect(find('science')).toBe(false);
   });
 
-  it('findes substrings of words', () => {
+  it('finds substrings of words', () => {
     expect(find('eatur')).toBe(true);
     expect(find('men')).toBe(true);
     expect(find('H')).toBe(true);
@@ -39,16 +39,16 @@ describe('stringFinder', () => {
     expect(find('z')).toBe(false);
   });
 
-  it('findes multiline strings', () => {
+  it('finds multiline strings', () => {
     expect(find('words')).toBe(true);
   });
 
-  it('findes strings case insensitively', () => {
+  it('finds strings case insensitively', () => {
     expect(find('MixedCase')).toBe(true);
     expect(find('mixedcase')).toBe(true);
   });
 
-  it('findes RegExp special characters', () => {
+  it('finds RegExp special characters', () => {
     // Finds literal match.
     expect(find('\\d+')).toBe(true);
 
@@ -56,7 +56,7 @@ describe('stringFinder', () => {
     expect(find('.+')).toBe(false);
   });
 
-  it('findes URLs', () => {
+  it('finds URLs', () => {
     // Testing these because they have literal `/` in them.
     expect(find('http://example.com')).toBe(true);
   });
