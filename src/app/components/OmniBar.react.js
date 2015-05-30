@@ -227,7 +227,7 @@ export default class OmniBar extends React.Component {
             Actions.searchRequested(this._pendingDeletion, true);
           }
         }
-        break;
+        return;
 
       case Keys.ESCAPE:
         Actions.allNotesDeselected();
@@ -268,7 +268,7 @@ export default class OmniBar extends React.Component {
             Actions.noteListFocused();
           }
         }
-        break;
+        return;
     }
 
     performKeyboardNavigation(event);
