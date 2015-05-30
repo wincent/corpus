@@ -191,7 +191,7 @@ export default class NoteList extends React.Component {
     // In order to avoid re-implementing the first-responder wheel, we need to
     // handle "Select All" especially here. When we're focused, we want to
     // intercept it. We do this by ensuring that `Note.react` has `user-select:
-    // none`, and we listen for "selectionchange". In order to elimate false
+    // none`, and we listen for "selectionchange". In order to eliminate false
     // positives, we only listen when we're focused, and we use `setTimeout`
     // here because otherwise we wind up with a "selectionchange" event
     // immediately after focusing.
