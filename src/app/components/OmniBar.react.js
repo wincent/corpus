@@ -98,7 +98,10 @@ export default class OmniBar extends React.Component {
   }
 
   componentDidMount() {
-    ipc.on('blur', () => this.setState({foreground: false}));
+    ipc.on('blur', () => {
+      this._blurred = true; // See _onFocus for rationale.
+      this.setState({foreground: false});
+    });
     ipc.on('focus', () => this.setState({foreground: true}));
     React.findDOMNode(this._inputRef).focus();
     FocusStore.on('change', this._updateFocus);
@@ -184,9 +187,20 @@ export default class OmniBar extends React.Component {
     React.findDOMNode(this._inputRef).focus();
   }
 
+  @autobind
   _onFocus(event) {
-    const input = event.currentTarget;
-    input.setSelectionRange(0, input.value.length);
+    // We want to select all text only if this was an in-app focus event; we
+    // don't want to change the selection if this event is the result of the
+    // application coming from the background into the foreground.
+    if (this._blurred) {
+      // Ignore first focus event after app goes to the background
+      // (can't rely on this.state.foreground because it's racy with respect to
+      // the focus event).
+      this._blurred = false;
+    } else {
+      const input = event.currentTarget;
+      input.setSelectionRange(0, input.value.length);
+    }
   }
 
   @autobind
