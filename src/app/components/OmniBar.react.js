@@ -176,6 +176,7 @@ export default class OmniBar extends React.Component {
 
   @autobind
   _onChange(event) {
+    this._pendingDeletion = null;
     const value = event.currentTarget.value;
     this.setState({value});
     Actions.searchRequested(value);
