@@ -1,9 +1,5 @@
 # Minutiae
 
-- make `ContentEditable` actually "contenteditable"
-- implement undo support for `Note.react`
-- clean up Git commits; we're overcommitting a lot, producing empty commits: we should avoid that
-- figure out why Jest is suddenly crashing (commenting out batchedUpdates import in Dispatcher makes the crash go away)
 - fix pre-delete snaphots (we don't actually flush unpersisted changes from a note that is currently being edited)
 - take additional snapshots after certain amount of idle time without an FS write
 - make Command-Delete and Command-R work when OmniBar or Note are focused, like nvALT
