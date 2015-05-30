@@ -33,7 +33,6 @@ export default class ContentEditable extends React.Component {
   }
 
   componentDidMount() {
-    React.findDOMNode(this).focus();
     FocusStore.on('change', this._updateFocus);
   }
 
