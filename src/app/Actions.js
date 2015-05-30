@@ -134,8 +134,8 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_RENAME_REQUESTED);
   },
 
-  searchRequested(value: string) {
-    dispatch(actionTypes.SEARCH_REQUESTED, {value});
+  searchRequested(value: string, isDeletion = false: boolean) {
+    dispatch(actionTypes.SEARCH_REQUESTED, {value, isDeletion});
   },
 
   selectedNotesDeleted(ids) {

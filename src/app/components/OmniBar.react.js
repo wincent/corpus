@@ -223,7 +223,7 @@ export default class OmniBar extends React.Component {
               return; // Nothing to do (already at start of input field).
             }
             this.setState({value: this._pendingDeletion});
-            Actions.searchRequested(this._pendingDeletion);
+            Actions.searchRequested(this._pendingDeletion, true);
           }
         }
         break;

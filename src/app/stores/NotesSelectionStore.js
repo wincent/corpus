@@ -239,6 +239,10 @@ class NotesSelectionStore extends Store {
         this._change(payload.type, () => {
           if (payload.value === '') {
             return clearSelection();
+          } else if (payload.isDeletion) {
+            // Special case: we don't want anything being selected if this is
+            // the result of the user pressing BACKSPACE.
+            return clearSelection();
           } else {
             // Find first matching title and select it, if there is one.
             let matchingIndex = null;
