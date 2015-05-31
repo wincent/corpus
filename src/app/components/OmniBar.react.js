@@ -105,7 +105,7 @@ export default class OmniBar extends React.Component {
     ipc.on('focus', () => this.setState({foreground: true}));
     React.findDOMNode(this._inputRef).focus();
     FocusStore.on('change', this._updateFocus);
-    NotesSelectionStore.on('change', this._onSelectionChange);
+    NotesSelectionStore.on('change', this._onNotesSelectionChange);
     FilteredNotesStore.on('change', this._onNotesChange);
     SystemStore.on('change', this._onSystemChange);
   }
@@ -114,7 +114,7 @@ export default class OmniBar extends React.Component {
     ipc.removeAllListeners('blur');
     ipc.removeAllListeners('focus');
     FocusStore.removeListerner('change', this._updateFocus);
-    NotesSelectionStore.removeListener('change', this._onSelectionChange);
+    NotesSelectionStore.removeListener('change', this._onNotesSelectionChange);
     FilteredNotesStore.removeListener('change', this._onNotesChange);
     SystemStore.removeListener('change', this._onSystemChange);
   }
@@ -136,7 +136,7 @@ export default class OmniBar extends React.Component {
   }
 
   @autobind
-  _onSelectionChange() {
+  _onNotesSelectionChange() {
     const note = getCurrentNote();
     const currentValue = note ? note.get('title').toLowerCase() : '';
     const pendingValue = this._query ? this._query.toLowerCase() : '';
