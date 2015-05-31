@@ -23,6 +23,37 @@ import Viewport from './Viewport.react';
 import run from '../run';
 import warn from '../warn';
 
+function deleteSelectedNotes() {
+  const selection = NotesSelectionStore.selection;
+  let warning;
+  if (selection.size === 1) {
+    const note = FilteredNotesStore.notes.get(selection.first());
+    warning = `Delete the note titled "${note.get('title')}"?`;
+  } else {
+    warning = `Delete ${selection.size} notes?`;
+  }
+  if (!confirm(warning)) {
+    return;
+  }
+
+  // Convert selection indices within the FilteredNotesStore to
+  // canonical indices within the NotesStore.
+  Actions.selectedNotesDeleted(
+    selection
+      .map(index => FilteredNotesStore.notes.get(index))
+      .map(note => note.get('index'))
+      .toSet()
+  );
+}
+
+function reveal() {
+  const selection = NotesSelectionStore.selection;
+  if (selection.size === 1) {
+    const note = FilteredNotesStore.notes.get(selection.first());
+    run('open', '-R', note.get('path')).catch(warn);
+  }
+}
+
 export default class Corpus extends React.Component {
   constructor(props) {
     super(props);
@@ -30,11 +61,11 @@ export default class Corpus extends React.Component {
   }
 
   componentDidMount() {
-    ipc.on('delete', this._deleteSelectedNotes);
+    ipc.on('delete', deleteSelectedNotes);
     ipc.on('next', Actions.nextNoteSelected);
     ipc.on('previous', Actions.previousNoteSelected);
     ipc.on('rename', Actions.renameRequested);
-    ipc.on('reveal', this._reveal);
+    ipc.on('reveal', reveal);
     ipc.on('search', Actions.omniBarFocused);
     NotesSelectionStore.on('change', this._updateSelection);
   }
@@ -47,37 +78,6 @@ export default class Corpus extends React.Component {
     ipc.removeAllListeners('reveal');
     ipc.removeAllListeners('search');
     NotesSelectionStore.removeListener('change', this._updateSelection);
-  }
-
-  _deleteSelectedNotes() {
-    const selection = NotesSelectionStore.selection;
-    let warning;
-    if (selection.size === 1) {
-      const note = FilteredNotesStore.notes.get(selection.first());
-      warning = `Delete the note titled "${note.get('title')}"?`;
-    } else {
-      warning = `Delete ${selection.size} notes?`;
-    }
-    if (!confirm(warning)) {
-      return;
-    }
-
-    // Convert selection indices within the FilteredNotesStore to
-    // canonical indices within the NotesStore.
-    Actions.selectedNotesDeleted(
-      selection
-        .map(index => FilteredNotesStore.notes.get(index))
-        .map(note => note.get('index'))
-        .toSet()
-    );
-  }
-
-  _reveal() {
-    const selection = NotesSelectionStore.selection;
-    if (selection.size === 1) {
-      const note = FilteredNotesStore.notes.get(selection.first());
-      run('open', '-R', note.get('path')).catch(warn);
-    }
   }
 
   @autobind
