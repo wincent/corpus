@@ -9,11 +9,11 @@
 
 import {Map as ImmutableMap} from 'immutable';
 import Promise from 'bluebird';
-import run from '../run';
 
 import Actions from '../Actions';
 import ConfigStore from './ConfigStore';
 import Store from './Store';
+import run from '../run';
 import warn from '../warn';
 
 const defaults = {
