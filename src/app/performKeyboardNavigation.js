@@ -14,6 +14,11 @@ import Keys from './Keys';
  * Common keyboard navigation code used by NoteList and OmniBar components.
  */
 function performKeyboardNavigation(event) {
+  if (event.defaultPrevented) {
+    // Event has already been handled.
+    return;
+  }
+
   switch (event.keyCode) {
     case Keys.DOWN:
       if (event.metaKey) {

@@ -18,6 +18,7 @@ import NotesSelectionStore from '../stores/NotesSelectionStore';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import FocusStore from '../stores/FocusStore';
 import colors from '../colors';
+import printableFromKeyEvent from '../util/printableFromKeyEvent';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 import pure from '../pure';
 import throttle from '../throttle';
@@ -210,7 +211,7 @@ export default class NoteList extends React.Component {
           Actions.allNotesSelected();
           event.preventDefault();
         }
-        return;
+        break;
 
       case Keys.TAB:
         event.preventDefault();
@@ -225,10 +226,20 @@ export default class NoteList extends React.Component {
             Actions.omniBarFocused();
           }
         }
-        return;
+        break;
     }
 
     performKeyboardNavigation(event);
+
+    // If event not handled yet, focus the OmniBar and initiate a search.
+    if (!event.defaultPrevented) {
+      const printable = printableFromKeyEvent(event.nativeEvent);
+      if (printable !== null) {
+        event.preventDefault();
+        Actions.omniBarFocused();
+        Actions.searchRequested(printable);
+      }
+    }
   }
 
   // TODO: if I can figure out how to get @autobind and @throttle to play
