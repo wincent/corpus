@@ -67,6 +67,12 @@ export default [
         label: 'Search or Create...', // TODO: use a real ellipsis?
         click: () => BrowserWindow.getFocusedWindow().webContents.send('search'),
       },
+      {type: 'separator'},
+      {
+        accelerator: 'Shift+Command+R',
+        label: 'Show in Finder',
+        click: () => BrowserWindow.getFocusedWindow().webContents.send('reveal'),
+      },
     ],
   },
   {

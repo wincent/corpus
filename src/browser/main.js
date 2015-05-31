@@ -22,6 +22,7 @@ let mainWindow = null;
 
 let deleteEnabled = false;
 let renameEnabled = false;
+let revealEnabled = false;
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
@@ -53,6 +54,17 @@ app.on('ready', () => {
         label: 'Delete...',
       })
     );
+    contextualMenu.append(
+      new MenuItem({type: 'separator'})
+    );
+    contextualMenu.append(
+      new MenuItem({
+        accelerator: 'Shift+Command+R',
+        click: () => mainWindow.webContents.send('reveal'),
+        enabled: revealEnabled,
+        label: 'Show in Finder',
+      })
+    );
     contextualMenu.popup(mainWindow);
   });
 
@@ -62,15 +74,19 @@ app.on('ready', () => {
   ipc.on('selection-count-changed', (event, newCount) => {
     const deleteItem = menu.items[1].submenu.items[1];
     const renameItem = menu.items[1].submenu.items[0];
+    const revealItem = menu.items[1].submenu.items[5];
     if (newCount === 0) {
       deleteItem.enabled = deleteEnabled = false;
       renameItem.enabled = renameEnabled = false;
+      revealItem.enabled = revealEnabled = false;
     } else if (newCount === 1) {
       deleteItem.enabled = deleteEnabled = true;
       renameItem.enabled = renameEnabled = true;
+      revealItem.enabled = revealEnabled = true;
     } else {
       deleteItem.enabled = deleteEnabled = true;
       renameItem.enabled = renameEnabled = false;
+      revealItem.enabled = revealEnabled = false;
     }
   });
 

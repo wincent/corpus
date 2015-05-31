@@ -23,7 +23,6 @@
 - gracefully handle files going missing (and restoring); use case is mountable filesystems
 - resolve clash of Command-R accelerators (using it for rename and reload); reloading shouldn't be too easy for users to do accidentally
 - show pie chart indicator showing file reading/indexing progress
-- implement "Show in Finder"
 - add some more structure: "components" (React components), "util[?]" (data structures, reusable stuff?)
 - save/restore cursor position across restarts
 

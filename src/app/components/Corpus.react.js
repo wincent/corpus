@@ -20,6 +20,8 @@ import NotesSelectionStore from '../stores/NotesSelectionStore';
 import OmniBar from './OmniBar.react';
 import SplitView from './SplitView.react';
 import Viewport from './Viewport.react';
+import run from '../run';
+import warn from '../warn';
 
 export default class Corpus extends React.Component {
   constructor(props) {
@@ -32,6 +34,7 @@ export default class Corpus extends React.Component {
     ipc.on('next', Actions.nextNoteSelected);
     ipc.on('previous', Actions.previousNoteSelected);
     ipc.on('rename', Actions.renameRequested);
+    ipc.on('reveal', this._reveal);
     ipc.on('search', Actions.omniBarFocused);
     NotesSelectionStore.on('change', this._updateSelection);
   }
@@ -41,6 +44,7 @@ export default class Corpus extends React.Component {
     ipc.removeAllListeners('next');
     ipc.removeAllListeners('previous');
     ipc.removeAllListeners('rename');
+    ipc.removeAllListeners('reveal');
     ipc.removeAllListeners('search');
     NotesSelectionStore.removeListener('change', this._updateSelection);
   }
@@ -66,6 +70,14 @@ export default class Corpus extends React.Component {
         .map(note => note.get('index'))
         .toSet()
     );
+  }
+
+  _reveal() {
+    const selection = NotesSelectionStore.selection;
+    if (selection.size === 1) {
+      const note = FilteredNotesStore.notes.get(selection.first());
+      run('open', '-R', note.get('path')).catch(warn);
+    }
   }
 
   @autobind
