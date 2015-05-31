@@ -18,4 +18,5 @@ export default {
   RETURN: 13,
   TAB: 9,
   UP: 38,
+  Z: 90,
 };
