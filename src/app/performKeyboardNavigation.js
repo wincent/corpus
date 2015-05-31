@@ -29,6 +29,7 @@ function performKeyboardNavigation(event) {
     case Keys.ESCAPE:
       Actions.allNotesDeselected();
       Actions.omniBarFocused();
+      event.preventDefault();
       break;
 
     case Keys.J:
