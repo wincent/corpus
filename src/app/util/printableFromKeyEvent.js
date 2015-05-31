@@ -16,7 +16,7 @@
  * Chrome supports.
  */
 export default function printableFromKeyEvent(event: Event): ?string {
-  const match = event.keyIdentifier.match(/^U\+(\d{4})$/);
+  const match = event.keyIdentifier.match(/^U\+([0-9A-F]{4})$/);
   if (match) {
     const codePoint = parseInt(match[1], 16);
     if (codePoint >= 32 && codePoint < 127) {
