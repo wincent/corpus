@@ -16,7 +16,9 @@ export default {
   J: 74,
   K: 75,
   RETURN: 13,
+  SPACE: 32,
   TAB: 9,
+  TILDE: 126,
   UP: 38,
   Z: 90,
 };

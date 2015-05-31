@@ -21,7 +21,8 @@ export default function printableFromKeyEvent(event: Event): ?string {
   const match = event.keyIdentifier.match(/^U\+([0-9A-F]{4})$/);
   if (match) {
     let codePoint = parseInt(match[1], 16);
-    if (codePoint >= 32 && codePoint < 127) { // Printable ASCII.
+    if (codePoint >= Keys.SPACE && codePoint <= Keys.TILDE) {
+      // Printable ASCII.
       if (
         codePoint >= Keys.A && codePoint <= Keys.Z &&
         !event.shiftKey
