@@ -157,10 +157,7 @@ export default class OmniBar extends React.Component {
           const input = React.findDOMNode(this._inputRef);
           if (document.activeElement === input) {
             if (currentValue && currentValue.startsWith(pendingValue)) {
-              // Gah, another ghastly hack.
-              setTimeout(() => {
-                input.setSelectionRange(pendingValue.length, input.value.length);
-              }, 300);
+              input.setSelectionRange(pendingValue.length, input.value.length);
             }
           }
         }
