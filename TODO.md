@@ -1,7 +1,6 @@
 # Minutiae
 
 - fix pre-delete snaphots (we don't actually flush unpersisted changes from a note that is currently being edited)
-- take additional snapshots after certain amount of idle time without an FS write
 - make Command-Delete and Command-R work when OmniBar or Note are focused, like nvALT
 - make `ContentEditable` agnostic (no stores, no actions)
 - can I use setState((state, props) => {}) to clean up some of my gnarly logic?

@@ -64,12 +64,20 @@ class FilteredNotesStore extends Store {
         this._change(() => filter(query));
         break;
 
-      case Actions.NOTE_TEXT_CHANGED:
       case Actions.NOTE_TITLE_CHANGED:
         // Forget the query; the note will be bumped to the top.
         this.waitFor(NotesStore.dispatchToken);
         query = null;
         this._change(() => NotesStore.notes);
+        break;
+
+      case Actions.NOTE_TEXT_CHANGED:
+        if (!payload.isAutosave) {
+          // Forget the query; the note will be bumped to the top.
+          this.waitFor(NotesStore.dispatchToken);
+          query = null;
+          this._change(() => NotesStore.notes);
+        }
         break;
 
       case Actions.NOTES_LOADED:

@@ -265,9 +265,6 @@ class NotesStore extends Store {
         break;
 
       case Actions.NOTE_TEXT_CHANGED:
-        // NOTE: At the moment, we don't fire NOTE_TEXT_CHANGED for every text
-        // change (only when we've lost textarea focus); this will eventually
-        // change, because we probably want to save more often than that.
         {
           const update = {
             mtime: Date.now(),
@@ -277,10 +274,12 @@ class NotesStore extends Store {
             [payload.index],
             update
           );
-
-          // Bump note to top of list.
           const note = notes.get(payload.index);
-          notes = notes.delete(payload.index).unshift(note);
+
+          if (!payload.isAutosave) {
+            // Bump note to top of list.
+            notes = notes.delete(payload.index).unshift(note);
+          }
 
           // Persist changes to disk.
           updateNote(note);

@@ -16,6 +16,7 @@ import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
 import NotesStore from '../stores/NotesStore';
 import colors from '../colors';
+import debounce from '../debounce';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
 export default class ContentEditable extends React.Component {
@@ -24,6 +25,8 @@ export default class ContentEditable extends React.Component {
     onBlur: React.PropTypes.func,
     value: React.PropTypes.text,
   };
+
+  _autosave = debounce(() => this._persistChanges(true), 5000);
 
   constructor(props) {
     super(props);
@@ -67,7 +70,12 @@ export default class ContentEditable extends React.Component {
     };
   }
 
-  _persistChanges() {
+  _persistChanges(isAutosave = false: boolean) {
+    if (!this._pendingSave && isAutosave) {
+      // No need to complete the autosave; an eager save already happened.
+      return;
+    }
+
     const text = this.state.value;
 
     // Ugh, would like to do this without a linear scan.
@@ -82,9 +90,12 @@ export default class ContentEditable extends React.Component {
     if (text !== this.props.note.get('text')) {
       Actions.noteTextChanged({
         index: matchingIndex,
+        isAutosave,
         text,
       });
     }
+
+    this._pendingSave = false;
   }
 
   @autobind
@@ -101,8 +112,8 @@ export default class ContentEditable extends React.Component {
   @autobind
   _onChange(event) {
     this.setState({value: event.currentTarget.value});
-    // TODO: persist changes after an interval has passed, or a set number of
-    // changes (or size of changes)
+    this._pendingSave = true;
+    this._autosave();
   }
 
   _onKeyDown(event) {
