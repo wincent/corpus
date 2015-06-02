@@ -17,7 +17,7 @@ describe('debounce()', () => {
   });
 
   it('does nothing when the debounced function is not called', () => {
-    const debounced = debounce(mockFunction, 100);
+    debounce(mockFunction, 100);
     jest.runAllTimers();
     expect(mockFunction).not.toBeCalled();
   });

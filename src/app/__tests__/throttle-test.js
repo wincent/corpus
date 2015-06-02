@@ -17,7 +17,7 @@ describe('throttle()', () => {
   });
 
   it('does nothing if the throttled function is not called', () => {
-    const throttled = throttle(mockFunction, 100);
+    throttle(mockFunction, 100);
     expect(mockFunction).not.toBeCalled();
   });
 
@@ -61,7 +61,7 @@ describe('throttle()', () => {
     }, 100);
     const context1 = {};
     const context2 = {};
-    const context3 = {}
+    const context3 = {};
     throttled.call(context1);
     throttled.call(context2);
     throttled.call(context3);
