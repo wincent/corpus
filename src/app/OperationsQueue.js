@@ -5,7 +5,7 @@
 
 'use strict';
 
-import type Promise from 'bluebird';
+import type Promise from 'bluebird'; // eslint-disable-line no-unused-vars
 
 import Heap from './Heap';
 
