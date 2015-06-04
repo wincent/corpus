@@ -55,15 +55,16 @@ class FilteredNotesStore extends Store {
       // TODO: may need some events here to reset query
 
       case Actions.NOTE_CREATION_COMPLETED:
+      case Actions.SELECTED_NOTES_DELETED:
         this.waitFor(NotesStore.dispatchToken);
-        this._change(() => filter(query));
+        this._change();
         break;
 
       case Actions.NOTE_TITLE_CHANGED:
         // Forget the query; the note will be bumped to the top.
         this.waitFor(NotesStore.dispatchToken);
         query = null;
-        this._change(() => filter(query));
+        this._change();
         break;
 
       case Actions.NOTE_TEXT_CHANGED:
@@ -71,32 +72,24 @@ class FilteredNotesStore extends Store {
           // Forget the query; the note will be bumped to the top.
           this.waitFor(NotesStore.dispatchToken);
           query = null;
-          this._change(() => filter(query));
+          this._change();
         }
         break;
 
       case Actions.NOTES_LOADED:
-        this._change(() => filter(query));
+        this._change();
         break;
 
       case Actions.SEARCH_REQUESTED:
         query = payload.value;
-        this._change(() => filter(query));
-        break;
-
-      case Actions.SELECTED_NOTES_DELETED:
-        // Keep and re-run the query, if we have one
-        this.waitFor(NotesStore.dispatchToken);
-        this._change(() => filter(query));
+        this._change();
         break;
     }
   }
 
-  // TODO: can we move a general version of this up to the Store for re-use?
-  // (probably not)
-  _change(changer) {
+  _change() {
     const previous = notes;
-    notes = changer.call();
+    notes = filter(query)
     if (notes !== previous) {
       this.emit('change', query);
     }
