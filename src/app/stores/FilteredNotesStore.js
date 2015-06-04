@@ -19,15 +19,11 @@ let notes = NotesStore.notes;
 let query = null;
 
 function filter(value: ?string): ImmutableList {
-  if (value === null) {
-    return NotesStore.notes.map((note, index) => (
-      // Augment note with its index within the NoteStore.
-      note.set('index', index)
-    ));
-  }
-
-  const regexen = value.trim().split(/\s+/).map(stringFinder);
-  if (regexen.length) {
+  const regexen = (
+    value !== null &&
+    value.trim().split(/\s+/).map(stringFinder)
+  );
+  if (regexen && regexen.length) {
     const indices = [];
     return NotesStore.notes
       .filter((note, index) => {
@@ -50,7 +46,10 @@ function filter(value: ?string): ImmutableList {
       ))
       .toList();
   } else {
-    return notes;
+    return NotesStore.notes.map((note, index) => (
+      // Augment note with its index within the NoteStore.
+      note.set('index', index)
+    ));
   }
 }
 
