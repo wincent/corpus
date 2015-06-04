@@ -15,12 +15,12 @@ import NotesStore from './NotesStore';
 import Store from './Store';
 import stringFinder from '../util/stringFinder';
 
-let notes = NotesStore.notes;
 let query = null;
+let notes = filter(query);
 
 function filter(value: ?string): ImmutableList {
   const regexen = (
-    value !== null &&
+    value != null &&
     value.trim().split(/\s+/).map(stringFinder)
   );
   if (regexen && regexen.length) {
@@ -63,7 +63,7 @@ class FilteredNotesStore extends Store {
         // Forget the query; the note will be bumped to the top.
         this.waitFor(NotesStore.dispatchToken);
         query = null;
-        this._change(() => NotesStore.notes);
+        this._change(() => filter(query));
         break;
 
       case Actions.NOTE_TEXT_CHANGED:
@@ -71,7 +71,7 @@ class FilteredNotesStore extends Store {
           // Forget the query; the note will be bumped to the top.
           this.waitFor(NotesStore.dispatchToken);
           query = null;
-          this._change(() => NotesStore.notes);
+          this._change(() => filter(query));
         }
         break;
 
