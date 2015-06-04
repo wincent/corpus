@@ -29,6 +29,7 @@ const actionTypes = keyMirror({
   LAST_NOTE_SELECTED: null,
   NEXT_NOTE_SELECTED: null,
   NOTES_LOADED: null,
+  NOTE_BUBBLE_STARTED: null,
   NOTE_CREATION_COMPLETED: null,
   NOTE_CREATION_REQUESTED: null,
   NOTE_DESELECTED: null,
@@ -80,6 +81,14 @@ const actionCreators = {
 
   nextNoteSelected() {
     dispatch(actionTypes.NEXT_NOTE_SELECTED);
+  },
+
+  /**
+   * Called when a note starts getting bubbled (animated) towards the top of
+   * the notes list as the result of a change to its contents or title.
+   */
+  noteBubbleStarted(index: number) {
+    dispatch(actionTypes.NOTE_BUBBLE_STARTED, {index});
   },
 
   noteCreationRequested(title: string) {

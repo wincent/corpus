@@ -14,6 +14,7 @@ import Actions from '../Actions';
 import Constants from '../Constants';
 import Keys from '../Keys';
 import NotePreview from './NotePreview.react';
+import NoteAnimationStore from '../stores/NoteAnimationStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import FocusStore from '../stores/FocusStore';
@@ -41,6 +42,7 @@ export default class NoteList extends React.Component {
     this._listening = false;
     this._listenerTimeout = null;
     this.state = {
+      bubbling: null,
       focused: false,
       notes: FilteredNotesStore.notes,
       scrollTop: 0,
@@ -49,6 +51,7 @@ export default class NoteList extends React.Component {
   }
 
   componentDidMount() {
+    NoteAnimationStore.on('change', this._initiateBubbling);
     NotesSelectionStore.on('change', this._updateNoteSelection);
     FilteredNotesStore.on('change', this._updateNotes);
     FocusStore.on('change', this._updateFocus);
@@ -154,6 +157,11 @@ export default class NoteList extends React.Component {
     if (document.activeElement === React.findDOMNode(this)) {
       Actions.allNotesSelected();
     }
+  }
+
+  @autobind
+  _initiateBubbling() {
+    this.setState({bubbling: NoteAnimationStore.bubbling});
   }
 
   @autobind
@@ -274,6 +282,23 @@ export default class NoteList extends React.Component {
     this._lastKeyDown = null;
   }
 
+  _getTranslate(index: number) {
+    let translate = this.state.bubbling;
+    if (translate != null) {
+      if (translate === index) {
+        // This note should animate upwards, to the top.
+        translate *= -1;
+      } else if (index < translate) {
+        // This note should animate down 1 slot.
+        translate = 1;
+      } else {
+        // This note should stay still.
+        translate = null;
+      }
+    }
+    return translate;
+  }
+
   _renderNotes() {
     const first = this._getFirstRenderedNote();
     const last = this._getLastRenderedNote();
@@ -289,6 +314,7 @@ export default class NoteList extends React.Component {
           note={note}
           ref={i}
           selected={selected}
+          translate={this._getTranslate(i)}
         />
       );
     }

@@ -14,7 +14,7 @@ import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
 import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
-import NotesStore from '../stores/NotesStore';
+import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';
 import debounce from '../debounce';
 import performKeyboardNavigation from '../performKeyboardNavigation';
@@ -101,6 +101,11 @@ export default class ContentEditable extends React.Component {
 
   @autobind
   _onChange(event) {
+    const index = NotesSelectionStore.selection.first();
+    if (index !== 0) {
+      // Not at top of list, so want to bubble note to top.
+      Actions.noteBubbleStarted(index);
+    }
     this.setState({value: event.currentTarget.value});
     this._pendingSave = true;
     this._autosave();

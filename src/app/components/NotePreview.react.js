@@ -274,8 +274,14 @@ export default class NotePreview extends React.Component {
 
   render() {
     const styles = this._getStyles();
+    if (this.props.translate != null) {
+      const offset = Constants.PREVIEW_ROW_HEIGHT * this.props.translate;
+      styles.root.transform = `translate3d(0, ${offset}px, 0)`;
+      styles.root.transition = 'transform .5s ease-out';
+    }
     return (
       <li
+        className="animatable"
         onClick={this._onClick}
         onContextMenu={this._onContextMenu}
         onMouseDown={this._onMouseDown}
