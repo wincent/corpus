@@ -31,10 +31,6 @@ function filter(value: ?string): ImmutableList {
           note.get('title').search(regexp) !== -1 ||
           note.get('text').search(regexp) !== -1
         )))) {
-          // If I had transducer functionality here I'd do a natural map ->
-          // filter, but instead have to do filter -> map and some manual
-          // book-keeping to avoid double-iteration and creating a bunch of
-          // intermediate objects.
           indices.push(index);
           return true;
         }
