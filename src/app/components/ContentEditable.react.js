@@ -77,19 +77,9 @@ export default class ContentEditable extends React.Component {
     }
 
     const text = this.state.value;
-
-    // Ugh, would like to do this without a linear scan.
-    let matchingIndex = null;
-    NotesStore.notes.find((note, index) => {
-      if (note.get('id') === this.props.note.get('id')) {
-        matchingIndex = index;
-        return true;
-      }
-    });
-
     if (text !== this.props.note.get('text')) {
       Actions.noteTextChanged({
-        index: matchingIndex,
+        index: this.props.note.get('index'),
         isAutosave,
         text,
       });
