@@ -18,8 +18,10 @@ class NoteAnimationStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.NOTE_BUBBLE_STARTED:
-        bubbling = payload.index;
-        this.emit('change');
+        if (payload.index !== bubbling) {
+          bubbling = payload.index;
+          this.emit('change');
+        }
         break;
     }
   }
