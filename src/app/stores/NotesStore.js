@@ -251,6 +251,14 @@ function loadNotes() {
 class NotesStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
+      case Actions.NOTE_BUBBLE_COMPLETED:
+        {
+          const newNote = notes.get(payload.index);
+          notes = notes.delete(payload.index).unshift(newNote);
+          this.emit('change');
+        }
+        break;
+
       case Actions.CONFIG_LOADED:
         // Can't load notes without config telling us where to look.
         loadNotes();
@@ -274,11 +282,12 @@ class NotesStore extends Store {
             [payload.index],
             update
           );
+          // BUG: this is wrong due to bumping!
           const note = notes.get(payload.index);
 
           if (!payload.isAutosave) {
             // Bump note to top of list.
-            notes = notes.delete(payload.index).unshift(note);
+            // notes = notes.delete(payload.index).unshift(note);
           }
 
           // Persist changes to disk.

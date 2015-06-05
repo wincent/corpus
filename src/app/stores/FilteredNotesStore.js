@@ -54,6 +54,7 @@ class FilteredNotesStore extends Store {
     switch (payload.type) {
       // TODO: may need some events here to reset query
 
+      case Actions.NOTE_BUBBLE_COMPLETED:
       case Actions.NOTE_CREATION_COMPLETED:
       case Actions.SELECTED_NOTES_DELETED:
         this.waitFor(NotesStore.dispatchToken);
