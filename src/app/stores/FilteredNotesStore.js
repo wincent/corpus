@@ -89,7 +89,7 @@ class FilteredNotesStore extends Store {
 
   _change() {
     const previous = notes;
-    notes = filter(query)
+    notes = filter(query);
     if (notes !== previous) {
       this.emit('change', query);
     }
