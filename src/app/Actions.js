@@ -89,7 +89,7 @@ const actionCreators = {
    *
    * In order to maintain an internally coherent state, the bubbling is actually
    * immediate (ie. we move the note in our internal data structures) and the
-   * animation is shown after the fact).
+   * animation is shown after the fact.
    */
   noteBubbled(index: number) {
     dispatch(actionTypes.NOTE_BUBBLED, {index});
