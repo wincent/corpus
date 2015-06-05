@@ -277,7 +277,7 @@ export default class NotePreview extends React.Component {
     if (this.props.translate != null) {
       const offset = Constants.PREVIEW_ROW_HEIGHT * this.props.translate;
       styles.root.transform = `translate3d(0, ${offset}px, 0)`;
-      styles.root.transition = 'transform .3s ease-out';
+      styles.root.transition = 'transform .5s ease-in-out';
     }
     return (
       <li
