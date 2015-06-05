@@ -58,8 +58,6 @@ export default class NoteList extends React.Component {
     FocusStore.on('change', this._updateFocus);
 
     const node = React.findDOMNode(this);
-    node.addEventListener('transitionend', this._onTransitionEnd);
-
     const parent = node.parentNode;
     parent.addEventListener('scroll', this._onScroll);
   }
@@ -71,8 +69,6 @@ export default class NoteList extends React.Component {
     this._removeListeners();
 
     const node = React.findDOMNode(this);
-    node.removeEventListener('transitionend', this._onTransitionEnd);
-
     const parent = node.parentNode;
     parent.removeEventListener('scroll', this._onScroll);
   }
@@ -169,8 +165,10 @@ export default class NoteList extends React.Component {
   @autobind
   _initiateBubbling() {
     const bubbling = NoteAnimationStore.bubbling;
-    this._pendingTransitionCount = bubbling + 1;
-    this.setState({bubbling});
+    this.setState({
+      animating: false,
+      bubbling,
+    });
   }
 
   @autobind
@@ -275,22 +273,9 @@ export default class NoteList extends React.Component {
     this._updateScrollTop(scrollTop);
   }
 
-  @autobind
-  _onTransitionEnd() {
-    // We'll get called once per animated note, but we only want to respond once
-    // all of the transitions have finished.
-    this._pendingTransitionCount--;
-
-    if (!this._pendingTransitionCount) {
-      // Note bubbling animation has finished.
-      this.setState({animating: false, bubbling: null});
-    }
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if (
-      prevState.bubbling === null &&
-      this.state.bubbling !== null &&
+      prevState.bubbling !== this.state.bubbling &&
       !this.state.animating
     ) {
       // Bubbling has been set up (we've re-rendered with the notes in a new
