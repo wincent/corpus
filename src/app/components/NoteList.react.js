@@ -303,6 +303,7 @@ export default class NoteList extends React.Component {
   _getTranslate(index: number) {
     let translate = this.state.bubbling;
     if (translate != null) {
+      // The bubbled note is going to move up; handle the others specially:
       if (index > translate) {
         // This note should stay still.
         translate = null;
