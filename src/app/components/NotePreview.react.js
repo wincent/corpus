@@ -92,7 +92,6 @@ export default class NotePreview extends React.Component {
         listStyleType: 'none',
         height: Constants.PREVIEW_ROW_HEIGHT + 'px',
         padding: '4px 4px 4px 8px',
-        position: 'relative',
       },
       text: {
         WebkitBoxOrient: 'vertical',
@@ -278,16 +277,25 @@ export default class NotePreview extends React.Component {
     if (this.props.translate != null) {
       // We can't just animate `translate3d` because that would move the element
       // away from its new position; instead, we want it to appear to start at
-      // its original position and move towards the new position. (Ab)use
-      // chained transitions to get the desired effect: the first one happens
-      // instantaneously (we use `top` to jump by the specified `offset`),
-      // then the next one happens over .5s (gradually restoring us back to 0
-      // offset, this time with `transform/translate3d`).
+      // its original position and move towards the new position.
+      //
+      // I was originally (ab)using chained transitions to get the desired
+      // effect: the first one happened instantaneously (we used `top` to jump
+      // by the specified `offset`), then the next one happened over .5s
+      // (gradually restoring us back to 0 offset, this time with
+      // `transform/translate3d`). However, the way React removes and reinserts
+      // DOM nodes confused the browser and prevented some of the transitions
+      // from happening, so instead, we use state juggling in `NoteList.react`
+      // to effectively `setState` twice, and render twice.
       const offset = Constants.PREVIEW_ROW_HEIGHT * this.props.translate;
-      // Negative offset will animate up, positive will animate down.
-      styles.root.transform = `translate3d(0, ${offset}px, 0)`;
-      styles.root.top = `${-offset}px`;
-      styles.root.transition = 'top 0s, transform .5s ease-in-out';
+      if (this.props.animating) {
+        styles.root.transition = 'transform .5s ease-in-out';
+      } else {
+        // Not ready to start animating yet, but the note has been reordered
+        // within the `NotesStore` and within the DOM, so we have to offset it
+        // to make it appear like it was still in its original location.
+        styles.root.transform = `translate3d(0, ${offset}px, 0)`;
+      }
     }
     return (
       <li

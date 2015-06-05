@@ -42,6 +42,7 @@ export default class NoteList extends React.Component {
     this._listening = false;
     this._listenerTimeout = null;
     this.state = {
+      animating: false,
       bubbling: null,
       focused: false,
       notes: FilteredNotesStore.notes,
@@ -169,7 +170,7 @@ export default class NoteList extends React.Component {
   _initiateBubbling() {
     const bubbling = NoteAnimationStore.bubbling;
     this._pendingTransitionCount = bubbling + 1;
-    setTimeout(() => this.setState({bubbling}), 100);
+    this.setState({bubbling});
   }
 
   @autobind
@@ -282,11 +283,23 @@ export default class NoteList extends React.Component {
 
     if (!this._pendingTransitionCount) {
       // Note bubbling animation has finished.
-      this.setState({bubbling: null});
+      this.setState({animating: false, bubbling: null});
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.bubbling === null &&
+      this.state.bubbling !== null &&
+      !this.state.animating
+    ) {
+      // Bubbling has been set up (we've re-rendered with the notes in a new
+      // order, but with offsets in place to make it seem they haven't moved),
+      // so now it's time to actually animate them to their new (real)
+      // positions.
+      this.setState({animating: true});
+    }
+
     if (prevState.selection !== this.state.selection) {
       if (this.state.selection.size) {
         // Maintain last selection within view.
@@ -305,17 +318,13 @@ export default class NoteList extends React.Component {
   _getTranslate(index: number) {
     let translate = this.state.bubbling;
     if (translate != null) {
-      if (!index) {
-        // This is the top (just-bubbled) note.
-        // We'll show it as animating up from its original position.
-        translate *= -1;
-      } else if (index <= translate) {
-        // This note was displaced downwards by the bubbled note.
-        // We'll show it as animating down 1 slot from its original position.
-        translate = 1;
-      } else {
+      if (index > translate) {
         // This note should stay still.
         translate = null;
+      } else if (index) {
+        // This note was displaced downwards by the bubbled note.
+        // We'll show it as animating down 1 slot from its original position.
+        translate = -1;
       }
     }
     return translate;
@@ -330,6 +339,7 @@ export default class NoteList extends React.Component {
       const note = this.state.notes.get(i);
       notes.push(
         <NotePreview
+          animating={this.state.animating}
           focused={this.state.focused && selected}
           index={i}
           key={note.get('id')}
