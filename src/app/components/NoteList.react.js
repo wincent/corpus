@@ -169,7 +169,7 @@ export default class NoteList extends React.Component {
   _initiateBubbling() {
     const bubbling = NoteAnimationStore.bubbling;
     this._pendingTransitionCount = bubbling + 1;
-    this.setState({bubbling});
+    setTimeout(() => this.setState({bubbling}), 100);
   }
 
   @autobind
