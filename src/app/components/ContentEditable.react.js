@@ -102,7 +102,7 @@ export default class ContentEditable extends React.Component {
   @autobind
   _onChange(event) {
     const index = NotesSelectionStore.selection.first();
-    if (index !== 0) {
+    if (index) {
       // Not at top of list, so want to bubble note to top.
       Actions.noteBubbleStarted(index);
     }
