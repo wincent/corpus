@@ -29,8 +29,7 @@ const actionTypes = keyMirror({
   LAST_NOTE_SELECTED: null,
   NEXT_NOTE_SELECTED: null,
   NOTES_LOADED: null,
-  NOTE_BUBBLE_COMPLETED: null,
-  NOTE_BUBBLE_STARTED: null,
+  NOTE_BUBBLED: null,
   NOTE_CREATION_COMPLETED: null,
   NOTE_CREATION_REQUESTED: null,
   NOTE_DESELECTED: null,
@@ -85,19 +84,15 @@ const actionCreators = {
   },
 
   /**
-   * Called when a note finishes getting bubbled (animated) towards the top of
-   * the notes list as the result of a change to its contents or title.
-   */
-  noteBubbleCompleted(index: number) {
-    dispatch(actionTypes.NOTE_BUBBLE_COMPLETED, {index});
-  },
-
-  /**
    * Called when a note starts getting bubbled (animated) towards the top of
    * the notes list as the result of a change to its contents or title.
+   *
+   * In order to maintain an internally coherent state, the bubbling is actually
+   * immediate (ie. we move the note in our internal data structures) and the
+   * animation is shown after the fact).
    */
-  noteBubbleStarted(index: number) {
-    dispatch(actionTypes.NOTE_BUBBLE_STARTED, {index});
+  noteBubbled(index: number) {
+    dispatch(actionTypes.NOTE_BUBBLED, {index});
   },
 
   noteCreationRequested(title: string) {

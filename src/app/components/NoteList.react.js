@@ -279,10 +279,7 @@ export default class NoteList extends React.Component {
     this._pendingTransitionCount--;
 
     if (!this._pendingTransitionCount) {
-      // Note bubbling animation has finished; make it real.
-      Actions.noteBubbleCompleted(
-        FilteredNotesStore.notes.get(this.state.bubbling).get('index')
-      );
+      // Note bubbling animation has finished.
       this.setState({bubbling: null});
     }
   }
@@ -306,11 +303,13 @@ export default class NoteList extends React.Component {
   _getTranslate(index: number) {
     let translate = this.state.bubbling;
     if (translate != null) {
-      if (translate === index) {
-        // This note should animate upwards, to the top.
+      if (!index) {
+        // This is the top (just-bubbled) note.
+        // We'll show it as animating up from its original position.
         translate *= -1;
-      } else if (index < translate) {
-        // This note should animate down 1 slot.
+      } else if (index <= translate) {
+        // This note was displaced downwards by the bubbled note.
+        // We'll show it as animating down 1 slot from its original position.
         translate = 1;
       } else {
         // This note should stay still.

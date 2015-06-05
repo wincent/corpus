@@ -92,6 +92,7 @@ export default class NotePreview extends React.Component {
         listStyleType: 'none',
         height: Constants.PREVIEW_ROW_HEIGHT + 'px',
         padding: '4px 4px 4px 8px',
+        position: 'relative',
       },
       text: {
         WebkitBoxOrient: 'vertical',
@@ -274,14 +275,24 @@ export default class NotePreview extends React.Component {
 
   render() {
     const styles = this._getStyles();
+    let className = null;
     if (this.props.translate != null) {
+      // It's trivial to use inline styles to transition _to_ an offset, but we
+      // want to translate _from_ an offset back to the neutral position. We do
+      // that with this hack, which (ab)uses chained transitions to get the
+      // desired effect: the first one happens instantaneously (we use `top` to
+      // jump down the specified `offset`), then the next one happens over .5s
+      // (gradually restoring us back to 0 offset, this time with `transform`).
       const offset = Constants.PREVIEW_ROW_HEIGHT * this.props.translate;
       styles.root.transform = `translate3d(0, ${offset}px, 0)`;
-      styles.root.transition = 'transform .5s ease-in-out';
+      styles.root.top = `${-offset}px`;
+      styles.root.transition = 'top 0s, transform .5s ease-in-out';
+      className = 'animatable';
+      // TODO: fix bug with downwards motions
     }
     return (
       <li
-        className="animatable"
+        className={className}
         onClick={this._onClick}
         onContextMenu={this._onContextMenu}
         onMouseDown={this._onMouseDown}

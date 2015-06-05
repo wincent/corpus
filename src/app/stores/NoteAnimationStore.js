@@ -6,6 +6,7 @@
 'use strict';
 
 import Actions from '../Actions';
+import NotesSelectionStore from './NotesSelectionStore';
 import Store from './Store';
 
 let bubbling = null;
@@ -17,7 +18,8 @@ let bubbling = null;
 class NoteAnimationStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
-      case Actions.NOTE_BUBBLE_STARTED:
+      case Actions.NOTE_BUBBLED:
+        this.waitFor(NotesSelectionStore.dispatchToken);
         if (payload.index !== bubbling) {
           bubbling = payload.index;
           this.emit('change');

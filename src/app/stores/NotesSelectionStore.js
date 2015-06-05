@@ -186,11 +186,7 @@ class NotesSelectionStore extends Store {
         this._change(payload.type, selectNext);
         break;
 
-      case Actions.NOTE_BUBBLE_COMPLETED:
-        this.waitFor(FilteredNotesStore.dispatchToken);
-        this._change(payload.type, selectFirst);
-        break;
-
+      case Actions.NOTE_BUBBLED:
       case Actions.NOTE_CREATION_COMPLETED:
         this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, selectFirst);
