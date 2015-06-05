@@ -275,24 +275,23 @@ export default class NotePreview extends React.Component {
 
   render() {
     const styles = this._getStyles();
-    let className = null;
     if (this.props.translate != null) {
-      // It's trivial to use inline styles to transition _to_ an offset, but we
-      // want to translate _from_ an offset back to the neutral position. We do
-      // that with this hack, which (ab)uses chained transitions to get the
-      // desired effect: the first one happens instantaneously (we use `top` to
-      // jump down the specified `offset`), then the next one happens over .5s
-      // (gradually restoring us back to 0 offset, this time with `transform`).
+      // We can't just animate `translate3d` because that would move the element
+      // away from its new position; instead, we want it to appear to start at
+      // its original position and move towards the new position. (Ab)use
+      // chained transitions to get the desired effect: the first one happens
+      // instantaneously (we use `top` to jump by the specified `offset`),
+      // then the next one happens over .5s (gradually restoring us back to 0
+      // offset, this time with `transform/translate3d`).
       const offset = Constants.PREVIEW_ROW_HEIGHT * this.props.translate;
+      // Negative offset will animate up, positive will animate down.
       styles.root.transform = `translate3d(0, ${offset}px, 0)`;
       styles.root.top = `${-offset}px`;
       styles.root.transition = 'top 0s, transform .5s ease-in-out';
-      className = 'animatable';
-      // TODO: fix bug with downwards motions
     }
     return (
       <li
-        className={className}
+        className="animatable"
         onClick={this._onClick}
         onContextMenu={this._onContextMenu}
         onMouseDown={this._onMouseDown}

@@ -267,10 +267,8 @@ class NotesStore extends Store {
             update
           );
           if (notes.get(payload.index) !== note) {
-            if (payload.index) {
-              // Note is not at top, bump to top.
-              notes = notes.delete(payload.index).unshift(note);
-            }
+            // Note is not at top, bump to top.
+            notes = notes.delete(payload.index).unshift(note);
             this.emit('change');
           }
         }

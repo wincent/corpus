@@ -275,7 +275,9 @@ export default class NoteList extends React.Component {
   }
 
   @autobind
-  _onTransitionEnd(event) {
+  _onTransitionEnd() {
+    // We'll get called once per animated note, but we only want to respond once
+    // all of the transitions have finished.
     this._pendingTransitionCount--;
 
     if (!this._pendingTransitionCount) {
