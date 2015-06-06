@@ -19,6 +19,7 @@ class NoteAnimationStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.NOTE_BUBBLED:
+      case Actions.NOTE_TITLE_CHANGED:
         this.waitFor(NotesSelectionStore.dispatchToken);
         if (payload.index !== bubbling) {
           bubbling = payload.index;
