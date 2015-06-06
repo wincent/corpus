@@ -40,12 +40,15 @@ export default class ContentEditable extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.note !== this.props.note) {
+    if (nextProps.note.get('id') !== this.props.note.get('id')) {
+      // Check for note identity ('id') rather than using `===`. Attributes of a
+      // note may change (for example, 'index' will change in response to
+      // bubbling).
       this._persistChanges();
+      this.setState({
+        value: nextProps.note.get('text'),
+      });
     }
-    this.setState({
-      value: nextProps.note.get('text'),
-    });
   }
 
   componentWillUnmount() {

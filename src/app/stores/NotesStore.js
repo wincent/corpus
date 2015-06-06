@@ -258,19 +258,10 @@ class NotesStore extends Store {
 
       case Actions.NOTE_BUBBLED:
         {
-          const update = {
-            mtime: Date.now(),
-          };
+          // Bump note to top.
           const note = notes.get(payload.index);
-          notes = notes.mergeIn(
-            [payload.index],
-            update
-          );
-          if (notes.get(payload.index) !== note) {
-            // Note is not at top, bump to top.
-            notes = notes.delete(payload.index).unshift(note);
-            this.emit('change');
-          }
+          notes = notes.delete(payload.index).unshift(note);
+          this.emit('change');
         }
         break;
 
