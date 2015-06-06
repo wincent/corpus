@@ -200,13 +200,11 @@ export default class NotePreview extends React.Component {
 
   @autobind
   _onKeyDown(event) {
+    event.stopPropagation();
     switch (event.keyCode) {
       case Keys.RETURN:
-        event.currentTarget.blur(); // TODO: lose focus on input but not on entire preview
-        break;
-      case Keys.DOWN:
-      case Keys.UP:
-        event.stopPropagation(); // don't actually want to switch notes here
+        // TODO: lose focus on input but not on entire preview
+        event.currentTarget.blur();
         break;
       case Keys.ESCAPE:
         this._endEditing(event);
