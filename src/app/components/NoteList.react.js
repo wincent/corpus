@@ -58,6 +58,7 @@ export default class NoteList extends React.Component {
     FocusStore.on('change', this._updateFocus);
 
     const node = React.findDOMNode(this);
+    node.addEventListener('transitionend', this._onTransitionEnd);
     const parent = node.parentNode;
     parent.addEventListener('scroll', this._onScroll);
   }
@@ -69,6 +70,7 @@ export default class NoteList extends React.Component {
     this._removeListeners();
 
     const node = React.findDOMNode(this);
+    node.removeEventListener('transitionend', this._onTransitionEnd);
     const parent = node.parentNode;
     parent.removeEventListener('scroll', this._onScroll);
   }
@@ -263,6 +265,13 @@ export default class NoteList extends React.Component {
     scrollTop => requestAnimationFrame(() => this.setState({scrollTop})),
     SCROLL_THROTTLE_INTERVAL
   );
+
+  @autobind
+  _onTransitionEnd() {
+    // A note has bubbled to the top, make sure we can see it still.
+    const parent = React.findDOMNode(this).parentNode;
+    parent.scrollTop = 0;
+  }
 
   @autobind
   _onScroll() {
