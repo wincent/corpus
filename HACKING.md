@@ -102,3 +102,14 @@ looking like this:
 2. Create a Git commit.
 3. Update note contents (update filesystem).
 4. Create a Git commit.
+
+# Branching model
+
+The project follows a simplified branching model inspired by
+[git.git](https://github.com/git/git).
+
+- The `master` branch should generally be pretty stable.
+- New feature development or more invasive fixes/refactoring are baked first in
+  the `next` branch before being merged into `master`.
+- Longer-term feature development should occur in topic branches (usually off of
+  the `next` branch).
