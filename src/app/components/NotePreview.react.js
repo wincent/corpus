@@ -203,9 +203,8 @@ export default class NotePreview extends React.Component {
     event.stopPropagation();
     switch (event.keyCode) {
       case Keys.RETURN:
-        // TODO: lose focus on input but not on entire preview
         event.preventDefault();
-        event.currentTarget.blur();
+        React.findDOMNode(this).parentNode.focus(); // focus NoteList
         break;
       case Keys.ESCAPE:
         this._endEditing(event);
