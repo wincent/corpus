@@ -126,7 +126,9 @@ export default class OmniBar extends React.Component {
   @autobind
   _updateFocus() {
     if (FocusStore.focus === 'OmniBar') {
-      React.findDOMNode(this._inputRef).focus();
+      const input = React.findDOMNode(this._inputRef);
+      input.focus();
+      input.setSelectionRange(0, input.value.length);
     }
   }
 
