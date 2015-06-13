@@ -187,7 +187,6 @@ export default class NoteList extends React.Component {
       () => {
         if (!NotesSelectionStore.selection.size) {
           Actions.searchRequested('');
-          Actions.omniBarFocused();
         }
       }
     );
