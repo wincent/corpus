@@ -113,7 +113,7 @@ export default class OmniBar extends React.Component {
   componentWillUnmount() {
     ipc.removeAllListeners('blur');
     ipc.removeAllListeners('focus');
-    FocusStore.removeListerner('change', this._updateFocus);
+    FocusStore.removeListener('change', this._updateFocus);
     NotesSelectionStore.removeListener('change', this._onNotesSelectionChange);
     FilteredNotesStore.removeListener('change', this._onNotesChange);
     SystemStore.removeListener('change', this._onSystemChange);
