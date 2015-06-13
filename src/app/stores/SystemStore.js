@@ -8,7 +8,6 @@
 'use strict';
 
 import {Map as ImmutableMap} from 'immutable';
-import Promise from 'bluebird';
 
 import Actions from '../Actions';
 import ConfigStore from './ConfigStore';
@@ -27,17 +26,17 @@ function parseValue(value: string) {
   return parseInt(value.trim(), 10);
 }
 
-function load(): Promise {
+async function load() {
   const notesDirectory = ConfigStore.config.get('notesDirectory');
-  return Promise
-    .all([
+  try {
+    const [nameMax, pathMax] = await* [
       run('getconf', 'NAME_MAX', notesDirectory).then(parseValue),
       run('getconf', 'PATH_MAX', notesDirectory).then(parseValue),
-    ])
-    .then(([nameMax, pathMax]) => {
-      values = values.merge({nameMax, pathMax});
-    })
-    .catch(warn);
+    ];
+    values = values.merge({nameMax, pathMax});
+  } catch(error) {
+    warn(error);
+  }
 }
 
 /**
@@ -47,7 +46,15 @@ class SystemStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.CONFIG_LOADED:
-        load().then(() => this.emit('change'));
+        requestAnimationFrame(
+          async function() {
+            const previousValues = values;
+            await load();
+            if (values !== previousValues) {
+              this.emit('change');
+            }
+          }.bind(this)
+        );
         break;
     }
   }
