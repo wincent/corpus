@@ -46,15 +46,13 @@ class SystemStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.CONFIG_LOADED:
-        requestAnimationFrame(
-          async function() {
-            const previousValues = values;
-            await load();
-            if (values !== previousValues) {
-              this.emit('change');
-            }
-          }.bind(this)
-        );
+        requestAnimationFrame(async () => {
+          const previousValues = values;
+          await load();
+          if (values !== previousValues) {
+            this.emit('change');
+          }
+        });
         break;
     }
   }

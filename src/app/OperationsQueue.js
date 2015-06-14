@@ -15,12 +15,13 @@ const DEFAULT_PRIORITY = 20;
 const queue = new Heap(value => value.priority);
 let isRunning = false;
 
-function _run(operation: Operation) {
-  isRunning = true;
-  operation().finally(() => {
+async function _run(operation: Operation) {
+  try {
+    await operation();
+  } finally {
     isRunning = false;
     OperationsQueue.dequeue();
-  });
+  }
 }
 
 /**
@@ -33,13 +34,15 @@ const OperationsQueue = {
 
   dequeue() {
     if (queue.size() && !isRunning) {
-      _run(queue.extract().operation);
+      isRunning = true;
+      requestAnimationFrame(() => _run(queue.extract().operation));
     }
   },
 
   enqueue(operation: Operation, priority = DEFAULT_PRIORITY: number) {
     if (!queue.size() && !isRunning) {
-      _run(operation);
+      isRunning = true;
+      requestAnimationFrame(() => _run(operation));
     } else {
       queue.insert({priority, operation});
     }
