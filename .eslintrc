@@ -3,7 +3,6 @@
   "rules": {
     // key: 0 = allow, 1 = warn, 2 = error
     "comma-dangle": [0, "always-multiline"],
-    "strict": [2, "global"],
     "new-cap": [
       2,
       {
@@ -18,6 +17,7 @@
     "no-alert": [0],
     "no-underscore-dangle": [0],
     "no-use-before-define": [0],
-    "quotes": [1, "single", "avoid-escape"]
+    "quotes": [1, "single", "avoid-escape"],
+    "strict": [2, "global"]
   }
 }
