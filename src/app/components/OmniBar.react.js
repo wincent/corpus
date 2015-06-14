@@ -220,8 +220,13 @@ export default class OmniBar extends React.Component {
               // Selection deletion.
               this._pendingDeletion = value.substr(0, selectionStart);
             } else if (selectionStart && event.keyCode === Keys.BACKSPACE) {
-              // Delete last character in field.
-              this._pendingDeletion = value.substr(0, selectionStart - 1);
+              if (event.metaKey) {
+                // Command+BACKSPACE: delete all previous characters in field.
+                this._pendingDeletion = '';
+              } else {
+                // BACKSPACE: delete last character in field.
+                this._pendingDeletion = value.substr(0, selectionStart - 1);
+              }
             } else {
               return; // Nothing to do (already at start of input field).
             }
