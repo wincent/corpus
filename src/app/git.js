@@ -7,6 +7,8 @@
 
 'use strict';
 
+import type Promise from 'bluebird';
+
 import run from './run';
 
 function git(...args: Array<string>): Promise {
