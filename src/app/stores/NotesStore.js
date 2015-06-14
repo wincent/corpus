@@ -240,7 +240,7 @@ function renameNote(oldPath, newPath) {
     }
   });
 }
-let start;
+
 function loadNotes() {
   OperationsQueue.enqueue(async () => {
     notesDirectory = ConfigStore.config.get('notesDirectory');
