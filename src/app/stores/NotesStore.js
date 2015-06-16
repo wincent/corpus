@@ -76,29 +76,26 @@ const pathMap: PathMap = {};
 // created by Corpus), which would overflow NAME_MAX or PATH_MAX if we end up
 // appending .999 to the name...
 
-function ignore(): void {
-  return;
-}
-
 function filterFilenames(filenames: Array<string>): Array<string> {
   return filenames.filter(fileName => path.extname(fileName) === '.txt');
 }
 
-function getStatInfo(fileName: string): ImmutableMap {
+async function getStatInfo(fileName: string): Promise<ImmutableMap> {
   const notePath = path.join(notesDirectory, fileName);
   const title = getTitleFromPath(notePath);
-  return Promise.join(
-    noteID++,
+  let statResult;
+  try {
+    statResult = await stat(notePath);
+  } catch(error) { // eslint-disable-line no-empty
+    // Do nothing.
+  }
+
+  return ImmutableMap({
+    id: noteID++,
+    mtime: statResult && statResult.mtime.getTime(),
+    path: notePath,
     title,
-    notePath,
-    stat(notePath).catch(ignore),
-    (id, _, __, statResult) => ImmutableMap({
-      id,
-      mtime: statResult && statResult.mtime.getTime(),
-      path: notePath,
-      title,
-    })
-  );
+  });
 }
 
 function compareMTime(a, b) {
@@ -113,12 +110,13 @@ function compareMTime(a, b) {
   }
 }
 
-function readContents(info) {
-  return Promise.join(
-    info,
-    readFile(info.get('path')).catch(ignore),
-    (_, text) => info.set('text', text.toString())
-  );
+async function readContents(info: ImmutableMap): Promise<ImmutableMap> {
+  try {
+    const text = await readFile(info.get('path'));
+    return info.set('text', text.toString());
+  } catch(error) {
+    return info; // Ignore errors.
+  }
 }
 
 function appendResults(results) {
@@ -151,24 +149,28 @@ function getPathForTitle(title: string): string {
 }
 
 function createNote(title) {
-  OperationsQueue.enqueue(() => {
+  OperationsQueue.enqueue(async () => {
     const notePath = getPathForTitle(title);
-    return open(notePath, 'wx') // w = write, x = fail if already exists
-      .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
-      .then(fd => close(fd))
-      .then(() => {
-        notes = notes.unshift(ImmutableMap({
-          id: noteID++,
-          mtime: Date.now(),
-          path: notePath,
-          text: '',
-          title,
-        }));
-        pathMap[notePath] = true;
-        Actions.noteCreationCompleted();
-      })
-      .then(Actions.changePersisted)
-      .catch(error => handleError(error, `Failed to open ${notePath} for writing`));
+    try {
+      const fd = await open(
+        notePath,
+        'wx' // w = write, x = fail if already exists
+      );
+      await fsync(fd);
+      await close(fd);
+      notes = notes.unshift(ImmutableMap({
+        id: noteID++,
+        mtime: Date.now(),
+        path: notePath,
+        text: '',
+        title,
+      }));
+      pathMap[notePath] = true;
+      Actions.noteCreationCompleted();
+      Actions.changePersisted();
+    } catch(error) {
+      handleError(error, `Failed to open ${notePath} for writing`);
+    }
   });
 }
 
@@ -178,73 +180,85 @@ function deleteNotes(deletedNotes) {
   // TODO: make this force a write for unsaved changes in active text area
   const repo = new Repo(ConfigStore.config.get('notesDirectory'));
   OperationsQueue.enqueue(
-    () => (
-      repo
-        .add('*.txt')
-        .then(() => repo.commit('Corpus (pre-deletion) snapshot'))
-        .catch(error => handleError(error, 'Failed to create Git commit'))
-    ),
+    async () => {
+      try {
+        await repo.add('*.txt');
+        await repo.commit('Corpus (pre-deletion) snapshot');
+      } catch(error) {
+        handleError(error, 'Failed to create Git commit');
+      }
+    },
     OperationsQueue.DEFAULT_PRIORITY - 20
   );
 
   deletedNotes.forEach(note => {
-    OperationsQueue.enqueue(() => {
+    OperationsQueue.enqueue(async () => {
       const notePath = note.get('path');
-      return unlink(notePath)
-        .then(() => delete pathMap[notePath])
-        .catch(error => handleError(error, `Failed to delete ${notePath}`));
+      try {
+        await unlink(notePath);
+        delete pathMap[notePath];
+      } catch(error) {
+        handleError(error, `Failed to delete ${notePath}`);
+      }
     });
   });
 }
 
 function updateNote(note) {
-  OperationsQueue.enqueue(() => {
+  OperationsQueue.enqueue(async () => {
+    let fd = null;
     const notePath = note.get('path');
-    const time = new Date();
-    const noteText = normalizeText(note.get('text'));
-    return open(notePath, 'w') // w = write
-      .then(fd => new Promise(resolve => write(fd, noteText).then(() => resolve(fd))))
-      .then(fd => new Promise(resolve => utimes(notePath, time, time).then(resolve(fd))))
-      .then(fd => new Promise(resolve => fsync(fd).then(() => resolve(fd))))
-      .then(fd => close(fd))
-      .then(Actions.changePersisted)
-      .catch(error => handleError(error, `Failed to write ${notePath}`));
+    try {
+      const time = new Date();
+      const noteText = normalizeText(note.get('text'));
+      fd = await open(notePath, 'w'); // w = write
+      await write(fd, noteText);
+      await utimes(notePath, time, time);
+      await fsync(fd);
+      Actions.changePersisted();
+    } catch(error) {
+      handleError(error, `Failed to write ${notePath}`);
+    } finally {
+      if (fd) {
+        await close(fd);
+      }
+    }
   });
 }
 
 function renameNote(oldPath, newPath) {
-  OperationsQueue.enqueue(() => {
-    const time = new Date();
-    return rename(oldPath, newPath)
-      .then(() => new Promise(resolve => utimes(newPath, time, time).then(resolve)))
-      .then(() => {
-        delete pathMap[oldPath];
-        pathMap[newPath] = true;
-      })
-      .then(Actions.changePersisted)
-      .catch(error => handleError(error, `Failed to rename ${oldPath} to ${newPath}`));
+  OperationsQueue.enqueue(async () => {
+    try {
+      const time = new Date();
+      await rename(oldPath, newPath);
+      await utimes(newPath, time, time);
+      delete pathMap[oldPath];
+      pathMap[newPath] = true;
+      Actions.changePersisted();
+    } catch(error) {
+      handleError(error, `Failed to rename ${oldPath} to ${newPath}`);
+    }
   });
 }
 
 function loadNotes() {
-  OperationsQueue.enqueue(() => {
+  OperationsQueue.enqueue(async () => {
     notesDirectory = ConfigStore.config.get('notesDirectory');
-    return mkdir(notesDirectory)
-      .then(() => readdir(notesDirectory))
-      .then(filterFilenames)
-      .map(getStatInfo)
-      .then(info => {
-        const sorted = info.sort(compareMTime);
-        const preload = sorted.splice(0, PRELOAD_COUNT);
-        return new Promise(resolve => (
-          Promise.map(preload, readContents, {concurrency: 5})
-            .then(appendResults)
-            .then(() => Promise.map(sorted, readContents, {concurrency: 5}))
-            .then(appendResults)
-            .then(resolve)
-        ));
-      })
-      .catch(error => handleError(error, 'Failed to read notes from disk'));
+    try {
+      await mkdir(notesDirectory);
+      const filenames = await readdir(notesDirectory);
+      const filtered = filterFilenames(filenames);
+      const info = await* filtered.map(getStatInfo);
+      const sorted = info.sort(compareMTime);
+      // TODO: enforce concurrency = 5 here
+      const preload = sorted.splice(0, PRELOAD_COUNT);
+      let results = await* preload.map(readContents);
+      appendResults(results);
+      results = await* sorted.map(readContents);
+      appendResults(results);
+    } catch(error) {
+      handleError(error, 'Failed to read notes from disk');
+    }
   });
 }
 
@@ -254,6 +268,15 @@ class NotesStore extends Store {
       case Actions.CONFIG_LOADED:
         // Can't load notes without config telling us where to look.
         loadNotes();
+        break;
+
+      case Actions.NOTE_BUBBLED:
+        {
+          // Bump note to top.
+          const note = notes.get(payload.index);
+          notes = notes.delete(payload.index).unshift(note);
+          this.emit('change');
+        }
         break;
 
       case Actions.NOTE_CREATION_COMPLETED:
@@ -277,8 +300,10 @@ class NotesStore extends Store {
           const note = notes.get(payload.index);
 
           if (!payload.isAutosave) {
-            // Bump note to top of list.
-            notes = notes.delete(payload.index).unshift(note);
+            if (payload.index) {
+              // Note is not at top, bump to top.
+              notes = notes.delete(payload.index).unshift(note);
+            }
           }
 
           // Persist changes to disk.

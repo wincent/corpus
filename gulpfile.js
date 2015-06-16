@@ -12,6 +12,7 @@ var path = require('path');
 
 var babelOptions = {
   optional: [
+    'es7.asyncFunctions',
     'es7.classProperties',
     'es7.decorators',
     'es7.objectRestSpread',

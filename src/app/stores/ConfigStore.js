@@ -29,6 +29,9 @@ const defaults = {
   ),
 };
 
+const configFile = path.join(process.env.HOME, '.corpusrc');
+let config = ImmutableMap(defaults);
+
 const mergerConfig = {
   notesDirectory(previousValue, nextValue, key) {
     const value = requireString(nextValue, previousValue, key);
@@ -54,19 +57,20 @@ function merger(previousValue, nextValue, key) {
   }
 }
 
-const configFile = path.join(process.env.HOME, '.corpusrc');
-let config = ImmutableMap(defaults);
+async function readConfig() {
+  try {
+    const data = await readFile(configFile);
+    config = config.mergeWith(merger, JSON.parse(data.toString()));
+  } catch(error) {
+    warn(`Reading ${configFile}: ${error.message}`);
+  }
+  Actions.configLoaded();
+}
 
 class ConfigStore extends Store {
   constructor() {
     super();
-
-    readFile(configFile)
-      .then(data => (
-        config = config.mergeWith(merger, JSON.parse(data.toString()))
-      ))
-      .catch(error => warn(`Reading ${configFile}: ${error.message}`))
-      .finally(Actions.configLoaded);
+    requestAnimationFrame(readConfig);
   }
 
   handleDispatch(payload) { // eslint-disable-line no-unused-vars

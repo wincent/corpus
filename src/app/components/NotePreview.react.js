@@ -200,13 +200,11 @@ export default class NotePreview extends React.Component {
 
   @autobind
   _onKeyDown(event) {
+    event.stopPropagation();
     switch (event.keyCode) {
       case Keys.RETURN:
-        event.currentTarget.blur(); // TODO: lose focus on input but not on entire preview
-        break;
-      case Keys.DOWN:
-      case Keys.UP:
-        event.stopPropagation(); // don't actually want to switch notes here
+        event.preventDefault();
+        React.findDOMNode(this).parentNode.focus(); // focus NoteList
         break;
       case Keys.ESCAPE:
         this._endEditing(event);
@@ -274,8 +272,32 @@ export default class NotePreview extends React.Component {
 
   render() {
     const styles = this._getStyles();
+    if (this.props.translate != null) {
+      // We can't just animate `translate3d` because that would move the element
+      // away from its new position; instead, we want it to appear to start at
+      // its original position and move towards the new position.
+      //
+      // I was originally (ab)using chained transitions to get the desired
+      // effect: the first one happened instantaneously (we used `top` to jump
+      // by the specified `offset`), then the next one happened over .5s
+      // (gradually restoring us back to 0 offset, this time with
+      // `transform/translate3d`). However, the way React removes and reinserts
+      // DOM nodes confused the browser and prevented some of the transitions
+      // from happening, so instead, we use state juggling in `NoteList.react`
+      // to effectively `setState` twice, and render twice.
+      const offset = Constants.PREVIEW_ROW_HEIGHT * this.props.translate;
+      if (this.props.animating) {
+        styles.root.transition = 'transform .5s ease-in-out';
+      } else {
+        // Not ready to start animating yet, but the note has been reordered
+        // within the `NotesStore` and within the DOM, so we have to offset it
+        // to make it appear like it was still in its original location.
+        styles.root.transform = `translate3d(0, ${offset}px, 0)`;
+      }
+    }
     return (
       <li
+        className="animatable"
         onClick={this._onClick}
         onContextMenu={this._onContextMenu}
         onMouseDown={this._onMouseDown}

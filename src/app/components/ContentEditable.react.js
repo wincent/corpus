@@ -14,7 +14,7 @@ import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
 import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
-import NotesStore from '../stores/NotesStore';
+import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';
 import debounce from '../debounce';
 import performKeyboardNavigation from '../performKeyboardNavigation';
@@ -40,12 +40,15 @@ export default class ContentEditable extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.note !== this.props.note) {
+    // Check for note identity ('id') rather than using `===`. Attributes of a
+    // note may change (for example, 'index' will change in response to
+    // bubbling).
+    if (nextProps.note.get('id') !== this.props.note.get('id')) {
       this._persistChanges();
+      this.setState({
+        value: nextProps.note.get('text'),
+      });
     }
-    this.setState({
-      value: nextProps.note.get('text'),
-    });
   }
 
   componentWillUnmount() {
@@ -77,19 +80,9 @@ export default class ContentEditable extends React.Component {
     }
 
     const text = this.state.value;
-
-    // Ugh, would like to do this without a linear scan.
-    let matchingIndex = null;
-    NotesStore.notes.find((note, index) => {
-      if (note.get('id') === this.props.note.get('id')) {
-        matchingIndex = index;
-        return true;
-      }
-    });
-
     if (text !== this.props.note.get('text')) {
       Actions.noteTextChanged({
-        index: matchingIndex,
+        index: this.props.note.get('index'),
         isAutosave,
         text,
       });
@@ -111,6 +104,11 @@ export default class ContentEditable extends React.Component {
 
   @autobind
   _onChange(event) {
+    const index = NotesSelectionStore.selection.first();
+    if (index) {
+      // Not at top of list, so bubble note to top.
+      Actions.noteBubbled(this.props.note.get('index'));
+    }
     this.setState({value: event.currentTarget.value});
     this._pendingSave = true;
     this._autosave();

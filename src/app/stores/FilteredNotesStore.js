@@ -15,19 +15,15 @@ import NotesStore from './NotesStore';
 import Store from './Store';
 import stringFinder from '../util/stringFinder';
 
-let notes = NotesStore.notes;
 let query = null;
+let notes = filter(query);
 
 function filter(value: ?string): ImmutableList {
-  if (value === null) {
-    return NotesStore.notes.map((note, index) => (
-      // Augment note with its index within the NoteStore.
-      note.set('index', index)
-    ));
-  }
-
-  const regexen = value.trim().split(/\s+/).map(stringFinder);
-  if (regexen.length) {
+  const regexen = (
+    value != null &&
+    value.trim().split(/\s+/).map(stringFinder)
+  );
+  if (regexen && regexen.length) {
     const indices = [];
     return NotesStore.notes
       .filter((note, index) => {
@@ -35,10 +31,6 @@ function filter(value: ?string): ImmutableList {
           note.get('title').search(regexp) !== -1 ||
           note.get('text').search(regexp) !== -1
         )))) {
-          // If I had transducer functionality here I'd do a natural map ->
-          // filter, but instead have to do filter -> map and some manual
-          // book-keeping to avoid double-iteration and creating a bunch of
-          // intermediate objects.
           indices.push(index);
           return true;
         }
@@ -50,7 +42,10 @@ function filter(value: ?string): ImmutableList {
       ))
       .toList();
   } else {
-    return notes;
+    return NotesStore.notes.map((note, index) => (
+      // Augment note with its index within the NoteStore.
+      note.set('index', index)
+    ));
   }
 }
 
@@ -58,17 +53,18 @@ class FilteredNotesStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       // TODO: may need some events here to reset query
-
+      case Actions.NOTE_BUBBLED:
       case Actions.NOTE_CREATION_COMPLETED:
+      case Actions.SELECTED_NOTES_DELETED:
         this.waitFor(NotesStore.dispatchToken);
-        this._change(() => filter(query));
+        this._change();
         break;
 
       case Actions.NOTE_TITLE_CHANGED:
         // Forget the query; the note will be bumped to the top.
         this.waitFor(NotesStore.dispatchToken);
         query = null;
-        this._change(() => NotesStore.notes);
+        this._change();
         break;
 
       case Actions.NOTE_TEXT_CHANGED:
@@ -76,32 +72,24 @@ class FilteredNotesStore extends Store {
           // Forget the query; the note will be bumped to the top.
           this.waitFor(NotesStore.dispatchToken);
           query = null;
-          this._change(() => NotesStore.notes);
+          this._change();
         }
         break;
 
       case Actions.NOTES_LOADED:
-        this._change(() => filter(query));
+        this._change();
         break;
 
       case Actions.SEARCH_REQUESTED:
         query = payload.value;
-        this._change(() => filter(query));
-        break;
-
-      case Actions.SELECTED_NOTES_DELETED:
-        // Keep and re-run the query, if we have one
-        this.waitFor(NotesStore.dispatchToken);
-        this._change(() => filter(query));
+        this._change();
         break;
     }
   }
 
-  // TODO: can we move a general version of this up to the Store for re-use?
-  // (probably not)
-  _change(changer) {
+  _change() {
     const previous = notes;
-    notes = changer.call();
+    notes = filter(query);
     if (notes !== previous) {
       this.emit('change', query);
     }

@@ -18,6 +18,11 @@ import Keys from '../Keys';
  * Chrome supports.
  */
 export default function printableFromKeyEvent(event: Event): ?string {
+  if (event.metaKey) {
+    // Potential menu short-cuts should never be printable.
+    return null;
+  }
+
   const match = event.keyIdentifier.match(/^U\+([0-9A-F]{4})$/);
   if (match) {
     let codePoint = parseInt(match[1], 16);

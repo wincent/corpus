@@ -1,3 +1,10 @@
+/**
+ * Copyright 2015-present Greg Hurrell. All rights reserved.
+ * Licensed under the terms of the MIT license.
+ *
+ * @flow
+ */
+
 'use strict';
 
 // https://github.com/eslint/eslint/issues/2584
@@ -181,6 +188,7 @@ class NotesSelectionStore extends Store {
         this._change(payload.type, selectNext);
         break;
 
+      case Actions.NOTE_BUBBLED:
       case Actions.NOTE_CREATION_COMPLETED:
         this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, selectFirst);

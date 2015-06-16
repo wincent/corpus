@@ -131,7 +131,7 @@ export default [
     label: 'Debug',
     submenu: [
       {
-        accelerator: 'Command+R',
+        accelerator: 'Alt+Command+R',
         click: () => BrowserWindow.getFocusedWindow().reloadIgnoringCache(),
         label: 'Reload',
       },

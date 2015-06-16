@@ -40,7 +40,7 @@ function performKeyboardNavigation(event) {
     case Keys.J:
       // Intercept before the menu shortcut gets fired to avoid annoying
       // flicker and slowdown.
-      if (event.metaKey) {
+      if (event.metaKey && !event.shiftKey && !event.altKey) {
         Actions.nextNoteSelected();
         event.preventDefault();
       }
@@ -49,7 +49,7 @@ function performKeyboardNavigation(event) {
     case Keys.K:
       // Intercept before the menu shortcut gets fired to avoid annoying
       // flicker and slowdown.
-      if (event.metaKey) {
+      if (event.metaKey && !event.shiftKey && !event.altKey) {
         Actions.previousNoteSelected();
         event.preventDefault();
       }
