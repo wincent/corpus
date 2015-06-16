@@ -40,10 +40,10 @@ export default class ContentEditable extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // Check for note identity ('id') rather than using `===`. Attributes of a
+    // note may change (for example, 'index' will change in response to
+    // bubbling).
     if (nextProps.note.get('id') !== this.props.note.get('id')) {
-      // Check for note identity ('id') rather than using `===`. Attributes of a
-      // note may change (for example, 'index' will change in response to
-      // bubbling).
       this._persistChanges();
       this.setState({
         value: nextProps.note.get('text'),
@@ -107,7 +107,7 @@ export default class ContentEditable extends React.Component {
     const index = NotesSelectionStore.selection.first();
     if (index) {
       // Not at top of list, so bubble note to top.
-      Actions.noteBubbled(index);
+      Actions.noteBubbled(this.props.note.get('index'));
     }
     this.setState({value: event.currentTarget.value});
     this._pendingSave = true;
