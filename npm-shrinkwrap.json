@@ -1356,11 +1356,6 @@
       "from": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.25.tgz",
       "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.25.tgz"
     },
-    "classnames": {
-      "version": "2.1.1",
-      "from": "https://registry.npmjs.org/classnames/-/classnames-2.1.1.tgz",
-      "resolved": "https://registry.npmjs.org/classnames/-/classnames-2.1.1.tgz"
-    },
     "eslint": {
       "version": "0.22.1",
       "from": "eslint@0.22.1",
