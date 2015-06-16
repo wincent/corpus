@@ -299,8 +299,9 @@ export default class NoteList extends React.Component {
         const lastIndex = this.state.selection.last();
         const last = React.findDOMNode(this.refs[lastIndex]);
         last.scrollIntoViewIfNeeded(false);
-      } else if (this._lastKeyDown === Keys.ESCAPE) {
-        // If we cleared selection by pressing Escape, we want to scroll to top.
+      } else {
+        // If we cleared the selection by pressing Escape or entering a
+        // non-exact title match, we want to scroll to the top.
         const parent = React.findDOMNode(this).parentNode;
         parent.scrollTop = 0;
       }
