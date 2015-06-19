@@ -182,14 +182,7 @@ export default class NoteList extends React.Component {
 
   @autobind
   _updateNoteSelection() {
-    this.setState(
-      {selection: NotesSelectionStore.selection},
-      () => {
-        if (!NotesSelectionStore.selection.size) {
-          Actions.searchRequested('');
-        }
-      }
-    );
+    this.setState({selection: NotesSelectionStore.selection});
   }
 
   @autobind

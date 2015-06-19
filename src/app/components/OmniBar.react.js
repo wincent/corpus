@@ -237,9 +237,8 @@ export default class OmniBar extends React.Component {
         return;
 
       case Keys.ESCAPE:
-        Actions.allNotesDeselected();
+        this.setState({value: ''});
         Actions.searchRequested('');
-        Actions.omniBarFocused();
         return;
 
       case Keys.RETURN:
