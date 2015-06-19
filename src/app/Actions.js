@@ -91,8 +91,8 @@ const actionCreators = {
    * immediate (ie. we move the note in our internal data structures) and the
    * animation is shown after the fact.
    */
-  noteBubbled(index: number) {
-    dispatch(actionTypes.NOTE_BUBBLED, {index});
+  noteBubbled(index: number, position: number) {
+    dispatch(actionTypes.NOTE_BUBBLED, {index, position});
   },
 
   noteCreationRequested(title: string) {

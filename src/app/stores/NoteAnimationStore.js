@@ -23,8 +23,8 @@ class NoteAnimationStore extends Store {
       case Actions.NOTE_BUBBLED:
       case Actions.NOTE_TITLE_CHANGED:
         this.waitFor(NotesSelectionStore.dispatchToken);
-        if (payload.index !== bubbling) {
-          bubbling = payload.index;
+        if (payload.position !== bubbling) {
+          bubbling = payload.position;
           this.emit('change');
         }
         break;

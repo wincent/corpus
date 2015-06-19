@@ -107,7 +107,7 @@ export default class ContentEditable extends React.Component {
     const index = NotesSelectionStore.selection.first();
     if (index) {
       // Not at top of list, so bubble note to top.
-      Actions.noteBubbled(this.props.note.get('index'));
+      Actions.noteBubbled(this.props.note.get('index'), index);
     }
     this.setState({value: event.currentTarget.value});
     this._pendingSave = true;
