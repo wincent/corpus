@@ -16,7 +16,7 @@ import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';
-import debounce from '../debounce';
+import debounce from 'simple-debounce';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
 export default class ContentEditable extends React.Component {
