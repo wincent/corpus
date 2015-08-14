@@ -5,7 +5,7 @@
   "main": "dist/browser/main.js",
   "scripts": {
     "build": "gulp build",
-    "lint": "eslint src",
+    "lint": "gulp lint",
     "test": "BABEL_JEST_STAGE=0 jest",
     "jest": "BABEL_JEST_STAGE=0 jest",
     "watch": "gulp"
