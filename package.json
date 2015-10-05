@@ -33,7 +33,7 @@
     "eslint": "^0.22.0",
     "eslint-plugin-react": "^2.2.0",
     "flux": "^2.0.3",
-    "gulp": "^3.8.11",
+    "gulp": "^3.9.0",
     "gulp-babel": "^5.1.0",
     "gulp-eslint": "^0.12.0",
     "gulp-flowtype": "^0.4.7",
