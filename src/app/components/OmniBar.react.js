@@ -38,6 +38,7 @@ const styles = {
     WebkitAppearance: 'none', // only with this can we override padding
     border: '1px solid #a0a0a0',
     borderRadius: '4px',
+    fontFamily: 'Helvetica Neue',
     lineHeight: '16px',
     padding: '2px 20px 1px', // room for icons/controls
     width: '100%',
