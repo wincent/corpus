@@ -17,7 +17,11 @@ if [ -z ${NODE_ENV+unset} ]; then
   #   NODE_ENV= ./corpus.sh
   #   NODE_ENV=anything_but_production ./corpus.sh
   #
-  NODE_ENV=production $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
+  if [ $1 = '--daemonize' ]; then
+    (NODE_ENV=production $ELECTRON_DIST/$ELECTRON_EXECUTABLE . &) &
+  else
+    NODE_ENV=production $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
+  fi
 else
   NODE_ENV="${NODE_ENV}" $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
 fi
