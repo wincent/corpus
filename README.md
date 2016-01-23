@@ -1,5 +1,7 @@
 # Corpus: A note-management application for OS X
 
+![](https://raw.githubusercontent.com/wincent/corpus/media/corpus.png)
+
 This is a clone of the fantastic nvALT application with some features added. So far:
 
 - Automatic versioning of notes directory via Git
