@@ -9,7 +9,6 @@
 
 import React from 'react';
 import autobind from 'autobind-decorator';
-import invariant from 'react/lib/invariant';
 
 import Separator from './Separator.react';
 import clamp from '../clamp';
@@ -78,10 +77,9 @@ export default class SplitView extends React.Component {
   }
 
   render() {
-    invariant(
-      React.Children.count(this.props.children) === 2,
-      'SplitView expects exactly two children'
-    );
+    if (React.Children.count(this.props.children) !== 2) {
+      throw new Error('SplitView expects exactly two children');
+    }
     const leftStyles = {
       ...styles.left,
       flexGrow: this.state.left,

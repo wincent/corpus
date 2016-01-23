@@ -7,7 +7,30 @@
 
 'use strict';
 
-import shallowEqual from 'react/lib/shallowEqual';
+/**
+ * Reimplementation of method with same name in fbjs.
+ */
+function shallowEqual(a, b) {
+  if (a === b) {
+    return true;
+  } else if (
+    typeof a !== 'object' ||
+    a === null ||
+    typeof b !== 'object' ||
+    b === null
+  ) {
+    return false;
+  } else {
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+
+    if (aKeys.length !== bKeys.length) {
+      return false;
+    }
+
+    return aKeys.every(key => b.hasOwnProperty(key) && a[key] === b[key]);
+  }
+}
 
 /**
  * Implements a basic `shouldComponentUpdate` based on shallow comparison of
