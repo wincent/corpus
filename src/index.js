@@ -7,8 +7,18 @@
 
 'use strict';
 
-import React from 'react';
-import Corpus from './app/components/Corpus.react';
+import React from 'react'; // eslint-disable-line no-unused-vars
+import {render} from 'react-dom';
+import {Provider} from 'react-redux';
+import Corpus from './app/containers/Corpus.react';
+import configureStore from './app/configureStore';
 
+const store = configureStore();
 const root = document.getElementById('app-root');
-React.render(<Corpus />, root);
+
+render(
+  <Provider store={store}>
+    <Corpus />
+  </Provider>,
+  root
+);

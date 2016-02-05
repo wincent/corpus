@@ -8,20 +8,37 @@
 'use strict';
 
 import React from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
 import Actions from '../Actions';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import GitStore from '../stores/GitStore'; // eslint-disable-line no-unused-vars
-import NoteView from './NoteView.react';
-import NoteList from './NoteList.react';
+import NoteView from '../components/NoteView.react';
+import NoteList from '../components/NoteList.react';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
-import OmniBar from './OmniBar.react';
-import SplitView from './SplitView.react';
-import Viewport from './Viewport.react';
+import OmniBar from '../components/OmniBar.react';
+import SplitView from '../components/SplitView.react';
+import Viewport from '../components/Viewport.react';
 import run from '../run';
 import warn from '../warn';
+
+const ReduxActions = {};
+
+function mapStateToProps(state) {
+  return {
+    ...state,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+    ...bindActionCreators(ReduxActions, dispatch),
+  };
+}
 
 function deleteSelectedNotes() {
   const selection = NotesSelectionStore.selection;
@@ -54,7 +71,7 @@ function reveal() {
   }
 }
 
-export default class Corpus extends React.Component {
+class Corpus extends React.Component {
   constructor(props) {
     super(props);
     this._selectionCount = 0;
@@ -107,3 +124,5 @@ export default class Corpus extends React.Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Corpus);
