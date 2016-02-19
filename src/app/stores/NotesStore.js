@@ -18,6 +18,7 @@ import Promise from 'bluebird';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
+import unpackContent from 'unpack-content';
 
 import Actions from '../Actions';
 import ConfigStore from './ConfigStore';
@@ -27,7 +28,6 @@ import Repo from '../Repo';
 import Store from './Store';
 import handleError from '../handleError';
 import normalizeText from '../util/normalizeText';
-import unpackContent from '../util/unpackContent';
 
 const close = Promise.promisify(fs.close);
 const fsync = Promise.promisify(fs.fsync);
