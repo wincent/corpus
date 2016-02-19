@@ -295,6 +295,10 @@ export default class NotePreview extends React.Component {
         styles.root.transform = `translate3d(0, ${offset}px, 0)`;
       }
     }
+    const {note} = this.props;
+    const preview = note.get('body').substr(0, PREVIEW_LENGTH);
+    const isPrivate = note.get('tags').has('private');
+    const text = isPrivate ? '' : preview;
     return (
       <li
         className="animatable"
@@ -304,7 +308,7 @@ export default class NotePreview extends React.Component {
         style={styles.root}>
         {this._renderTitle()}
         <p style={styles.text}>
-          {this.props.note.get('text').substr(0, PREVIEW_LENGTH)}
+          {text}
         </p>
       </li>
     );

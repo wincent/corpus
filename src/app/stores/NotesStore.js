@@ -11,6 +11,7 @@
 import {
   List as ImmutableList,
   Map as ImmutableMap,
+  Set as ImmutableSet,
 } from 'immutable';
 
 import Promise from 'bluebird';
@@ -26,6 +27,7 @@ import Repo from '../Repo';
 import Store from './Store';
 import handleError from '../handleError';
 import normalizeText from '../util/normalizeText';
+import unpackContent from '../util/unpackContent';
 
 const close = Promise.promisify(fs.close);
 const fsync = Promise.promisify(fs.fsync);
@@ -112,8 +114,13 @@ function compareMTime(a, b) {
 
 async function readContents(info: ImmutableMap): Promise<ImmutableMap> {
   try {
-    const text = await readFile(info.get('path'));
-    return info.set('text', text.toString());
+    const content = (await readFile(info.get('path'))).toString();
+    const unpacked = unpackContent(content);
+    return info.merge({
+      body: unpacked.body,
+      text: content,
+      tags: ImmutableSet(unpacked.tags),
+    });
   } catch(error) {
     return info; // Ignore errors.
   }
@@ -159,9 +166,11 @@ function createNote(title) {
       await fsync(fd);
       await close(fd);
       notes = notes.unshift(ImmutableMap({
+        body: '',
         id: noteID++,
         mtime: Date.now(),
         path: notePath,
+        tags: ImmutableSet([]),
         text: '',
         title,
       }));
@@ -289,8 +298,11 @@ class NotesStore extends Store {
 
       case Actions.NOTE_TEXT_CHANGED:
         {
+          const unpacked = unpackContent(payload.text);
           const update = {
+            body: unpacked.body,
             mtime: Date.now(),
+            tags: ImmutableSet(unpacked.tags),
             text: payload.text,
           };
           notes = notes.mergeIn(
