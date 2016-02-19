@@ -49,6 +49,6 @@
     "redux-saga": "*",
     "reselect": "*",
     "simple-debounce": "0.0.3",
-    "unpack-content": "0.0.1"
+    "unpack-content": "0.0.2"
   }
 }
