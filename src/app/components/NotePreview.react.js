@@ -78,11 +78,13 @@ export default class NotePreview extends React.Component {
   }
 
   _getStyles() {
+    const {focused, note, selected} = this.props;
+    const isPrivate = note.get('tags').has('private');
     return {
       root: {
         background: (
-          this.props.focused ? '#6f6f73' :
-          this.props.selected ? '#c8c8c8' :
+          focused ? '#6f6f73' :
+          selected ? '#c8c8c8' :
           'inherit'
         ),
         borderBottom: '1px solid #c0c0c0',
@@ -97,18 +99,24 @@ export default class NotePreview extends React.Component {
         WebkitBoxOrient: 'vertical',
         WebkitLineClamp: 2,
         color: (
-          this.props.focused ? '#fff' :
-          this.props.selected ? '#4e4e4e' :
+          isPrivate ? 'transparent' :
+          focused ? '#fff' :
+          selected ? '#4e4e4e' :
           '#a3a3a3'
         ),
         display: '-webkit-box',
         fontWeight: 'normal',
         overflow: 'hidden',
+        textShadow: (
+          isPrivate ?
+          '0 0 5px rgba(0, 0, 0, .5)' :
+          'unset'
+        ),
       },
       title: {
         color: (
-          this.props.focused ? '#fff' :
-          this.props.selected ? '#4e4e4e' :
+          focused ? '#fff' :
+          selected ? '#4e4e4e' :
           '#4f4f4f'
         ),
         fontWeight: 'bold',
@@ -297,9 +305,7 @@ export default class NotePreview extends React.Component {
       }
     }
     const {note} = this.props;
-    const preview = note.get('body').substr(0, PREVIEW_LENGTH);
-    const isPrivate = note.get('tags').has('private');
-    const text = isPrivate ? '' : preview;
+    const text = note.get('body').substr(0, PREVIEW_LENGTH);
     return (
       <li
         className="animatable"
