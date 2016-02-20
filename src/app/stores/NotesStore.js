@@ -192,7 +192,7 @@ function deleteNotes(deletedNotes) {
   // Ideally, we'd have the GitStore do this, but I can't introduce a
   // `waitFor(GitStore.dispatchToken` here without adding a circular dependency.
   // TODO: make this force a write for unsaved changes in active text area
-  const repo = new Repo(ConfigStore.config.get('notesDirectory'));
+  const repo = new Repo(ConfigStore.config.notesDirectory);
   OperationsQueue.enqueue(
     async () => {
       try {
@@ -257,7 +257,7 @@ function renameNote(oldPath, newPath) {
 
 function loadNotes() {
   OperationsQueue.enqueue(async () => {
-    notesDirectory = ConfigStore.config.get('notesDirectory');
+    notesDirectory = ConfigStore.config.notesDirectory;
     try {
       await mkdir(notesDirectory);
       const filenames = await readdir(notesDirectory);

@@ -27,7 +27,7 @@ function parseValue(value: string) {
 }
 
 async function load() {
-  const notesDirectory = ConfigStore.config.get('notesDirectory');
+  const notesDirectory = ConfigStore.config.notesDirectory;
   try {
     const [nameMax, pathMax] = await* [
       run('getconf', 'NAME_MAX', notesDirectory).then(parseValue),

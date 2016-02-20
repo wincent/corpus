@@ -11,6 +11,7 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 
 import Actions from '../Actions';
+import ConfigStore from '../stores/ConfigStore';
 import Dispatcher from '../Dispatcher';
 import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
@@ -61,8 +62,8 @@ export default class ContentEditable extends React.Component {
       root: {
         background: colors.background,
         border: 0,
-        fontFamily: 'Consolas, Monaco',
-        fontSize: '12px',
+        fontFamily: ConfigStore.config.noteFontFamily,
+        fontSize: ConfigStore.config.noteFontSize + 'px',
         minHeight: 'calc(100vh - 36px)',
         outline: 0,
         overflowWrap: 'break-word',

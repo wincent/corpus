@@ -23,7 +23,7 @@ class GitStore extends Store {
     switch (payload.type) {
       case Actions.CONFIG_LOADED:
         this.waitFor(NotesStore.dispatchToken); // creates directory if needed
-        this._repo = new Repo(ConfigStore.config.get('notesDirectory'));
+        this._repo = new Repo(ConfigStore.config.notesDirectory);
         OperationsQueue.enqueue(
           async () => {
             try {

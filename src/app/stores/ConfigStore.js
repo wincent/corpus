@@ -7,7 +7,7 @@
 
 'use strict';
 
-import {Map as ImmutableMap} from 'immutable';
+import {Record as ImmutableRecord} from 'immutable';
 import Promise from 'bluebird';
 import fs from 'fs';
 import path from 'path';
@@ -27,40 +27,48 @@ const defaults = {
     'Corpus',
     'Notes'
   ),
+  noteFontFamily: 'Monaco',
+  noteFontSize: '12',
 };
 
+const Config = ImmutableRecord(defaults);
+let config = new Config({});
 const configFile = path.join(process.env.HOME, '.corpusrc');
-let config = ImmutableMap(defaults);
 
 const mergerConfig = {
-  notesDirectory(previousValue, nextValue, key) {
-    const value = requireString(nextValue, previousValue, key);
+  notesDirectory(value, key) {
+    value = requireString(value, key);
     return value.replace(/^~/, process.env.HOME);
   },
 };
 
-function requireString(maybeString, defaultValue, key) {
+function requireString(maybeString, key) {
   if (Object.prototype.toString.call(maybeString) === '[object String]') {
     return maybeString;
   } else {
     warn(`Reading ${configFile}: expected string value for key: ${key}`);
-    return defaultValue;
+    return '' + maybeString;
   }
 }
 
-function merger(previousValue, nextValue, key) {
-  if (key in mergerConfig) {
-    return mergerConfig[key](previousValue, nextValue, key);
-  } else {
-    // Superfluous key.
-    return null;
-  }
+function validateAndStore(maybeObject) {
+  Object.keys(maybeObject).forEach(key => {
+    try {
+      const value = key in mergerConfig ?
+        mergerConfig[key](maybeObject[key], key) :
+        requireString(maybeObject[key], key);
+      config = config.set(key, value);
+    } catch(error) {
+      warn(`Problem with key ${key} in ${configFile}: ${error}`);
+    }
+  });
 }
 
 async function readConfig() {
   try {
     const data = await readFile(configFile);
-    config = config.mergeWith(merger, JSON.parse(data.toString()));
+    const parsed = JSON.parse(data.toString());
+    validateAndStore(parsed);
   } catch(error) {
     warn(`Reading ${configFile}: ${error.message}`);
   }
