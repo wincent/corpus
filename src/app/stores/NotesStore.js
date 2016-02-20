@@ -126,7 +126,7 @@ async function readContents(info: ImmutableMap): Promise<ImmutableMap> {
     // to blow up trying to access `body`, `text` and `tags` (and we don't want
     // to provide default values for `body` etc because the user could use those
     // to overwrite real content on the disk).
-    console.error(error); // eslint-disable-line no-console
+    Actions.errorLogged(error);
     return null;
   }
 }

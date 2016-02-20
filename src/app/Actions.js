@@ -24,6 +24,7 @@ const actionTypes = {
   ADJUST_NOTE_SELECTION_UP: 'ADJUST_NOTE_SELECTION_UP',
   CHANGE_PERSISTED: 'CHANGE_PERSISTED',
   CONFIG_LOADED: 'CONFIG_LOADED',
+  ERROR_LOGGED: 'ERROR_LOGGED',
   FIRST_NOTE_SELECTED: 'FIRST_NOTE_SELECTED',
   LAST_NOTE_SELECTED: 'LAST_NOTE_SELECTED',
   NEXT_NOTE_SELECTED: 'NEXT_NOTE_SELECTED',
@@ -68,6 +69,10 @@ const actionCreators = {
 
   configLoaded() {
     dispatch(actionTypes.CONFIG_LOADED);
+  },
+
+  errorLogged(message) {
+    dispatch(actionTypes.ERROR_LOGGED, {message});
   },
 
   firstNoteSelected() {
