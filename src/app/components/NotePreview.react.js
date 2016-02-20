@@ -31,11 +31,21 @@ const Tag = ({focused, tag}) => {
     backgroundColor: focused ? '#fff' : '#9e9e9e',
     borderRadius: '2px',
     color: focused ? '#6f6f73' : '#e6e6e6',
+    cursor: 'pointer',
     display: 'inline-block',
     marginLeft: '4px',
     padding: '0 4px',
   };
-  return <span style={styles}>{tag}</span>;
+  return (
+    // BUG: This doesn't quite work due to races (OmniBar doesn't update,
+    // canceling doesn't reset filtering). Would work from OmniBar (see
+    // _onChange there).
+    <span
+      onClick={() => Actions.searchRequested(tag)}
+      style={styles}>
+      {tag}
+    </span>
+  );
 };
 
 const Tags = ({tags, ...extraProps}) => {
