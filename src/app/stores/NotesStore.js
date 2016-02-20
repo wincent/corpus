@@ -54,7 +54,7 @@ type PathMap = {
 const PRELOAD_COUNT = Math.floor(window.innerHeight / Constants.PREVIEW_ROW_HEIGHT) + 5;
 
 /**
- * Ordered colllection of notes (as they appear in the NoteList).
+ * Ordered collection of notes (as they appear in the NoteList).
  */
 let notes = ImmutableList();
 
@@ -122,7 +122,12 @@ async function readContents(info: ImmutableMap): Promise<ImmutableMap> {
       tags: ImmutableSet(unpacked.tags),
     });
   } catch(error) {
-    return info; // Ignore errors.
+    // Soft-ignore the error. We return `null` here because we don't want views
+    // to blow up trying to access `body`, `text` and `tags` (and we don't want
+    // to provide default values for `body` etc because the user could use those
+    // to overwrite real content on the disk).
+    console.error(error); // eslint-disable-line no-console
+    return null;
   }
 }
 
@@ -259,12 +264,16 @@ function loadNotes() {
       const filtered = filterFilenames(filenames);
       const info = await* filtered.map(getStatInfo);
       const sorted = info.sort(compareMTime);
-      // TODO: enforce concurrency = 5 here
-      const preload = sorted.splice(0, PRELOAD_COUNT);
-      let results = await* preload.map(readContents);
-      appendResults(results);
-      results = await* sorted.map(readContents);
-      appendResults(results);
+
+      // Load in batches. First batch of size PRELOAD_COUNT is to improve
+      // perceived responsiveness. Subsequent batches are to avoid running afoul
+      // of miniscule OS X file count limits.
+      const filterErrors = note => note;
+      while (sorted.length) {
+        const batch = sorted.splice(0, PRELOAD_COUNT);
+        let results = await* batch.map(readContents);
+        appendResults(results.filter(filterErrors));
+      }
     } catch(error) {
       handleError(error, 'Failed to read notes from disk');
     }
