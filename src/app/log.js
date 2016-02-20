@@ -9,12 +9,12 @@
 
 import Actions from './Actions';
 
-export function error(...args) {
-  console.error(...args); // eslint-disable-line no-console
-  Actions.errorLogged(...args);
+export function error(message) {
+  console.error(message); // eslint-disable-line no-console
+  Actions.logError(message);
 }
 
-export function warn(...args) {
-  console.warn(...args); // eslint-disable-line no-console
-  Actions.warningLogged(...args);
+export function warn(message) {
+  console.warn(message); // eslint-disable-line no-console
+  Actions.logWarning(message);
 }

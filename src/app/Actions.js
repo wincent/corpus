@@ -24,9 +24,10 @@ const actionTypes = {
   ADJUST_NOTE_SELECTION_UP: 'ADJUST_NOTE_SELECTION_UP',
   CHANGE_PERSISTED: 'CHANGE_PERSISTED',
   CONFIG_LOADED: 'CONFIG_LOADED',
-  ERROR_LOGGED: 'ERROR_LOGGED',
   FIRST_NOTE_SELECTED: 'FIRST_NOTE_SELECTED',
   LAST_NOTE_SELECTED: 'LAST_NOTE_SELECTED',
+  LOG_ERROR: 'LOG_ERROR',
+  LOG_WARNING: 'LOG_WARNING',
   NEXT_NOTE_SELECTED: 'NEXT_NOTE_SELECTED',
   NOTES_LOADED: 'NOTES_LOADED',
   NOTE_BUBBLED: 'NOTE_BUBBLED',
@@ -44,7 +45,6 @@ const actionTypes = {
   PREVIOUS_NOTE_SELECTED: 'PREVIOUS_NOTE_SELECTED',
   SEARCH_REQUESTED: 'SEARCH_REQUESTED',
   SELECTED_NOTES_DELETED: 'SELECTED_NOTES_DELETED',
-  WARNING_LOGGED: 'WARNING_LOGGED',
 };
 
 const actionCreators = {
@@ -72,8 +72,11 @@ const actionCreators = {
     dispatch(actionTypes.CONFIG_LOADED);
   },
 
-  errorLogged(...args) {
-    dispatch(actionTypes.ERROR_LOGGED, {args});
+  logError(message) {
+    dispatch(actionTypes.LOG_ERROR, {
+      level: 'ERROR',
+      message,
+    });
   },
 
   firstNoteSelected() {
@@ -160,8 +163,11 @@ const actionCreators = {
     dispatch(actionTypes.SELECTED_NOTES_DELETED, {ids});
   },
 
-  warningLogged(...args) {
-    dispatch(actionTypes.WARNING_LOGGED, {args});
+  logWarning(message) {
+    dispatch(actionTypes.LOG_WARNING, {
+      level: 'WARNING',
+      message,
+    });
   },
 };
 

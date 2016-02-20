@@ -7,23 +7,11 @@
 
 'use strict';
 
-import Actions from '../Actions';
-import Store from './Store';
+import {List as ImmutableList} from 'immutable';
+import logs from '../reducers/logs';
+import createFluxStore from './createFluxStore';
 
-/**
- * Not a persistent store; just takes error messages and drops them (doesn't
- * even log them to the console). We might build a dedicated log-viewing UI
- * later on, in which case this will become a "real" store.
- */
-class LogStore extends Store {
-  handleDispatch(payload) {
-    switch (payload.type) {
-      case Actions.ERROR_LOGGED:
-      case Actions.WARNING_LOGGED:
-        this.emit('change');
-        break;
-    }
-  }
-}
+const state = ImmutableList();
+const LogStore = createFluxStore(logs, state);
 
-export default new LogStore();
+export default LogStore;
