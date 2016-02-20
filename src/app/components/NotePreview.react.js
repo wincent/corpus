@@ -26,6 +26,31 @@ import pure from '../pure';
 const PREVIEW_LENGTH = 250;
 const TITLE_LENGTH = 125;
 
+const Tag = ({focused, tag}) => {
+  const styles = {
+    backgroundColor: focused ? '#fff' : '#9e9e9e',
+    borderRadius: '2px',
+    color: focused ? '#6f6f73' : '#e6e6e6',
+    display: 'inline-block',
+    marginLeft: '4px',
+    padding: '0 4px',
+  };
+  return <span style={styles}>{tag}</span>;
+};
+
+const Tags = ({tags, ...extraProps}) => {
+  const styles = {
+    bottom: '4px',
+    position: 'absolute',
+    right: '4px',
+  };
+  return (
+    <div style={styles}>
+      {tags.map(tag => <Tag tag={tag} {...extraProps} />)}
+    </div>
+  );
+};
+
 @pure
 export default class NotePreview extends React.Component {
   static propTypes = {
@@ -94,6 +119,7 @@ export default class NotePreview extends React.Component {
         listStyleType: 'none',
         height: Constants.PREVIEW_ROW_HEIGHT + 'px',
         padding: '4px 4px 4px 8px',
+        position: 'relative',
       },
       text: {
         WebkitBoxOrient: 'vertical',
@@ -108,8 +134,8 @@ export default class NotePreview extends React.Component {
         fontWeight: 'normal',
         overflow: 'hidden',
         textShadow: (
-          isPrivate ?
-          '0 0 5px rgba(0, 0, 0, .25)' :
+          isPrivate && focused ? '0 0 5px rgba(255, 255, 255, .5)' :
+          isPrivate ? '0 0 5px rgba(0, 0, 0, .25)' :
           'unset'
         ),
       },
@@ -304,7 +330,7 @@ export default class NotePreview extends React.Component {
         styles.root.transform = `translate3d(0, ${offset}px, 0)`;
       }
     }
-    const {note} = this.props;
+    const {focused, note} = this.props;
     const text = note.get('body').substr(0, PREVIEW_LENGTH);
     return (
       <li
@@ -317,6 +343,7 @@ export default class NotePreview extends React.Component {
         <p style={styles.text}>
           {text}
         </p>
+        <Tags focused={focused} tags={note.get('tags')} />
       </li>
     );
   }
