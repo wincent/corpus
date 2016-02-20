@@ -210,6 +210,7 @@ export default class OmniBar extends React.Component {
   @autobind
   _onAttentionClick() {
     remote.getCurrentWindow().openDevTools();
+    this.setState({hasError: false});
   }
 
   @autobind
