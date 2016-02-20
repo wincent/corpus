@@ -20,47 +20,6 @@ import FilteredNotesStore from '../stores/FilteredNotesStore';
 import SystemStore from '../stores/SystemStore';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
-const styles = {
-  attention: {
-    color: '#fe2310',
-    fontSize: '13px',
-    position: 'absolute',
-    right: '22px',
-    top: '7px',
-  },
-  cancel: {
-    color: '#bfbfbf',
-    fontSize: '13px',
-    position: 'absolute',
-    right: '8px',
-    top: '7px',
-  },
-  icon: {
-    color: '#565656',
-    fontSize: '14px',
-    left: '10px',
-    position: 'absolute',
-    top: '7px',
-  },
-  input: {
-    WebkitAppearance: 'none', // only with this can we override padding
-    border: '1px solid #a0a0a0',
-    borderRadius: '4px',
-    fontFamily: 'Helvetica Neue',
-    lineHeight: '16px',
-    padding: '2px 20px 1px', // room for icons/controls
-    width: '100%',
-  },
-  root: {
-    WebkitUserSelect: 'none',
-    borderBottom: '1px solid #d1d1d1',
-    flexGrow: 0,
-    padding: '4px 8px',
-    position: 'relative',
-    minHeight: '36px',
-  },
-};
-
 function getCurrentNote() {
   const selection = NotesSelectionStore.selection;
   if (selection.size === 1) {
@@ -100,9 +59,58 @@ export default class OmniBar extends React.Component {
     const note = getCurrentNote();
     this.state = {
       foreground: true,
+      hasError: true,
       maxLength: getMaxLength(),
       note,
       value: getCurrentTitle(),
+    };
+  }
+
+  _getStyles() {
+    const rightInputPadding = 0 +
+      (this.state.value ? 16 : 0) +
+      (this.state.hasError ? 16 : 0) +
+      'px';
+    return {
+      attention: {
+        color: '#fe2310',
+        fontSize: '13px',
+        position: 'absolute',
+        right: '22px',
+        top: '7px',
+      },
+      cancel: {
+        color: '#bfbfbf',
+        fontSize: '13px',
+        position: 'absolute',
+        right: '8px',
+        top: '7px',
+      },
+      icon: {
+        color: '#565656',
+        fontSize: '14px',
+        left: '10px',
+        position: 'absolute',
+        top: '7px',
+      },
+      input: {
+        WebkitAppearance: 'none', // only with this can we override padding
+        border: '1px solid #a0a0a0',
+        borderRadius: '4px',
+        fontFamily: 'Helvetica Neue',
+        lineHeight: '16px',
+        padding: `2px ${rightInputPadding} 1px 20px`,
+        width: '100%',
+      },
+      root: {
+        WebkitUserSelect: 'none',
+        background: this._getBackgroundStyle(),
+        borderBottom: '1px solid #d1d1d1',
+        flexGrow: 0,
+        padding: '4px 8px',
+        position: 'relative',
+        minHeight: '36px',
+      },
     };
   }
 
@@ -295,15 +303,12 @@ export default class OmniBar extends React.Component {
   }
 
   render() {
-    const rootStyles = {
-      ...styles.root,
-      background: this._getBackgroundStyle(),
-    };
+    const styles = this._getStyles();
     const iconClass = NotesSelectionStore.selection.size === 1 ?
       'icon-pencil' :
       'icon-search';
     return (
-      <div style={rootStyles}>
+      <div style={styles.root}>
         <span className={iconClass} style={styles.icon}></span>
         <input
           maxLength={this.state.maxLength}
@@ -317,11 +322,15 @@ export default class OmniBar extends React.Component {
           type="text"
           value={this.state.value}
         />
-        <span
-          className="icon-attention"
-          onClick={this._onAttentionClick}
-          style={styles.attention}>
-        </span>
+        {
+          this.state.hasError ?
+            <span
+              className="icon-attention"
+              onClick={this._onAttentionClick}
+              style={styles.attention}>
+            </span> :
+            null
+        }
         {
           this.state.value ?
             <span
