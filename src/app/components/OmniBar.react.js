@@ -304,11 +304,15 @@ export default class OmniBar extends React.Component {
           type="text"
           value={this.state.value}
         />
-        <span
-          className="icon-cancel-circled"
-          onClick={this._onClick}
-          style={styles.cancel}>
-        </span>
+        {
+          this.state.value ?
+            <span
+              className="icon-cancel-circled"
+              onClick={this._onClick}
+              style={styles.cancel}>
+            </span> :
+            null
+        }
       </div>
     );
   }
