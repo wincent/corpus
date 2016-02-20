@@ -61,7 +61,7 @@ export default class ContentEditable extends React.Component {
       root: {
         background: colors.background,
         border: 0,
-        fontFamily: 'Monaco',
+        fontFamily: 'Consolas, Monaco',
         fontSize: '12px',
         minHeight: 'calc(100vh - 36px)',
         outline: 0,
