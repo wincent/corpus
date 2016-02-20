@@ -69,22 +69,22 @@ export default class OmniBar extends React.Component {
 
   _getStyles() {
     const rightInputPadding = 0 +
-      (this.state.value ? 16 : 0) +
-      (this.state.hasError ? 16 : 0) +
+      (this.state.value ? 18 : 0) +
+      (this.state.hasError ? 18 : 0) +
       'px';
     return {
       attention: {
         color: '#fe2310',
         fontSize: '13px',
         position: 'absolute',
-        right: '22px',
+        right: this.state.value ? '24px' : '10px',
         top: '7px',
       },
       cancel: {
         color: '#bfbfbf',
         fontSize: '13px',
         position: 'absolute',
-        right: '8px',
+        right: '10px',
         top: '7px',
       },
       icon: {
