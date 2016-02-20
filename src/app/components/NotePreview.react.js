@@ -109,7 +109,7 @@ export default class NotePreview extends React.Component {
         overflow: 'hidden',
         textShadow: (
           isPrivate ?
-          '0 0 5px rgba(0, 0, 0, .5)' :
+          '0 0 5px rgba(0, 0, 0, .25)' :
           'unset'
         ),
       },
