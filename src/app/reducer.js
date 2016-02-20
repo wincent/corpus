@@ -8,10 +8,10 @@
 'use strict';
 
 import {combineReducers} from 'redux';
-import passthroughReducer from './reducers/passthroughReducer';
+import logs from './reducers/logs';
 
 const reducer = combineReducers({
-  passthroughReducer,
+  logs,
 });
 
 export default reducer;
