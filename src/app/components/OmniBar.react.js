@@ -10,6 +10,7 @@
 import React from 'react';
 import autobind from 'autobind-decorator';
 import ipc from 'ipc';
+import remote from 'remote';
 
 import Actions from '../Actions';
 import FocusStore from '../stores/FocusStore';
@@ -20,6 +21,13 @@ import SystemStore from '../stores/SystemStore';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
 const styles = {
+  attention: {
+    color: '#fe2310',
+    fontSize: '13px',
+    position: 'absolute',
+    right: '22px',
+    top: '7px',
+  },
   cancel: {
     color: '#bfbfbf',
     fontSize: '13px',
@@ -186,9 +194,14 @@ export default class OmniBar extends React.Component {
   }
 
   @autobind
-  _onClick() {
+  _onCancelClick() {
     Actions.allNotesDeselected();
     React.findDOMNode(this._inputRef).focus();
+  }
+
+  @autobind
+  _onAttentionClick() {
+    remote.getCurrentWindow().openDevTools();
   }
 
   @autobind
@@ -304,11 +317,16 @@ export default class OmniBar extends React.Component {
           type="text"
           value={this.state.value}
         />
+        <span
+          className="icon-attention"
+          onClick={this._onAttentionClick}
+          style={styles.attention}>
+        </span>
         {
           this.state.value ?
             <span
               className="icon-cancel-circled"
-              onClick={this._onClick}
+              onClick={this._onCancelClick}
               style={styles.cancel}>
             </span> :
             null
