@@ -7,9 +7,12 @@
 
 'use strict';
 
-import {put, take} from 'redux-saga';
+import {put, take} from 'redux-saga/effects';
 
+/**
+ * Root saga, started when application boots.
+ */
 export default function* saga() {
-  yield take('SOME_ACTION');
-  yield put({type: 'SOME_OTHER_ACTION'});
+  yield put({type: 'LOAD_CONFIG'});
+  yield take({type: 'CONFIG_LOADED'});
 }

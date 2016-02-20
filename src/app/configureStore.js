@@ -8,14 +8,14 @@
 'use strict';
 
 import {createStore, applyMiddleware} from 'redux';
-import sagaMiddleware from 'redux-saga';
+import createSagaMiddleware from 'redux-saga';
 import reducer from './reducer';
 import saga from './saga';
 
-const createStoreWithSaga = applyMiddleware(
-  sagaMiddleware(saga)
-)(createStore);
-
 export default function configureStore(initialState) {
-  return createStoreWithSaga(reducer, initialState);
+  return createStore(
+    reducer,
+    initialState,
+    applyMiddleware(createSagaMiddleware(saga))
+  );
 }

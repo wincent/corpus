@@ -1444,15 +1444,20 @@
           "from": "caseless@~0.11.0",
           "resolved": "https://registry.npmjs.org/caseless/-/caseless-0.11.0.tgz"
         },
+        "chalk": {
+          "version": "1.1.1",
+          "from": "chalk@^1.1.1",
+          "resolved": "https://registry.npmjs.org/chalk/-/chalk-1.1.1.tgz"
+        },
         "combined-stream": {
           "version": "1.0.5",
           "from": "combined-stream@~1.0.5",
           "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.5.tgz"
         },
-        "chalk": {
-          "version": "1.1.1",
-          "from": "chalk@^1.1.1",
-          "resolved": "https://registry.npmjs.org/chalk/-/chalk-1.1.1.tgz"
+        "core-util-is": {
+          "version": "1.0.2",
+          "from": "core-util-is@~1.0.0",
+          "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz"
         },
         "commander": {
           "version": "2.9.0",
@@ -1463,11 +1468,6 @@
           "version": "2.0.5",
           "from": "cryptiles@2.x.x",
           "resolved": "https://registry.npmjs.org/cryptiles/-/cryptiles-2.0.5.tgz"
-        },
-        "core-util-is": {
-          "version": "1.0.2",
-          "from": "core-util-is@~1.0.0",
-          "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz"
         },
         "dashdash": {
           "version": "1.10.1",
@@ -1484,11 +1484,6 @@
           "from": "deep-extend@~0.4.0",
           "resolved": "https://registry.npmjs.org/deep-extend/-/deep-extend-0.4.0.tgz"
         },
-        "delayed-stream": {
-          "version": "1.0.0",
-          "from": "delayed-stream@~1.0.0",
-          "resolved": "https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz"
-        },
         "delegates": {
           "version": "0.1.0",
           "from": "delegates@^0.1.0",
@@ -1503,6 +1498,11 @@
           "version": "1.0.3",
           "from": "escape-string-regexp@^1.0.2",
           "resolved": "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-1.0.3.tgz"
+        },
+        "delayed-stream": {
+          "version": "1.0.0",
+          "from": "delayed-stream@~1.0.0",
+          "resolved": "https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz"
         },
         "extend": {
           "version": "3.0.0",
@@ -1549,15 +1549,15 @@
           "from": "graceful-fs@4.1",
           "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.1.2.tgz"
         },
-        "graceful-readlink": {
-          "version": "1.0.1",
-          "from": "graceful-readlink@>= 1.0.0",
-          "resolved": "https://registry.npmjs.org/graceful-readlink/-/graceful-readlink-1.0.1.tgz"
-        },
         "har-validator": {
           "version": "2.0.3",
           "from": "har-validator@~2.0.2",
           "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-2.0.3.tgz"
+        },
+        "graceful-readlink": {
+          "version": "1.0.1",
+          "from": "graceful-readlink@>= 1.0.0",
+          "resolved": "https://registry.npmjs.org/graceful-readlink/-/graceful-readlink-1.0.1.tgz"
         },
         "has-ansi": {
           "version": "2.0.0",
@@ -1634,15 +1634,15 @@
           "from": "json-schema@0.2.2",
           "resolved": "https://registry.npmjs.org/json-schema/-/json-schema-0.2.2.tgz"
         },
-        "json-stringify-safe": {
-          "version": "5.0.1",
-          "from": "json-stringify-safe@~5.0.1",
-          "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
-        },
         "jsonpointer": {
           "version": "2.0.0",
           "from": "jsonpointer@2.0.0",
           "resolved": "https://registry.npmjs.org/jsonpointer/-/jsonpointer-2.0.0.tgz"
+        },
+        "json-stringify-safe": {
+          "version": "5.0.1",
+          "from": "json-stringify-safe@~5.0.1",
+          "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
         },
         "jsprim": {
           "version": "1.2.2",
@@ -3388,14 +3388,14 @@
       "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-0.14.7.tgz"
     },
     "react-redux": {
-      "version": "4.3.0",
-      "from": "react-redux@4.3.0",
-      "resolved": "https://registry.npmjs.org/react-redux/-/react-redux-4.3.0.tgz",
+      "version": "4.4.0",
+      "from": "react-redux@4.4.0",
+      "resolved": "https://registry.npmjs.org/react-redux/-/react-redux-4.4.0.tgz",
       "dependencies": {
         "lodash": {
-          "version": "4.2.1",
+          "version": "4.5.0",
           "from": "lodash@>=4.2.0 <5.0.0",
-          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.2.1.tgz"
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.5.0.tgz"
         }
       }
     },
@@ -3452,21 +3452,26 @@
       "resolved": "https://registry.npmjs.org/redent/-/redent-1.0.0.tgz"
     },
     "redux": {
-      "version": "3.2.1",
-      "from": "redux@3.2.1",
-      "resolved": "https://registry.npmjs.org/redux/-/redux-3.2.1.tgz",
+      "version": "3.3.1",
+      "from": "redux@3.3.1",
+      "resolved": "https://registry.npmjs.org/redux/-/redux-3.3.1.tgz",
       "dependencies": {
         "lodash": {
-          "version": "4.2.1",
-          "from": "lodash@>=4.2.0 <5.0.0",
-          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.2.1.tgz"
+          "version": "4.5.0",
+          "from": "lodash@>=4.2.1 <5.0.0",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.5.0.tgz"
+        },
+        "lodash-es": {
+          "version": "4.5.0",
+          "from": "lodash-es@>=4.2.1 <5.0.0",
+          "resolved": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.5.0.tgz"
         }
       }
     },
     "redux-saga": {
-      "version": "0.6.1",
-      "from": "redux-saga@0.6.1",
-      "resolved": "https://registry.npmjs.org/redux-saga/-/redux-saga-0.6.1.tgz"
+      "version": "0.8.2",
+      "from": "redux-saga@0.8.2",
+      "resolved": "https://registry.npmjs.org/redux-saga/-/redux-saga-0.8.2.tgz"
     },
     "regenerate": {
       "version": "1.2.1",
