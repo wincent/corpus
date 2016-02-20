@@ -263,7 +263,7 @@ function loadNotes() {
       await mkdir(notesDirectory);
       const filenames = await readdir(notesDirectory);
       const filtered = filterFilenames(filenames);
-      const info = await* filtered.map(getStatInfo);
+      const info = await Promise.all(filtered.map(getStatInfo));
       const sorted = info.sort(compareMTime);
 
       // Load in batches. First batch of size PRELOAD_COUNT is to improve
@@ -272,7 +272,7 @@ function loadNotes() {
       const filterErrors = note => note;
       while (sorted.length) {
         const batch = sorted.splice(0, PRELOAD_COUNT);
-        let results = await* batch.map(readContents);
+        let results = await Promise.all(batch.map(readContents));
         appendResults(results.filter(filterErrors));
       }
     } catch(error) {

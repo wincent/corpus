@@ -29,10 +29,10 @@ function parseValue(value: string) {
 async function load() {
   const notesDirectory = ConfigStore.config.notesDirectory;
   try {
-    const [nameMax, pathMax] = await* [
+    const [nameMax, pathMax] = await Promise.all([
       run('getconf', 'NAME_MAX', notesDirectory).then(parseValue),
       run('getconf', 'PATH_MAX', notesDirectory).then(parseValue),
-    ];
+    ]);
     values = values.merge({nameMax, pathMax});
   } catch(error) {
     log.warn(error);
