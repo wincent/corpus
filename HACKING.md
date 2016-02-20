@@ -66,9 +66,9 @@ dispatch.
            |          \---------------------/
            |                     ^
            |                     |
-/--------------------\    /------------\
-| NoteAnimationStore |    | FocusStore |
-\--------------------/    \------------/
+/--------------------\    /------------\    /----------\
+| NoteAnimationStore |    | FocusStore |    | LogStore |
+\--------------------/    \------------/    \----------/
 ```
 
 - `ConfigStore`: Reads configuration information from `~/.corpusrc`.
@@ -84,8 +84,10 @@ dispatch.
 - `GitStore`: Takes Git snaphots (commits) of the filesystem when changes are
   persisted to disk.
 - `SystemStore`: Gathers system-specific attributes.
-- `NoteAnmationStore`: Tracks note animations ("bubbling" within
+- `NoteAnimationStore`: Tracks note animations ("bubbling" within
   `NoteList.react`).
+- `LogStore`: Independent store that serves as a channel for all logging
+  events.
 
 ## I/O operations
 
