@@ -15,7 +15,7 @@ import remote from 'remote';
 import Actions from '../Actions';
 import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
-import ErrorStore from '../stores/ErrorStore';
+import LogStore from '../stores/LogStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import SystemStore from '../stores/SystemStore';
@@ -122,8 +122,8 @@ export default class OmniBar extends React.Component {
     });
     ipc.on('focus', () => this.setState({foreground: true}));
     React.findDOMNode(this._inputRef).focus();
-    ErrorStore.on('change', this._onErrorChange);
     FocusStore.on('change', this._updateFocus);
+    LogStore.on('change', this._onLogChange);
     NotesSelectionStore.on('change', this._onNotesSelectionChange);
     FilteredNotesStore.on('change', this._onNotesChange);
     SystemStore.on('change', this._onSystemChange);
@@ -132,8 +132,8 @@ export default class OmniBar extends React.Component {
   componentWillUnmount() {
     ipc.removeAllListeners('blur');
     ipc.removeAllListeners('focus');
-    ErrorStore.removeListener('change', this._onErrorChange);
     FocusStore.removeListener('change', this._updateFocus);
+    LogStore.removeListener('change', this._onLogChange);
     NotesSelectionStore.removeListener('change', this._onNotesSelectionChange);
     FilteredNotesStore.removeListener('change', this._onNotesChange);
     SystemStore.removeListener('change', this._onSystemChange);
@@ -153,7 +153,7 @@ export default class OmniBar extends React.Component {
   }
 
   @autobind
-  _onErrorChange() {
+  _onLogChange() {
     this.setState({hasError: true});
   }
 

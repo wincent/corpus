@@ -27,6 +27,7 @@ import OperationsQueue from '../OperationsQueue';
 import Repo from '../Repo';
 import Store from './Store';
 import handleError from '../handleError';
+import * as log from '../log';
 import normalizeText from '../util/normalizeText';
 
 const close = Promise.promisify(fs.close);
@@ -126,7 +127,7 @@ async function readContents(info: ImmutableMap): Promise<ImmutableMap> {
     // to blow up trying to access `body`, `text` and `tags` (and we don't want
     // to provide default values for `body` etc because the user could use those
     // to overwrite real content on the disk).
-    Actions.errorLogged(error);
+    log.error(error);
     return null;
   }
 }

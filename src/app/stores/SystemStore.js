@@ -12,8 +12,8 @@ import {Map as ImmutableMap} from 'immutable';
 import Actions from '../Actions';
 import ConfigStore from './ConfigStore';
 import Store from './Store';
+import * as log from '../log';
 import run from '../run';
-import warn from '../warn';
 
 const defaults = {
   nameMax: 255,
@@ -35,7 +35,7 @@ async function load() {
     ];
     values = values.merge({nameMax, pathMax});
   } catch(error) {
-    warn(error);
+    log.warn(error);
   }
 }
 

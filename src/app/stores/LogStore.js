@@ -11,19 +11,19 @@ import Actions from '../Actions';
 import Store from './Store';
 
 /**
- * Not a persistent store; just takes error messages and logs them to the
- * console. We might build a dedicated log-viewing UI later on, in which case
- * this will become a "real" store.
+ * Not a persistent store; just takes error messages and drops them (doesn't
+ * even log them to the console). We might build a dedicated log-viewing UI
+ * later on, in which case this will become a "real" store.
  */
-class ErrorStore extends Store {
+class LogStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.ERROR_LOGGED:
-        console.error(payload.message); // eslint-disable-line no-console
+      case Actions.WARNING_LOGGED:
         this.emit('change');
         break;
     }
   }
 }
 
-export default new ErrorStore();
+export default new LogStore();

@@ -22,8 +22,8 @@ import NotesSelectionStore from '../stores/NotesSelectionStore';
 import OmniBar from '../components/OmniBar.react';
 import SplitView from '../components/SplitView.react';
 import Viewport from '../components/Viewport.react';
+import * as log from '../log';
 import run from '../run';
-import warn from '../warn';
 
 const ReduxActions = {};
 
@@ -67,7 +67,7 @@ function reveal() {
   const selection = NotesSelectionStore.selection;
   if (selection.size === 1) {
     const note = FilteredNotesStore.notes.get(selection.first());
-    run('open', '-R', note.get('path')).catch(warn);
+    run('open', '-R', note.get('path')).catch(log.warn);
   }
 }
 

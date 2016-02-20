@@ -44,6 +44,7 @@ const actionTypes = {
   PREVIOUS_NOTE_SELECTED: 'PREVIOUS_NOTE_SELECTED',
   SEARCH_REQUESTED: 'SEARCH_REQUESTED',
   SELECTED_NOTES_DELETED: 'SELECTED_NOTES_DELETED',
+  WARNING_LOGGED: 'WARNING_LOGGED',
 };
 
 const actionCreators = {
@@ -71,8 +72,8 @@ const actionCreators = {
     dispatch(actionTypes.CONFIG_LOADED);
   },
 
-  errorLogged(message) {
-    dispatch(actionTypes.ERROR_LOGGED, {message});
+  errorLogged(...args) {
+    dispatch(actionTypes.ERROR_LOGGED, {args});
   },
 
   firstNoteSelected() {
@@ -157,6 +158,10 @@ const actionCreators = {
 
   selectedNotesDeleted(ids) {
     dispatch(actionTypes.SELECTED_NOTES_DELETED, {ids});
+  },
+
+  warningLogged(...args) {
+    dispatch(actionTypes.WARNING_LOGGED, {args});
   },
 };
 

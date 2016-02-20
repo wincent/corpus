@@ -15,7 +15,7 @@ import process from 'process';
 
 import Actions from '../Actions';
 import Store from './Store';
-import warn from '../warn';
+import * as log from '../log';
 
 const readFile = Promise.promisify(fs.readFile);
 
@@ -46,7 +46,7 @@ function requireString(maybeString, key) {
   if (Object.prototype.toString.call(maybeString) === '[object String]') {
     return maybeString;
   } else {
-    warn(`Reading ${configFile}: expected string value for key: ${key}`);
+    log.warn(`Reading ${configFile}: expected string value for key: ${key}`);
     return '' + maybeString;
   }
 }
@@ -59,7 +59,7 @@ function validateAndStore(maybeObject) {
         requireString(maybeObject[key], key);
       config = config.set(key, value);
     } catch(error) {
-      warn(`Problem with key ${key} in ${configFile}: ${error}`);
+      log.warn(`Problem with key ${key} in ${configFile}: ${error}`);
     }
   });
 }
@@ -70,7 +70,7 @@ async function readConfig() {
     const parsed = JSON.parse(data.toString());
     validateAndStore(parsed);
   } catch(error) {
-    warn(`Reading ${configFile}: ${error.message}`);
+    log.warn(`Reading ${configFile}: ${error.message}`);
   }
   Actions.configLoaded();
 }
