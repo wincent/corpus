@@ -30,7 +30,7 @@ const styles = {
 
 export default class SplitView extends React.Component {
   static propTypes = {
-    children: React.PropTypes.arrayOf(React.PropTypes.element),
+    children: React.PropTypes.arrayOf(React.PropTypes.element).isRequired,
   };
 
   constructor(props) {

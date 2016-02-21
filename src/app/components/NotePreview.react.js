@@ -51,7 +51,7 @@ const Tag = ({focused, tag}) => {
 };
 Tag.propTypes = {
   focused: React.PropTypes.bool,
-  tag: React.PropTypes.string,
+  tag: React.PropTypes.string.isRequired,
 };
 
 const Tags = ({tags, ...extraProps}) => {
@@ -67,7 +67,7 @@ const Tags = ({tags, ...extraProps}) => {
   );
 };
 Tags.propTypes = {
-  tags: React.PropTypes.array,
+  tags: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
 };
 
 @pure

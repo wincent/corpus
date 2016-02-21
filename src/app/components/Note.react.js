@@ -7,9 +7,10 @@
 
 'use strict';
 
+import autobind from 'autobind-decorator';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import autobind from 'autobind-decorator';
+import Immutable from 'immutable';
 
 import ContentEditable from './ContentEditable.react';
 
@@ -17,8 +18,7 @@ const cursorPositions = {};
 
 export default class Note extends React.Component {
   static propTypes = {
-    // TODO: better shape for this
-    note: React.PropTypes.object,
+    note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
   };
 
   _recordCursorPosition(element) {

@@ -25,9 +25,8 @@ import performKeyboardNavigation from '../performKeyboardNavigation';
 class ContentEditable extends React.Component {
   static propTypes = {
     config: React.PropTypes.instanceOf(Immutable.Record),
-    note: React.PropTypes.instanceOf(Immutable.Map),
-    onBlur: React.PropTypes.func,
-    value: React.PropTypes.text,
+    note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    onBlur: React.PropTypes.func.isRequired,
   };
 
   _autosave = debounce(() => this._persistChanges(true), 5000);

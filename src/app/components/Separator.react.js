@@ -23,7 +23,7 @@ const styles = {
 
 export default class Separator extends React.Component {
   static propTypes = {
-    onMouseMove: React.PropTypes.func,
+    onMouseMove: React.PropTypes.func.isRequired,
   };
 
   @autobind
