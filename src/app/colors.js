@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 const colors = {
   background: '#ebebeb',
 };

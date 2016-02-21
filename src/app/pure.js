@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 /**
  * Reimplementation of method with same name in fbjs.
  */

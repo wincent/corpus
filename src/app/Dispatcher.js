@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import BatchingDispatcher from './BatchingDispatcher';
 
 export default new BatchingDispatcher();

@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import type Promise from 'bluebird';
 
 import git from './git';

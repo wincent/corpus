@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import throttle from './throttle';
 
 export default function(interval: number) {

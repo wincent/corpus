@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import {List as ImmutableList} from 'immutable';
 import logs from '../reducers/logs';
 import createFluxStore from './createFluxStore';

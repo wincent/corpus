@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import autobind from 'autobind-decorator';
 import React from 'react';
 import ReactDOM from 'react-dom';

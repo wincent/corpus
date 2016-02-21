@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 /**
  * Returns an escaped, case-insentive regular expression object suitable for
  * finding the literal string `string`.

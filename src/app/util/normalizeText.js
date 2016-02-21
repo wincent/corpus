@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 /**
  * Prepares a normalized version of `text` suitable for writing to the
  * file-system.

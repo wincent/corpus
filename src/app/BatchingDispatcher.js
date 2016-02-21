@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import {Dispatcher} from 'flux';
 import {batchedUpdates} from 'react/lib/ReactUpdates';
 

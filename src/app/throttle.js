@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 /**
  * Throttle implementation that fires on the leading and trailing edges.
  * If a call comes in when a pending call is yet to be processed, it replaces

@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import Dispatcher from './Dispatcher';
 
 function dispatch(type: string, payload?: Object): void {

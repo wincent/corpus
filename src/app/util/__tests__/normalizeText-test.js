@@ -3,8 +3,6 @@
  * Licensed under the terms of the MIT license.
  */
 
-'use strict';
-
 jest.dontMock('../normalizeText');
 
 const normalizeText = require('../normalizeText');

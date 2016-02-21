@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 export default {
   A: 65,
   BACKSPACE: 8,

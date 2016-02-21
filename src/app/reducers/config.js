@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import {Record as ImmutableRecord} from 'immutable';
 import path from 'path';
 import process from 'process';

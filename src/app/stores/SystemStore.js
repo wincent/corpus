@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import {Map as ImmutableMap} from 'immutable';
 
 import Actions from '../Actions';

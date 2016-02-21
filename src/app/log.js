@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import Actions from './Actions';
 
 export function error(message) {

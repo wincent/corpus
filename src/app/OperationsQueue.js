@@ -3,8 +3,6 @@
  * Licensed under the terms of the MIT license.
  */
 
-'use strict';
-
 import type Promise from 'bluebird';
 
 import Heap from './Heap';

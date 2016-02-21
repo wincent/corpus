@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import remote from 'remote';
 
 const app = remote.require('app');

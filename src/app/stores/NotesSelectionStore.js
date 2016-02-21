@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 // https://github.com/eslint/eslint/issues/2584
 import {
   OrderedSet as ImmutableOrderedSet,

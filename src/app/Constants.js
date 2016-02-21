@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 export default {
   PREVIEW_ROW_HEIGHT: 51,
 };

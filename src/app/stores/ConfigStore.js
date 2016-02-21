@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import {Record as ImmutableRecord} from 'immutable';
 import Promise from 'bluebird';
 import fs from 'fs';

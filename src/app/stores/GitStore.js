@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import Actions from '../Actions';
 import ConfigStore from './ConfigStore';
 import NotesStore from './NotesStore';

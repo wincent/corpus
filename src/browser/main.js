@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import BrowserWindow from 'browser-window';
 import Menu from 'menu';
 import MenuItem from 'menu-item';

@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 // babel-eslint issue: https://github.com/babel/babel-eslint/issues/108
 import type {List as ImmutableList} from 'immutable'; // eslint-disable-line no-unused-vars
 

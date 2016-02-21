@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import {call, put, take} from 'redux-saga/effects';
 import loadConfig from './loadConfig';
 

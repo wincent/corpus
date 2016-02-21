@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import {
   List as ImmutableList,
   Map as ImmutableMap,

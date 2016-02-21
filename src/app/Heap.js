@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 type WrappedValue = {
   value: mixed;
   insertionCounter: number;

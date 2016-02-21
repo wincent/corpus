@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 function clamp(value: number, minimum: number, maximum: number): number {
   if (minimum <= maximum) {
     return Math.min(

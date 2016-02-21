@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import autobind from 'autobind-decorator';
 import Immutable from 'immutable';
 import React from 'react';

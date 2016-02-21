@@ -5,8 +5,6 @@
  * @flow
  */
 
-'use strict';
-
 import Store from './Store';
 
 export default function createFluxStore(reducer, state) {

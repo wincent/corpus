@@ -3,8 +3,6 @@
  * Licensed under the terms of the MIT license.
  */
 
-'use strict';
-
 jest.dontMock('../Store');
 
 describe('Store', () => {
