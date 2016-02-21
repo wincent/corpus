@@ -362,16 +362,18 @@ class NotesStore extends Store {
         break;
 
       case Actions.SELECTED_NOTES_DELETED:
-        const deletedNotes = [];
-        notes = notes.filterNot((note, index) => {
-          if (payload.ids.has(index)) {
-            deletedNotes.push(note);
-            return true;
-          }
-          return false;
-        });
-        deleteNotes(deletedNotes);
-        this.emit('change');
+        {
+          const deletedNotes = [];
+          notes = notes.filterNot((note, index) => {
+            if (payload.ids.has(index)) {
+              deletedNotes.push(note);
+              return true;
+            }
+            return false;
+          });
+          deleteNotes(deletedNotes);
+          this.emit('change');
+        }
         break;
     }
   }

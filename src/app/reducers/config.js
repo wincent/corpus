@@ -8,15 +8,11 @@
 'use strict';
 
 import {Record as ImmutableRecord} from 'immutable';
-import Promise from 'bluebird';
-import fs from 'fs';
 import path from 'path';
 import process from 'process';
 
 import Actions from '../Actions';
 import * as log from '../log';
-
-const readFile = Promise.promisify(fs.readFile);
 
 const defaults = {
   notesDirectory: path.join(
