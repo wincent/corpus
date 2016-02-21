@@ -8,6 +8,7 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import autobind from 'autobind-decorator';
 
 import ContentEditable from './ContentEditable.react';
@@ -48,13 +49,13 @@ export default class Note extends React.Component {
 
   componentWillUpdate(nextProps) {
     if (this.props.note !== nextProps.note) {
-      this._recordCursorPosition(React.findDOMNode(this));
+      this._recordCursorPosition(ReactDOM.findDOMNode(this));
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.note !== prevProps.note) {
-      this._restoreCursorPosition(React.findDOMNode(this));
+      this._restoreCursorPosition(ReactDOM.findDOMNode(this));
     }
   }
 

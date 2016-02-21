@@ -9,6 +9,7 @@
 
 import autobind from 'autobind-decorator';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 
 import Actions from '../Actions';
@@ -154,7 +155,7 @@ class ContentEditable extends React.Component {
   @autobind
   _updateFocus() {
     if (FocusStore.focus === 'Note') {
-      React.findDOMNode(this).focus();
+      ReactDOM.findDOMNode(this).focus();
     }
   }
 

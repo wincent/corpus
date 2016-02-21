@@ -8,6 +8,7 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import autobind from 'autobind-decorator';
 
 import Actions from '../Actions';
@@ -57,7 +58,7 @@ export default class NoteList extends React.Component {
     FilteredNotesStore.on('change', this._updateNotes);
     FocusStore.on('change', this._updateFocus);
 
-    const node = React.findDOMNode(this);
+    const node = ReactDOM.findDOMNode(this);
     node.addEventListener('transitionend', this._onTransitionEnd);
     const parent = node.parentNode;
     parent.addEventListener('scroll', this._onScroll);
@@ -69,7 +70,7 @@ export default class NoteList extends React.Component {
     FocusStore.removeListener('change', this._updateFocus);
     this._removeListeners();
 
-    const node = React.findDOMNode(this);
+    const node = ReactDOM.findDOMNode(this);
     node.removeEventListener('transitionend', this._onTransitionEnd);
     const parent = node.parentNode;
     parent.removeEventListener('scroll', this._onScroll);
@@ -159,7 +160,7 @@ export default class NoteList extends React.Component {
   _selectionChanged() {
     // Don't want to trigger on descdendant (eg. NotePreview title) selection
     // changes.
-    if (document.activeElement === React.findDOMNode(this)) {
+    if (document.activeElement === ReactDOM.findDOMNode(this)) {
       Actions.allNotesSelected();
     }
   }
@@ -176,7 +177,7 @@ export default class NoteList extends React.Component {
   @autobind
   _updateFocus() {
     if (FocusStore.focus === 'NoteList') {
-      React.findDOMNode(this._ulRef).focus();
+      ReactDOM.findDOMNode(this._ulRef).focus();
     }
   }
 
@@ -261,7 +262,7 @@ export default class NoteList extends React.Component {
   @autobind
   _onTransitionEnd() {
     // A note has bubbled to the top, make sure we can see it still.
-    const parent = React.findDOMNode(this).parentNode;
+    const parent = ReactDOM.findDOMNode(this).parentNode;
     parent.scrollTop = 0;
   }
 
@@ -290,12 +291,12 @@ export default class NoteList extends React.Component {
       if (this.state.selection.size) {
         // Maintain last selection within view.
         const lastIndex = this.state.selection.last();
-        const last = React.findDOMNode(this.refs[lastIndex]);
+        const last = ReactDOM.findDOMNode(this.refs[lastIndex]);
         last.scrollIntoViewIfNeeded(false);
       } else {
         // If we cleared the selection by pressing Escape or entering a
         // non-exact title match, we want to scroll to the top.
-        const parent = React.findDOMNode(this).parentNode;
+        const parent = ReactDOM.findDOMNode(this).parentNode;
         parent.scrollTop = 0;
       }
     }

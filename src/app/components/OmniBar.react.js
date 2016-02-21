@@ -8,6 +8,7 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 import remote from 'remote';
@@ -121,7 +122,7 @@ export default class OmniBar extends React.Component {
       this.setState({foreground: false});
     });
     ipc.on('focus', () => this.setState({foreground: true}));
-    React.findDOMNode(this._inputRef).focus();
+    ReactDOM.findDOMNode(this._inputRef).focus();
     FocusStore.on('change', this._updateFocus);
     LogStore.on('change', this._onLogChange);
     NotesSelectionStore.on('change', this._onNotesSelectionChange);
@@ -146,7 +147,7 @@ export default class OmniBar extends React.Component {
   @autobind
   _updateFocus() {
     if (FocusStore.focus === 'OmniBar') {
-      const input = React.findDOMNode(this._inputRef);
+      const input = ReactDOM.findDOMNode(this._inputRef);
       input.focus();
       input.setSelectionRange(0, input.value.length);
     }
@@ -181,7 +182,7 @@ export default class OmniBar extends React.Component {
       this.setState(
         {note, value},
         () => {
-          const input = React.findDOMNode(this._inputRef);
+          const input = ReactDOM.findDOMNode(this._inputRef);
           if (document.activeElement === input) {
             if (currentValue && currentValue.startsWith(pendingValue)) {
               input.setSelectionRange(pendingValue.length, input.value.length);
@@ -212,7 +213,7 @@ export default class OmniBar extends React.Component {
   @autobind
   _onCancelClick() {
     Actions.allNotesDeselected();
-    React.findDOMNode(this._inputRef).focus();
+    ReactDOM.findDOMNode(this._inputRef).focus();
   }
 
   @autobind

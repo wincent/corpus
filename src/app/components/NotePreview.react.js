@@ -8,6 +8,7 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import autobind from 'autobind-decorator';
 import ipc from 'ipc';
 
@@ -174,7 +175,7 @@ export default class NotePreview extends React.Component {
         isEditing: true,
         pendingTitle: this.props.note.get('title'),
       },
-      () => React.findDOMNode(this).scrollIntoViewIfNeeded(false)
+      () => ReactDOM.findDOMNode(this).scrollIntoViewIfNeeded(false)
     );
   }
 
@@ -249,7 +250,7 @@ export default class NotePreview extends React.Component {
     switch (event.keyCode) {
       case Keys.RETURN:
         event.preventDefault();
-        React.findDOMNode(this).parentNode.focus(); // focus NoteList
+        ReactDOM.findDOMNode(this).parentNode.focus(); // focus NoteList
         break;
       case Keys.ESCAPE:
         this._endEditing(event);
@@ -296,7 +297,7 @@ export default class NotePreview extends React.Component {
           onChange={this._onChange}
           onFocus={this._onFocus}
           onKeyDown={this._onKeyDown}
-          ref={input => input && React.findDOMNode(input).focus()}
+          ref={input => input && ReactDOM.findDOMNode(input).focus()}
           style={this._getStyles().titleInput}
           type="text"
           value={this.state.pendingTitle}
