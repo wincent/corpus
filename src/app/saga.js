@@ -7,12 +7,13 @@
 
 'use strict';
 
-import {put, take} from 'redux-saga/effects';
+import {call, put, take} from 'redux-saga/effects';
+import loadConfig from './loadConfig';
 
 /**
  * Root saga, started when application boots.
  */
-export default function* saga() {
-  yield put({type: 'LOAD_CONFIG'});
-  yield take({type: 'CONFIG_LOADED'});
+export default function* saga(getState) {
+  const config = yield call(loadConfig);
+  yield put({type: 'CONFIG_LOADED', config});
 }

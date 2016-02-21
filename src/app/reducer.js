@@ -8,10 +8,13 @@
 'use strict';
 
 import {combineReducers} from 'redux';
+import config from './reducers/config';
 import logs from './reducers/logs';
 
-const reducer = combineReducers({
+/**
+ * Root reducer for the entire application.
+ */
+export default combineReducers({
+  config,
   logs,
 });
-
-export default reducer;
