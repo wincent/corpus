@@ -29,6 +29,10 @@ const styles = {
 };
 
 export default class SplitView extends React.Component {
+  static propTypes = {
+    children: React.PropTypes.arrayOf(React.PropTypes.element),
+  };
+
   constructor(props) {
     super(props);
 

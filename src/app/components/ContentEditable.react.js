@@ -8,6 +8,7 @@
 'use strict';
 
 import autobind from 'autobind-decorator';
+import Immutable from 'immutable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
@@ -23,7 +24,8 @@ import performKeyboardNavigation from '../performKeyboardNavigation';
 
 class ContentEditable extends React.Component {
   static propTypes = {
-    note: React.PropTypes.object,
+    config: React.PropTypes.instanceOf(Immutable.Record),
+    note: React.PropTypes.instanceOf(Immutable.Map),
     onBlur: React.PropTypes.func,
     value: React.PropTypes.text,
   };

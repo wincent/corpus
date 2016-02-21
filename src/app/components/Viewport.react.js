@@ -19,6 +19,10 @@ const styles = {
 };
 
 export default class Viewport extends React.Component {
+  static propTypes = {
+    children: React.PropTypes.arrayOf(React.PropTypes.element),
+  };
+
   render() {
     return (
       <div style={styles.root}>

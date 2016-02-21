@@ -284,7 +284,7 @@ export default class NoteList extends React.Component {
       // order, but with offsets in place to make it seem they haven't moved),
       // so now it's time to actually animate them to their new (real)
       // positions.
-      this.setState({animating: true});
+      this.setState({animating: true}); // eslint-disable-line react/no-did-update-set-state
     }
 
     if (prevState.selection !== this.state.selection) {

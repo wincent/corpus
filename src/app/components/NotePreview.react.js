@@ -10,6 +10,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import autobind from 'autobind-decorator';
+import Immutable from 'immutable';
 import ipc from 'ipc';
 
 import Actions from '../Actions';
@@ -48,6 +49,10 @@ const Tag = ({focused, tag}) => {
     </span>
   );
 };
+Tag.propTypes = {
+  focused: React.PropTypes.bool,
+  tag: React.PropTypes.string,
+};
 
 const Tags = ({tags, ...extraProps}) => {
   const styles = {
@@ -61,14 +66,19 @@ const Tags = ({tags, ...extraProps}) => {
     </div>
   );
 };
+Tags.propTypes = {
+  tags: React.PropTypes.array,
+};
 
 @pure
 export default class NotePreview extends React.Component {
   static propTypes = {
+    animating: React.PropTypes.bool,
     focused: React.PropTypes.bool,
     index: React.PropTypes.number.isRequired,
-    note: React.PropTypes.object.isRequired, // TODO: better shape here
+    note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     selected: React.PropTypes.bool,
+    translate: React.PropTypes.number,
   };
   static defaultProps = {
     focused: false,

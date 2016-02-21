@@ -32,7 +32,7 @@ const styles = {
 };
 
 export default class NotePlaceholder extends React.Component {
-  static PropTypes = {
+  static propTypes = {
     count: React.PropTypes.number.required,
   };
 
