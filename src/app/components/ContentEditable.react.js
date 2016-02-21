@@ -7,11 +7,11 @@
 
 'use strict';
 
-import React from 'react';
 import autobind from 'autobind-decorator';
+import React from 'react';
+import {connect} from 'react-redux';
 
 import Actions from '../Actions';
-import ConfigStore from '../stores/ConfigStore';
 import Dispatcher from '../Dispatcher';
 import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
@@ -20,7 +20,7 @@ import colors from '../colors';
 import debounce from 'simple-debounce';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
-export default class ContentEditable extends React.Component {
+class ContentEditable extends React.Component {
   static propTypes = {
     note: React.PropTypes.object,
     onBlur: React.PropTypes.func,
@@ -58,12 +58,13 @@ export default class ContentEditable extends React.Component {
   }
 
   _getStyles() {
+    const {config} = this.props;
     return {
       root: {
         background: colors.background,
         border: 0,
-        fontFamily: ConfigStore.config.noteFontFamily,
-        fontSize: ConfigStore.config.noteFontSize + 'px',
+        fontFamily: config.noteFontFamily,
+        fontSize: config.noteFontSize + 'px',
         minHeight: 'calc(100vh - 36px)',
         outline: 0,
         overflowWrap: 'break-word',
@@ -170,3 +171,9 @@ export default class ContentEditable extends React.Component {
     );
   }
 }
+
+function mapStateToProps({config}) {
+  return {config};
+}
+
+export default connect(mapStateToProps)(ContentEditable);
