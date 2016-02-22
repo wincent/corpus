@@ -31,6 +31,8 @@ export default class Note extends React.Component {
       const id = this.props.note.get('id');
       if (id in cursorPositions) {
         element.selectionStart = element.selectionEnd = cursorPositions[id];
+      } else {
+        element.selectionStart = element.selectionEnd = 0;
       }
     }
   }

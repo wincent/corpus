@@ -19,7 +19,6 @@
 - gracefully handle files going missing (and restoring); use case is mountable filesystems
 - show pie chart indicator showing file reading/indexing progress
 - add some more structure: "components" (React components), "util[?]" (data structures, reusable stuff?)
-- save/restore cursor position across restarts
 
 # Nice-to-haves
 
