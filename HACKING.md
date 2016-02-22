@@ -47,13 +47,13 @@ dispatch.
 
 ```
                           /-------------\
-            /------------>| ConfigStore |<------\
-            |             \-------------/       |
-            |                    ^              |
-            |                    |              |
-            |             /------------\  /-------------\
-            | /---------->| NotesStore |  | SystemStore |
-            | |           \------------/  \-------------/
+            /------------>| ConfigStore |
+            |             \-------------/
+            |                    ^
+            |                    |
+            |             /------------\
+            | /---------->| NotesStore |
+            | |           \------------/
             | |                  ^
             | |                  |
         /----------\  /--------------------\
@@ -83,7 +83,6 @@ dispatch.
   the left side, and `Note.react` on the right side).
 - `GitStore`: Takes Git snaphots (commits) of the filesystem when changes are
   persisted to disk.
-- `SystemStore`: Gathers system-specific attributes.
 - `NoteAnimationStore`: Tracks note animations ("bubbling" within
   `NoteList.react`).
 - `LogStore`: Independent store that serves as a channel for all logging

@@ -7,6 +7,7 @@
 
 import {call, put, take} from 'redux-saga/effects';
 import loadConfig from './loadConfig';
+import querySystem from './querySystem';
 
 /**
  * Root saga, started when application boots.
@@ -14,4 +15,6 @@ import loadConfig from './loadConfig';
 export default function* saga(getState) {
   const config = yield call(loadConfig);
   yield put({type: 'CONFIG_LOADED', config});
+  const info = yield call(querySystem, getState().config);
+  yield put({type: 'SYSTEM_INFO_LOADED', info});
 }

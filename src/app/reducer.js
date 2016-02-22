@@ -8,6 +8,7 @@
 import {combineReducers} from 'redux';
 import config from './reducers/config';
 import logs from './reducers/logs';
+import system from './reducers/system';
 
 /**
  * Root reducer for the entire application.
@@ -15,4 +16,5 @@ import logs from './reducers/logs';
 export default combineReducers({
   config,
   logs,
+  system,
 });

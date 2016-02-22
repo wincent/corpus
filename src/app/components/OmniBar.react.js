@@ -5,19 +5,19 @@
  * @flow
  */
 
+import autobind from 'autobind-decorator';
+import Immutable from 'immutable';
+import ipc from 'ipc';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import autobind from 'autobind-decorator';
-import ipc from 'ipc';
+import {connect} from 'react-redux';
 import remote from 'remote';
-
 import Actions from '../Actions';
-import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
+import FilteredNotesStore from '../stores/FilteredNotesStore';
+import FocusStore from '../stores/FocusStore';
 import LogStore from '../stores/LogStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
-import FilteredNotesStore from '../stores/FilteredNotesStore';
-import SystemStore from '../stores/SystemStore';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
 function getCurrentNote() {
@@ -38,32 +38,35 @@ function getCurrentTitle() {
   }
 }
 
-/**
- * Returns the maximum note title length.
- */
-function getMaxLength(): number {
-  const maxLength =
-    SystemStore.values.get('nameMax') -
-    '.txt'.length -
-    '.000'.length; // room to disambiguate up to 1,000 duplicate titles
+class OmniBar extends React.Component {
+  static propTypes = {
+    system: React.PropTypes.instanceOf(Immutable.Map),
+  };
 
-  return Math.max(
-    0, // sanity: never return a negative number
-    maxLength
-  );
-}
-
-export default class OmniBar extends React.Component {
   constructor(props) {
     super(props);
     const note = getCurrentNote();
     this.state = {
       foreground: true,
       hasError: false,
-      maxLength: getMaxLength(),
       note,
       value: getCurrentTitle(),
     };
+  }
+
+  /**
+  * Returns the maximum note title length.
+  */
+  _getMaxLength(): number {
+    const maxLength =
+      this.props.system.get('nameMax') -
+      '.txt'.length -
+      '.000'.length; // room to disambiguate up to 1,000 duplicate titles
+
+    return Math.max(
+      0, // sanity: never return a negative number
+      maxLength
+    );
   }
 
   _getStyles() {
@@ -125,7 +128,6 @@ export default class OmniBar extends React.Component {
     LogStore.on('change', this._onLogChange);
     NotesSelectionStore.on('change', this._onNotesSelectionChange);
     FilteredNotesStore.on('change', this._onNotesChange);
-    SystemStore.on('change', this._onSystemChange);
   }
 
   componentWillUnmount() {
@@ -135,7 +137,6 @@ export default class OmniBar extends React.Component {
     LogStore.removeListener('change', this._onLogChange);
     NotesSelectionStore.removeListener('change', this._onNotesSelectionChange);
     FilteredNotesStore.removeListener('change', this._onNotesChange);
-    SystemStore.removeListener('change', this._onSystemChange);
   }
 
   _getBackgroundStyle() {
@@ -193,11 +194,6 @@ export default class OmniBar extends React.Component {
       // but nvALT selects the remaining part
     }
     this._query = null;
-  }
-
-  @autobind
-  _onSystemChange() {
-    this.setState({maxLength: getMaxLength()});
   }
 
   @autobind
@@ -319,7 +315,7 @@ export default class OmniBar extends React.Component {
       <div style={styles.root}>
         <span className={iconClass} style={styles.icon}></span>
         <input
-          maxLength={this.state.maxLength}
+          maxLength={this._getMaxLength()}
           onChange={this._onChange}
           onFocus={this._onFocus}
           onKeyDown={this._onKeyDown}
@@ -352,3 +348,9 @@ export default class OmniBar extends React.Component {
     );
   }
 }
+
+function mapStateToProps({system}) {
+  return {system};
+}
+
+export default connect(mapStateToProps)(OmniBar);
