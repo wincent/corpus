@@ -38,6 +38,7 @@ class ContentEditable extends React.Component {
 
   componentDidMount() {
     FocusStore.on('change', this._updateFocus);
+    this._updateFocus();
   }
 
   componentWillReceiveProps(nextProps) {
