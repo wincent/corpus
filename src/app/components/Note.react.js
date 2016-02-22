@@ -12,50 +12,56 @@ import Immutable from 'immutable';
 
 import ContentEditable from './ContentEditable.react';
 
-const cursorPositions = {};
+const viewStates = {};
 
 export default class Note extends React.Component {
   static propTypes = {
     note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
   };
 
-  _recordCursorPosition(element) {
+  _recordViewState(element) {
     if (this.props.note) {
-      const position = element.selectionStart;
-      cursorPositions[this.props.note.get('id')] = position;
+      viewStates[this.props.note.get('id')] = {
+        scrollTop: element.scrollTop,
+        selectionEnd: element.selectionEnd,
+        selectionStart: element.selectionStart,
+      };
     }
   }
 
-  _restoreCursorPosition(element) {
+  _restoreViewState(element) {
     if (this.props.note) {
       const id = this.props.note.get('id');
-      if (id in cursorPositions) {
-        element.selectionStart = element.selectionEnd = cursorPositions[id];
+      const viewState = viewStates[id];
+      if (viewState) {
+        element.scrollTop = viewState.scrollTop;
+        element.selectionEnd = viewState.selectionEnd;
+        element.selectionStart = viewState.selectionStart;
       } else {
-        element.selectionStart = element.selectionEnd = 0;
+        element.selectionStart = element.selectionEnd = element.scrollTop = 0;
       }
     }
   }
 
   @autobind
   _onBlur(event) {
-    this._recordCursorPosition(event.currentTarget);
+    this._recordViewState(event.currentTarget);
   }
 
   @autobind
   _onFocus(event) {
-    this._restoreCursorPosition(event.currentTarget);
+    this._restoreViewState(event.currentTarget);
   }
 
   componentWillUpdate(nextProps) {
     if (this.props.note !== nextProps.note) {
-      this._recordCursorPosition(ReactDOM.findDOMNode(this));
+      this._recordViewState(ReactDOM.findDOMNode(this));
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.note !== prevProps.note) {
-      this._restoreCursorPosition(ReactDOM.findDOMNode(this));
+      this._restoreViewState(ReactDOM.findDOMNode(this));
     }
   }
 
