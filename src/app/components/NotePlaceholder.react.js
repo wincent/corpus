@@ -31,7 +31,7 @@ const styles = {
 
 export default class NotePlaceholder extends React.Component {
   static propTypes = {
-    count: React.PropTypes.number.required,
+    count: React.PropTypes.number.isRequired,
   };
 
   _onMouseDown(event) {

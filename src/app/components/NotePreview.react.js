@@ -60,12 +60,12 @@ const Tags = ({tags, ...extraProps}) => {
   };
   return (
     <div style={styles}>
-      {tags.map(tag => <Tag tag={tag} {...extraProps} />)}
+      {tags.map(tag => <Tag key={tag} tag={tag} {...extraProps} />)}
     </div>
   );
 };
 Tags.propTypes = {
-  tags: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+  tags: React.PropTypes.instanceOf(Immutable.Set).isRequired,
 };
 
 @pure
