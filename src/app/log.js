@@ -9,10 +9,18 @@ import Actions from './Actions';
 
 export function error(message) {
   console.error(message); // eslint-disable-line no-console
-  Actions.logError(message);
+
+  // Yes, hideous global state; see explaination in src/index.js.
+  if (global.store) {
+    Actions.logError(message, global.store);
+  }
 }
 
 export function warn(message) {
   console.warn(message); // eslint-disable-line no-console
-  Actions.logWarning(message);
+
+  // Yes, hideous global state; see explaination in src/index.js.
+  if (global.store) {
+    Actions.logWarning(message, global.store);
+  }
 }

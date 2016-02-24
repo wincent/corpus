@@ -66,9 +66,9 @@ dispatch.
            |          \---------------------/
            |                     ^
            |                     |
-/--------------------\    /------------\    /----------\
-| NoteAnimationStore |    | FocusStore |    | LogStore |
-\--------------------/    \------------/    \----------/
+/--------------------\    /------------\
+| NoteAnimationStore |    | FocusStore |
+\--------------------/    \------------/
 ```
 
 - `ConfigStore`: Reads configuration information from `~/.corpusrc`.
@@ -85,8 +85,6 @@ dispatch.
   persisted to disk.
 - `NoteAnimationStore`: Tracks note animations ("bubbling" within
   `NoteList.react`).
-- `LogStore`: Independent store that serves as a channel for all logging
-  events.
 
 ## I/O operations
 

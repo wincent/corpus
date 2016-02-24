@@ -16,7 +16,6 @@ import Actions from '../Actions';
 import Keys from '../Keys';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import FocusStore from '../stores/FocusStore';
-import LogStore from '../stores/LogStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
@@ -40,6 +39,7 @@ function getCurrentTitle() {
 
 class OmniBar extends React.Component {
   static propTypes = {
+    logs: React.PropTypes.instanceOf(Immutable.List),
     system: React.PropTypes.instanceOf(Immutable.Map),
   };
 
@@ -48,7 +48,7 @@ class OmniBar extends React.Component {
     const note = getCurrentNote();
     this.state = {
       foreground: true,
-      hasError: false,
+      hasError: props.logs.size,
       note,
       value: getCurrentTitle(),
     };
@@ -125,7 +125,6 @@ class OmniBar extends React.Component {
     ipc.on('focus', () => this.setState({foreground: true}));
     ReactDOM.findDOMNode(this._inputRef).focus();
     FocusStore.on('change', this._updateFocus);
-    LogStore.on('change', this._onLogChange);
     NotesSelectionStore.on('change', this._onNotesSelectionChange);
     FilteredNotesStore.on('change', this._onNotesChange);
   }
@@ -134,7 +133,6 @@ class OmniBar extends React.Component {
     ipc.removeAllListeners('blur');
     ipc.removeAllListeners('focus');
     FocusStore.removeListener('change', this._updateFocus);
-    LogStore.removeListener('change', this._onLogChange);
     NotesSelectionStore.removeListener('change', this._onNotesSelectionChange);
     FilteredNotesStore.removeListener('change', this._onNotesChange);
   }
@@ -152,9 +150,10 @@ class OmniBar extends React.Component {
     }
   }
 
-  @autobind
-  _onLogChange() {
-    this.setState({hasError: true});
+  componentWillReceiveProps(nextProps) {
+    if (this.props.logs !== nextProps.logs) {
+      this.setState({hasError: true});
+    }
   }
 
   @autobind
@@ -349,8 +348,8 @@ class OmniBar extends React.Component {
   }
 }
 
-function mapStateToProps({system}) {
-  return {system};
+function mapStateToProps({logs, system}) {
+  return {logs, system};
 }
 
 export default connect(mapStateToProps)(OmniBar);

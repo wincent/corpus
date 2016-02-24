@@ -70,8 +70,10 @@ const actionCreators = {
     dispatch(actionTypes.CONFIG_LOADED);
   },
 
-  logError(message) {
-    dispatch(actionTypes.LOG_ERROR, {
+  // Temporary hack: pass in Redux store to get access to `dispatch`.
+  logError(message, store) {
+    store.dispatch({
+      type: actionTypes.LOG_ERROR,
       level: 'ERROR',
       message,
     });
@@ -161,8 +163,10 @@ const actionCreators = {
     dispatch(actionTypes.SELECTED_NOTES_DELETED, {ids});
   },
 
-  logWarning(message) {
-    dispatch(actionTypes.LOG_WARNING, {
+  // Temporary hack: pass in Redux store to get access to `dispatch`.
+  logWarning(message, store) {
+    store.dispatch({
+      type: actionTypes.LOG_WARNING,
       level: 'WARNING',
       message,
     });

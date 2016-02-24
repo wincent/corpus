@@ -3,6 +3,7 @@
     "browser": true
   },
   "globals": {
+    "global": true,
     "setImmediate": false
   },
   "plugins": [
