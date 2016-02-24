@@ -10,14 +10,6 @@ var gutil = require('gulp-util');
 var minifyHTML = require('gulp-minify-html');
 var path = require('path');
 
-var babelOptions = {
-  optional: [
-    'es7.asyncFunctions',
-    'es7.classProperties',
-    'es7.decorators',
-    'es7.objectRestSpread',
-  ],
-};
 var electronBase = '/usr/local/lib/node_modules/electron-prebuilt/dist';
 var watching = false;
 
@@ -64,7 +56,7 @@ gulp.task('js', function() {
   return gulp.src('src/**/*.js')
     .pipe(eslint())
     .pipe(eslint.format())
-    .pipe(wrap(babel(babelOptions)))
+    .pipe(wrap(babel()))
     .pipe(gulp.dest('dist'));
 });
 
