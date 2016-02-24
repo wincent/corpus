@@ -1,4 +1,12 @@
 {
+  "env": {
+    "production": {
+      "plugins": [
+        "transform-react-constant-elements",
+        "transform-react-inline-elements"
+      ]
+    }
+  },
   "plugins": [
     "transform-decorators-legacy"
   ],
