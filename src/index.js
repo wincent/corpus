@@ -8,7 +8,7 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
-import Corpus from './app/containers/Corpus.react';
+import Corpus from './app/components/Corpus.react';
 import configureStore from './app/configureStore';
 
 const store = configureStore();
