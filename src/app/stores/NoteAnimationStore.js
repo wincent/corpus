@@ -26,6 +26,11 @@ class NoteAnimationStore extends Store {
           this.emit('change');
         }
         break;
+
+      case Actions.BUBBLE_ANIMATION_FINISHED:
+        bubbling = null;
+        this.emit('change');
+        break;
     }
   }
 

@@ -51,7 +51,7 @@ export default class NoteList extends React.Component {
   }
 
   componentDidMount() {
-    NoteAnimationStore.on('change', this._initiateBubbling);
+    NoteAnimationStore.on('change', this._updateBubbling);
     NotesSelectionStore.on('change', this._updateNoteSelection);
     FilteredNotesStore.on('change', this._updateNotes);
     FocusStore.on('change', this._updateFocus);
@@ -63,7 +63,7 @@ export default class NoteList extends React.Component {
   }
 
   componentWillUnmount() {
-    NoteAnimationStore.removeListener('change', this._initiateBubbling);
+    NoteAnimationStore.removeListener('change', this._updateBubbling);
     NotesSelectionStore.removeListener('change', this._updateNoteSelection);
     FilteredNotesStore.removeListener('change', this._updateNotes);
     FocusStore.removeListener('change', this._updateFocus);
@@ -165,7 +165,7 @@ export default class NoteList extends React.Component {
   }
 
   @autobind
-  _initiateBubbling() {
+  _updateBubbling() {
     const bubbling = NoteAnimationStore.bubbling;
     this.setState({
       animating: false,
@@ -263,6 +263,7 @@ export default class NoteList extends React.Component {
     // A note has bubbled to the top, make sure we can see it still.
     const parent = ReactDOM.findDOMNode(this).parentNode;
     parent.scrollTop = 0;
+    Actions.bubbleAnimationFinished();
   }
 
   @autobind
