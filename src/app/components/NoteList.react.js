@@ -63,6 +63,7 @@ export default class NoteList extends React.Component {
   }
 
   componentWillUnmount() {
+    NoteAnimationStore.removeListener('change', this._initiateBubbling);
     NotesSelectionStore.removeListener('change', this._updateNoteSelection);
     FilteredNotesStore.removeListener('change', this._updateNotes);
     FocusStore.removeListener('change', this._updateFocus);
