@@ -4,20 +4,19 @@
     "plugin:react/recommended"
   ],
   "env": {
-    "es6": true,
+    "es6": true
   },
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 6,
     "ecmaFeatures": {
-      "jsx": true,
-    },
+      "jsx": true
+    }
   },
   "plugins": [
     "react"
   ],
   "rules": {
-    // key: 0 = allow, 1 = warn, 2 = error
     "comma-dangle": [0, "always-multiline"],
     "global-strict": 0,
     "new-cap": [
