@@ -13,7 +13,8 @@ import * as log from './log';
 
 const readFile = Promise.promisify(fs.readFile);
 
-const configFile = path.join(process.env.HOME, '.corpusrc');
+const configFile = process.env.CORPUSRC ||
+  path.join(process.env.HOME, '.corpusrc');
 
 export default async function loadConfig() {
   try {
