@@ -31,7 +31,8 @@ const defaults = {
 
 const Config = ImmutableRecord(defaults);
 let config = new Config({});
-const configFile = path.join(process.env.HOME, '.corpusrc');
+const configFile = process.env.CORPUSRC ||
+  path.join(process.env.HOME, '.corpusrc');
 
 const mergerConfig = {
   notesDirectory(value, key) {
