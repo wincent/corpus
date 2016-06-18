@@ -83,9 +83,32 @@ gulp.task('copy-app', function(callback) {
    );
 });
 
+gulp.task('copy-debug-app', function(callback) {
+  var source = path.join(electronBase, 'Electron.app');
+   exec(
+     'cp -pR ' + source + ' debug/',
+     function(error, stdout, stderr) {
+       gutil.log(stdout);
+       gutil.log(stderr);
+       callback(error);
+     }
+   );
+});
+
 gulp.task('rename-app', ['copy-app'], function(callback) {
    exec(
      'mv release/Electron.app release/Corpus.app',
+     function(error, stdout, stderr) {
+       gutil.log(stdout);
+       gutil.log(stderr);
+       callback(error);
+     }
+   );
+});
+
+gulp.task('rename-debug-app', ['copy-debug-app'], function(callback) {
+   exec(
+     'mv debug/Electron.app debug/Corpus.app',
      function(error, stdout, stderr) {
        gutil.log(stdout);
        gutil.log(stderr);
@@ -99,9 +122,19 @@ gulp.task('copy-icon', ['rename-app'], function() {
     .pipe(gulp.dest('release/Corpus.app/Contents/Resources/'));
 });
 
+gulp.task('copy-debug-icon', ['rename-debug-app'], function() {
+  return gulp.src('gfx/corpus-debug.icns')
+    .pipe(gulp.dest('debug/Corpus.app/Contents/Resources/corpus.icns'));
+});
+
 gulp.task('copy-plist', ['rename-app'], function() {
   return gulp.src('pkg/Info.plist')
     .pipe(gulp.dest('release/Corpus.app/Contents/'));
+});
+
+gulp.task('copy-debug-plist', ['rename-debug-app'], function() {
+  return gulp.src('pkg/Info.plist')
+    .pipe(gulp.dest('debug/Corpus.app/Contents/'));
 });
 
 /*
@@ -113,6 +146,7 @@ gulp.task('copy-plist', ['rename-app'], function() {
   5. Bundle node_modules (eg. NODE_ENV=production + uglify for React)
 */
 gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon']);
+gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon']);
 
 gulp.task('watch', function() {
   watching = true;

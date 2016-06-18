@@ -23,8 +23,7 @@ if [ -z ${NODE_ENV+unset} ]; then
     NODE_ENV=production $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
   fi
 elif [[ $NODE_ENV = 'development' ]]; then
-  # TODO: show a different icon here
-  CORPUSRC=./corpusrc.sample.json $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
+  CORPUSRC=./corpusrc.sample.json ./debug/$ELECTRON_EXECUTABLE .
 else
   NODE_ENV="${NODE_ENV}" $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
 fi
