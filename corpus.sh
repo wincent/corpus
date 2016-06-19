@@ -6,7 +6,7 @@ if [ -d release/Corpus.app ]; then
   ELECTRON_DIST=release
   ELECTRON_EXECUTABLE=Corpus.app/Contents/MacOS/Electron
 else
-  ELECTRON_DIST=/usr/local/lib/node_modules/electron-prebuilt/dist
+  ELECTRON_DIST=node_modules/electron-prebuilt/dist
   ELECTRON_EXECUTABLE=Electron.app/Contents/MacOS/Electron
 fi
 

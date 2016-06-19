@@ -5,11 +5,7 @@
  * @flow
  */
 
-import BrowserWindow from 'browser-window';
-import Menu from 'menu';
-import MenuItem from 'menu-item';
-import app from 'app';
-import ipc from 'ipc';
+import {BrowserWindow, Menu, MenuItem, app, ipcMain} from 'electron';
 import path from 'path';
 
 import template from './menu/template';
@@ -30,11 +26,11 @@ app.on('ready', () => {
     show: false,
     width: 1200,
   });
-  mainWindow.loadUrl('file://' + path.join(__dirname, '/../index.html'));
+  mainWindow.loadURL('file://' + path.join(__dirname, '/../index.html'));
   mainWindow.webContents.on('did-finish-load', () => mainWindow.show());
 
   // TODO: extract this into a better place and make it more flexible
-  ipc.on('context-menu', () => {
+  ipcMain.on('context-menu', () => {
     const contextualMenu = new Menu();
     contextualMenu.append(
       new MenuItem({
@@ -69,7 +65,7 @@ app.on('ready', () => {
   menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  ipc.on('selection-count-changed', (event, newCount) => {
+  ipcMain.on('selection-count-changed', (event, newCount) => {
     const deleteItem = menu.items[1].submenu.items[1];
     const renameItem = menu.items[1].submenu.items[0];
     const revealItem = menu.items[1].submenu.items[5];

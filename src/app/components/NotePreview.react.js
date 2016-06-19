@@ -5,11 +5,11 @@
  * @flow
  */
 
+import Immutable from 'immutable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import autobind from 'autobind-decorator';
-import Immutable from 'immutable';
-import ipc from 'ipc';
+import {ipcRenderer} from 'electron';
 
 import Actions from '../Actions';
 import Constants from '../Constants';
@@ -237,7 +237,7 @@ export default class NotePreview extends React.Component {
     }
 
     // Ghastly hack...
-    setTimeout(() => ipc.send('context-menu'), 100);
+    setTimeout(() => ipcRenderer.send('context-menu'), 100);
   }
 
   @autobind

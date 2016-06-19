@@ -10,7 +10,7 @@ var gutil = require('gulp-util');
 var minifyHTML = require('gulp-minify-html');
 var path = require('path');
 
-var electronBase = '/usr/local/lib/node_modules/electron-prebuilt/dist';
+var electronBase = 'node_modules/electron-prebuilt/dist';
 var watching = false;
 
 /**

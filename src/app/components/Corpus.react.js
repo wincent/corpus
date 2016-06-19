@@ -6,10 +6,10 @@
  */
 
 import React from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import autobind from 'autobind-decorator';
-import ipc from 'ipc';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {ipcRenderer} from 'electron';
 
 import Actions from '../Actions';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
@@ -76,22 +76,22 @@ class Corpus extends React.Component {
   }
 
   componentDidMount() {
-    ipc.on('delete', deleteSelectedNotes);
-    ipc.on('next', Actions.nextNoteSelected);
-    ipc.on('previous', Actions.previousNoteSelected);
-    ipc.on('rename', Actions.renameRequested);
-    ipc.on('reveal', reveal);
-    ipc.on('search', Actions.omniBarFocused);
+    ipcRenderer.on('delete', deleteSelectedNotes);
+    ipcRenderer.on('next', Actions.nextNoteSelected);
+    ipcRenderer.on('previous', Actions.previousNoteSelected);
+    ipcRenderer.on('rename', Actions.renameRequested);
+    ipcRenderer.on('reveal', reveal);
+    ipcRenderer.on('search', Actions.omniBarFocused);
     NotesSelectionStore.on('change', this._updateSelection);
   }
 
   componentWillUnmount() {
-    ipc.removeAllListeners('delete');
-    ipc.removeAllListeners('next');
-    ipc.removeAllListeners('previous');
-    ipc.removeAllListeners('rename');
-    ipc.removeAllListeners('reveal');
-    ipc.removeAllListeners('search');
+    ipcRenderer.removeAllListeners('delete');
+    ipcRenderer.removeAllListeners('next');
+    ipcRenderer.removeAllListeners('previous');
+    ipcRenderer.removeAllListeners('rename');
+    ipcRenderer.removeAllListeners('reveal');
+    ipcRenderer.removeAllListeners('search');
     NotesSelectionStore.removeListener('change', this._updateSelection);
   }
 
@@ -105,7 +105,7 @@ class Corpus extends React.Component {
       size === 1 && this._selectionCount !== 1 ||
       size > 1 && this._selectionCount <= 1
     ) {
-      ipc.send('selection-count-changed', size);
+      ipcRenderer.send('selection-count-changed', size);
     }
     this._selectionCount = size;
   }

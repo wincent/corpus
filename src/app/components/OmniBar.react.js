@@ -5,13 +5,13 @@
  * @flow
  */
 
-import autobind from 'autobind-decorator';
 import Immutable from 'immutable';
-import ipc from 'ipc';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import autobind from 'autobind-decorator';
+import {remote} from 'electron';
 import {connect} from 'react-redux';
-import remote from 'remote';
+import {ipcRenderer} from 'electron';
 import Actions from '../Actions';
 import Keys from '../Keys';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
@@ -118,11 +118,11 @@ class OmniBar extends React.Component {
   }
 
   componentDidMount() {
-    ipc.on('blur', () => {
+    ipcRenderer.on('blur', () => {
       this._blurred = true; // See _onFocus for rationale.
       this.setState({foreground: false});
     });
-    ipc.on('focus', () => this.setState({foreground: true}));
+    ipcRenderer.on('focus', () => this.setState({foreground: true}));
     ReactDOM.findDOMNode(this._inputRef).focus();
     FocusStore.on('change', this._updateFocus);
     NotesSelectionStore.on('change', this._onNotesSelectionChange);
@@ -130,8 +130,8 @@ class OmniBar extends React.Component {
   }
 
   componentWillUnmount() {
-    ipc.removeAllListeners('blur');
-    ipc.removeAllListeners('focus');
+    ipcRenderer.removeAllListeners('blur');
+    ipcRenderer.removeAllListeners('focus');
     FocusStore.removeListener('change', this._updateFocus);
     NotesSelectionStore.removeListener('change', this._onNotesSelectionChange);
     FilteredNotesStore.removeListener('change', this._onNotesChange);

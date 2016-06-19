@@ -57,5 +57,8 @@
     "reselect": "*",
     "simple-debounce": "*",
     "unpack-content": "*"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "1.2.3"
   }
 }

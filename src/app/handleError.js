@@ -5,9 +5,9 @@
  * @flow
  */
 
-import remote from 'remote';
+import {remote} from 'electron';
 
-const app = remote.require('app');
+const {app} = remote;
 
 /**
  * Show an error to the user.

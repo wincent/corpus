@@ -5,8 +5,7 @@
  * @flow
  */
 
-import BrowserWindow from 'browser-window';
-import app from 'app';
+import {BrowserWindow, app} from 'electron';
 
 export default [
   {
@@ -130,7 +129,7 @@ export default [
     submenu: [
       {
         accelerator: 'Alt+Command+R',
-        click: () => BrowserWindow.getFocusedWindow().reloadIgnoringCache(),
+        click: () => BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache(),
         label: 'Reload',
       },
       {
