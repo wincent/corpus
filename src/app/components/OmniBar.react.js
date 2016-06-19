@@ -114,7 +114,7 @@ class OmniBar extends React.Component {
         flexGrow: 0,
         padding: '30px 8px 14px',
         position: 'relative',
-        minHeight: '36px',
+        minHeight: '60px',
       },
     };
   }
