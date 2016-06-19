@@ -123,8 +123,8 @@ gulp.task('copy-icon', ['rename-app'], function() {
 });
 
 gulp.task('copy-debug-icon', ['rename-debug-app'], function() {
-  return gulp.src('gfx/corpus-debug.icns')
-    .pipe(gulp.dest('debug/Corpus.app/Contents/Resources/corpus.icns'));
+  return gulp.src('gfx/debug/corpus.icns')
+    .pipe(gulp.dest('debug/Corpus.app/Contents/Resources/'));
 });
 
 gulp.task('copy-plist', ['rename-app'], function() {
