@@ -21,10 +21,11 @@ let revealEnabled = false;
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
     height: 800,
-    'min-width': 200,
-    'min-height': 200,
+    minWidth: 200,
+    minHeight: 200,
     show: false,
     width: 1200,
+    titleBarStyle: 'hidden',
   });
   mainWindow.loadURL('file://' + path.join(__dirname, '/../index.html'));
   mainWindow.webContents.on('did-finish-load', () => mainWindow.show());
