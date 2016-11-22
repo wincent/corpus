@@ -2,6 +2,11 @@
 # Copyright 2015-present Greg Hurrell. All rights reserved.
 # Licensed under the terms of the MIT license.
 
+if [ -n "$TMUX" ]; then
+  echo "error: clipboard (copy/paste) won't work if launched from inside a tmux session (bailing)"
+  exit 1
+fi
+
 if [ -d release/Corpus.app ]; then
   ELECTRON_DIST=release
   ELECTRON_EXECUTABLE=Corpus.app/Contents/MacOS/Electron
