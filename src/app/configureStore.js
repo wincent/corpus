@@ -10,10 +10,12 @@ import createSagaMiddleware from 'redux-saga';
 import reducer from './reducer';
 import saga from './saga';
 
-export default function configureStore(initialState) {
-  return createStore(
+export default function configureStore() {
+  const sagaMiddleware = createSagaMiddleware();
+  const store = createStore(
     reducer,
-    initialState,
-    applyMiddleware(createSagaMiddleware(saga))
+    applyMiddleware(sagaMiddleware)
   );
+  sagaMiddleware.run(saga);
+  return store;
 }

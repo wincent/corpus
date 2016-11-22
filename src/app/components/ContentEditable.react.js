@@ -76,7 +76,7 @@ class ContentEditable extends React.Component {
     };
   }
 
-  _persistChanges(isAutosave = false: boolean) {
+  _persistChanges(isAutosave: boolean = false) {
     if (!this._pendingSave && isAutosave) {
       // No need to complete the autosave; an eager save already happened.
       return;

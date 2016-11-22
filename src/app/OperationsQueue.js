@@ -37,7 +37,7 @@ const OperationsQueue = {
     }
   },
 
-  enqueue(operation: Operation, priority = DEFAULT_PRIORITY: number) {
+  enqueue(operation: Operation, priority: number = DEFAULT_PRIORITY) {
     if (!queue.size() && !isRunning) {
       isRunning = true;
       requestAnimationFrame(() => _run(operation));

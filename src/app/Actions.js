@@ -132,7 +132,7 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_RANGE_SELECTED, {index});
   },
 
-  noteSelected(index: number, exclusive=false: boolean) {
+  noteSelected(index: number, exclusive: boolean = false) {
     dispatch(actionTypes.NOTE_SELECTED, {exclusive, index});
   },
 
@@ -160,7 +160,7 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_RENAME_REQUESTED);
   },
 
-  searchRequested(value: string, isDeletion = false: boolean) {
+  searchRequested(value: string, isDeletion: boolean = false) {
     dispatch(actionTypes.SEARCH_REQUESTED, {value, isDeletion});
   },
 
