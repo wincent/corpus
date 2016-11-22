@@ -8,7 +8,6 @@
 import autobind from 'autobind-decorator';
 import Immutable from 'immutable';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 
 import Actions from '../Actions';
@@ -155,7 +154,7 @@ class ContentEditable extends React.Component {
   @autobind
   _updateFocus() {
     if (FocusStore.focus === 'Note') {
-      ReactDOM.findDOMNode(this).focus();
+      this._node.focus();
     }
   }
 
@@ -166,6 +165,7 @@ class ContentEditable extends React.Component {
         onBlur={this._onBlur}
         onChange={this._onChange}
         onKeyDown={this._onKeyDown}
+        ref={node => this._node = node}
         style={this._getStyles().root}
         value={this.state.value}
       />
