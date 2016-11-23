@@ -144,7 +144,12 @@ gulp.task('copy-debug-plist', ['rename-debug-app'], function() {
   3. Copy plist
   4. Move app sources into right place under Resources
   5. Bundle node_modules (eg. NODE_ENV=production + uglify for React)
+
+    mkdir -p release/Corpus.app/Contents/Resources/app
+    cp -pR node_modules package.json dist release/Corpus.app/Contents/Resources/app/
+
 */
+
 gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon']);
 gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon']);
 
