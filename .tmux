@@ -13,7 +13,7 @@ tmux send-keys -t corpus:vim "vim -c CommandT" Enter
 
 # Window 1, (top) right pane: gulp
 tmux split-window -t corpus:vim -h
-tmux send-keys -t corpus:vim.right "gulp" Enter
+tmux send-keys -t corpus:vim.right "yarn run gulp" Enter
 
 # Window 1, bottom right pane: shell.
 tmux split-window -t corpus:vim.2
