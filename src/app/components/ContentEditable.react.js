@@ -24,6 +24,8 @@ class ContentEditable extends React.Component {
     config: React.PropTypes.instanceOf(Immutable.Record),
     note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     onBlur: React.PropTypes.func.isRequired,
+    onFocus: React.PropTypes.func.isRequired,
+    tabIndex: React.PropTypes.number,
   };
 
   _autosave = debounce(() => this._persistChanges(true), 5000);
@@ -161,12 +163,13 @@ class ContentEditable extends React.Component {
   render() {
     return (
       <textarea
-        {...this.props}
         onBlur={this._onBlur}
+        onFocus={this.props.onFocus}
         onChange={this._onChange}
         onKeyDown={this._onKeyDown}
         ref={node => this._node = node}
         style={this._getStyles().root}
+        tabIndex={this.props.tabIndex}
         value={this.state.value}
       />
     );
