@@ -73,48 +73,48 @@ gulp.task('typecheck', function() {
 
 gulp.task('copy-app', function(callback) {
   var source = path.join(electronBase, 'Electron.app');
-   exec(
-     'cp -pR ' + source + ' release/',
-     function(error, stdout, stderr) {
-       gutil.log(stdout);
-       gutil.log(stderr);
-       callback(error);
-     }
-   );
+  exec(
+    'cp -pR ' + source + ' release/',
+    function(error, stdout, stderr) {
+      gutil.log(stdout);
+      gutil.log(stderr);
+      callback(error);
+    }
+  );
 });
 
 gulp.task('copy-debug-app', function(callback) {
   var source = path.join(electronBase, 'Electron.app');
-   exec(
-     'cp -pR ' + source + ' debug/',
-     function(error, stdout, stderr) {
-       gutil.log(stdout);
-       gutil.log(stderr);
-       callback(error);
-     }
-   );
+  exec(
+    'cp -pR ' + source + ' debug/',
+    function(error, stdout, stderr) {
+      gutil.log(stdout);
+      gutil.log(stderr);
+      callback(error);
+    }
+  );
 });
 
 gulp.task('rename-app', ['copy-app'], function(callback) {
-   exec(
-     'mv release/Electron.app release/Corpus.app',
-     function(error, stdout, stderr) {
-       gutil.log(stdout);
-       gutil.log(stderr);
-       callback(error);
-     }
-   );
+  exec(
+    'mv release/Electron.app release/Corpus.app',
+    function(error, stdout, stderr) {
+      gutil.log(stdout);
+      gutil.log(stderr);
+      callback(error);
+    }
+  );
 });
 
 gulp.task('rename-debug-app', ['copy-debug-app'], function(callback) {
-   exec(
-     'mv debug/Electron.app debug/Corpus.app',
-     function(error, stdout, stderr) {
-       gutil.log(stdout);
-       gutil.log(stderr);
-       callback(error);
-     }
-   );
+  exec(
+    'mv debug/Electron.app debug/Corpus.app',
+    function(error, stdout, stderr) {
+      gutil.log(stdout);
+      gutil.log(stderr);
+      callback(error);
+    }
+  );
 });
 
 gulp.task('copy-icon', ['rename-app'], function() {
