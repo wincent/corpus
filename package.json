@@ -26,7 +26,6 @@
   "homepage": "https://github.com/wincent/corpus",
   "dependencies": {
     "autobind-decorator": "*",
-    "babel-polyfill": "*",
     "bluebird": "*",
     "flux": "*",
     "immutable": "*",
@@ -45,6 +44,7 @@
     "babel-eslint": "*",
     "babel-jest": "*",
     "babel-plugin-transform-decorators-legacy": "*",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.22.0",
     "babel-plugin-transform-react-constant-elements": "*",
     "babel-plugin-transform-react-inline-elements": "*",
     "babel-preset-es2016": "^6.22.0",
