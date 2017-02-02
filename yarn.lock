@@ -809,21 +809,21 @@ babel-plugin-transform-strict-mode@^6.18.0:
     babel-runtime "^6.0.0"
     babel-types "^6.18.0"
 
-babel-polyfill@6.5.0, babel-polyfill@^6.3.14:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.5.0.tgz#868f8f02ad02081e087a965d2e0d3f4ef8c57cc3"
-  dependencies:
-    babel-regenerator-runtime "^6.3.13"
-    babel-runtime "^5.0.0"
-    core-js "^1.0.1"
-
-babel-polyfill@^6.16.0:
+babel-polyfill@*, babel-polyfill@^6.16.0:
   version "6.16.0"
   resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.16.0.tgz#2d45021df87e26a374b6d4d1a9c65964d17f2422"
   dependencies:
     babel-runtime "^6.9.1"
     core-js "^2.4.0"
     regenerator-runtime "^0.9.5"
+
+babel-polyfill@^6.3.14:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.5.0.tgz#868f8f02ad02081e087a965d2e0d3f4ef8c57cc3"
+  dependencies:
+    babel-regenerator-runtime "^6.3.13"
+    babel-runtime "^5.0.0"
+    core-js "^1.0.1"
 
 babel-preset-es2015@*:
   version "6.18.0"
