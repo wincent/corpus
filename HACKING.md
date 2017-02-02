@@ -1,8 +1,8 @@
 # Development environment bootstrap
 
 ```
-# Install Electron to /usr/local/lib/node_modules/electron-prebuilt:
-npm install electron-prebuilt -g
+# Install Electron to /usr/local/lib/node_modules/electron:
+npm install electron -g
 
 # Install other dependencies.
 npm install

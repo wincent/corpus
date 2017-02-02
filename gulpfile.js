@@ -10,7 +10,7 @@ var gutil = require('gulp-util');
 var minifyHTML = require('gulp-minify-html');
 var path = require('path');
 
-var electronBase = 'node_modules/electron-prebuilt/dist';
+var electronBase = 'node_modules/electron/dist';
 var watching = false;
 
 /**
@@ -138,7 +138,7 @@ gulp.task('copy-debug-plist', ['rename-debug-app'], function() {
 });
 
 /*
-  1. Copy app from /usr/local/lib/node_modules/electron-prebuilt/dist to
+  1. Copy app from /usr/local/lib/node_modules/electron/dist to
      release/Corpus.app
   2. Copy icon
   3. Copy plist
