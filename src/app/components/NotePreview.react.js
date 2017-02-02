@@ -7,7 +7,6 @@
 
 import Immutable from 'immutable';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import autobind from 'autobind-decorator';
 import {ipcRenderer} from 'electron';
 
@@ -119,6 +118,7 @@ export default class NotePreview extends React.Component {
 
   componentWillUnmount() {
     this._removeListener();
+    this._ref = null;
   }
 
   _getStyles() {
@@ -183,7 +183,7 @@ export default class NotePreview extends React.Component {
         isEditing: true,
         pendingTitle: this.props.note.get('title'),
       },
-      () => ReactDOM.findDOMNode(this).scrollIntoViewIfNeeded(false)
+      () => this._ref.scrollIntoViewIfNeeded(false)
     );
   }
 
@@ -258,7 +258,7 @@ export default class NotePreview extends React.Component {
     switch (event.keyCode) {
       case Keys.RETURN:
         event.preventDefault();
-        ReactDOM.findDOMNode(this).parentNode.focus(); // focus NoteList
+        this._ref.parentNode.focus(); // focus NoteList
         break;
       case Keys.ESCAPE:
         this._endEditing(event);
@@ -305,7 +305,7 @@ export default class NotePreview extends React.Component {
           onChange={this._onChange}
           onFocus={this._onFocus}
           onKeyDown={this._onKeyDown}
-          ref={input => input && ReactDOM.findDOMNode(input).focus()}
+          ref={input => input.focus()}
           style={this._getStyles().titleInput}
           type="text"
           value={this.state.pendingTitle}
@@ -357,6 +357,7 @@ export default class NotePreview extends React.Component {
         onClick={this._onClick}
         onContextMenu={this._onContextMenu}
         onMouseDown={this._onMouseDown}
+        ref={node => this.ref = node}
         style={styles.root}>
         {this._renderTitle()}
         <p style={styles.text}>
