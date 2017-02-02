@@ -118,7 +118,7 @@ export default class NotePreview extends React.Component {
 
   componentWillUnmount() {
     this._removeListener();
-    this._ref = null;
+    this.ref = null;
   }
 
   _getStyles() {
@@ -183,7 +183,7 @@ export default class NotePreview extends React.Component {
         isEditing: true,
         pendingTitle: this.props.note.get('title'),
       },
-      () => this._ref.scrollIntoViewIfNeeded(false)
+      () => this.ref.scrollIntoViewIfNeeded(false)
     );
   }
 
@@ -258,7 +258,7 @@ export default class NotePreview extends React.Component {
     switch (event.keyCode) {
       case Keys.RETURN:
         event.preventDefault();
-        this._ref.parentNode.focus(); // focus NoteList
+        this.ref.parentNode.focus(); // focus NoteList
         break;
       case Keys.ESCAPE:
         this._endEditing(event);

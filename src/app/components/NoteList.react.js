@@ -292,7 +292,7 @@ export default class NoteList extends React.Component {
         // Maintain last selection within view.
         const lastIndex = this.state.selection.last();
         const last = this.refs[lastIndex];
-        last.scrollIntoViewIfNeeded(false);
+        last.ref.scrollIntoViewIfNeeded(false);
       } else {
         // If we cleared the selection by pressing Escape or entering a
         // non-exact title match, we want to scroll to the top.
