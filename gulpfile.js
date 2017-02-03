@@ -87,43 +87,45 @@ gulp.task('typecheck', function() {
     .pipe(flow())
 });
 
-gulp.task('copy-app', () => {
-  var source = path.join(electronBase, 'Electron.app');
-  return exec('cp -pR ' + source + ' release/');
-});
+function copyApp(env) {
+  return () => {
+    var source = path.join(electronBase, 'Electron.app');
+    return exec(`cp -pR ${source} ${env}/`);
+  };
+}
 
-gulp.task('copy-debug-app', () => {
-  var source = path.join(electronBase, 'Electron.app');
-  return exec('cp -pR ' + source + ' debug/');
-});
+gulp.task('copy-app', copyApp('release'));
+gulp.task('copy-debug-app', copyApp('debug'));
 
-gulp.task('rename-app', ['copy-app'], () => {
-  return exec('mv release/Electron.app release/Corpus.app');
-});
+function renameApp(env) {
+  return () => {
+    return exec(`mv ${env}/Electron.app ${env}/Corpus.app`);
+  };
+}
 
-gulp.task('rename-debug-app', ['copy-debug-app'], () => {
-  return exec('mv debug/Electron.app debug/Corpus.app');
-});
+gulp.task('rename-app', ['copy-app'], renameApp('release'));
+gulp.task('rename-debug-app', ['copy-debug-app'], renameApp('debug'));
 
-gulp.task('copy-icon', ['rename-app'], function() {
-  return gulp.src('gfx/corpus.icns')
-    .pipe(gulp.dest('release/Corpus.app/Contents/Resources/'));
-});
+function copyIcon(env) {
+  return () => {
+    return gulp.src(`gfx/${env}/corpus.icns`)
+      .pipe(gulp.dest(`${env}/Corpus.app/Contents/Resources/`));
+  }
+}
 
-gulp.task('copy-debug-icon', ['rename-debug-app'], function() {
-  return gulp.src('gfx/debug/corpus.icns')
-    .pipe(gulp.dest('debug/Corpus.app/Contents/Resources/'));
-});
+gulp.task('copy-icon', ['rename-app'], copyIcon('release'));
+gulp.task('copy-debug-icon', ['rename-debug-app'], copyIcon('debug'));
 
-gulp.task('copy-plist', ['rename-app'], function() {
-  return gulp.src('pkg/Info.plist')
-    .pipe(gulp.dest('release/Corpus.app/Contents/'));
-});
+// TODO put version number from package.json in plist
+function copyPlist(env) {
+  return () => {
+    return gulp.src('pkg/Info.plist')
+      .pipe(gulp.dest(`${env}/Corpus.app/Contents/`));
+  };
+}
 
-gulp.task('copy-debug-plist', ['rename-debug-app'], function() {
-  return gulp.src('pkg/Info.plist')
-    .pipe(gulp.dest('debug/Corpus.app/Contents/'));
-});
+gulp.task('copy-plist', ['rename-app'], copyPlist('release'));
+gulp.task('copy-debug-plist', ['rename-debug-app'], copyPlist('debug'));
 
 gulp.task('copy-resources', ['rename-app'], function() {
   return gulp.src([
@@ -133,7 +135,6 @@ gulp.task('copy-resources', ['rename-app'], function() {
     ]).pipe(gulp.dest('release/Corpus.app/Contents/Resources/app/'));
 });
 
-// TODO: DRY these debug vs non-debug tasks up
 gulp.task('link-debug-resources', ['rename-debug-app'], function() {
   return exec(
     'mkdir -p debug/Corpus.app/Contents/Resources/app && ' +
