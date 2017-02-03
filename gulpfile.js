@@ -154,12 +154,30 @@ gulp.task('copy-debug-resources', ['rename-debug-app'], function() {
     ]).pipe(gulp.dest('debug/Corpus.app/Contents/Resources/app/'));
 });
 
-/*
-    yarn install --prod --modules-folder release/Corpus.app/Contents/Resources/app/node_modules
-*/
+gulp.task('copy-node-modules', ['copy-app'], function(callback) {
+  exec(
+    'yarn install --prod --modules-folder release/Corpus.app/Contents/Resources/app/node_modules',
+    function(error, stdout, stderr) {
+      gutil.log(stdout);
+      gutil.log(stderr);
+      callback(error);
+    }
+  );
+});
 
-gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon', 'copy-resources']);
-gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon', 'copy-debug-resources']);
+gulp.task('copy-debug-node-modules', ['copy-app'], function(callback) {
+  exec(
+    'yarn install --prod --modules-folder debug/Corpus.app/Contents/Resources/app/node_modules',
+    function(error, stdout, stderr) {
+      gutil.log(stdout);
+      gutil.log(stderr);
+      callback(error);
+    }
+  );
+});
+
+gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon', 'copy-resources', 'copy-node-modules']);
+gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon', 'copy-debug-resources', 'copy-debug-node-modules']);
 
 gulp.task('watch', function() {
   watching = true;
