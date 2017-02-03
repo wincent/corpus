@@ -23,15 +23,17 @@ function ringBell() {
 /**
  * Convenience wrapper for `child_process.exec` that logs using `gutil.log`.
  */
-function exec(command, callback) {
-  child_process.exec(
-    command,
-    function(error, stdout, stderr) {
-      gutil.log(stdout);
-      gutil.log(stderr);
-      callback(error);
-    }
-  );
+function exec(command) {
+  return new Promise((resolve, reject) => {
+    child_process.exec(
+      command,
+      (error, stdout, stderr) => {
+        gutil.log(stdout);
+        gutil.log(stderr);
+        error ? reject(error) : resolve();
+      }
+    );
+  });
 }
 
 /**
@@ -85,22 +87,22 @@ gulp.task('typecheck', function() {
     .pipe(flow())
 });
 
-gulp.task('copy-app', function(callback) {
+gulp.task('copy-app', () => {
   var source = path.join(electronBase, 'Electron.app');
-  exec('cp -pR ' + source + ' release/', callback);
+  return exec('cp -pR ' + source + ' release/');
 });
 
-gulp.task('copy-debug-app', function(callback) {
+gulp.task('copy-debug-app', () => {
   var source = path.join(electronBase, 'Electron.app');
-  exec('cp -pR ' + source + ' debug/', callback);
+  return exec('cp -pR ' + source + ' debug/');
 });
 
-gulp.task('rename-app', ['copy-app'], function(callback) {
-  exec('mv release/Electron.app release/Corpus.app', callback);
+gulp.task('rename-app', ['copy-app'], () => {
+  return exec('mv release/Electron.app release/Corpus.app');
 });
 
-gulp.task('rename-debug-app', ['copy-debug-app'], function(callback) {
-  exec('mv debug/Electron.app debug/Corpus.app', callback);
+gulp.task('rename-debug-app', ['copy-debug-app'], () => {
+  return exec('mv debug/Electron.app debug/Corpus.app');
 });
 
 gulp.task('copy-icon', ['rename-app'], function() {
@@ -140,40 +142,36 @@ gulp.task('copy-debug-resources', ['rename-debug-app'], function() {
     ]).pipe(gulp.dest('debug/Corpus.app/Contents/Resources/app/'));
 });
 
-gulp.task('copy-node-modules', ['rename-app'], function(callback) {
-  exec(
-    'yarn install --prod --no-bin-links --modules-folder release/Corpus.app/Contents/Resources/app/node_modules',
-    callback
+gulp.task('copy-node-modules', ['rename-app'], () => {
+  return exec(
+    'yarn install --prod --no-bin-links --modules-folder release/Corpus.app/Contents/Resources/app/node_modules'
   );
 });
 
-gulp.task('copy-debug-node-modules', ['rename-debug-app'], function(callback) {
-  exec(
-    'yarn install --prod --no-bin-links --modules-folder debug/Corpus.app/Contents/Resources/app/node_modules',
-    callback
+gulp.task('copy-debug-node-modules', ['rename-debug-app'], () => {
+  return exec(
+    'yarn install --prod --no-bin-links --modules-folder debug/Corpus.app/Contents/Resources/app/node_modules'
   );
 });
 
-gulp.task('asar', ['rename-app', 'copy-resources', 'copy-node-modules'], function(callback) {
-    exec(
-      'asar pack release/Corpus.app/Contents/Resources/app release/Corpus.app/Contents/Resources/app.asar',
-      callback
-    );
+gulp.task('asar', ['rename-app', 'copy-resources', 'copy-node-modules'], () => {
+  return exec(
+    'asar pack release/Corpus.app/Contents/Resources/app release/Corpus.app/Contents/Resources/app.asar'
+  );
 });
 
-gulp.task('debug-asar', ['rename-debug-app', 'copy-debug-resources', 'copy-debug-node-modules'], function(callback) {
-    exec(
-      'asar pack debug/Corpus.app/Contents/Resources/app debug/Corpus.app/Contents/Resources/app.asar',
-      callback
-    );
+gulp.task('debug-asar', ['rename-debug-app', 'copy-debug-resources', 'copy-debug-node-modules'], () => {
+  return exec(
+    'asar pack debug/Corpus.app/Contents/Resources/app debug/Corpus.app/Contents/Resources/app.asar'
+  );
 });
 
-gulp.task('prune-app', ['asar'], function(callback) {
-  exec('rm -r release/Corpus.app/Contents/Resources/app', callback);
+gulp.task('prune-app', ['asar'], () => {
+  return exec('rm -r release/Corpus.app/Contents/Resources/app');
 });
 
-gulp.task('prune-debug-app', ['debug-asar'], function(callback) {
-  exec('rm -r debug/Corpus.app/Contents/Resources/app', callback);
+gulp.task('prune-debug-app', ['debug-asar'], () => {
+  return exec('rm -r debug/Corpus.app/Contents/Resources/app');
 });
 
 gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon', 'copy-resources', 'copy-node-modules', 'asar', 'prune-app']);
