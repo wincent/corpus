@@ -144,13 +144,13 @@ gulp.task('copy-debug-resources', ['rename-debug-app'], function() {
 
 gulp.task('copy-node-modules', ['rename-app'], () => {
   return exec(
-    'yarn install --prod --no-bin-links --modules-folder release/Corpus.app/Contents/Resources/app/node_modules'
+    'yarn install --prod --no-bin-links --modules-folder release/Corpus.app/Contents/Resources/app/node_modules && yarn'
   );
 });
 
 gulp.task('copy-debug-node-modules', ['rename-debug-app'], () => {
   return exec(
-    'yarn install --prod --no-bin-links --modules-folder debug/Corpus.app/Contents/Resources/app/node_modules'
+    'yarn install --prod --no-bin-links --modules-folder debug/Corpus.app/Contents/Resources/app/node_modules && yarn'
   );
 });
 
