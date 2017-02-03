@@ -1,17 +1,17 @@
 // Copyright 2015-present Greg Hurrell. All rights reserved.
 // Licensed under the terms of the MIT license.
 
-var babel = require('gulp-babel');
-var child_process = require('child_process');
-var eslint = require('gulp-eslint');
-var flow = require('gulp-flowtype');
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var minifyHTML = require('gulp-minify-html');
-var path = require('path');
+import babel from 'gulp-babel';
+import child_process from 'child_process';
+import eslint from 'gulp-eslint';
+import flow from 'gulp-flowtype';
+import gulp from 'gulp';
+import gutil from 'gulp-util';
+import minifyHTML from 'gulp-minify-html';
+import path from 'path';
 
-var electronBase = 'node_modules/electron/dist';
-var watching = false;
+const electronBase = 'node_modules/electron/dist';
+let watching = false;
 
 /**
  * Ring the terminal bell.
@@ -89,7 +89,7 @@ gulp.task('typecheck', function() {
 
 function copyApp(env) {
   return () => {
-    var source = path.join(electronBase, 'Electron.app');
+    const source = path.join(electronBase, 'Electron.app');
     return exec(`cp -pR ${source} ${env}/`);
   };
 }
