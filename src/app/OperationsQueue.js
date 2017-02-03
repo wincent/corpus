@@ -45,6 +45,10 @@ const OperationsQueue = {
       queue.insert({priority, operation});
     }
   },
+
+  get size() {
+    return queue.size();
+  },
 };
 
 export default OperationsQueue;

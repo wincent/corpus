@@ -38,6 +38,7 @@ export default [
       {type: 'separator'},
       {
         accelerator: 'Command+Q',
+        // TODO: don't quit immediately if operationsqueue is not empty
         click: () => app.quit(),
         label: 'Quit Corpus',
       },
