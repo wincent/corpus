@@ -154,9 +154,9 @@ gulp.task('copy-debug-resources', ['rename-debug-app'], function() {
     ]).pipe(gulp.dest('debug/Corpus.app/Contents/Resources/app/'));
 });
 
-gulp.task('copy-node-modules', ['copy-app'], function(callback) {
+gulp.task('copy-node-modules', ['rename-app'], function(callback) {
   exec(
-    'yarn install --prod --modules-folder release/Corpus.app/Contents/Resources/app/node_modules',
+    'yarn install --prod --no-bin-links --modules-folder release/Corpus.app/Contents/Resources/app/node_modules',
     function(error, stdout, stderr) {
       gutil.log(stdout);
       gutil.log(stderr);
@@ -165,9 +165,9 @@ gulp.task('copy-node-modules', ['copy-app'], function(callback) {
   );
 });
 
-gulp.task('copy-debug-node-modules', ['copy-app'], function(callback) {
+gulp.task('copy-debug-node-modules', ['rename-debug-app'], function(callback) {
   exec(
-    'yarn install --prod --modules-folder debug/Corpus.app/Contents/Resources/app/node_modules',
+    'yarn install --prod --no-bin-links --modules-folder debug/Corpus.app/Contents/Resources/app/node_modules',
     function(error, stdout, stderr) {
       gutil.log(stdout);
       gutil.log(stderr);
@@ -176,8 +176,52 @@ gulp.task('copy-debug-node-modules', ['copy-app'], function(callback) {
   );
 });
 
-gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon', 'copy-resources', 'copy-node-modules']);
-gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon', 'copy-debug-resources', 'copy-debug-node-modules']);
+gulp.task('asar', ['rename-app', 'copy-resources', 'copy-node-modules'], function(callback) {
+    exec(
+      'asar pack release/Corpus.app/Contents/Resources/app release/Corpus.app/Contents/Resources/app.asar',
+      function(error, stdout, stderr) {
+        gutil.log(stdout);
+        gutil.log(stderr);
+        callback(error);
+      }
+    );
+});
+
+gulp.task('debug-asar', ['rename-debug-app', 'copy-debug-resources', 'copy-debug-node-modules'], function(callback) {
+    exec(
+      'asar pack debug/Corpus.app/Contents/Resources/app debug/Corpus.app/Contents/Resources/app.asar',
+      function(error, stdout, stderr) {
+        gutil.log(stdout);
+        gutil.log(stderr);
+        callback(error);
+      }
+    );
+});
+
+gulp.task('prune-app', ['asar'], function(callback) {
+  exec(
+    'rm -r release/Corpus.app/Contents/Resources/app',
+    function(error, stdout, stderr) {
+      gutil.log(stdout);
+      gutil.log(stderr);
+      callback(error);
+    }
+  );
+});
+
+gulp.task('prune-debug-app', ['debug-asar'], function(callback) {
+  exec(
+    'rm -r debug/Corpus.app/Contents/Resources/app',
+    function(error, stdout, stderr) {
+      gutil.log(stdout);
+      gutil.log(stderr);
+      callback(error);
+    }
+  );
+});
+
+gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon', 'copy-resources', 'copy-node-modules', 'asar', 'prune-app']);
+gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon', 'copy-debug-resources', 'copy-debug-node-modules', 'debug-asar', 'prune-debug-app']);
 
 gulp.task('watch', function() {
   watching = true;
