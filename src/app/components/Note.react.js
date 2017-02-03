@@ -19,7 +19,7 @@ export default class Note extends React.Component {
   };
 
   _recordViewState(element) {
-    if (this.props.note) {
+    if (this.props.note && element.scrollTop !== undefined) {
       viewStates[this.props.note.get('id')] = {
         scrollTop: element.scrollTop,
         selectionEnd: element.selectionEnd,
@@ -53,7 +53,7 @@ export default class Note extends React.Component {
   }
 
   componentWillUpdate(nextProps) {
-    if (this.props.note !== nextProps.note) {
+    if (this.props.note.get('id') !== nextProps.note.get('id')) {
       this._recordViewState(this._node);
     }
   }
