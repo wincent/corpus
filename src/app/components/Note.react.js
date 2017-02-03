@@ -7,6 +7,7 @@
 
 import autobind from 'autobind-decorator';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
 
 import ContentEditable from './ContentEditable.react';
@@ -54,13 +55,17 @@ export default class Note extends React.Component {
 
   componentWillUpdate(nextProps) {
     if (this.props.note.get('id') !== nextProps.note.get('id')) {
-      this._recordViewState(this._node);
+      this._recordViewState(ReactDOM.findDOMNode(this._node));
     }
+  }
+
+  componentDidMount() {
+    this._restoreViewState(ReactDOM.findDOMNode(this._node));
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.note !== prevProps.note) {
-      this._restoreViewState(this._node);
+      this._restoreViewState(ReactDOM.findDOMNode(this._node));
     }
   }
 
