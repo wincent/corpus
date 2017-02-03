@@ -140,8 +140,8 @@ gulp.task('copy-debug-plist', ['rename-debug-app'], function() {
 gulp.task('copy-resources', ['rename-app'], function() {
   return gulp.src([
       'package.json',
-      'dist/**/*',
-      'vendor/**/*',
+      '*dist/**/*',
+      '*vendor/**/*',
     ]).pipe(gulp.dest('release/Corpus.app/Contents/Resources/app/'));
 });
 
@@ -149,8 +149,8 @@ gulp.task('copy-resources', ['rename-app'], function() {
 gulp.task('copy-debug-resources', ['rename-debug-app'], function() {
   return gulp.src([
       'package.json',
-      'dist/**/*',
-      'vendor/**/*',
+      '*dist/**/*',
+      '*vendor/**/*',
     ]).pipe(gulp.dest('debug/Corpus.app/Contents/Resources/app/'));
 });
 
