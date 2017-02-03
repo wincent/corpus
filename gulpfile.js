@@ -134,12 +134,14 @@ gulp.task('copy-resources', ['rename-app'], function() {
 });
 
 // TODO: DRY these debug vs non-debug tasks up
-gulp.task('copy-debug-resources', ['rename-debug-app'], function() {
-  return gulp.src([
-      'package.json',
-      '*dist/**/*',
-      '*vendor/**/*',
-    ]).pipe(gulp.dest('debug/Corpus.app/Contents/Resources/app/'));
+gulp.task('link-debug-resources', ['rename-debug-app'], function() {
+  return exec(
+    'mkdir -p debug/Corpus.app/Contents/Resources/app && ' +
+    'cd debug/Corpus.app/Contents/Resources/app && ' +
+    'ln -s ../../../../../package.json && ' +
+    'ln -s ../../../../../dist && ' +
+    'ln -s ../../../../../vendor'
+  );
 });
 
 gulp.task('copy-node-modules', ['rename-app'], () => {
@@ -148,9 +150,11 @@ gulp.task('copy-node-modules', ['rename-app'], () => {
   );
 });
 
-gulp.task('copy-debug-node-modules', ['rename-debug-app'], () => {
+gulp.task('link-debug-node-modules', ['rename-debug-app'], () => {
   return exec(
-    'yarn install --prod --no-bin-links --modules-folder debug/Corpus.app/Contents/Resources/app/node_modules && yarn'
+    'mkdir -p debug/Corpus.app/Contents/Resources/app && ' +
+    'cd debug/Corpus.app/Contents/Resources/app && ' +
+    'ln -s ../../../../../node_modules'
   );
 });
 
@@ -160,22 +164,13 @@ gulp.task('asar', ['rename-app', 'copy-resources', 'copy-node-modules'], () => {
   );
 });
 
-gulp.task('debug-asar', ['rename-debug-app', 'copy-debug-resources', 'copy-debug-node-modules'], () => {
-  return exec(
-    'asar pack debug/Corpus.app/Contents/Resources/app debug/Corpus.app/Contents/Resources/app.asar'
-  );
-});
-
 gulp.task('prune-app', ['asar'], () => {
   return exec('rm -r release/Corpus.app/Contents/Resources/app');
 });
 
-gulp.task('prune-debug-app', ['debug-asar'], () => {
-  return exec('rm -r debug/Corpus.app/Contents/Resources/app');
-});
-
 gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon', 'copy-resources', 'copy-node-modules', 'asar', 'prune-app']);
-gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon', 'copy-debug-resources', 'copy-debug-node-modules', 'debug-asar', 'prune-debug-app']);
+
+gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon', 'link-debug-resources', 'link-debug-node-modules']);
 
 gulp.task('watch', function() {
   watching = true;
