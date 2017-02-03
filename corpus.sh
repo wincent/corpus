@@ -7,28 +7,20 @@ if [ -n "$TMUX" ]; then
   exit 1
 fi
 
-if [ -d release/Corpus.app ]; then
-  ELECTRON_DIST=release
+if [ -d debug/Corpus.app ]; then
+  ELECTRON_DIST=debug
   ELECTRON_EXECUTABLE=Corpus.app/Contents/MacOS/Electron
 else
-  ELECTRON_DIST=node_modules/electron/dist
-  ELECTRON_EXECUTABLE=Electron.app/Contents/MacOS/Electron
+  echo 'error: debug application not found; please run `yarn run gulp debug`'
+  exit 1
 fi
 
 # Check if NODE_ENV is set (http://stackoverflow.com/a/13864829/2103996).
 if [ -z ${NODE_ENV+unset} ]; then
-  # Fast by default, to override, start with:
-  #
-  #   NODE_ENV= ./corpus.sh
-  #   NODE_ENV=anything_but_production ./corpus.sh
-  #
-  if [[ $1 = '--daemonize' ]]; then
-    (NODE_ENV=production $ELECTRON_DIST/$ELECTRON_EXECUTABLE . &) &
-  else
-    NODE_ENV=production $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
-  fi
+  NODE_ENV=development $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
 elif [[ $NODE_ENV = 'development' ]]; then
-  CORPUSRC=./corpusrc.sample.json ./debug/$ELECTRON_EXECUTABLE .
+  NODE_ENV="${NODE_ENV}" CORPUSRC=./corpusrc.sample.json $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
 else
+  # Anything else. To go fast, run with `NODE_ENV=production ./corpus.sh`.
   NODE_ENV="${NODE_ENV}" $ELECTRON_DIST/$ELECTRON_EXECUTABLE .
 fi
