@@ -206,9 +206,8 @@ class OmniBar extends React.Component {
 
   @autobind
   _onCancelClick() {
-    Actions.allNotesDeselected();
-    this._inputRef.focus();
-    this.setState({value: ''});
+    Actions.searchRequested('');
+    this.setState({value: ''}, () => this._inputRef.focus());
   }
 
   @autobind
