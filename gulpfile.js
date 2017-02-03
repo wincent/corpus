@@ -146,7 +146,8 @@ gulp.task('copy-debug-plist', ['rename-debug-app'], function() {
   5. Bundle node_modules (eg. NODE_ENV=production + uglify for React)
 
     mkdir -p release/Corpus.app/Contents/Resources/app
-    cp -pR node_modules package.json dist vendor release/Corpus.app/Contents/Resources/app/
+    yarn install --prod --modules-folder release/Corpus.app/Contents/Resources/app/node_modules
+    cp -pR package.json dist vendor release/Corpus.app/Contents/Resources/app/
 
 */
 
