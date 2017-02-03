@@ -41,7 +41,7 @@ function exec(command) {
  * task from dying on error).
  */
 function wrap(stream) {
-  stream.on('error', function(error) {
+  stream.on('error', err => {
     gutil.log(gutil.colors.red(error.message));
     gutil.log(error.stack);
     if (watching) {
@@ -62,13 +62,13 @@ gulp.task('build', ['html', 'js']);
 
 gulp.task('flow', ['typecheck']);
 
-gulp.task('html', function() {
+gulp.task('html', () => {
   return gulp.src('src/**/*.html')
     .pipe(wrap(minifyHTML()))
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('js', function() {
+gulp.task('js', () => {
   return gulp.src('src/**/*.js')
     .pipe(eslint())
     .pipe(eslint.format())
@@ -76,13 +76,13 @@ gulp.task('js', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('lint', function() {
+gulp.task('lint', () => {
   return gulp.src('src/**/*.js')
     .pipe(eslint())
     .pipe(eslint.format())
 });
 
-gulp.task('typecheck', function() {
+gulp.task('typecheck', () => {
   return gulp.src('src/**/*.js')
     .pipe(flow())
 });
@@ -127,7 +127,7 @@ function copyPlist(env) {
 gulp.task('copy-plist', ['rename-app'], copyPlist('release'));
 gulp.task('copy-debug-plist', ['rename-debug-app'], copyPlist('debug'));
 
-gulp.task('copy-resources', ['rename-app'], function() {
+gulp.task('copy-resources', ['rename-app'], () => {
   return gulp.src([
       'package.json',
       '*dist/**/*',
@@ -135,7 +135,7 @@ gulp.task('copy-resources', ['rename-app'], function() {
     ]).pipe(gulp.dest('release/Corpus.app/Contents/Resources/app/'));
 });
 
-gulp.task('link-debug-resources', ['rename-debug-app'], function() {
+gulp.task('link-debug-resources', ['rename-debug-app'], () => {
   return exec(
     'mkdir -p debug/Corpus.app/Contents/Resources/app && ' +
     'cd debug/Corpus.app/Contents/Resources/app && ' +
@@ -173,7 +173,7 @@ gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon', 'copy
 
 gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon', 'link-debug-resources', 'link-debug-node-modules']);
 
-gulp.task('watch', function() {
+gulp.task('watch', () => {
   watching = true;
   gulp.watch('src/**/*.html', ['html']);
   gulp.watch('src/**/*.js', ['js']);
