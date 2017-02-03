@@ -137,22 +137,29 @@ gulp.task('copy-debug-plist', ['rename-debug-app'], function() {
     .pipe(gulp.dest('debug/Corpus.app/Contents/'));
 });
 
+gulp.task('copy-resources', ['rename-app'], function() {
+  return gulp.src([
+      'package.json',
+      'dist/**/*',
+      'vendor/**/*',
+    ]).pipe(gulp.dest('release/Corpus.app/Contents/Resources/app/'));
+});
+
+// TODO: DRY these debug vs non-debug tasks up
+gulp.task('copy-debug-resources', ['rename-debug-app'], function() {
+  return gulp.src([
+      'package.json',
+      'dist/**/*',
+      'vendor/**/*',
+    ]).pipe(gulp.dest('debug/Corpus.app/Contents/Resources/app/'));
+});
+
 /*
-  1. Copy app from /usr/local/lib/node_modules/electron/dist to
-     release/Corpus.app
-  2. Copy icon
-  3. Copy plist
-  4. Move app sources into right place under Resources
-  5. Bundle node_modules (eg. NODE_ENV=production + uglify for React)
-
-    mkdir -p release/Corpus.app/Contents/Resources/app
     yarn install --prod --modules-folder release/Corpus.app/Contents/Resources/app/node_modules
-    cp -pR package.json dist vendor release/Corpus.app/Contents/Resources/app/
-
 */
 
-gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon']);
-gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon']);
+gulp.task('release', ['copy-app', 'rename-app', 'copy-plist', 'copy-icon', 'copy-resources']);
+gulp.task('debug', ['copy-debug-app', 'rename-debug-app', 'copy-debug-plist', 'copy-debug-icon', 'copy-debug-resources']);
 
 gulp.task('watch', function() {
   watching = true;
