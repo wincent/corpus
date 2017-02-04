@@ -45,7 +45,7 @@ class ContentEditable extends React.Component {
       this._node,
       {
         inputStyle: 'contenteditable',
-        keyMap: vim,
+        keyMap: 'vim',
         lineWrapping: true,
         mode: 'markdown',
         theme: 'base16-light', // TODO: tweak this
