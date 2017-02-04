@@ -4,6 +4,9 @@
     <title>Corpus</title>
     <meta name="copyright" content="Copyright 2015-present Greg Hurrell. All rights reserved." />
     <meta name="license" content="Licensed under the terms of the MIT license." />
+    <link href="../vendor/icons/css/fontello.css" rel="stylesheet" type="text/css">
+    <link href="../node_modules/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css">
+    <link href="../node_modules/codemirror/theme/base16-light.css" rel="stylesheet" type="text/css">
     <style type="text/css">
       /* Sane box sizing model by default */
       html {
@@ -18,10 +21,6 @@
       /* Reset */
       body {
         margin: 0;
-      }
-      textarea {
-        /* NOTE: this will go away when we switch to contenteditable */
-        resize: none;
       }
 
       body.grabbing * {
@@ -47,8 +46,17 @@
       .animatable {
         transform: translate3d(0);
       }
+
+      /* CodeMirror */
+      .CodeMirror {
+        height: 100vh;
+
+        /* TODO: inject this dynamically, because it can be overridden in config
+           */
+        font-family: Monaco;
+        font-size: 12px;
+      }
     </style>
-    <link href="../vendor/icons/css/fontello.css" rel="stylesheet" type="text/css">
   </head>
   <body>
     <div id="app-root">

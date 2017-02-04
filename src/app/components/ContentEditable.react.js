@@ -6,9 +6,11 @@
  */
 
 import autobind from 'autobind-decorator';
+import CodeMirror from 'codemirror';
 import Immutable from 'immutable';
 import React from 'react';
 import {connect} from 'react-redux';
+import vim from 'codemirror/keymap/vim';
 
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
@@ -38,6 +40,21 @@ class ContentEditable extends React.Component {
   }
 
   componentDidMount() {
+    this._editor = CodeMirror( // eslint-disable-line new-cap
+      this._node,
+      {
+        inputStyle: 'contenteditable',
+        keyMap: vim,
+        lineWrapping: true,
+        mode: 'markdown',
+        theme: 'base16-light', // TODO: tweak this
+        value: this.state.value,
+      }
+    );
+    this._editor.on('blur', (cm, event) => this._onBlur(event));
+    this._editor.on('focus', (cm, event) => this.props.onFocus(event));
+    this._editor.on('change', (cm, change) => this._onChange(cm.getValue()));
+    this._editor.on('keydown', this._onKeyDown);
     FocusStore.on('change', this._updateFocus);
     this._updateFocus();
   }
@@ -47,14 +64,18 @@ class ContentEditable extends React.Component {
     // note may change (for example, 'index' will change in response to
     // bubbling).
     if (nextProps.note.get('id') !== this.props.note.get('id')) {
+      const value = nextProps.note.get('text');
       this._persistChanges();
-      this.setState({
-        value: nextProps.note.get('text'),
-      });
+      this.setState(
+        {value},
+        () => this._editor.setValue(value)
+      );
     }
   }
 
   componentWillUnmount() {
+    this._node.removeChild(this._node.children[0]);
+    this._editor = null;
     FocusStore.removeListener('change', this._updateFocus);
     this._persistChanges();
   }
@@ -107,13 +128,16 @@ class ContentEditable extends React.Component {
 
 
   @autobind
-  _onChange(event) {
+  _onChange(value) {
+    if (value === this.state.value) {
+      return;
+    }
     const index = NotesSelectionStore.selection.first();
     if (index) {
       // Not at top of list, so bubble note to top.
       Actions.noteBubbled(this.props.note.get('index'), index);
     }
-    this.setState({value: event.currentTarget.value});
+    this.setState({value});
     this._pendingSave = true;
     this._autosave();
   }
@@ -156,23 +180,12 @@ class ContentEditable extends React.Component {
   @autobind
   _updateFocus() {
     if (FocusStore.focus === 'Note') {
-      this._node.focus();
+      this._editor.focus();
     }
   }
 
   render() {
-    return (
-      <textarea
-        onBlur={this._onBlur}
-        onFocus={this.props.onFocus}
-        onChange={this._onChange}
-        onKeyDown={this._onKeyDown}
-        ref={node => this._node = node}
-        style={this._getStyles().root}
-        tabIndex={this.props.tabIndex}
-        value={this.state.value}
-      />
-    );
+    return <div ref={node => this._node = node}></div>;
   }
 }
 

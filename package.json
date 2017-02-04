@@ -27,6 +27,7 @@
   "dependencies": {
     "autobind-decorator": "*",
     "bluebird": "*",
+    "codemirror": "^5.23.0",
     "flux": "*",
     "immutable": "*",
     "mkdirp": "*",
