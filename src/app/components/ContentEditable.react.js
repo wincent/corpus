@@ -11,6 +11,7 @@ import Immutable from 'immutable';
 import React from 'react';
 import {connect} from 'react-redux';
 import vim from 'codemirror/keymap/vim';
+import gfm from 'codemirror/mode/gfm/gfm';
 
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
