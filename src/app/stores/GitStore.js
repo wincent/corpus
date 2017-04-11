@@ -38,7 +38,7 @@ class GitStore extends Store {
         OperationsQueue.enqueue(
           async () => {
             try {
-              await this._repo.add('*.txt');
+              await this._repo.add('*.md');
               await this._repo.commit('Corpus (post-change) snapshot');
             } catch(error) {
               handleError(error, 'Failed to create Git commit');

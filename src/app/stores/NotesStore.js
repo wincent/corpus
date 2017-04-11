@@ -68,8 +68,8 @@ let notesDirectory;
  * Map of note paths on disk to a boolean (`true`) indicating the path is in
  * use.
  *
- * Duplicate titles are disambiguated using a numeric prefix before the '.txt'
- * extension; eg: `foo.txt`, `foo.1.txt`, `foo.2.txt` etc.
+ * Duplicate titles are disambiguated using a numeric prefix before the '.md'
+ * extension; eg: `foo.md`, `foo.1.md`, `foo.2.md` etc.
  */
 const pathMap: PathMap = {};
 
@@ -78,7 +78,7 @@ const pathMap: PathMap = {};
 // appending .999 to the name...
 
 function filterFilenames(filenames: Array<string>): Array<string> {
-  return filenames.filter(fileName => path.extname(fileName) === '.txt');
+  return filenames.filter(fileName => path.extname(fileName) === '.md');
 }
 
 async function getStatInfo(fileName: string): Promise<ImmutableMap> {
@@ -140,7 +140,7 @@ function appendResults(results) {
 
 // TODO: make this a separate module so it can be tested separately
 function getTitleFromPath(notePath: string): string {
-  const title = path.basename(notePath, '.txt');
+  const title = path.basename(notePath, '.md');
   return title.replace(/\.\d{1,3}$/, '');
 }
 
@@ -149,7 +149,7 @@ function getPathForTitle(title: string): string {
 
   for (var ii = 0; ii <= 999; ii++) {
     const number = ii ? `.${ii}` : '';
-    const notePath = path.join(notesDirectory, sanitizedTitle + number + '.txt');
+    const notePath = path.join(notesDirectory, sanitizedTitle + number + '.md');
     if (!(notePath in pathMap)) {
       return notePath;
     }
@@ -195,7 +195,7 @@ function deleteNotes(deletedNotes) {
   OperationsQueue.enqueue(
     async () => {
       try {
-        await repo.add('*.txt');
+        await repo.add('*.md');
         await repo.commit('Corpus (pre-deletion) snapshot');
       } catch(error) {
         handleError(error, 'Failed to create Git commit');

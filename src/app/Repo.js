@@ -18,7 +18,7 @@ export default class Repo {
   }
 
   /**
-   * `git add -- '*.txt'`
+   * `git add -- '*.md'`
    *
    * Handles deletions as well.
    */

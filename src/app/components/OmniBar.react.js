@@ -59,7 +59,7 @@ class OmniBar extends React.Component {
   _getMaxLength(): number {
     const maxLength =
       this.props.system.get('nameMax') -
-      '.txt'.length -
+      '.md'.length -
       '.000'.length; // room to disambiguate up to 1,000 duplicate titles
 
     return Math.max(
