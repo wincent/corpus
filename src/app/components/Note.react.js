@@ -39,6 +39,11 @@ export default class Note extends React.Component {
         element.selectionStart = viewState.selectionStart;
       } else {
         element.selectionStart = element.selectionEnd = element.scrollTop = 0;
+        viewStates[id] = {
+          scrollTop: element.scrollTop,
+          selectionEnd: element.selectionEnd,
+          selectionStart: element.selectionStart,
+        };
       }
     }
   }
@@ -46,11 +51,6 @@ export default class Note extends React.Component {
   @autobind
   _onBlur(event) {
     this._recordViewState(event.currentTarget);
-  }
-
-  @autobind
-  _onFocus(event) {
-    this._restoreViewState(event.currentTarget);
   }
 
   componentWillUpdate(nextProps) {
@@ -64,7 +64,7 @@ export default class Note extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.note !== prevProps.note) {
+    if (this.props.note.get('id') !== prevProps.note.get('id')) {
       this._restoreViewState(ReactDOM.findDOMNode(this._node));
     }
   }
@@ -75,7 +75,6 @@ export default class Note extends React.Component {
         <ContentEditable
           note={this.props.note}
           onBlur={this._onBlur}
-          onFocus={this._onFocus}
           ref={node => this._node = node}
           tabIndex={3}
         />

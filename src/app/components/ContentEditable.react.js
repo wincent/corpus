@@ -24,7 +24,6 @@ class ContentEditable extends React.Component {
     config: React.PropTypes.instanceOf(Immutable.Record),
     note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
     onBlur: React.PropTypes.func.isRequired,
-    onFocus: React.PropTypes.func.isRequired,
     tabIndex: React.PropTypes.number,
   };
 
@@ -164,7 +163,6 @@ class ContentEditable extends React.Component {
     return (
       <textarea
         onBlur={this._onBlur}
-        onFocus={this.props.onFocus}
         onChange={this._onChange}
         onKeyDown={this._onKeyDown}
         ref={node => this._node = node}
