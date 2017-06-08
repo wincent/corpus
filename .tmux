@@ -8,7 +8,7 @@ if tmux has-session -t corpus 2> /dev/null; then
 fi
 
 # Window 1, left pane: vim.
-tmux new-session -d -s corpus -n vim
+tmux new-session -d -s corpus -n vim -x $(tput cols) -y $(tput lines)
 tmux send-keys -t corpus:vim "vim -c CommandT" Enter
 
 # Window 1, (top) right pane: gulp
