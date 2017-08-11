@@ -83,6 +83,7 @@ gulp.task('lint', () => {
 });
 
 gulp.task('fix', () => {
+  // Fix lints in place with `base` trickery.
   return gulp.src('src/**/*.js', {base: './'})
     .pipe(eslint({fix: true}))
     .pipe(eslint.format())
