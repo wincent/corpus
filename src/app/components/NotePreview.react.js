@@ -204,7 +204,6 @@ export default class NotePreview extends React.Component {
   @autobind
   _onClick(event) {
     if (event.metaKey && event.shiftKey) {
-      // eslint-disable-line no-empty
       // TODO: in nvALT this is some kind of drag;
       // eg. to a text document -> copies path
       // to desktop -> copies document

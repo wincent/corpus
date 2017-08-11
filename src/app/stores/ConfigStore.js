@@ -81,8 +81,9 @@ class ConfigStore extends Store {
     requestAnimationFrame(readConfig);
   }
 
+  /* eslint-disable no-unused-vars */
   handleDispatch(payload) {
-    // eslint-disable-line no-unused-vars
+    /* eslint-enable no-unused-vars */
     // Required override, but we have nothing to do.
   }
 

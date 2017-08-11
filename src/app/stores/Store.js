@@ -15,8 +15,9 @@ export default class Store extends EventEmitter {
     this.dispatchToken = Dispatcher.register(this.handleDispatch.bind(this));
   }
 
+  /* eslint-disable no-unused-vars */
   handleDispatch(payload: Object) {
-    // eslint-disable-line no-unused-vars
+    /* eslint-enable no-unused-vars */
     throw new Error(
       this.constructor.name + ' does not implement handleDispatch',
     );
