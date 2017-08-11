@@ -43,6 +43,16 @@
         cursor: col-resize;
       }
 
+      .tag:hover {
+        filter: brightness(85%);
+      }
+
+      .tag:active {
+        filter: brightness(75%);
+        transform: scale(1.1);
+        transition: transform .2s;
+      }
+
       /* base for CSS animations */
       .animatable {
         transform: translate3d(0);

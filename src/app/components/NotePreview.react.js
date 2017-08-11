@@ -37,6 +37,7 @@ const Tag = ({focused, tag}) => {
   };
   return (
     <span
+      className="tag"
       onClick={event => {
         // Don't want to select note that was clicked on.
         event.stopPropagation();
