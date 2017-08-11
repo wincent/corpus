@@ -7,7 +7,6 @@
 
 import autobind from 'autobind-decorator';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
 
 import ContentEditable from './ContentEditable.react';
@@ -19,31 +18,31 @@ export default class Note extends React.Component {
     note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
   };
 
-  _recordViewState(element) {
-    if (this.props.note && element.scrollTop !== undefined) {
-      viewStates[this.props.note.get('id')] = {
-        scrollTop: element.scrollTop,
-        selectionEnd: element.selectionEnd,
-        selectionStart: element.selectionStart,
-      };
+  _recordViewState() {
+    const {note} = this.props;
+    if (note) {
+      const viewState = this._node.getWrappedInstance().getViewState();
+      if (viewState.scrollTop !== undefined) {
+        viewStates[note.get('id')] = viewState;
+      }
     }
   }
 
-  _restoreViewState(element) {
+  _restoreViewState() {
     if (this.props.note) {
       const id = this.props.note.get('id');
       const viewState = viewStates[id];
+      const node = this._node.getWrappedInstance();
       if (viewState) {
-        element.scrollTop = viewState.scrollTop;
-        element.selectionEnd = viewState.selectionEnd;
-        element.selectionStart = viewState.selectionStart;
+        node.setViewState(viewState);
       } else {
-        element.selectionStart = element.selectionEnd = element.scrollTop = 0;
-        viewStates[id] = {
-          scrollTop: element.scrollTop,
-          selectionEnd: element.selectionEnd,
-          selectionStart: element.selectionStart,
+        const newState = {
+          scrollTop: 0,
+          selectionEnd: 0,
+          selectionStart: 0,
         };
+        node.setViewState(newState);
+        viewStates[id] = newState;
       }
     }
   }
@@ -55,32 +54,32 @@ export default class Note extends React.Component {
 
   componentWillUpdate(nextProps) {
     if (this.props.note.get('id') !== nextProps.note.get('id')) {
-      this._recordViewState(ReactDOM.findDOMNode(this._node));
+      this._recordViewState();
     }
   }
 
   componentDidMount() {
-    this._restoreViewState(ReactDOM.findDOMNode(this._node));
+    this._restoreViewState();
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.note.get('id') !== prevProps.note.get('id')) {
-      this._restoreViewState(ReactDOM.findDOMNode(this._node));
+      this._restoreViewState();
     }
   }
 
   render() {
-    if (this.props.note) {
+    const {note} = this.props;
+    if (note) {
       return (
         <ContentEditable
-          note={this.props.note}
+          note={note}
           onBlur={this._onBlur}
           ref={node => this._node = node}
           tabIndex={3}
         />
       );
     }
-
     return null;
   }
 }

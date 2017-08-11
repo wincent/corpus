@@ -58,6 +58,20 @@ class ContentEditable extends React.Component {
     this._persistChanges();
   }
 
+  getViewState() {
+    return {
+      scrollTop: this._node.scrollTop,
+      selectionEnd: this._node.selectionEnd,
+      selectionStart: this._node.selectionStart,
+    };
+  }
+
+  setViewState({scrollTop, selectionEnd, selectionStart}) {
+    this._node.scrollTop = scrollTop;
+    this._node.selectionEnd = selectionEnd;
+    this._node.selectionStart = selectionStart;
+  }
+
   _getStyles() {
     const {config} = this.props;
     return {
@@ -103,7 +117,6 @@ class ContentEditable extends React.Component {
       this._persistChanges();
     }
   }
-
 
   @autobind
   _onChange(event) {
@@ -178,4 +191,9 @@ function mapStateToProps({config}) {
   return {config};
 }
 
-export default connect(mapStateToProps)(ContentEditable);
+export default connect(
+  mapStateToProps,
+  null,
+  null,
+  {withRef: true}
+)(ContentEditable);
