@@ -40,7 +40,7 @@ const Tag = ({focused, tag}) => {
     // canceling doesn't reset filtering). Would work from OmniBar (see
     // _onChange there).
     <span
-      onClick={() => Actions.searchRequested(tag)}
+      onClick={() => Actions.searchRequested(`#${tag}`)}
       style={styles}>
       {tag}
     </span>
