@@ -162,11 +162,7 @@ class OmniBar extends React.Component {
     this._query = query || '';
 
     // This will force an update in the event that the notes changed due to
-    // clicking on a tag, for instance. Still won't catch every case though (for
-    // example, if I have five notes tagged #foo and #bar, then clicking on
-    // either tag won't change the notes list, so the bar title will not
-    // update). At least that is what *should* happen; in testing, we are
-    // getting these events.
+    // clicking on a tag, for instance.
     this.setState({value: this._query});
   }
 

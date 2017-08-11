@@ -55,8 +55,7 @@ function filter(value: ?string): ImmutableList {
       .map((note, index) => (
         // Augment note with its index within the NotesStore.
         note.set('index', indices[index])
-      ))
-      .toList();
+      ));
   } else {
     return NotesStore.notes.map((note, index) => (
       // Augment note with its index within the NoteStore.
