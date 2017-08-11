@@ -36,9 +36,6 @@ const Tag = ({focused, tag}) => {
     padding: '0 4px',
   };
   return (
-    // BUG: This doesn't quite work due to races (OmniBar doesn't update,
-    // canceling doesn't reset filtering). Would work from OmniBar (see
-    // _onChange there).
     <span
       onClick={event => {
         // Don't want to select note that was clicked on.
