@@ -26,7 +26,8 @@ export default class NoteView extends React.Component {
     super(props);
     const {selection} = NotesSelectionStore;
     const count = selection.size;
-    const note = count === 1 ? FilteredNotesStore.notes.get(selection.first()) : null;
+    const note =
+      count === 1 ? FilteredNotesStore.notes.get(selection.first()) : null;
     this.state = {count, note};
   }
 
@@ -46,7 +47,8 @@ export default class NoteView extends React.Component {
     // this up (we'll be doing it in a few places)
     const {selection} = NotesSelectionStore;
     const count = selection.size;
-    const note = count === 1 ? FilteredNotesStore.notes.get(selection.first()) : null;
+    const note =
+      count === 1 ? FilteredNotesStore.notes.get(selection.first()) : null;
     if (this.state.note !== note || this.state.count !== count) {
       this.setState({count, note});
     }

@@ -55,7 +55,7 @@ function adjustSelection(delta) {
   totalDelta = clamp(
     totalDelta + delta, // desired distance from where we started
     -initialLocation, // limit of upwards selection
-    FilteredNotesStore.notes.size - initialLocation - 1 // limit of downwards selection
+    FilteredNotesStore.notes.size - initialLocation - 1, // limit of downwards selection
   );
 
   if (totalDelta < previousDelta) {
@@ -84,7 +84,10 @@ function adjustSelection(delta) {
       // Extending downwards selection.
       if (selection.has(initialLocation + totalDelta)) {
         // Need to skip already-selected selection; recurse.
-        if (initialLocation + totalDelta === FilteredNotesStore.notes.size - 1) {
+        if (
+          initialLocation + totalDelta ===
+          FilteredNotesStore.notes.size - 1
+        ) {
           // Unless we're already at the bottom.
           return selection;
         } else {
@@ -202,7 +205,7 @@ class NotesSelectionStore extends Store {
           const end = payload.index;
           const range = ImmutableRange(
             Math.min(start, end),
-            Math.max(start, end) + 1
+            Math.max(start, end) + 1,
           );
           return selection.union(range);
         });
@@ -253,7 +256,12 @@ class NotesSelectionStore extends Store {
             // Find first matching title and select it, if there is one.
             let matchingIndex = null;
             FilteredNotesStore.notes.find((note, index) => {
-              if (note.get('title').toLowerCase().startsWith(payload.value.toLowerCase())) {
+              if (
+                note
+                  .get('title')
+                  .toLowerCase()
+                  .startsWith(payload.value.toLowerCase())
+              ) {
                 matchingIndex = index;
                 return true;
               }

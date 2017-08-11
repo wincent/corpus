@@ -57,7 +57,7 @@ function deleteSelectedNotes() {
     selection
       .map(index => FilteredNotesStore.notes.get(index))
       .map(note => note.get('index'))
-      .toSet()
+      .toSet(),
   );
 }
 
@@ -101,9 +101,9 @@ class Corpus extends React.Component {
     // enable/disable menu items.
     const size = NotesSelectionStore.selection.size;
     if (
-      size === 0 && this._selectionCount !== 0 ||
-      size === 1 && this._selectionCount !== 1 ||
-      size > 1 && this._selectionCount <= 1
+      (size === 0 && this._selectionCount !== 0) ||
+      (size === 1 && this._selectionCount !== 1) ||
+      (size > 1 && this._selectionCount <= 1)
     ) {
       ipcRenderer.send('selection-count-changed', size);
     }

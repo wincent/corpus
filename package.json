@@ -5,6 +5,8 @@
   "main": "dist/browser/main.js",
   "scripts": {
     "build": "gulp build",
+    "eslint-check": "scripts/eslint-check",
+    "fix": "gulp fix",
     "lint": "gulp lint",
     "test": "jest",
     "jest": "jest",
@@ -54,6 +56,9 @@
     "babel-preset-stage-0": "*",
     "electron": "^1.7.5",
     "eslint": "*",
+    "eslint-config-prettier": "^2.3.0",
+    "eslint-plugin-flowtype": "^2.35.0",
+    "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-react": "*",
     "gulp": "*",
     "gulp-babel": "*",
@@ -61,6 +66,7 @@
     "gulp-flowtype": "*",
     "gulp-minify-html": "*",
     "gulp-util": "*",
-    "jest-cli": "*"
+    "jest-cli": "*",
+    "prettier": "^1.5.3"
   }
 }

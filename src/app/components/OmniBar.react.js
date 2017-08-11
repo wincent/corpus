@@ -58,21 +58,17 @@ class OmniBar extends React.Component {
   */
   _getMaxLength(): number {
     const maxLength =
-      this.props.system.get('nameMax') -
-      '.md'.length -
-      '.000'.length; // room to disambiguate up to 1,000 duplicate titles
+      this.props.system.get('nameMax') - '.md'.length - '.000'.length; // room to disambiguate up to 1,000 duplicate titles
 
     return Math.max(
       0, // sanity: never return a negative number
-      maxLength
+      maxLength,
     );
   }
 
   _getStyles() {
-    const rightInputPadding = 0 +
-      (this.state.value ? 18 : 0) +
-      (this.state.hasError ? 18 : 0) +
-      'px';
+    const rightInputPadding =
+      0 + (this.state.value ? 18 : 0) + (this.state.hasError ? 18 : 0) + 'px';
     return {
       attention: {
         color: '#fe2310',
@@ -139,7 +135,9 @@ class OmniBar extends React.Component {
   }
 
   _getBackgroundStyle() {
-    return this.state.foreground ? 'linear-gradient(#d3d3d3, #d0d0d0)' : '#f6f6f6';
+    return this.state.foreground
+      ? 'linear-gradient(#d3d3d3, #d0d0d0)'
+      : '#f6f6f6';
   }
 
   @autobind
@@ -171,10 +169,7 @@ class OmniBar extends React.Component {
     const note = getCurrentNote();
     const currentValue = note ? note.get('title').toLowerCase() : '';
     const pendingValue = this._query ? this._query.toLowerCase() : '';
-    if (
-      this.state.note !== note ||
-      pendingValue !== currentValue
-    ) {
+    if (this.state.note !== note || pendingValue !== currentValue) {
       let value;
       if (this._pendingDeletion != null) {
         value = this._pendingDeletion;
@@ -182,17 +177,14 @@ class OmniBar extends React.Component {
       } else {
         value = getCurrentTitle() || this._query || '';
       }
-      this.setState(
-        {note, value},
-        () => {
-          const input = this._inputRef;
-          if (document.activeElement === input) {
-            if (currentValue && currentValue.startsWith(pendingValue)) {
-              input.setSelectionRange(pendingValue.length, input.value.length);
-            }
+      this.setState({note, value}, () => {
+        const input = this._inputRef;
+        if (document.activeElement === input) {
+          if (currentValue && currentValue.startsWith(pendingValue)) {
+            input.setSelectionRange(pendingValue.length, input.value.length);
           }
         }
-      );
+      });
       // TODO: need to handle case where i type "cheatsheet", then back cursor
       // to start and prefix "jest space"; at that point we jump to the end,
       // but nvALT selects the remaining part
@@ -312,42 +304,37 @@ class OmniBar extends React.Component {
 
   render() {
     const styles = this._getStyles();
-    const iconClass = NotesSelectionStore.selection.size === 1 ?
-      'icon-pencil' :
-      'icon-search';
+    const iconClass =
+      NotesSelectionStore.selection.size === 1 ? 'icon-pencil' : 'icon-search';
     return (
       <div style={styles.root}>
-        <span className={iconClass} style={styles.icon}></span>
+        <span className={iconClass} style={styles.icon} />
         <input
           maxLength={this._getMaxLength()}
           onChange={this._onChange}
           onFocus={this._onFocus}
           onKeyDown={this._onKeyDown}
           placeholder="Search or Create"
-          ref={ref => this._inputRef = ref}
+          ref={ref => (this._inputRef = ref)}
           style={styles.input}
           tabIndex={1}
           type="text"
           value={this.state.value}
         />
-        {
-          this.state.hasError ?
-            <span
+        {this.state.hasError
+          ? <span
               className="icon-attention"
               onClick={this._onAttentionClick}
-              style={styles.attention}>
-            </span> :
-            null
-        }
-        {
-          this.state.value ?
-            <span
+              style={styles.attention}
+            />
+          : null}
+        {this.state.value
+          ? <span
               className="icon-cancel-circled"
               onClick={this._onCancelClick}
-              style={styles.cancel}>
-            </span> :
-            null
-        }
+              style={styles.cancel}
+            />
+          : null}
       </div>
     );
   }

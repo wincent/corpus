@@ -6,8 +6,8 @@
  */
 
 type WrappedValue = {
-  value: mixed;
-  insertionCounter: number;
+  value: mixed,
+  insertionCounter: number,
 };
 
 /**
@@ -93,8 +93,10 @@ export default class Heap {
     // Trickle down until heap property is restored.
     const [leftChildIndex, rightChildIndex] = this._childIndices(parentIndex);
 
-    if (!this._respectsHeapProperty(parentIndex, leftChildIndex) ||
-        !this._respectsHeapProperty(parentIndex, rightChildIndex)) {
+    if (
+      !this._respectsHeapProperty(parentIndex, leftChildIndex) ||
+      !this._respectsHeapProperty(parentIndex, rightChildIndex)
+    ) {
       // Swap with smallest child.
       const smallestChildIndex = this._smallestChildIndex(parentIndex);
       this._swap(smallestChildIndex, parentIndex);
@@ -125,7 +127,7 @@ export default class Heap {
   _childIndices(index: number): [number, number] {
     return [
       2 * (index + 1) - 1, // left child
-      2 * (index + 1)      // right child
+      2 * (index + 1), // right child
     ];
   }
 

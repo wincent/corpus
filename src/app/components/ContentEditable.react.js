@@ -86,7 +86,7 @@ class ContentEditable extends React.Component {
         padding: '8px',
         whiteSpace: 'pre-wrap',
         width: '100%',
-      }
+      },
     };
   }
 
@@ -152,7 +152,7 @@ class ContentEditable extends React.Component {
         }
         break;
 
-       case Keys.TAB:
+      case Keys.TAB:
         // Prevent the <body> from becoming `document.activeElement`.
         if (!event.shiftKey) {
           event.preventDefault();
@@ -178,7 +178,7 @@ class ContentEditable extends React.Component {
         onBlur={this._onBlur}
         onChange={this._onChange}
         onKeyDown={this._onKeyDown}
-        ref={node => this._node = node}
+        ref={node => (this._node = node)}
         style={this._getStyles().root}
         tabIndex={this.props.tabIndex}
         value={this.state.value}
@@ -191,9 +191,6 @@ function mapStateToProps({config}) {
   return {config};
 }
 
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  {withRef: true}
-)(ContentEditable);
+export default connect(mapStateToProps, null, null, {withRef: true})(
+  ContentEditable,
+);

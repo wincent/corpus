@@ -79,7 +79,9 @@ export default class NoteList extends React.Component {
    * Returns the index of the first renderable note in the range.
    */
   _getFirstRenderedNote() {
-    const topEdge = Math.floor(this.state.scrollTop / Constants.PREVIEW_ROW_HEIGHT);
+    const topEdge = Math.floor(
+      this.state.scrollTop / Constants.PREVIEW_ROW_HEIGHT,
+    );
     const first = Math.max(0, topEdge - OFF_VIEWPORT_NOTE_BUFFER_COUNT);
 
     // Always keep last-selected note in the range, even if it means
@@ -98,11 +100,11 @@ export default class NoteList extends React.Component {
   _getLastRenderedNote() {
     const visibleHeight = window.innerHeight - 36;
     const bottomEdge = Math.ceil(
-      (this.state.scrollTop + visibleHeight) / Constants.PREVIEW_ROW_HEIGHT
+      (this.state.scrollTop + visibleHeight) / Constants.PREVIEW_ROW_HEIGHT,
     );
     const last = Math.min(
       this.state.notes.size - 1,
-      bottomEdge + OFF_VIEWPORT_NOTE_BUFFER_COUNT
+      bottomEdge + OFF_VIEWPORT_NOTE_BUFFER_COUNT,
     );
 
     // Always keep last-selected note in the range, even if it means
@@ -255,7 +257,7 @@ export default class NoteList extends React.Component {
   // nicely, use them...
   _updateScrollTop = throttle(
     scrollTop => requestAnimationFrame(() => this.setState({scrollTop})),
-    SCROLL_THROTTLE_INTERVAL
+    SCROLL_THROTTLE_INTERVAL,
   );
 
   @autobind
@@ -276,10 +278,7 @@ export default class NoteList extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.bubbling !== this.state.bubbling &&
-      !this.state.animating
-    ) {
+    if (prevState.bubbling !== this.state.bubbling && !this.state.animating) {
       // Bubbling has been set up (we've re-rendered with the notes in a new
       // order, but with offsets in place to make it seem they haven't moved),
       // so now it's time to actually animate them to their new (real)
@@ -336,7 +335,7 @@ export default class NoteList extends React.Component {
           ref={i}
           selected={selected}
           translate={this._getTranslate(i)}
-        />
+        />,
       );
     }
     return notes;
@@ -345,17 +344,14 @@ export default class NoteList extends React.Component {
   render() {
     const styles = this._getStyles();
     return (
-      <div
-        ref={node => this._ref = node}
-        style={styles.root}>
+      <div ref={node => (this._ref = node)} style={styles.root}>
         <ul
           onBlur={this._onBlur}
           onFocus={this._onFocus}
           onKeyDown={this._onKeyDown}
-          ref={ref => this._ulRef = ref}
+          ref={ref => (this._ulRef = ref)}
           style={styles.list}
-          tabIndex={2}
-        >
+          tabIndex={2}>
           {this._renderNotes()}
         </ul>
       </div>

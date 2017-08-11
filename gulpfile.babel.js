@@ -82,6 +82,13 @@ gulp.task('lint', () => {
     .pipe(eslint.format())
 });
 
+gulp.task('fix', () => {
+  return gulp.src('src/**/*.js', {base: './'})
+    .pipe(eslint({fix: true}))
+    .pipe(eslint.format())
+    .pipe(gulp.dest('./'));
+});
+
 gulp.task('typecheck', () => {
   return gulp.src('src/**/*.js')
     .pipe(flow())

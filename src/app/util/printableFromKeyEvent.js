@@ -26,10 +26,7 @@ export default function printableFromKeyEvent(event: Event): ?string {
     let codePoint = parseInt(match[1], 16);
     if (codePoint >= Keys.SPACE && codePoint <= Keys.TILDE) {
       // Printable ASCII.
-      if (
-        codePoint >= Keys.A && codePoint <= Keys.Z &&
-        !event.shiftKey
-      ) {
+      if (codePoint >= Keys.A && codePoint <= Keys.Z && !event.shiftKey) {
         codePoint += 32; // Make lowercase.
       }
       return String.fromCodePoint(codePoint);

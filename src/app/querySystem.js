@@ -26,7 +26,7 @@ export default async function querySystem(config) {
       run('getconf', 'NAME_MAX', notesDirectory).then(parseValue),
       run('getconf', 'PATH_MAX', notesDirectory).then(parseValue),
     ]);
-  } catch(error) {
+  } catch (error) {
     log.warn(error);
   }
 

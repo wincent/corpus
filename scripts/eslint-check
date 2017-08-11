@@ -1,0 +1,7 @@
+#!/bin/sh
+
+eslint --print-config .eslintrc.json | eslint-config-prettier-check
+find src \
+  -name .eslintrc.json \
+  -print \
+  -exec sh -c 'cat {} | eslint-config-prettier-check' \;

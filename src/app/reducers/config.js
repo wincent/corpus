@@ -18,15 +18,15 @@ const defaults = {
     'Library',
     'Application Support',
     'Corpus',
-    'Notes'
+    'Notes',
   ),
   noteFontFamily: 'Monaco',
   noteFontSize: '12',
 };
 
 const Config = ImmutableRecord(defaults);
-const configFile = process.env.CORPUSRC ||
-  path.join(process.env.HOME, '.corpusrc');
+const configFile =
+  process.env.CORPUSRC || path.join(process.env.HOME, '.corpusrc');
 
 const mergerConfig = {
   notesDirectory(value, key) {
@@ -50,11 +50,12 @@ function requireString(maybeString, key) {
 function merge(state, maybeObject) {
   Object.keys(maybeObject).forEach(key => {
     try {
-      const value = key in mergerConfig ?
-        mergerConfig[key](maybeObject[key], key) :
-        requireString(maybeObject[key], key);
+      const value =
+        key in mergerConfig
+          ? mergerConfig[key](maybeObject[key], key)
+          : requireString(maybeObject[key], key);
       state = state.set(key, value);
-    } catch(error) {
+    } catch (error) {
       log.warn(`Problem with key ${key} in ${configFile}: ${error}`);
     }
   });

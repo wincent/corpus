@@ -49,13 +49,15 @@ export default [
     submenu: [
       {
         accelerator: 'Command+R',
-        click: () => BrowserWindow.getFocusedWindow().webContents.send('rename'),
+        click: () =>
+          BrowserWindow.getFocusedWindow().webContents.send('rename'),
         enabled: false,
         label: 'Rename',
       },
       {
         accelerator: 'Command+Backspace',
-        click: () => BrowserWindow.getFocusedWindow().webContents.send('delete'),
+        click: () =>
+          BrowserWindow.getFocusedWindow().webContents.send('delete'),
         enabled: false,
         label: 'Delete...',
       },
@@ -63,13 +65,15 @@ export default [
       {
         accelerator: 'Command+L',
         label: 'Search or Create...', // TODO: use a real ellipsis?
-        click: () => BrowserWindow.getFocusedWindow().webContents.send('search'),
+        click: () =>
+          BrowserWindow.getFocusedWindow().webContents.send('search'),
       },
       {type: 'separator'},
       {
         accelerator: 'Shift+Command+R',
         label: 'Show in Finder',
-        click: () => BrowserWindow.getFocusedWindow().webContents.send('reveal'),
+        click: () =>
+          BrowserWindow.getFocusedWindow().webContents.send('reveal'),
       },
     ],
   },
@@ -108,7 +112,7 @@ export default [
         label: 'Select All',
         selector: 'selectAll:',
       },
-    ]
+    ],
   },
   {
     label: 'View',
@@ -120,9 +124,10 @@ export default [
       },
       {
         accelerator: 'Command+K',
-        click: () => BrowserWindow.getFocusedWindow().webContents.send('previous'),
+        click: () =>
+          BrowserWindow.getFocusedWindow().webContents.send('previous'),
         label: 'Previous Note',
-      }
+      },
     ],
   },
   {
@@ -130,7 +135,8 @@ export default [
     submenu: [
       {
         accelerator: 'Alt+Command+R',
-        click: () => BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache(),
+        click: () =>
+          BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache(),
         label: 'Reload',
       },
       {
@@ -158,10 +164,10 @@ export default [
         label: 'Bring All to Front',
         selector: 'arrangeInFront:',
       },
-    ]
+    ],
   },
   {
     label: 'Help',
-    submenu: []
+    submenu: [],
   },
 ];

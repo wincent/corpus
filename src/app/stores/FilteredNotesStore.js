@@ -16,7 +16,7 @@ let query = null;
 let notes = filter(query);
 
 function filter(value: ?string): ImmutableList {
-  const patterns = (
+  const patterns =
     value != null &&
     value.trim().split(/\s+/).map(string => {
       if (string.startsWith('#')) {
@@ -30,37 +30,38 @@ function filter(value: ?string): ImmutableList {
           type: 'string',
         };
       }
-    })
-  );
+    });
   if (patterns && patterns.length) {
     const indices = [];
     return NotesStore.notes
       .filter((note, index) => {
-        if ((patterns.every(pattern => {
-          if (pattern.type === 'tag') {
-            return note.get('tags').has(pattern.tag);
-          } else {
-            // Plain text search.
-            return (
-              note.get('title').search(pattern.finder) !== -1 ||
-              note.get('text').search(pattern.finder) !== -1
-            );
-          }
-        }))) {
+        if (
+          patterns.every(pattern => {
+            if (pattern.type === 'tag') {
+              return note.get('tags').has(pattern.tag);
+            } else {
+              // Plain text search.
+              return (
+                note.get('title').search(pattern.finder) !== -1 ||
+                note.get('text').search(pattern.finder) !== -1
+              );
+            }
+          })
+        ) {
           indices.push(index);
           return true;
         }
         return false;
       })
-      .map((note, index) => (
+      .map((note, index) =>
         // Augment note with its index within the NotesStore.
-        note.set('index', indices[index])
-      ));
+        note.set('index', indices[index]),
+      );
   } else {
-    return NotesStore.notes.map((note, index) => (
+    return NotesStore.notes.map((note, index) =>
       // Augment note with its index within the NoteStore.
-      note.set('index', index)
-    ));
+      note.set('index', index),
+    );
   }
 }
 

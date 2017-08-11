@@ -16,9 +16,7 @@ const {app} = remote;
  * user to exit.
  */
 function handleError(error, context) {
-  const result = confirm(
-    `${context}\n\n${error}\n\nDo you want to exit?`
-  );
+  const result = confirm(`${context}\n\n${error}\n\nDo you want to exit?`);
   if (result) {
     app.quit();
   }

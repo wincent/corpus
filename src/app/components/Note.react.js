@@ -75,7 +75,7 @@ export default class Note extends React.Component {
         <ContentEditable
           note={note}
           onBlur={this._onBlur}
-          ref={node => this._node = node}
+          ref={node => (this._node = node)}
           tabIndex={3}
         />
       );

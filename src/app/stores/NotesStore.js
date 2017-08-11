@@ -41,7 +41,7 @@ const utimes = Promise.promisify(fs.utimes);
 const write = Promise.promisify(fs.write);
 
 type PathMap = {
-  [path: string]: boolean;
+  [path: string]: boolean,
 };
 
 /**
@@ -50,7 +50,8 @@ type PathMap = {
  *
  * Intended to increase perceived responsiveness.
  */
-const PRELOAD_COUNT = Math.floor(window.innerHeight / Constants.PREVIEW_ROW_HEIGHT) + 5;
+const PRELOAD_COUNT =
+  Math.floor(window.innerHeight / Constants.PREVIEW_ROW_HEIGHT) + 5;
 
 /**
  * Ordered collection of notes (as they appear in the NoteList).
@@ -87,7 +88,8 @@ async function getStatInfo(fileName: string): Promise<ImmutableMap> {
   let statResult;
   try {
     statResult = await stat(notePath);
-  } catch(error) { // eslint-disable-line no-empty
+  } catch (error) {
+    // eslint-disable-line no-empty
     // Do nothing.
   }
 
@@ -120,7 +122,7 @@ async function readContents(info: ImmutableMap): Promise<ImmutableMap> {
       text: content,
       tags: ImmutableSet(unpacked.tags),
     });
-  } catch(error) {
+  } catch (error) {
     // Soft-ignore the error. We return `null` here because we don't want views
     // to blow up trying to access `body`, `text` and `tags` (and we don't want
     // to provide default values for `body` etc because the user could use those
@@ -133,7 +135,7 @@ async function readContents(info: ImmutableMap): Promise<ImmutableMap> {
 function appendResults(results) {
   if (results.length) {
     notes = notes.push(...results);
-    results.forEach(note => pathMap[note.get('path')] = true);
+    results.forEach(note => (pathMap[note.get('path')] = true));
     Actions.notesLoaded();
   }
 }
@@ -165,23 +167,25 @@ function createNote(title) {
     try {
       const fd = await open(
         notePath,
-        'wx' // w = write, x = fail if already exists
+        'wx', // w = write, x = fail if already exists
       );
       await fsync(fd);
       await close(fd);
-      notes = notes.unshift(ImmutableMap({
-        body: '',
-        id: noteID++,
-        mtime: Date.now(),
-        path: notePath,
-        tags: ImmutableSet([]),
-        text: '',
-        title,
-      }));
+      notes = notes.unshift(
+        ImmutableMap({
+          body: '',
+          id: noteID++,
+          mtime: Date.now(),
+          path: notePath,
+          tags: ImmutableSet([]),
+          text: '',
+          title,
+        }),
+      );
       pathMap[notePath] = true;
       Actions.noteCreationCompleted();
       Actions.changePersisted();
-    } catch(error) {
+    } catch (error) {
       handleError(error, `Failed to open ${notePath} for writing`);
     }
   });
@@ -192,17 +196,14 @@ function deleteNotes(deletedNotes) {
   // `waitFor(GitStore.dispatchToken` here without adding a circular dependency.
   // TODO: make this force a write for unsaved changes in active text area
   const repo = new Repo(ConfigStore.config.notesDirectory);
-  OperationsQueue.enqueue(
-    async () => {
-      try {
-        await repo.add('*.md');
-        await repo.commit('Corpus (pre-deletion) snapshot');
-      } catch(error) {
-        handleError(error, 'Failed to create Git commit');
-      }
-    },
-    OperationsQueue.DEFAULT_PRIORITY - 20
-  );
+  OperationsQueue.enqueue(async () => {
+    try {
+      await repo.add('*.md');
+      await repo.commit('Corpus (pre-deletion) snapshot');
+    } catch (error) {
+      handleError(error, 'Failed to create Git commit');
+    }
+  }, OperationsQueue.DEFAULT_PRIORITY - 20);
 
   deletedNotes.forEach(note => {
     OperationsQueue.enqueue(async () => {
@@ -210,7 +211,7 @@ function deleteNotes(deletedNotes) {
       try {
         await unlink(notePath);
         delete pathMap[notePath];
-      } catch(error) {
+      } catch (error) {
         handleError(error, `Failed to delete ${notePath}`);
       }
     });
@@ -229,7 +230,7 @@ function updateNote(note) {
       await utimes(notePath, time, time);
       await fsync(fd);
       Actions.changePersisted();
-    } catch(error) {
+    } catch (error) {
       handleError(error, `Failed to write ${notePath}`);
     } finally {
       if (fd) {
@@ -248,7 +249,7 @@ function renameNote(oldPath, newPath) {
       delete pathMap[oldPath];
       pathMap[newPath] = true;
       Actions.changePersisted();
-    } catch(error) {
+    } catch (error) {
       handleError(error, `Failed to rename ${oldPath} to ${newPath}`);
     }
   });
@@ -273,7 +274,7 @@ function loadNotes() {
         let results = await Promise.all(batch.map(readContents));
         appendResults(results.filter(filterErrors));
       }
-    } catch(error) {
+    } catch (error) {
       handleError(error, 'Failed to read notes from disk');
     }
   });
@@ -313,10 +314,7 @@ class NotesStore extends Store {
             tags: ImmutableSet(unpacked.tags),
             text: payload.text,
           };
-          notes = notes.mergeIn(
-            [payload.index],
-            update
-          );
+          notes = notes.mergeIn([payload.index], update);
           const note = notes.get(payload.index);
 
           if (!payload.isAutosave) {
@@ -340,10 +338,7 @@ class NotesStore extends Store {
             title: payload.title,
           };
           const originalNote = notes.get(payload.index);
-          notes = notes.mergeIn(
-            [payload.index],
-            update
-          );
+          notes = notes.mergeIn([payload.index], update);
 
           // Bump note to top of list.
           const newNote = notes.get(payload.index);

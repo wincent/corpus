@@ -37,13 +37,15 @@ describe('Store', () => {
   xit('complains when handleDispatch is not overridden', () => {
     // Using the abstract class directly.
     let store = new Store();
-    expect(() => store.handleDispatch({}))
-      .toThrow('Store does not implement handleDispatch');
+    expect(() => store.handleDispatch({})).toThrow(
+      'Store does not implement handleDispatch',
+    );
 
     // Making an invalid subclass.
     class MyStore extends Store {}
     store = new MyStore();
-    expect(() => store.handleDispatch({}))
-      .toThrow('MyStore does not implement handleDispatch');
+    expect(() => store.handleDispatch({})).toThrow(
+      'MyStore does not implement handleDispatch',
+    );
   });
 });

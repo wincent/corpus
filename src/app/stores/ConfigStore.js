@@ -23,7 +23,7 @@ const defaults = {
     'Library',
     'Application Support',
     'Corpus',
-    'Notes'
+    'Notes',
   ),
   noteFontFamily: 'Monaco',
   noteFontSize: '12',
@@ -31,8 +31,8 @@ const defaults = {
 
 const Config = ImmutableRecord(defaults);
 let config = new Config({});
-const configFile = process.env.CORPUSRC ||
-  path.join(process.env.HOME, '.corpusrc');
+const configFile =
+  process.env.CORPUSRC || path.join(process.env.HOME, '.corpusrc');
 
 const mergerConfig = {
   notesDirectory(value, key) {
@@ -53,11 +53,12 @@ function requireString(maybeString, key) {
 function validateAndStore(maybeObject) {
   Object.keys(maybeObject).forEach(key => {
     try {
-      const value = key in mergerConfig ?
-        mergerConfig[key](maybeObject[key], key) :
-        requireString(maybeObject[key], key);
+      const value =
+        key in mergerConfig
+          ? mergerConfig[key](maybeObject[key], key)
+          : requireString(maybeObject[key], key);
       config = config.set(key, value);
-    } catch(error) {
+    } catch (error) {
       log.warn(`Problem with key ${key} in ${configFile}: ${error}`);
     }
   });
@@ -68,7 +69,7 @@ async function readConfig() {
     const data = await readFile(configFile);
     const parsed = JSON.parse(data.toString());
     validateAndStore(parsed);
-  } catch(error) {
+  } catch (error) {
     log.warn(`Reading ${configFile}: ${error.message}`);
   }
   Actions.configLoaded();
@@ -80,7 +81,8 @@ class ConfigStore extends Store {
     requestAnimationFrame(readConfig);
   }
 
-  handleDispatch(payload) { // eslint-disable-line no-unused-vars
+  handleDispatch(payload) {
+    // eslint-disable-line no-unused-vars
     // Required override, but we have nothing to do.
   }
 

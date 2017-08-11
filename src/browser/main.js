@@ -41,7 +41,7 @@ app.on('ready', () => {
         click: () => mainWindow.webContents.send('rename'),
         enabled: renameEnabled,
         label: 'Rename',
-      })
+      }),
     );
     contextualMenu.append(
       new MenuItem({
@@ -49,18 +49,16 @@ app.on('ready', () => {
         click: () => mainWindow.webContents.send('delete'),
         enabled: deleteEnabled,
         label: 'Delete...',
-      })
+      }),
     );
-    contextualMenu.append(
-      new MenuItem({type: 'separator'})
-    );
+    contextualMenu.append(new MenuItem({type: 'separator'}));
     contextualMenu.append(
       new MenuItem({
         accelerator: 'Shift+Command+R',
         click: () => mainWindow.webContents.send('reveal'),
         enabled: revealEnabled,
         label: 'Show in Finder',
-      })
+      }),
     );
     contextualMenu.popup(mainWindow);
   });

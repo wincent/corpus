@@ -128,11 +128,7 @@ export default class NotePreview extends React.Component {
     const isPrivate = note.get('tags').has('private');
     return {
       root: {
-        background: (
-          focused ? '#6f6f73' :
-          selected ? '#c8c8c8' :
-          'inherit'
-        ),
+        background: focused ? '#6f6f73' : selected ? '#c8c8c8' : 'inherit',
         borderBottom: '1px solid #c0c0c0',
         fontFamily: 'Helvetica Neue',
         fontSize: '11px',
@@ -145,27 +141,19 @@ export default class NotePreview extends React.Component {
       text: {
         WebkitBoxOrient: 'vertical',
         WebkitLineClamp: 2,
-        color: (
-          isPrivate ? 'transparent' :
-          focused ? '#fff' :
-          selected ? '#4e4e4e' :
-          '#a3a3a3'
-        ),
+        color: isPrivate
+          ? 'transparent'
+          : focused ? '#fff' : selected ? '#4e4e4e' : '#a3a3a3',
         display: '-webkit-box',
         fontWeight: 'normal',
         overflow: 'hidden',
-        textShadow: (
-          isPrivate && focused ? '0 0 5px rgba(255, 255, 255, .5)' :
-          isPrivate ? '0 0 5px rgba(0, 0, 0, .25)' :
-          'unset'
-        ),
+        textShadow:
+          isPrivate && focused
+            ? '0 0 5px rgba(255, 255, 255, .5)'
+            : isPrivate ? '0 0 5px rgba(0, 0, 0, .25)' : 'unset',
       },
       title: {
-        color: (
-          focused ? '#fff' :
-          selected ? '#4e4e4e' :
-          '#4f4f4f'
-        ),
+        color: focused ? '#fff' : selected ? '#4e4e4e' : '#4f4f4f',
         fontWeight: 'bold',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -185,7 +173,7 @@ export default class NotePreview extends React.Component {
         isEditing: true,
         pendingTitle: this.props.note.get('title'),
       },
-      () => this.ref.scrollIntoViewIfNeeded(false)
+      () => this.ref.scrollIntoViewIfNeeded(false),
     );
   }
 
@@ -215,7 +203,8 @@ export default class NotePreview extends React.Component {
 
   @autobind
   _onClick(event) {
-    if (event.metaKey && event.shiftKey) { // eslint-disable-line no-empty
+    if (event.metaKey && event.shiftKey) {
+      // eslint-disable-line no-empty
       // TODO: in nvALT this is some kind of drag;
       // eg. to a text document -> copies path
       // to desktop -> copies document
@@ -275,7 +264,7 @@ export default class NotePreview extends React.Component {
     }
 
     if (
-      event.button === Mouse.LEFT_BUTTON && event.ctrlKey ||
+      (event.button === Mouse.LEFT_BUTTON && event.ctrlKey) ||
       event.button === Mouse.RIGHT_BUTTON
     ) {
       // Context menu is about to appear.
@@ -317,9 +306,7 @@ export default class NotePreview extends React.Component {
       const styles = this._getStyles();
       const title = this.props.note.get('title').substr(0, TITLE_LENGTH);
       return (
-        <p
-          onDoubleClick={this._onDoubleClick}
-          style={styles.title}>
+        <p onDoubleClick={this._onDoubleClick} style={styles.title}>
           {title}
         </p>
       );
@@ -359,7 +346,7 @@ export default class NotePreview extends React.Component {
         onClick={this._onClick}
         onContextMenu={this._onContextMenu}
         onMouseDown={this._onMouseDown}
-        ref={node => this.ref = node}
+        ref={node => (this.ref = node)}
         style={styles.root}>
         {this._renderTitle()}
         <p style={styles.text}>

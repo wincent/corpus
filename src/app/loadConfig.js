@@ -13,14 +13,14 @@ import * as log from './log';
 
 const readFile = Promise.promisify(fs.readFile);
 
-const configFile = process.env.CORPUSRC ||
-  path.join(process.env.HOME, '.corpusrc');
+const configFile =
+  process.env.CORPUSRC || path.join(process.env.HOME, '.corpusrc');
 
 export default async function loadConfig() {
   try {
     const data = await readFile(configFile);
     return JSON.parse(data.toString());
-  } catch(error) {
+  } catch (error) {
     log.warn(`Reading ${configFile}: ${error.message}`);
   }
 }

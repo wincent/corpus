@@ -6,7 +6,5 @@
     "global": true,
     "setImmediate": false
   },
-  "plugins": [
-    "react"
-  ]
+  "rules": {}
 }

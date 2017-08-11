@@ -26,5 +26,5 @@ render(
   <Provider store={store}>
     <Corpus />
   </Provider>,
-  root
+  root,
 );

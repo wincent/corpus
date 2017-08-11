@@ -49,10 +49,9 @@ export default function pure(target) {
   let original = target.prototype.shouldComponentUpdate;
 
   function shouldComponentUpdate(nextProps, nextState) {
-    const pureResult = (
+    const pureResult =
       !shallowEqual(this.props, nextProps) ||
-      !shallowEqual(this.state, nextState)
-    );
+      !shallowEqual(this.state, nextState);
 
     if (pureResult) {
       return true;

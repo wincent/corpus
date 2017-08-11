@@ -1,7 +1,10 @@
 {
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react"
   ],
   "env": {
     "es6": true
@@ -14,6 +17,8 @@
     }
   },
   "plugins": [
+    "flowtype",
+    "prettier",
     "react"
   ],
   "rules": {
@@ -35,6 +40,11 @@
     "no-alert": [0],
     "no-underscore-dangle": [0],
     "no-use-before-define": [0],
-    "quotes": [1, "single", "avoid-escape"]
+    "prettier/prettier": ["error", {
+      "singleQuote": true,
+      "trailingComma": "all",
+      "bracketSpacing": false,
+      "jsxBracketSameLine": true
+    }]
   }
 }

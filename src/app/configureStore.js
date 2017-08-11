@@ -12,10 +12,7 @@ import saga from './saga';
 
 export default function configureStore() {
   const sagaMiddleware = createSagaMiddleware();
-  const store = createStore(
-    reducer,
-    applyMiddleware(sagaMiddleware)
-  );
+  const store = createStore(reducer, applyMiddleware(sagaMiddleware));
   sagaMiddleware.run(saga);
   return store;
 }

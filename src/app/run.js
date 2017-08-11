@@ -13,7 +13,7 @@ function run(command, ...args: Array<string>): Promise {
     const child = spawn(command, args);
     let stdout = '';
 
-    child.stdout.on('data', data => stdout += data);
+    child.stdout.on('data', data => (stdout += data));
 
     child.on('error', error => {
       if (promise.isPending()) {
@@ -30,7 +30,6 @@ function run(command, ...args: Array<string>): Promise {
         resolve(stdout);
       }
     });
-
   });
 
   return promise;

@@ -11,8 +11,5 @@
  */
 export default function stringFinder(string: string): RegExp {
   // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-  return new RegExp(
-    string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-    'i'
-  );
+  return new RegExp(string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
 }
