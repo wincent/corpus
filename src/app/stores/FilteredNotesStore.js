@@ -5,8 +5,7 @@
  * @flow
  */
 
-// babel-eslint issue: https://github.com/babel/babel-eslint/issues/108
-import type {List as ImmutableList} from 'immutable'; // eslint-disable-line no-unused-vars
+import type {List as ImmutableList} from 'immutable';
 
 import Actions from '../Actions';
 import NotesStore from './NotesStore';
