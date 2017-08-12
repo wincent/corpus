@@ -41,7 +41,7 @@ function exec(command) {
  * task from dying on error).
  */
 function wrap(stream) {
-  stream.on('error', err => {
+  stream.on('error', error => {
     gutil.log(gutil.colors.red(error.message));
     gutil.log(error.stack);
     if (watching) {
