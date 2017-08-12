@@ -6,6 +6,7 @@
  */
 
 import autobind from 'autobind-decorator';
+import PropTypes from 'prop-types';
 import React from 'react';
 import Immutable from 'immutable';
 
@@ -15,7 +16,7 @@ const viewStates = {};
 
 export default class Note extends React.Component {
   static propTypes = {
-    note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+    note: PropTypes.instanceOf(Immutable.Map).isRequired,
   };
 
   _recordViewState() {

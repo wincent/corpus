@@ -7,6 +7,7 @@
 
 import autobind from 'autobind-decorator';
 import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
 
@@ -21,10 +22,10 @@ import performKeyboardNavigation from '../performKeyboardNavigation';
 
 class ContentEditable extends React.Component {
   static propTypes = {
-    config: React.PropTypes.instanceOf(Immutable.Record),
-    note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
-    onBlur: React.PropTypes.func.isRequired,
-    tabIndex: React.PropTypes.number,
+    config: PropTypes.instanceOf(Immutable.Record),
+    note: PropTypes.instanceOf(Immutable.Map).isRequired,
+    onBlur: PropTypes.func.isRequired,
+    tabIndex: PropTypes.number,
   };
 
   _autosave = debounce(() => this._persistChanges(true), 5000);

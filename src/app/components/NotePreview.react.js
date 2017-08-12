@@ -6,6 +6,7 @@
  */
 
 import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 import React from 'react';
 import autobind from 'autobind-decorator';
 import {ipcRenderer} from 'electron';
@@ -49,8 +50,8 @@ const Tag = ({focused, tag}) => {
   );
 };
 Tag.propTypes = {
-  focused: React.PropTypes.bool,
-  tag: React.PropTypes.string.isRequired,
+  focused: PropTypes.bool,
+  tag: PropTypes.string.isRequired,
 };
 
 const Tags = ({tags, ...extraProps}) => {
@@ -66,18 +67,18 @@ const Tags = ({tags, ...extraProps}) => {
   );
 };
 Tags.propTypes = {
-  tags: React.PropTypes.instanceOf(Immutable.Set).isRequired,
+  tags: PropTypes.instanceOf(Immutable.Set).isRequired,
 };
 
 @pure
 export default class NotePreview extends React.Component {
   static propTypes = {
-    animating: React.PropTypes.bool,
-    focused: React.PropTypes.bool,
-    index: React.PropTypes.number.isRequired,
-    note: React.PropTypes.instanceOf(Immutable.Map).isRequired,
-    selected: React.PropTypes.bool,
-    translate: React.PropTypes.number,
+    animating: PropTypes.bool,
+    focused: PropTypes.bool,
+    index: PropTypes.number.isRequired,
+    note: PropTypes.instanceOf(Immutable.Map).isRequired,
+    selected: PropTypes.bool,
+    translate: PropTypes.number,
   };
   static defaultProps = {
     focused: false,

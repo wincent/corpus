@@ -6,6 +6,7 @@
  */
 
 import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 import React from 'react';
 import autobind from 'autobind-decorator';
 import {remote} from 'electron';
@@ -38,8 +39,8 @@ function getCurrentTitle() {
 
 class OmniBar extends React.Component {
   static propTypes = {
-    logs: React.PropTypes.instanceOf(Immutable.List),
-    system: React.PropTypes.instanceOf(Immutable.Map),
+    logs: PropTypes.instanceOf(Immutable.List),
+    system: PropTypes.instanceOf(Immutable.Map),
   };
 
   constructor(props) {

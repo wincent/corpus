@@ -290,7 +290,7 @@ export default class NoteList extends React.Component {
       if (this.state.selection.size) {
         // Maintain last selection within view.
         const lastIndex = this.state.selection.last();
-        const last = this.refs[lastIndex];
+        const last = this.refs[lastIndex]; // eslint-disable-line react/no-string-refs
         last.ref.scrollIntoViewIfNeeded(false);
       } else {
         // If we cleared the selection by pressing Escape or entering a

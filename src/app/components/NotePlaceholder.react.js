@@ -5,6 +5,7 @@
  * @flow
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const styles = {
@@ -31,7 +32,7 @@ const styles = {
 
 export default class NotePlaceholder extends React.Component {
   static propTypes = {
-    count: React.PropTypes.number.isRequired,
+    count: PropTypes.number.isRequired,
   };
 
   _onMouseDown(event) {

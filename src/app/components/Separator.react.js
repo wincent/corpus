@@ -5,6 +5,7 @@
  * @flow
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 import autobind from 'autobind-decorator';
 
@@ -21,7 +22,7 @@ const styles = {
 
 export default class Separator extends React.Component {
   static propTypes = {
-    onMouseMove: React.PropTypes.func.isRequired,
+    onMouseMove: PropTypes.func.isRequired,
   };
 
   @autobind

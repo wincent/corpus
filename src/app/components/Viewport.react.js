@@ -5,6 +5,7 @@
  * @flow
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const styles = {
@@ -18,7 +19,7 @@ const styles = {
 
 export default class Viewport extends React.Component {
   static propTypes = {
-    children: React.PropTypes.arrayOf(React.PropTypes.element).isRequired,
+    children: PropTypes.arrayOf(PropTypes.element).isRequired,
   };
 
   render() {
