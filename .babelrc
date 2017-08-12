@@ -8,13 +8,15 @@
     }
   },
   "plugins": [
+    "transform-class-properties",
     "transform-decorators-legacy",
-    "transform-es2015-modules-commonjs"
+    "transform-object-rest-spread"
   ],
   "presets": [
-    "es2016",
-    "es2017",
-    "react",
-    "stage-0"
+    ["env", {
+      "targets": "electron",
+      "useBuiltIns": true
+    }],
+    "react"
   ]
 }
