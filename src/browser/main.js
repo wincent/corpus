@@ -5,6 +5,7 @@
  * @flow
  */
 
+import 'babel-polyfill';
 import {BrowserWindow, Menu, MenuItem, app, ipcMain} from 'electron';
 import path from 'path';
 
