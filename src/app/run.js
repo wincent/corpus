@@ -12,11 +12,22 @@ function run(command, ...args: Array<string>): Promise {
   const promise = new Promise((resolve, reject) => {
     const child = spawn(command, args);
     let stdout = '';
+    let stderr = '';
 
+    function log(message) {
+      /* eslint-disable no-console */
+      console.error(message);
+      console.error(`stdout: ${stdout}`);
+      console.error(`stderr: ${stderr}`);
+      /* eslint-enable no-console */
+    }
+
+    child.stderr.on('data', data => (stderr += data));
     child.stdout.on('data', data => (stdout += data));
 
     child.on('error', error => {
       if (promise.isPending()) {
+        log(`error: ${error}`);
         reject(error);
       }
     });
@@ -24,6 +35,7 @@ function run(command, ...args: Array<string>): Promise {
     child.on('close', code => {
       if (code) {
         if (promise.isPending()) {
+          log(`exit code: ${code}`);
           reject(code);
         }
       } else {
