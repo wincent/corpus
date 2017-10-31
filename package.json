@@ -14,7 +14,9 @@
   },
   "jest": {
     "rootDir": "src",
-    "scriptPreprocessor": "<rootDir>/../node_modules/babel-jest/index.js"
+    "transform": {
+      ".*": "<rootDir>/../node_modules/babel-jest/build/index.js"
+    }
   },
   "repository": {
     "type": "git",

@@ -7,19 +7,16 @@
 
 import Promise from 'bluebird';
 import fs from 'fs';
-import path from 'path';
-import process from 'process';
+import configFile from './configFile';
 import * as log from './log';
+import stripComments from './stripComments';
 
 const readFile = Promise.promisify(fs.readFile);
-
-const configFile =
-  process.env.CORPUSRC || path.join(process.env.HOME, '.corpusrc');
 
 export default async function loadConfig() {
   try {
     const data = await readFile(configFile);
-    return JSON.parse(data.toString());
+    return JSON.parse(stripComments(data.toString()));
   } catch (error) {
     log.warn(`Reading ${configFile}: ${error.message}`);
   }

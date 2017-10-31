@@ -6,16 +6,14 @@
  */
 
 import {Record as ImmutableRecord} from 'immutable';
-import Promise from 'bluebird';
-import fs from 'fs';
 import path from 'path';
 import process from 'process';
 
 import Actions from '../Actions';
 import Store from './Store';
+import configFile from '../configFile';
+import loadConfig from '../loadConfig';
 import * as log from '../log';
-
-const readFile = Promise.promisify(fs.readFile);
 
 const defaults = {
   notesDirectory: path.join(
@@ -31,8 +29,6 @@ const defaults = {
 
 const Config = ImmutableRecord(defaults);
 let config = new Config({});
-const configFile =
-  process.env.CORPUSRC || path.join(process.env.HOME, '.corpusrc');
 
 const mergerConfig = {
   notesDirectory(value, key) {
@@ -64,21 +60,16 @@ function validateAndStore(maybeObject) {
   });
 }
 
-async function readConfig() {
-  try {
-    const data = await readFile(configFile);
-    const parsed = JSON.parse(data.toString());
-    validateAndStore(parsed);
-  } catch (error) {
-    log.warn(`Reading ${configFile}: ${error.message}`);
-  }
-  Actions.configLoaded();
-}
-
 class ConfigStore extends Store {
   constructor() {
     super();
-    requestAnimationFrame(readConfig);
+    requestAnimationFrame(async () => {
+      const data = await loadConfig();
+      if (data) {
+        validateAndStore(data);
+      }
+      Actions.configLoaded();
+    });
   }
 
   /* eslint-disable no-unused-vars */
