@@ -349,9 +349,7 @@ export default class NotePreview extends React.Component {
         ref={node => (this.ref = node)}
         style={styles.root}>
         {this._renderTitle()}
-        <p style={styles.text}>
-          {text}
-        </p>
+        <p style={styles.text}>{text}</p>
         <Tags focused={focused} tags={note.get('tags')} />
       </li>
     );

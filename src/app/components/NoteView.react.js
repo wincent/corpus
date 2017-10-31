@@ -61,10 +61,6 @@ export default class NoteView extends React.Component {
     } else {
       note = <NotePlaceholder count={this.state.count} />;
     }
-    return (
-      <div style={styles.root}>
-        {note}
-      </div>
-    );
+    return <div style={styles.root}>{note}</div>;
   }
 }

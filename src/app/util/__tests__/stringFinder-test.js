@@ -5,7 +5,7 @@
 
 jest.dontMock('../stringFinder');
 
-const stringFinder = require('../stringFinder');
+import stringFinder from '../stringFinder';
 
 describe('stringFinder', () => {
   let haystack;

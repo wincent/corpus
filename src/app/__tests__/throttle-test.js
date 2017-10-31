@@ -5,7 +5,7 @@
 
 jest.dontMock('../throttle');
 
-const throttle = require('../throttle');
+import throttle from '../throttle';
 
 describe('throttle()', () => {
   let mockFunction;

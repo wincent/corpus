@@ -18,19 +18,22 @@ let notes = filter(query);
 function filter(value: ?string): ImmutableList {
   const patterns =
     value != null &&
-    value.trim().split(/\s+/).map(string => {
-      if (string.startsWith('#')) {
-        return {
-          tag: string.slice(1),
-          type: 'tag',
-        };
-      } else {
-        return {
-          finder: stringFinder(string),
-          type: 'string',
-        };
-      }
-    });
+    value
+      .trim()
+      .split(/\s+/)
+      .map(string => {
+        if (string.startsWith('#')) {
+          return {
+            tag: string.slice(1),
+            type: 'tag',
+          };
+        } else {
+          return {
+            finder: stringFinder(string),
+            type: 'string',
+          };
+        }
+      });
   if (patterns && patterns.length) {
     const indices = [];
     return NotesStore.notes

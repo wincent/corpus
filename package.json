@@ -14,6 +14,7 @@
   },
   "jest": {
     "rootDir": "src",
+    "timers": "fake",
     "transform": {
       ".*": "<rootDir>/../node_modules/babel-jest/build/index.js"
     }

@@ -10,7 +10,7 @@ describe('Heap', () => {
   let heap;
 
   beforeEach(() => {
-    Heap = require('../Heap');
+    Heap = require('../Heap').default;
     heap = new Heap();
   });
 

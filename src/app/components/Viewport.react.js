@@ -23,10 +23,6 @@ export default class Viewport extends React.Component {
   };
 
   render() {
-    return (
-      <div style={styles.root}>
-        {this.props.children}
-      </div>
-    );
+    return <div style={styles.root}>{this.props.children}</div>;
   }
 }

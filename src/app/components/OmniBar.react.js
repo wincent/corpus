@@ -322,20 +322,20 @@ class OmniBar extends React.Component {
           type="text"
           value={this.state.value}
         />
-        {this.state.hasError
-          ? <span
-              className="icon-attention"
-              onClick={this._onAttentionClick}
-              style={styles.attention}
-            />
-          : null}
-        {this.state.value
-          ? <span
-              className="icon-cancel-circled"
-              onClick={this._onCancelClick}
-              style={styles.cancel}
-            />
-          : null}
+        {this.state.hasError ? (
+          <span
+            className="icon-attention"
+            onClick={this._onAttentionClick}
+            style={styles.attention}
+          />
+        ) : null}
+        {this.state.value ? (
+          <span
+            className="icon-cancel-circled"
+            onClick={this._onCancelClick}
+            style={styles.cancel}
+          />
+        ) : null}
       </div>
     );
   }

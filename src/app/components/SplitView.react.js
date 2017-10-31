@@ -93,13 +93,9 @@ export default class SplitView extends React.Component {
     };
     return (
       <div style={styles.root}>
-        <div style={leftStyles}>
-          {this.props.children[0]}
-        </div>
+        <div style={leftStyles}>{this.props.children[0]}</div>
         <Separator key="separator" onMouseMove={this._onMouseMove} />
-        <div style={rightStyles}>
-          {this.props.children[1]}
-        </div>
+        <div style={rightStyles}>{this.props.children[1]}</div>
       </div>
     );
   }

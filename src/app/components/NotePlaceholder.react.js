@@ -44,9 +44,7 @@ export default class NotePlaceholder extends React.Component {
     return (
       <div onMouseDown={this._onMouseDown} style={styles.root}>
         <div style={styles.upperSpacer} />
-        <div style={styles.notice}>
-          {count} Notes Selected
-        </div>
+        <div style={styles.notice}>{count} Notes Selected</div>
         <div style={styles.lowerSpacer} />
       </div>
     );

@@ -5,7 +5,7 @@
 
 jest.dontMock('../normalizeText');
 
-const normalizeText = require('../normalizeText');
+import normalizeText from '../normalizeText';
 
 describe('normalizeText()', () => {
   it('does nothing to empty strings', () => {
