@@ -1,4 +1,5 @@
 {
+  // Comments are allowed, unlike real JSON.
   "notesDirectory": "~/tmp/Corpus",
-  "noteFontFamily": "Consolas, Monaco"
+  "noteFontFamily": "'Source Code Pro', Consolas, Monaco"
 }
