@@ -18,6 +18,7 @@ import FilteredNotesStore from '../stores/FilteredNotesStore';
 import FocusStore from '../stores/FocusStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import performKeyboardNavigation from '../performKeyboardNavigation';
+import TitleBar from './TitleBar.react';
 
 function getCurrentNote() {
   const selection = NotesSelectionStore.selection;
@@ -309,6 +310,7 @@ class OmniBar extends React.Component {
       NotesSelectionStore.selection.size === 1 ? 'icon-pencil' : 'icon-search';
     return (
       <div style={styles.root}>
+        <TitleBar />
         <span className={iconClass} style={styles.icon} />
         <input
           maxLength={this._getMaxLength()}
