@@ -5,9 +5,17 @@
  * @flow
  */
 
+import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 import React from 'react';
+import {connect} from 'react-redux';
+import simplifyPath from '../simplifyPath';
 
 class TitleBar extends React.Component {
+  static propTypes = {
+    config: PropTypes.instanceOf(Immutable.Record),
+  };
+
   _getStyles() {
     return {
       root: {
@@ -26,8 +34,17 @@ class TitleBar extends React.Component {
 
   render() {
     const styles = this._getStyles();
-    return <div style={styles.root}>Corpus</div>;
+    const title = simplifyPath(this.props.config.notesDirectory);
+    return (
+      <div style={styles.root}>
+        <span>{title}</span>
+      </div>
+    );
   }
 }
 
-export default TitleBar;
+function mapStateToProps({config}) {
+  return {config};
+}
+
+export default connect(mapStateToProps)(TitleBar);
