@@ -70,6 +70,12 @@ export default [
       },
       {type: 'separator'},
       {
+        accelerator: 'Shift+Command+P',
+        label: 'Preview',
+        click: () =>
+          BrowserWindow.getFocusedWindow().webContents.send('preview'),
+      },
+      {
         accelerator: 'Shift+Command+R',
         label: 'Show in Finder',
         click: () =>

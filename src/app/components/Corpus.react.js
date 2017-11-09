@@ -61,6 +61,18 @@ function deleteSelectedNotes() {
   );
 }
 
+function preview() {
+  const selection = NotesSelectionStore.selection;
+  if (selection.size === 1) {
+    const note = FilteredNotesStore.notes.get(selection.first());
+    // TODO: show link to get a previewer if not available
+    // TODO: make previewer configurable
+    run('open', note.get('path'), '-b', 'com.brettterpstra.marked2').catch(
+      log.warn,
+    );
+  }
+}
+
 function reveal() {
   const selection = NotesSelectionStore.selection;
   if (selection.size === 1) {
@@ -78,6 +90,7 @@ class Corpus extends React.Component {
   componentDidMount() {
     ipcRenderer.on('delete', deleteSelectedNotes);
     ipcRenderer.on('next', Actions.nextNoteSelected);
+    ipcRenderer.on('preview', preview);
     ipcRenderer.on('previous', Actions.previousNoteSelected);
     ipcRenderer.on('rename', Actions.renameRequested);
     ipcRenderer.on('reveal', reveal);
@@ -88,6 +101,7 @@ class Corpus extends React.Component {
   componentWillUnmount() {
     ipcRenderer.removeAllListeners('delete');
     ipcRenderer.removeAllListeners('next');
+    ipcRenderer.removeAllListeners('preview');
     ipcRenderer.removeAllListeners('previous');
     ipcRenderer.removeAllListeners('rename');
     ipcRenderer.removeAllListeners('reveal');

@@ -18,6 +18,7 @@ let menu = null;
 let mainWindow = null;
 
 let deleteEnabled = false;
+let previewEnabled = false;
 let renameEnabled = false;
 let revealEnabled = false;
 
@@ -33,9 +34,36 @@ app.on('ready', () => {
   mainWindow.loadURL('file://' + path.join(__dirname, '/../index.html'));
   mainWindow.webContents.on('did-finish-load', () => mainWindow.show());
 
+  ipcMain.on('title-menu', () => {
+    const menu = new Menu();
+    menu.append(
+      new MenuItem({
+        label: 'Switch notes', // if there are other notes directories
+      }),
+    );
+    menu.popup(mainWindow);
+  });
+
   // TODO: extract this into a better place and make it more flexible
   ipcMain.on('context-menu', () => {
     const contextualMenu = new Menu();
+    contextualMenu.append(
+      new MenuItem({
+        accelerator: 'Shift+Command+P',
+        click: () => mainWindow.webContents.send('preview'),
+        enabled: previewEnabled,
+        label: 'Preview',
+      }),
+    );
+    contextualMenu.append(
+      new MenuItem({
+        accelerator: 'Shift+Command+R',
+        click: () => mainWindow.webContents.send('reveal'),
+        enabled: revealEnabled,
+        label: 'Show in Finder',
+      }),
+    );
+    contextualMenu.append(new MenuItem({type: 'separator'}));
     contextualMenu.append(
       new MenuItem({
         accelerator: 'Command+R',
@@ -52,15 +80,6 @@ app.on('ready', () => {
         label: 'Delete...',
       }),
     );
-    contextualMenu.append(new MenuItem({type: 'separator'}));
-    contextualMenu.append(
-      new MenuItem({
-        accelerator: 'Shift+Command+R',
-        click: () => mainWindow.webContents.send('reveal'),
-        enabled: revealEnabled,
-        label: 'Show in Finder',
-      }),
-    );
     contextualMenu.popup(mainWindow);
   });
 
@@ -70,17 +89,21 @@ app.on('ready', () => {
   ipcMain.on('selection-count-changed', (event, newCount) => {
     const deleteItem = menu.items[1].submenu.items[1];
     const renameItem = menu.items[1].submenu.items[0];
-    const revealItem = menu.items[1].submenu.items[5];
+    const previewItem = menu.items[1].submenu.items[5];
+    const revealItem = menu.items[1].submenu.items[6];
     if (newCount === 0) {
       deleteItem.enabled = deleteEnabled = false;
+      previewItem.enabled = previewEnabled = false;
       renameItem.enabled = renameEnabled = false;
       revealItem.enabled = revealEnabled = false;
     } else if (newCount === 1) {
       deleteItem.enabled = deleteEnabled = true;
+      previewItem.enabled = previewEnabled = true;
       renameItem.enabled = renameEnabled = true;
       revealItem.enabled = revealEnabled = true;
     } else {
       deleteItem.enabled = deleteEnabled = true;
+      previewItem.enabled = previewEnabled = false;
       renameItem.enabled = renameEnabled = false;
       revealItem.enabled = revealEnabled = false;
     }
