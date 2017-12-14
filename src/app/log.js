@@ -16,6 +16,10 @@ export function error(message) {
   }
 }
 
+export function info(message) {
+  console.log(message); // eslint-disable-line no-console
+}
+
 export function warn(message) {
   console.warn(message); // eslint-disable-line no-console
 

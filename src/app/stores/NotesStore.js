@@ -27,6 +27,7 @@ import Store from './Store';
 import handleError from '../handleError';
 import * as log from '../log';
 import normalizeText from '../util/normalizeText';
+import chokidar from 'chokidar';
 
 const close = Promise.promisify(fs.close);
 const fsync = Promise.promisify(fs.fsync);
@@ -255,11 +256,29 @@ function renameNote(oldPath, newPath) {
   });
 }
 
+let watcher;
+
 function loadNotes() {
   OperationsQueue.enqueue(async () => {
     notesDirectory = ConfigStore.config.notesDirectory;
     try {
       await mkdir(notesDirectory);
+      if (watcher) {
+        watcher.close();
+      }
+      watcher = chokidar
+        .watch(notesDirectory, {
+          awaitWriteFinish: {
+            pollInterval: 1000,
+          },
+          depth: 1,
+          disableGlobbing: true,
+          ignoreInitial: true,
+          ignored: /(^|\/)\../,
+        })
+        .on('all', (event, file) => {
+          log.info(`Watcher event: ${event}, path: ${file}`);
+        });
       const filenames = await readdir(notesDirectory);
       const filtered = filterFilenames(filenames);
       const info = await Promise.all(filtered.map(getStatInfo));
