@@ -75,6 +75,14 @@ let notesDirectory;
  */
 const pathMap: PathMap = {};
 
+/**
+ * Whenever we make changes we record the affected paths in this set. At the
+ * same time, we monitor the filesystem for changes made by other processes. If
+ * we detect a change to a path that we didn't make, we know that we have to
+ * reload from disk.
+ */
+const changedPaths = new Set();
+
 // TODO: handle edge case where notes directory has a long filename in it (not
 // created by Corpus), which would overflow NAME_MAX or PATH_MAX if we end up
 // appending .999 to the name...
@@ -165,6 +173,7 @@ function getPathForTitle(title: string): string {
 function createNote(title) {
   OperationsQueue.enqueue(async () => {
     const notePath = getPathForTitle(title);
+    changedPaths.add(notePath);
     try {
       const fd = await open(
         notePath,
@@ -209,6 +218,7 @@ function deleteNotes(deletedNotes) {
   deletedNotes.forEach(note => {
     OperationsQueue.enqueue(async () => {
       const notePath = note.get('path');
+      changedPaths.add(notePath);
       try {
         await unlink(notePath);
         delete pathMap[notePath];
@@ -223,6 +233,7 @@ function updateNote(note) {
   OperationsQueue.enqueue(async () => {
     let fd = null;
     const notePath = note.get('path');
+    changedPaths.add(notePath);
     try {
       const time = new Date();
       const noteText = normalizeText(note.get('text'));
@@ -243,6 +254,8 @@ function updateNote(note) {
 
 function renameNote(oldPath, newPath) {
   OperationsQueue.enqueue(async () => {
+    changedPaths.add(oldPath);
+    changedPaths.add(newPath);
     try {
       const time = new Date();
       await rename(oldPath, newPath);
@@ -277,7 +290,10 @@ function loadNotes() {
           ignored: /(^|\/)\../,
         })
         .on('all', (event, file) => {
-          log.info(`Watcher event: ${event}, path: ${file}`);
+          const expected = changedPaths.delete(file);
+          if (!expected) {
+            log.error(`File changed outside of Corpus: ${file}`);
+          }
         });
       const filenames = await readdir(notesDirectory);
       const filtered = filterFilenames(filenames);
