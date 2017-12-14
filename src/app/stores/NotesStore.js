@@ -83,6 +83,17 @@ const pathMap: PathMap = {};
  */
 const changedPaths = new Set();
 
+function notifyChanges(...notePaths: Array<string>): void {
+  notePaths.forEach(notePath => changedPaths.add(notePath));
+}
+
+function confirmChange(notePath: string): void {
+  const expected = changedPaths.delete(notePath);
+  if (!expected) {
+    log.error(`File changed outside of Corpus: ${notePath}`);
+  }
+}
+
 // TODO: handle edge case where notes directory has a long filename in it (not
 // created by Corpus), which would overflow NAME_MAX or PATH_MAX if we end up
 // appending .999 to the name...
@@ -173,7 +184,7 @@ function getPathForTitle(title: string): string {
 function createNote(title) {
   OperationsQueue.enqueue(async () => {
     const notePath = getPathForTitle(title);
-    changedPaths.add(notePath);
+    notifyChanges(notePath);
     try {
       const fd = await open(
         notePath,
@@ -218,7 +229,7 @@ function deleteNotes(deletedNotes) {
   deletedNotes.forEach(note => {
     OperationsQueue.enqueue(async () => {
       const notePath = note.get('path');
-      changedPaths.add(notePath);
+      notifyChanges(notePath);
       try {
         await unlink(notePath);
         delete pathMap[notePath];
@@ -233,7 +244,7 @@ function updateNote(note) {
   OperationsQueue.enqueue(async () => {
     let fd = null;
     const notePath = note.get('path');
-    changedPaths.add(notePath);
+    notifyChanges(notePath);
     try {
       const time = new Date();
       const noteText = normalizeText(note.get('text'));
@@ -254,8 +265,7 @@ function updateNote(note) {
 
 function renameNote(oldPath, newPath) {
   OperationsQueue.enqueue(async () => {
-    changedPaths.add(oldPath);
-    changedPaths.add(newPath);
+    notifyChanges(oldPath, newPath);
     try {
       const time = new Date();
       await rename(oldPath, newPath);
@@ -271,30 +281,31 @@ function renameNote(oldPath, newPath) {
 
 let watcher;
 
+function initWatcher(notesDirectory: string) {
+  if (watcher) {
+    watcher.close();
+  }
+  watcher = chokidar
+    .watch(notesDirectory, {
+      awaitWriteFinish: {
+        pollInterval: 1000,
+      },
+      depth: 1,
+      disableGlobbing: true,
+      ignoreInitial: true,
+      ignored: /(^|\/)\../,
+    })
+    .on('all', (event, file) => {
+      confirmChange(file);
+    });
+}
+
 function loadNotes() {
   OperationsQueue.enqueue(async () => {
     notesDirectory = ConfigStore.config.notesDirectory;
     try {
       await mkdir(notesDirectory);
-      if (watcher) {
-        watcher.close();
-      }
-      watcher = chokidar
-        .watch(notesDirectory, {
-          awaitWriteFinish: {
-            pollInterval: 1000,
-          },
-          depth: 1,
-          disableGlobbing: true,
-          ignoreInitial: true,
-          ignored: /(^|\/)\../,
-        })
-        .on('all', (event, file) => {
-          const expected = changedPaths.delete(file);
-          if (!expected) {
-            log.error(`File changed outside of Corpus: ${file}`);
-          }
-        });
+      initWatcher(notesDirectory);
       const filenames = await readdir(notesDirectory);
       const filtered = filterFilenames(filenames);
       const info = await Promise.all(filtered.map(getStatInfo));
