@@ -87,10 +87,16 @@ function notifyChanges(...notePaths: Array<string>): void {
   notePaths.forEach(notePath => changedPaths.add(notePath));
 }
 
+const OPTION_KEY = '\u2325';
+const COMMAND_KEY = '\u2318';
+
 function confirmChange(notePath: string): void {
   const expected = changedPaths.delete(notePath);
   if (!expected) {
-    log.error(`File changed outside of Corpus: ${notePath}`);
+    log.error(
+      `File changed outside of Corpus: ${notePath}\n` +
+        `Reload with ${OPTION_KEY}${COMMAND_KEY}R`,
+    );
   }
 }
 
