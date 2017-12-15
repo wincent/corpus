@@ -79,7 +79,7 @@ export default class Heap {
     }
   }
 
-  size(): number {
+  get size(): number {
     return this._emptySlot;
   }
 

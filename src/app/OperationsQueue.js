@@ -31,14 +31,14 @@ const OperationsQueue = {
   DEFAULT_PRIORITY,
 
   dequeue() {
-    if (queue.size() && !isRunning) {
+    if (queue.size && !isRunning) {
       isRunning = true;
       requestAnimationFrame(() => _run(queue.extract().operation));
     }
   },
 
   enqueue(operation: Operation, priority: number = DEFAULT_PRIORITY) {
-    if (!queue.size() && !isRunning) {
+    if (!queue.size && !isRunning) {
       isRunning = true;
       requestAnimationFrame(() => _run(operation));
     } else {
@@ -47,7 +47,7 @@ const OperationsQueue = {
   },
 
   get size() {
-    return queue.size();
+    return queue.size;
   },
 };
 

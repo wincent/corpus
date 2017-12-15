@@ -74,29 +74,29 @@ describe('Heap', () => {
     });
   });
 
-  describe('size()', () => {
+  describe('size', () => {
     it('returns 0 for an empty heap', () => {
-      expect(heap.size()).toBe(0);
+      expect(heap.size).toBe(0);
     });
 
     it('grows by 1 for each item inserted on the heap', () => {
       heap.insert(10);
-      expect(heap.size()).toBe(1);
+      expect(heap.size).toBe(1);
       heap.insert(5);
-      expect(heap.size()).toBe(2);
+      expect(heap.size).toBe(2);
       heap.insert(15);
-      expect(heap.size()).toBe(3);
+      expect(heap.size).toBe(3);
     });
 
     it('decreases by 1 for each item extracted from the heap', () => {
       heap.insert(5);
       heap.insert(10);
       heap.insert(1);
-      expect(heap.size()).toBe(3);
+      expect(heap.size).toBe(3);
       heap.extract();
-      expect(heap.size()).toBe(2);
+      expect(heap.size).toBe(2);
       heap.extract();
-      expect(heap.size()).toBe(1);
+      expect(heap.size).toBe(1);
       heap.extract();
     });
   });
