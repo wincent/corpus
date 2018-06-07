@@ -44,7 +44,9 @@
     "redux": "^3.7.2",
     "redux-saga": "^0.15.6",
     "reselect": "^3.0.1",
+    "rxjs": "6.2.0",
     "simple-debounce": "*",
+    "undux": "4.6.2",
     "unpack-content": "*"
   },
   "devDependencies": {
