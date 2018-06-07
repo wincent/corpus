@@ -6,7 +6,7 @@
  */
 
 import {Dispatcher} from 'flux';
-import {batchedUpdates} from 'react-dom/lib/ReactUpdates';
+import {unstable_batchedUpdates as batchedUpdates} from 'react-dom';
 
 export default class BatchingDispatcher extends Dispatcher {
   dispatch(payload) {
