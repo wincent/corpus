@@ -5,10 +5,12 @@
  * @flow
  */
 
-type WrappedValue = {
-  value: mixed,
-  insertionCounter: number,
-};
+type Comparable = number | string;
+
+type WrappedValue<T> = {|
+  value: T,
+  insertionIndex: number,
+|};
 
 /**
  * Given two equally-valued keys, we use this counter to track insertion order
@@ -22,7 +24,7 @@ let insertionIndex = 0;
 /**
  * Annotate `value` with insertion order information.
  */
-function wrapValue(value: mixed): WrappedValue {
+function wrapValue<T>(value: T): WrappedValue<T> {
   return {
     value,
     insertionIndex: insertionIndex++,
@@ -33,7 +35,7 @@ function wrapValue(value: mixed): WrappedValue {
  * Retrieve the original wrapped value from an item previously annotated with
  * insertion order information.
  */
-function unwrapValue(value: WrappedValue): mixed {
+function unwrapValue<T>(value: WrappedValue<T>): T {
   return value.value;
 }
 
@@ -41,14 +43,18 @@ function unwrapValue(value: WrappedValue): mixed {
  * Binary min-heap implementation with FIFO behavior for equal-priority items,
  * for use as a priority queue.
  */
-export default class Heap {
-  constructor(keyGetter: ?(value: mixed) => number) {
+export default class Heap<T: Comparable> {
+  _emptySlot: number;
+  _keyGetter: (value: T) => T;
+  _storage: Array<WrappedValue<T>>;
+
+  constructor(keyGetter: ?(value: T) => T) {
     this._emptySlot = 0;
     this._keyGetter = keyGetter || (x => x);
     this._storage = [];
   }
 
-  insert(value: mixed): void {
+  insert(value: T): void {
     // Insert into first empty slot.
     this._storage[this._emptySlot] = wrapValue(value);
 
@@ -64,7 +70,7 @@ export default class Heap {
     this._emptySlot++;
   }
 
-  extract(): mixed {
+  extract(): ?T {
     if (this._emptySlot) {
       // Grab root.
       const extracted = this._storage[0];
@@ -140,12 +146,15 @@ export default class Heap {
    * Note that we can never return 0 because `a` can never be ordered "the same"
    * as `b` thanks to our use of the `insertionIndex` tie-breaker.
    */
-  _compare(a: WrappedValue, b: WrappedValue): number {
+  _compare(a: WrappedValue<T>, b: WrappedValue<T>): number {
     const aKey = this._keyGetter(unwrapValue(a));
     const bKey = this._keyGetter(unwrapValue(b));
     if (aKey === bKey) {
       return a.insertionIndex < b.insertionIndex ? -1 : 1;
     } else {
+      /* $FlowFixMe: Need a "comparable" interface in order to make this work.
+       * https://github.com/facebook/flow/issues/388
+       */
       return aKey < bKey ? -1 : 1;
     }
   }

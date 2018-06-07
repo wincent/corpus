@@ -9,7 +9,7 @@ import {Dispatcher} from 'flux';
 import {unstable_batchedUpdates as batchedUpdates} from 'react-dom';
 
 export default class BatchingDispatcher extends Dispatcher {
-  dispatch(payload) {
+  dispatch(payload: $FlowFixMe) {
     batchedUpdates(() => super.dispatch(payload));
   }
 }

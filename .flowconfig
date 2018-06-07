@@ -1,4 +1,8 @@
 [ignore]
-.*/dist/.*
-.*/node_modules/.*
+<PROJECT_ROOT>/dist/.*
+# TODO: use Flow even in __tests__
 .*/__tests__/.*
+
+[options]
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+suppress_type=$FlowFixMe

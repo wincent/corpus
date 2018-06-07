@@ -13,6 +13,8 @@ import git from './git';
  * Wrapper around subset of Git functionality needed by Corpus.
  */
 export default class Repo {
+  _path: string;
+
   constructor(path: string) {
     this._path = path;
   }

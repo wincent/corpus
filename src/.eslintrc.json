@@ -4,7 +4,8 @@
   },
   "globals": {
     "global": true,
-    "setImmediate": false
+    "setImmediate": false,
+    "$FlowFixMe": false
   },
   "rules": {}
 }

@@ -76,7 +76,7 @@ const actionCreators = {
   },
 
   // Temporary hack: pass in Redux store to get access to `dispatch`.
-  logError(message, store) {
+  logError(message: string, store: $FlowFixMe) {
     store.dispatch({
       type: actionTypes.LOG_ERROR,
       level: 'ERROR',
@@ -164,12 +164,12 @@ const actionCreators = {
     dispatch(actionTypes.SEARCH_REQUESTED, {value, isDeletion});
   },
 
-  selectedNotesDeleted(ids) {
+  selectedNotesDeleted(ids: Array<number>) {
     dispatch(actionTypes.SELECTED_NOTES_DELETED, {ids});
   },
 
   // Temporary hack: pass in Redux store to get access to `dispatch`.
-  logWarning(message, store) {
+  logWarning(message: string, store: $FlowFixMe) {
     store.dispatch({
       type: actionTypes.LOG_WARNING,
       level: 'WARNING',
