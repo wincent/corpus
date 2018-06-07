@@ -39,11 +39,11 @@
     "mkdirp": "*",
     "nan": "2.10.0",
     "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "16.4.0",
+    "react-dom": "16.4.0",
     "react-redux": "^5.0.6",
-    "redux": "^3.7.2",
-    "redux-saga": "^0.15.6",
+    "redux": "4.0.0",
+    "redux-saga": "0.16.0",
     "reselect": "^3.0.1",
     "rxjs": "6.2.0",
     "simple-debounce": "*",
@@ -51,10 +51,10 @@
     "unpack-content": "*"
   },
   "devDependencies": {
-    "asar": "^0.13.0",
+    "asar": "0.14.3",
     "babel-core": "^6.25.0",
-    "babel-eslint": "^7.2.3",
-    "babel-jest": "^20.0.3",
+    "babel-eslint": "8.2.3",
+    "babel-jest": "23.0.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "*",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
@@ -62,7 +62,7 @@
     "babel-plugin-transform-react-inline-elements": "*",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
-    "electron": "^1.7.5",
+    "electron": "2.0.2",
     "eslint": "^4.4.1",
     "eslint-config-prettier": "^2.3.0",
     "eslint-plugin-flowtype": "^2.35.0",
@@ -74,7 +74,7 @@
     "gulp-flowtype": "*",
     "gulp-minify-html": "*",
     "gulp-util": "*",
-    "jest-cli": "^20.0.4",
+    "jest-cli": "23.1.0",
     "prettier": "^1.5.3"
   }
 }
