@@ -42,7 +42,7 @@ class ContentEditable extends React.Component {
     this._updateFocus();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // Check for note identity ('id') rather than using `===`. Attributes of a
     // note may change (for example, 'index' will change in response to
     // bubbling).

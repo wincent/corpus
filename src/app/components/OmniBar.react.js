@@ -151,7 +151,7 @@ class OmniBar extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.logs !== nextProps.logs) {
       this.setState({hasError: true});
     }

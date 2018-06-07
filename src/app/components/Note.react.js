@@ -53,7 +53,7 @@ export default class Note extends React.Component {
     this._recordViewState(event.currentTarget);
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     if (this.props.note.get('id') !== nextProps.note.get('id')) {
       this._recordViewState();
     }
