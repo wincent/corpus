@@ -192,6 +192,9 @@ function mapStateToProps({config}) {
   return {config};
 }
 
-export default connect(mapStateToProps, null, null, {withRef: true})(
-  ContentEditable,
-);
+export default connect(
+  mapStateToProps,
+  null,
+  null,
+  {withRef: true},
+)(ContentEditable);

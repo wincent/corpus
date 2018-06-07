@@ -144,14 +144,20 @@ export default class NotePreview extends React.Component {
         WebkitLineClamp: 2,
         color: isPrivate
           ? 'transparent'
-          : focused ? '#fff' : selected ? '#4e4e4e' : '#a3a3a3',
+          : focused
+            ? '#fff'
+            : selected
+              ? '#4e4e4e'
+              : '#a3a3a3',
         display: '-webkit-box',
         fontWeight: 'normal',
         overflow: 'hidden',
         textShadow:
           isPrivate && focused
             ? '0 0 5px rgba(255, 255, 255, .5)'
-            : isPrivate ? '0 0 5px rgba(0, 0, 0, .25)' : 'unset',
+            : isPrivate
+              ? '0 0 5px rgba(0, 0, 0, .25)'
+              : 'unset',
       },
       title: {
         color: focused ? '#fff' : selected ? '#4e4e4e' : '#4f4f4f',

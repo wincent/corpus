@@ -56,8 +56,8 @@ class OmniBar extends React.Component {
   }
 
   /**
-  * Returns the maximum note title length.
-  */
+   * Returns the maximum note title length.
+   */
   _getMaxLength(): number {
     const maxLength =
       this.props.system.get('nameMax') - '.md'.length - '.000'.length; // room to disambiguate up to 1,000 duplicate titles

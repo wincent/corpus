@@ -137,4 +137,7 @@ class Corpus extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Corpus);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Corpus);
