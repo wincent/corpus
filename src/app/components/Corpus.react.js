@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import autobind from 'autobind-decorator';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {ipcRenderer} from 'electron';
@@ -81,7 +80,11 @@ function reveal() {
   }
 }
 
-class Corpus extends React.Component {
+type Props = {||};
+
+class Corpus extends React.Component<Props> {
+  _selectionCount: number;
+
   constructor(props) {
     super(props);
     this._selectionCount = 0;
@@ -109,8 +112,7 @@ class Corpus extends React.Component {
     NotesSelectionStore.removeListener('change', this._updateSelection);
   }
 
-  @autobind
-  _updateSelection() {
+  _updateSelection = () => {
     // Notify of changes to selection size so that the main process can
     // enable/disable menu items.
     const size = NotesSelectionStore.selection.size;
@@ -122,7 +124,7 @@ class Corpus extends React.Component {
       ipcRenderer.send('selection-count-changed', size);
     }
     this._selectionCount = size;
-  }
+  };
 
   render() {
     return (

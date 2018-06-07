@@ -5,9 +5,6 @@
  * @flow
  */
 
-import autobind from 'autobind-decorator';
-import Immutable from 'immutable';
-import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
 
@@ -20,13 +17,23 @@ import colors from '../colors';
 import debounce from 'simple-debounce';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
-class ContentEditable extends React.Component {
-  static propTypes = {
-    config: PropTypes.instanceOf(Immutable.Record),
-    note: PropTypes.instanceOf(Immutable.Map).isRequired,
-    onBlur: PropTypes.func.isRequired,
-    tabIndex: PropTypes.number,
-  };
+type Props = {
+  // PropTypes.instanceOf(Immutable.Record),
+  config: $FlowFixMe,
+  // PropTypes.instanceOf(Immutable.Map).isRequired,
+  note: $FlowFixMe,
+  // PropTypes.func.isRequired,
+  onBlur: $FlowFixMe,
+  tabIndex: number,
+};
+
+type State = {|
+  value: string,
+|};
+
+class ContentEditable extends React.Component<Props, State> {
+  _node: ?HTMLTextAreaElement;
+  _pendingSave: boolean;
 
   _autosave = debounce(() => this._persistChanges(true), 5000);
 
@@ -59,18 +66,27 @@ class ContentEditable extends React.Component {
     this._persistChanges();
   }
 
+  _getNode(): HTMLTextAreaElement {
+    if (!this._node) {
+      throw new Error('Expected HTMLTextAreaElement');
+    }
+    return this._node;
+  }
+
   getViewState() {
+    const node = this._getNode();
     return {
-      scrollTop: this._node.scrollTop,
-      selectionEnd: this._node.selectionEnd,
-      selectionStart: this._node.selectionStart,
+      scrollTop: node.scrollTop,
+      selectionEnd: node.selectionEnd,
+      selectionStart: node.selectionStart,
     };
   }
 
   setViewState({scrollTop, selectionEnd, selectionStart}) {
-    this._node.scrollTop = scrollTop;
-    this._node.selectionEnd = selectionEnd;
-    this._node.selectionStart = selectionStart;
+    const node = this._getNode();
+    node.scrollTop = scrollTop;
+    node.selectionEnd = selectionEnd;
+    node.selectionStart = selectionStart;
   }
 
   _getStyles() {
@@ -109,18 +125,16 @@ class ContentEditable extends React.Component {
     this._pendingSave = false;
   }
 
-  @autobind
-  _onBlur(event) {
+  _onBlur = (event: SyntheticInputEvent<HTMLTextAreaElement>) => {
     if (this.props.onBlur) {
       this.props.onBlur(event);
     }
     if (!Dispatcher.isDispatching()) {
       this._persistChanges();
     }
-  }
+  };
 
-  @autobind
-  _onChange(event) {
+  _onChange = (event: SyntheticInputEvent<HTMLTextAreaElement>) => {
     const index = NotesSelectionStore.selection.first();
     if (index) {
       // Not at top of list, so bubble note to top.
@@ -129,7 +143,7 @@ class ContentEditable extends React.Component {
     this.setState({value: event.currentTarget.value});
     this._pendingSave = true;
     this._autosave();
-  }
+  };
 
   _onKeyDown(event) {
     // Prevent undesired fallthrough to `performKeyboardNavigation` for some
@@ -166,12 +180,11 @@ class ContentEditable extends React.Component {
     performKeyboardNavigation(event);
   }
 
-  @autobind
-  _updateFocus() {
+  _updateFocus = () => {
     if (FocusStore.focus === 'Note') {
-      this._node.focus();
+      this._getNode().focus();
     }
-  }
+  };
 
   render() {
     return (

@@ -5,19 +5,22 @@
  * @flow
  */
 
-import autobind from 'autobind-decorator';
-import PropTypes from 'prop-types';
 import React from 'react';
-import Immutable from 'immutable';
 
 import ContentEditable from './ContentEditable.react';
 
 const viewStates = {};
 
-export default class Note extends React.Component {
-  static propTypes = {
-    note: PropTypes.instanceOf(Immutable.Map).isRequired,
-  };
+type Props = {|
+  // PropTypes.instanceOf(Immutable.Map).isRequired
+  note: $FlowFixMe,
+|};
+
+export default class Note extends React.Component<Props> {
+  /* When we get rid of Redux, getWrappedInstance() will go away and we can type
+   * this.
+   */
+  _node: $FlowFixMe;
 
   _recordViewState() {
     const {note} = this.props;
@@ -48,10 +51,9 @@ export default class Note extends React.Component {
     }
   }
 
-  @autobind
-  _onBlur(event) {
-    this._recordViewState(event.currentTarget);
-  }
+  _onBlur = () => {
+    this._recordViewState();
+  };
 
   UNSAFE_componentWillUpdate(nextProps) {
     if (this.props.note.get('id') !== nextProps.note.get('id')) {

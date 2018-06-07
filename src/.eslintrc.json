@@ -3,9 +3,10 @@
     "browser": true
   },
   "globals": {
+    "$FlowFixMe": false,
+    "SyntheticInputEvent": false,
     "global": true,
-    "setImmediate": false,
-    "$FlowFixMe": false
+    "setImmediate": false
   },
   "rules": {}
 }
