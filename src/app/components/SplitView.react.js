@@ -5,7 +5,6 @@
  * @flow
  */
 
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import Separator from './Separator.react';
@@ -26,12 +25,17 @@ const styles = {
   },
 };
 
-export default class SplitView extends React.Component {
-  static propTypes = {
-    children: PropTypes.arrayOf(PropTypes.element).isRequired,
-  };
+import type {ChildrenArray, Node as ReactNode} from 'react';
+type Props = {|
+  children: ChildrenArray<ReactNode>,
+|};
+type State = {|
+  left: number,
+  right: number,
+|};
 
-  constructor(props) {
+export default class SplitView extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     // Initial desired separator location based on initial window dimensions
@@ -47,7 +51,7 @@ export default class SplitView extends React.Component {
     window.removeEventListener('resize', this._onResize);
   }
 
-  _getPaneDimensions(desiredLeftPaneWidth) {
+  _getPaneDimensions(desiredLeftPaneWidth: number) {
     if (desiredLeftPaneWidth < 40) {
       desiredLeftPaneWidth = 0;
     } else if (desiredLeftPaneWidth < 75) {
@@ -67,7 +71,7 @@ export default class SplitView extends React.Component {
     };
   }
 
-  _onMouseMove = event => {
+  _onMouseMove = (event: SyntheticMouseEvent<HTMLDivElement>) => {
     event.preventDefault(); // avoids unwanted selection of note text
     this.setState(this._getPaneDimensions(event.clientX));
   };
@@ -77,7 +81,8 @@ export default class SplitView extends React.Component {
   };
 
   render() {
-    if (React.Children.count(this.props.children) !== 2) {
+    const children = React.Children.toArray(this.props.children);
+    if (children.length !== 2) {
       throw new Error('SplitView expects exactly two children');
     }
     const leftStyles = {
@@ -88,11 +93,12 @@ export default class SplitView extends React.Component {
       ...styles.right,
       flexGrow: this.state.right,
     };
+
     return (
       <div style={styles.root}>
-        <div style={leftStyles}>{this.props.children[0]}</div>
+        <div style={leftStyles}>{children[0]}</div>
         <Separator key="separator" onMouseMove={this._onMouseMove} />
-        <div style={rightStyles}>{this.props.children[1]}</div>
+        <div style={rightStyles}>{children[1]}</div>
       </div>
     );
   }

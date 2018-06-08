@@ -8,6 +8,7 @@
     "SyntheticEvent": false,
     "SyntheticKeyboardEvent": false,
     "SyntheticInputEvent": false,
+    "SyntheticMouseEvent": false,
     "TimeoutID": false,
     "global": true,
     "setImmediate": false

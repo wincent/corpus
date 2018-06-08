@@ -5,12 +5,9 @@
  * @flow
  */
 
-import Immutable from 'immutable';
-import PropTypes from 'prop-types';
+import {ipcRenderer, remote} from 'electron';
 import React from 'react';
-import {remote} from 'electron';
 import {connect} from 'react-redux';
-import {ipcRenderer} from 'electron';
 import Actions from '../Actions';
 import Keys from '../Keys';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
@@ -37,18 +34,29 @@ function getCurrentTitle() {
   }
 }
 
-class OmniBar extends React.Component {
-  static propTypes = {
-    logs: PropTypes.instanceOf(Immutable.List),
-    system: PropTypes.instanceOf(Immutable.Map),
-  };
+type Props = {|
+  logs: $FlowFixMe, // PropTypes.instanceOf(Immutable.List),
+  system: $FlowFixMe, // PropTypes.instanceOf(Immutable.Map),
+|};
+type State = {|
+  foreground: boolean,
+  hasError: boolean,
+  note: $FlowFixMe,
+  value: string,
+|};
+
+class OmniBar extends React.Component<Props, State> {
+  _blurred: ?boolean;
+  _inputRef: ?HTMLInputElement;
+  _pendingDeletion: ?string;
+  _query: ?string;
 
   constructor(props) {
     super(props);
     const note = getCurrentNote();
     this.state = {
       foreground: true,
-      hasError: props.logs.size,
+      hasError: !!props.logs.size,
       note,
       value: getCurrentTitle(),
     };

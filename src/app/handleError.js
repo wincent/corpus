@@ -15,8 +15,8 @@ const {app} = remote;
  * This function is intended for handling serious errors, because it prompts the
  * user to exit.
  */
-function handleError(error, context) {
-  const result = confirm(`${context}\n\n${error}\n\nDo you want to exit?`);
+function handleError(error: Error, context: string): void {
+  const result = confirm(`${context}\n\n${String(error)}\n\nDo you want to exit?`);
   if (result) {
     app.quit();
   }

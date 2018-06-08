@@ -5,17 +5,16 @@
  * @flow
  */
 
-import Immutable from 'immutable';
-import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
 import simplifyPath from '../simplifyPath';
 
-class TitleBar extends React.Component {
-  static propTypes = {
-    config: PropTypes.instanceOf(Immutable.Record),
-  };
+type Props = {|
+  config: $FlowFixMe, // PropTypes.instanceOf(Immutable.Record),
+|};
 
+// TODO: make this a pure functional component
+class TitleBar extends React.Component<Props> {
   _getStyles() {
     return {
       root: {

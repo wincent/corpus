@@ -5,7 +5,6 @@
  * @flow
  */
 
-import PropTypes from 'prop-types';
 import React from 'react';
 
 const styles = {
@@ -17,11 +16,14 @@ const styles = {
   },
 };
 
-export default class Viewport extends React.Component {
-  static propTypes = {
-    children: PropTypes.arrayOf(PropTypes.element).isRequired,
-  };
+import type {ChildrenArray, Node as ReactNode} from 'react';
 
+type Props = {|
+  children: ChildrenArray<ReactNode>,
+|};
+
+// TODO: Make this a functional component
+export default class Viewport extends React.Component<Props> {
   render() {
     return <div style={styles.root}>{this.props.children}</div>;
   }

@@ -5,8 +5,8 @@
  * @flow
  */
 
-import PropTypes from 'prop-types';
 import React from 'react';
+import nullthrows from 'fbjs/lib/nullthrows';
 
 const styles = {
   root: {
@@ -19,22 +19,23 @@ const styles = {
   },
 };
 
-export default class Separator extends React.Component {
-  static propTypes = {
-    onMouseMove: PropTypes.func.isRequired,
-  };
+type Props = {|
+  onMouseMove: $FlowFixMe, // PropTypes.func.isRequired,
+|};
 
-  _onMouseDown = event => {
+// TODO: make this a functional component
+export default class Separator extends React.Component<Props> {
+  _onMouseDown = (event: SyntheticMouseEvent<HTMLDivElement>) => {
     const onMouseMove = this.props.onMouseMove;
     const onMouseUp = () => {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      document.body.classList.remove('grabbing');
+      nullthrows(document.body).classList.remove('grabbing');
     };
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-    document.body.classList.add('grabbing');
+    nullthrows(document.body).classList.add('grabbing');
 
     // Don't let the browser focus us. We're a div, after all.
     event.preventDefault();

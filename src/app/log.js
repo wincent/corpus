@@ -7,7 +7,7 @@
 
 import Actions from './Actions';
 
-export function error(message) {
+export function error(message: string) {
   console.error(message); // eslint-disable-line no-console
 
   // Yes, hideous global state; see explaination in src/index.js.
@@ -16,14 +16,14 @@ export function error(message) {
   }
 }
 
-export function info(message) {
+export function info(message: string) {
   console.log(message); // eslint-disable-line no-console
 }
 
-export function warn(message) {
+export function warn(message: string) {
   console.warn(message); // eslint-disable-line no-console
 
-  // Yes, hideous global state; see explaination in src/index.js.
+  // Yes, hideous global state; see explanation in src/index.js.
   if (global.store) {
     Actions.logWarning(message, global.store);
   }
