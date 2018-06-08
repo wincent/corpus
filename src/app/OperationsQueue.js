@@ -10,9 +10,13 @@ import type Promise from 'bluebird';
 import Heap from './Heap';
 
 type Operation = () => Promise;
+type Job = {|
+  operation: Operation,
+  priority: number,
+|};
 
 const DEFAULT_PRIORITY = 20;
-const queue = new Heap(value => value.priority);
+const queue = new Heap((job: Job): number => job.priority);
 let isRunning = false;
 
 async function _run(operation: Operation) {
@@ -22,6 +26,14 @@ async function _run(operation: Operation) {
     isRunning = false;
     OperationsQueue.dequeue();
   }
+}
+
+function extract(): Job {
+  const job = queue.extract();
+  if (!job) {
+    throw new Error('extract(): Expected job');
+  }
+  return job;
 }
 
 /**
@@ -35,14 +47,14 @@ const OperationsQueue = {
   dequeue() {
     if (queue.size && !isRunning) {
       isRunning = true;
-      requestAnimationFrame(() => _run(queue.extract().operation));
+      requestAnimationFrame(() => void _run(extract().operation));
     }
   },
 
   enqueue(operation: Operation, priority: number = DEFAULT_PRIORITY) {
     if (!queue.size && !isRunning) {
       isRunning = true;
-      requestAnimationFrame(() => _run(operation));
+      requestAnimationFrame(() => void _run(operation));
     } else {
       queue.insert({priority, operation});
     }

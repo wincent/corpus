@@ -5,8 +5,6 @@
  * @flow
  */
 
-type Comparable = number | string;
-
 type WrappedValue<T> = {|
   value: T,
   insertionIndex: number,
@@ -43,14 +41,14 @@ function unwrapValue<T>(value: WrappedValue<T>): T {
  * Binary min-heap implementation with FIFO behavior for equal-priority items,
  * for use as a priority queue.
  */
-export default class Heap<T: Comparable> {
+export default class Heap<T: mixed> {
   _emptySlot: number;
-  _keyGetter: (value: T) => T;
+  _keyGetter: (value: T) => number;
   _storage: Array<WrappedValue<T>>;
 
-  constructor(keyGetter: ?(value: T) => T) {
+  constructor(keyGetter: ?(value: T) => number) {
     this._emptySlot = 0;
-    this._keyGetter = keyGetter || (x => x);
+    this._keyGetter = keyGetter || Number;
     this._storage = [];
   }
 
@@ -152,9 +150,6 @@ export default class Heap<T: Comparable> {
     if (aKey === bKey) {
       return a.insertionIndex < b.insertionIndex ? -1 : 1;
     } else {
-      /* $FlowFixMe: Need a "comparable" interface in order to make this work.
-       * https://github.com/facebook/flow/issues/388
-       */
       return aKey < bKey ? -1 : 1;
     }
   }
