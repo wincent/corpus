@@ -19,7 +19,6 @@ import FocusStore from '../stores/FocusStore';
 import colors from '../colors';
 import printableFromKeyEvent from '../util/printableFromKeyEvent';
 import performKeyboardNavigation from '../performKeyboardNavigation';
-import pure from '../pure';
 import throttle from '../throttle';
 
 /**
@@ -33,8 +32,7 @@ const OFF_VIEWPORT_NOTE_BUFFER_COUNT = 20;
  */
 const SCROLL_THROTTLE_INTERVAL = 250;
 
-@pure
-export default class NoteList extends React.Component {
+export default class NoteList extends React.PureComponent {
   constructor(props) {
     super(props);
     this._listening = false;

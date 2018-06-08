@@ -5,8 +5,6 @@
  * @flow
  */
 
-import Immutable from 'immutable';
-import PropTypes from 'prop-types';
 import React from 'react';
 import autobind from 'autobind-decorator';
 import {ipcRenderer} from 'electron';
@@ -17,7 +15,6 @@ import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
 import Mouse from '../Mouse';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
-import pure from '../pure';
 
 /**
  * Don't want the DOM to contain all the text of all the notes.
@@ -26,7 +23,7 @@ import pure from '../pure';
 const PREVIEW_LENGTH = 250;
 const TITLE_LENGTH = 125;
 
-const Tag = ({focused, tag}) => {
+const Tag = ({focused, tag}: {|focused: boolean, tag: $FlowFixMe|}) => {
   const styles = {
     backgroundColor: focused ? '#fff' : '#9e9e9e',
     borderRadius: '2px',
@@ -49,12 +46,9 @@ const Tag = ({focused, tag}) => {
     </span>
   );
 };
-Tag.propTypes = {
-  focused: PropTypes.bool,
-  tag: PropTypes.string.isRequired,
-};
 
-const Tags = ({tags, ...extraProps}) => {
+// PropTypes.instanceOf(Immutable.Set).isRequired,
+const Tags = ({tags, focused}: {|tags: $FlowFixMe, focused: boolean|}) => {
   const styles = {
     bottom: '4px',
     position: 'absolute',
@@ -62,24 +56,22 @@ const Tags = ({tags, ...extraProps}) => {
   };
   return (
     <div style={styles}>
-      {tags.map(tag => <Tag key={tag} tag={tag} {...extraProps} />)}
+      {tags.map(tag => <Tag focused={focused} key={tag} tag={tag} />)}
     </div>
   );
 };
-Tags.propTypes = {
-  tags: PropTypes.instanceOf(Immutable.Set).isRequired,
-};
 
-@pure
-export default class NotePreview extends React.Component {
-  static propTypes = {
-    animating: PropTypes.bool,
-    focused: PropTypes.bool,
-    index: PropTypes.number.isRequired,
-    note: PropTypes.instanceOf(Immutable.Map).isRequired,
-    selected: PropTypes.bool,
-    translate: PropTypes.number,
-  };
+type Props = {|
+  animating: boolean,
+  focused: boolean,
+  index: number,
+  // PropTypes.instanceOf(Immutable.Map).isRequired,
+  note: $FlowFixMe,
+  selected: boolean,
+  translate: number,
+|};
+
+export default class NotePreview extends React.PureComponent<Props> {
   static defaultProps = {
     focused: false,
     selected: false,

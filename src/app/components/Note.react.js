@@ -55,7 +55,7 @@ export default class Note extends React.Component<Props> {
     this._recordViewState();
   };
 
-  UNSAFE_componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps: Props) {
     if (this.props.note.get('id') !== nextProps.note.get('id')) {
       this._recordViewState();
     }
@@ -65,7 +65,7 @@ export default class Note extends React.Component<Props> {
     this._restoreViewState();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (this.props.note.get('id') !== prevProps.note.get('id')) {
       this._restoreViewState();
     }
