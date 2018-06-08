@@ -9,8 +9,6 @@
  * Throttle implementation that fires on the leading and trailing edges.
  * If a call comes in when a pending call is yet to be processed, it replaces
  * the pending call.
- *
- * @see throttle-decorator
  */
 export default function throttle(fn, interval) {
   let timeout = null;
