@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import nullthrows from 'fbjs/lib/nullthrows';
 
 import Actions from '../Actions';
 import Constants from '../Constants';
@@ -31,8 +32,24 @@ const OFF_VIEWPORT_NOTE_BUFFER_COUNT = 20;
  */
 const SCROLL_THROTTLE_INTERVAL = 250;
 
-export default class NoteList extends React.PureComponent {
-  constructor(props) {
+type Props = {||};
+type State = {|
+  animating: boolean,
+  bubbling: ?number,
+  focused: boolean,
+  notes: $FlowFixMe, // FilteredNotesStore.notes,
+  scrollTop: number,
+  selection: $FlowFixMe, // NotesSelectionStore.selection,
+|};
+
+export default class NoteList extends React.PureComponent<Props, State> {
+  _lastKeyDown: ?number;
+  _listening: boolean;
+  _listenerTimeout: ?TimeoutID;
+  _ref: ?HTMLDivElement;
+  _ulRef: ?HTMLUListElement;
+
+  constructor(props: Props) {
     super(props);
     this._listening = false;
     this._listenerTimeout = null;
@@ -52,9 +69,9 @@ export default class NoteList extends React.PureComponent {
     FilteredNotesStore.on('change', this._updateNotes);
     FocusStore.on('change', this._updateFocus);
 
-    const node = this._ref;
+    const node = nullthrows(this._ref);
     node.addEventListener('transitionend', this._onTransitionEnd);
-    const parent = node.parentNode;
+    const parent = nullthrows(node.parentElement);
     parent.addEventListener('scroll', this._onScroll);
   }
 
@@ -65,9 +82,9 @@ export default class NoteList extends React.PureComponent {
     FocusStore.removeListener('change', this._updateFocus);
     this._removeListeners();
 
-    const node = this._ref;
+    const node = nullthrows(this._ref);
     node.removeEventListener('transitionend', this._onTransitionEnd);
-    const parent = node.parentNode;
+    const parent = nullthrows(node.parentElement);
     parent.removeEventListener('scroll', this._onScroll);
     this._ref = null;
   }
@@ -145,7 +162,7 @@ export default class NoteList extends React.PureComponent {
   };
 
   _removeListeners() {
-    clearTimeout(this._listenerTimeout);
+    this._listenerTimeout && clearTimeout(this._listenerTimeout);
     this._listenerTimeout = null;
     if (this._listening) {
       document.removeEventListener('selectionchange', this._selectionChanged);
@@ -171,7 +188,7 @@ export default class NoteList extends React.PureComponent {
 
   _updateFocus = () => {
     if (FocusStore.focus === 'NoteList') {
-      this._ulRef.focus();
+      nullthrows(this._ulRef).focus();
     }
   };
 
@@ -190,18 +207,18 @@ export default class NoteList extends React.PureComponent {
 
   _onFocus = () => {
     // In order to avoid re-implementing the first-responder wheel, we need to
-    // handle "Select All" especially here. When we're focused, we want to
+    // handle "Select All" specially here. When we're focused, we want to
     // intercept it. We do this by ensuring that `Note.react` has `user-select:
     // none`, and we listen for "selectionchange". In order to eliminate false
     // positives, we only listen when we're focused, and we use `setTimeout`
     // here because otherwise we wind up with a "selectionchange" event
     // immediately after focusing.
-    clearTimeout(this._listenerTimeout);
+    this._listenerTimeout && clearTimeout(this._listenerTimeout);
     this._listenerTimeout = setTimeout(this._addListeners, 200);
     this.setState({focused: true});
   };
 
-  _onKeyDown = event => {
+  _onKeyDown = (event: SyntheticKeyboardEvent<HTMLUListElement>) => {
     this._lastKeyDown = event.keyCode; // teh hax!
 
     switch (event.keyCode) {
@@ -233,7 +250,7 @@ export default class NoteList extends React.PureComponent {
     // If event not handled yet, focus the OmniBar and initiate a search.
     if (!event.defaultPrevented) {
       const printable = printableFromKeyEvent(event.nativeEvent);
-      if (printable !== null) {
+      if (printable != null) {
         event.preventDefault();
         Actions.omniBarFocused();
         Actions.searchRequested(printable);
@@ -248,12 +265,12 @@ export default class NoteList extends React.PureComponent {
 
   _onTransitionEnd = () => {
     // A note has bubbled to the top, make sure we can see it still.
-    const parent = this._ref.parentNode;
-    parent.scrollTop = 0;
+    const parent = nullthrows(this._ref).parentElement;
+    nullthrows(parent).scrollTop = 0;
     Actions.bubbleAnimationFinished();
   };
 
-  _onScroll = () => {
+  _onScroll = (event: Event): mixed => {
     // A layer of indirection here is needed because event objects are pooled;
     // if we passed them directly into the throttled function they may have
     // changed by the time the wrapped function gets executed.
@@ -261,7 +278,7 @@ export default class NoteList extends React.PureComponent {
     this._updateScrollTop(scrollTop);
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevState.bubbling !== this.state.bubbling && !this.state.animating) {
       // Bubbling has been set up (we've re-rendered with the notes in a new
       // order, but with offsets in place to make it seem they haven't moved),
@@ -279,8 +296,8 @@ export default class NoteList extends React.PureComponent {
       } else {
         // If we cleared the selection by pressing Escape or entering a
         // non-exact title match, we want to scroll to the top.
-        const parent = this._ref.parentNode;
-        parent.scrollTop = 0;
+        const parent = nullthrows(this._ref).parentElement;
+        nullthrows(parent).scrollTop = 0;
       }
     }
     this._lastKeyDown = null;
@@ -316,7 +333,7 @@ export default class NoteList extends React.PureComponent {
           index={i}
           key={note.get('id')}
           note={note}
-          ref={i}
+          ref={String(i)}
           selected={selected}
           translate={this._getTranslate(i)}
         />,

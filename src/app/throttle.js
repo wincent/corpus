@@ -10,7 +10,11 @@
  * If a call comes in when a pending call is yet to be processed, it replaces
  * the pending call.
  */
-export default function throttle(fn, interval) {
+// TODO: mark this as always returning void.
+export default function throttle<TArgs: Iterable<mixed>, TReturn>(
+  fn: (...TArgs) => TReturn,
+  interval: number,
+): (...TArgs) => TReturn {
   let timeout = null;
   let last = null;
   return function() {

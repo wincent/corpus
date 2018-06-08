@@ -67,7 +67,7 @@ type Props = {|
   // PropTypes.instanceOf(Immutable.Map).isRequired,
   note: $FlowFixMe,
   selected: boolean,
-  translate: number,
+  translate: ?number,
 |};
 
 export default class NotePreview extends React.PureComponent<Props> {

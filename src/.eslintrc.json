@@ -4,7 +4,11 @@
   },
   "globals": {
     "$FlowFixMe": false,
+    "Iterable": false,
+    "SyntheticEvent": false,
+    "SyntheticKeyboardEvent": false,
     "SyntheticInputEvent": false,
+    "TimeoutID": false,
     "global": true,
     "setImmediate": false
   },
