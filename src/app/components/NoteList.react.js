@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import autobind from 'autobind-decorator';
 
 import Actions from '../Actions';
 import Constants from '../Constants';
@@ -138,13 +137,12 @@ export default class NoteList extends React.PureComponent {
     };
   }
 
-  @autobind
-  _addListeners() {
+  _addListeners = () => {
     if (!this._listening) {
       document.addEventListener('selectionchange', this._selectionChanged);
       this._listening = true;
     }
-  }
+  };
 
   _removeListeners() {
     clearTimeout(this._listenerTimeout);
@@ -155,49 +153,42 @@ export default class NoteList extends React.PureComponent {
     }
   }
 
-  @autobind
-  _selectionChanged() {
+  _selectionChanged = () => {
     // Don't want to trigger on descdendant (eg. NotePreview title) selection
     // changes.
     if (document.activeElement === this._ref) {
       Actions.allNotesSelected();
     }
-  }
+  };
 
-  @autobind
-  _updateBubbling() {
+  _updateBubbling = () => {
     const bubbling = NoteAnimationStore.bubbling;
     this.setState({
       animating: false,
       bubbling,
     });
-  }
+  };
 
-  @autobind
-  _updateFocus() {
+  _updateFocus = () => {
     if (FocusStore.focus === 'NoteList') {
       this._ulRef.focus();
     }
-  }
+  };
 
-  @autobind
-  _updateNoteSelection() {
+  _updateNoteSelection = () => {
     this.setState({selection: NotesSelectionStore.selection});
-  }
+  };
 
-  @autobind
-  _updateNotes() {
+  _updateNotes = () => {
     this.setState({notes: FilteredNotesStore.notes});
-  }
+  };
 
-  @autobind
-  _onBlur() {
+  _onBlur = () => {
     this._removeListeners();
     this.setState({focused: false});
-  }
+  };
 
-  @autobind
-  _onFocus() {
+  _onFocus = () => {
     // In order to avoid re-implementing the first-responder wheel, we need to
     // handle "Select All" especially here. When we're focused, we want to
     // intercept it. We do this by ensuring that `Note.react` has `user-select:
@@ -208,10 +199,9 @@ export default class NoteList extends React.PureComponent {
     clearTimeout(this._listenerTimeout);
     this._listenerTimeout = setTimeout(this._addListeners, 200);
     this.setState({focused: true});
-  }
+  };
 
-  @autobind
-  _onKeyDown(event) {
+  _onKeyDown = event => {
     this._lastKeyDown = event.keyCode; // teh hax!
 
     switch (event.keyCode) {
@@ -249,31 +239,27 @@ export default class NoteList extends React.PureComponent {
         Actions.searchRequested(printable);
       }
     }
-  }
+  };
 
-  // TODO: if I can figure out how to get @autobind and @throttle to play
-  // nicely, use them...
   _updateScrollTop = throttle(
     scrollTop => requestAnimationFrame(() => this.setState({scrollTop})),
     SCROLL_THROTTLE_INTERVAL,
   );
 
-  @autobind
-  _onTransitionEnd() {
+  _onTransitionEnd = () => {
     // A note has bubbled to the top, make sure we can see it still.
     const parent = this._ref.parentNode;
     parent.scrollTop = 0;
     Actions.bubbleAnimationFinished();
-  }
+  };
 
-  @autobind
-  _onScroll() {
+  _onScroll = () => {
     // A layer of indirection here is needed because event objects are pooled;
     // if we passed them directly into the throttled function they may have
     // changed by the time the wrapped function gets executed.
     const scrollTop = event.currentTarget.scrollTop;
     this._updateScrollTop(scrollTop);
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.bubbling !== this.state.bubbling && !this.state.animating) {

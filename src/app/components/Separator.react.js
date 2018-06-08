@@ -7,7 +7,6 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import autobind from 'autobind-decorator';
 
 const styles = {
   root: {
@@ -25,8 +24,7 @@ export default class Separator extends React.Component {
     onMouseMove: PropTypes.func.isRequired,
   };
 
-  @autobind
-  _onMouseDown(event) {
+  _onMouseDown = event => {
     const onMouseMove = this.props.onMouseMove;
     const onMouseUp = () => {
       document.removeEventListener('mousemove', onMouseMove);
@@ -40,7 +38,7 @@ export default class Separator extends React.Component {
 
     // Don't let the browser focus us. We're a div, after all.
     event.preventDefault();
-  }
+  };
 
   shouldComponentUpdate() {
     return false;

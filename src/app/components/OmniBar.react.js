@@ -8,7 +8,6 @@
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
 import React from 'react';
-import autobind from 'autobind-decorator';
 import {remote} from 'electron';
 import {connect} from 'react-redux';
 import {ipcRenderer} from 'electron';
@@ -142,14 +141,13 @@ class OmniBar extends React.Component {
       : '#f6f6f6';
   }
 
-  @autobind
-  _updateFocus() {
+  _updateFocus = () => {
     if (FocusStore.focus === 'OmniBar') {
       const input = this._inputRef;
       input.focus();
       input.setSelectionRange(0, input.value.length);
     }
-  }
+  };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.logs !== nextProps.logs) {
@@ -157,17 +155,15 @@ class OmniBar extends React.Component {
     }
   }
 
-  @autobind
-  _onNotesChange(query: ?string) {
+  _onNotesChange = (query: ?string) => {
     this._query = query || '';
 
     // This will force an update in the event that the notes changed due to
     // clicking on a tag, for instance.
     this.setState({value: this._query});
-  }
+  };
 
-  @autobind
-  _onNotesSelectionChange() {
+  _onNotesSelectionChange = () => {
     const note = getCurrentNote();
     const currentValue = note ? note.get('title').toLowerCase() : '';
     const pendingValue = this._query ? this._query.toLowerCase() : '';
@@ -192,30 +188,26 @@ class OmniBar extends React.Component {
       // but nvALT selects the remaining part
     }
     this._query = null;
-  }
+  };
 
-  @autobind
-  _onChange(event) {
+  _onChange = event => {
     this._pendingDeletion = null;
     const value = event.currentTarget.value;
     this.setState({value});
     Actions.searchRequested(value);
-  }
+  };
 
-  @autobind
-  _onCancelClick() {
+  _onCancelClick = () => {
     Actions.searchRequested('');
     this.setState({value: ''}, () => this._inputRef.focus());
-  }
+  };
 
-  @autobind
-  _onAttentionClick() {
+  _onAttentionClick = () => {
     remote.getCurrentWindow().openDevTools();
     this.setState({hasError: false});
-  }
+  };
 
-  @autobind
-  _onFocus(event) {
+  _onFocus = event => {
     // We want to select all text only if this was an in-app focus event; we
     // don't want to change the selection if this event is the result of the
     // application coming from the background into the foreground.
@@ -228,10 +220,9 @@ class OmniBar extends React.Component {
       const input = event.currentTarget;
       input.setSelectionRange(0, input.value.length);
     }
-  }
+  };
 
-  @autobind
-  _onKeyDown(event) {
+  _onKeyDown = event => {
     switch (event.keyCode) {
       case Keys.BACKSPACE:
       case Keys.DELETE:
@@ -302,7 +293,7 @@ class OmniBar extends React.Component {
     }
 
     performKeyboardNavigation(event);
-  }
+  };
 
   render() {
     const styles = this._getStyles();

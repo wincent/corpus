@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import autobind from 'autobind-decorator';
 import {ipcRenderer} from 'electron';
 
 import Actions from '../Actions';
@@ -190,18 +189,15 @@ export default class NotePreview extends React.PureComponent<Props> {
     });
   }
 
-  @autobind
-  _onBlurTitle(event) {
+  _onBlurTitle = event => {
     this._endEditing(event);
-  }
+  };
 
-  @autobind
-  _onChange(event) {
+  _onChange = event => {
     this.setState({pendingTitle: event.currentTarget.value});
-  }
+  };
 
-  @autobind
-  _onClick(event) {
+  _onClick = event => {
     if (event.metaKey && event.shiftKey) {
       // TODO: in nvALT this is some kind of drag;
       // eg. to a text document -> copies path
@@ -217,22 +213,20 @@ export default class NotePreview extends React.PureComponent<Props> {
     } else {
       Actions.noteSelected(this.props.index, true);
     }
-  }
+  };
 
-  @autobind
-  _onContextMenu() {
+  _onContextMenu = () => {
     if (this.state.isEditing) {
       return;
     }
 
     // Ghastly hack...
     setTimeout(() => ipcRenderer.send('context-menu'), 100);
-  }
+  };
 
-  @autobind
-  _onDoubleClick() {
+  _onDoubleClick = () => {
     this._startEditing();
-  }
+  };
 
   // TODO: the input is getting complicated enough to pull out into a separate
   // component?
@@ -241,8 +235,7 @@ export default class NotePreview extends React.PureComponent<Props> {
     input.setSelectionRange(0, input.value.length);
   }
 
-  @autobind
-  _onKeyDown(event) {
+  _onKeyDown = event => {
     event.stopPropagation();
     switch (event.keyCode) {
       case Keys.RETURN:
@@ -253,10 +246,9 @@ export default class NotePreview extends React.PureComponent<Props> {
         this._endEditing(event);
         break;
     }
-  }
+  };
 
-  @autobind
-  _onMouseDown(event) {
+  _onMouseDown = event => {
     if (this.state.isEditing) {
       return;
     }
@@ -272,10 +264,9 @@ export default class NotePreview extends React.PureComponent<Props> {
         Actions.noteSelected(this.props.index, true);
       }
     }
-  }
+  };
 
-  @autobind
-  _updateFocus() {
+  _updateFocus = () => {
     if (FocusStore.focus === 'TitleInput') {
       const selection = NotesSelectionStore.selection;
       if (selection.size === 1) {
@@ -284,7 +275,7 @@ export default class NotePreview extends React.PureComponent<Props> {
         }
       }
     }
-  }
+  };
 
   _renderTitle() {
     if (this.state.isEditing) {

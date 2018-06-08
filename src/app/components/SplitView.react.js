@@ -7,7 +7,6 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import autobind from 'autobind-decorator';
 
 import Separator from './Separator.react';
 import clamp from '../clamp';
@@ -68,16 +67,14 @@ export default class SplitView extends React.Component {
     };
   }
 
-  @autobind
-  _onMouseMove(event) {
+  _onMouseMove = event => {
     event.preventDefault(); // avoids unwanted selection of note text
     this.setState(this._getPaneDimensions(event.clientX));
-  }
+  };
 
-  @autobind
-  _onResize() {
+  _onResize = () => {
     this.setState(this._getPaneDimensions(this.state.left));
-  }
+  };
 
   render() {
     if (React.Children.count(this.props.children) !== 2) {

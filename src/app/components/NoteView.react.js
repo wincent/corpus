@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import autobind from 'autobind-decorator';
 
 import Note from './Note.react';
 import NotePlaceholder from './NotePlaceholder.react';
@@ -41,8 +40,7 @@ export default class NoteView extends React.Component {
     FilteredNotesStore.removeListener('change', this._updateNote);
   }
 
-  @autobind
-  _updateNote() {
+  _updateNote = () => {
     // TODO: make a convenience method for this, probably on the store, to DRY
     // this up (we'll be doing it in a few places)
     const {selection} = NotesSelectionStore;
@@ -52,7 +50,7 @@ export default class NoteView extends React.Component {
     if (this.state.note !== note || this.state.count !== count) {
       this.setState({count, note});
     }
-  }
+  };
 
   render() {
     let note;
