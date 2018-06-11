@@ -11,7 +11,7 @@ import Keys from './Keys';
 /**
  * Common keyboard navigation code used by NoteList and OmniBar components.
  */
-function performKeyboardNavigation(event) {
+function performKeyboardNavigation(event: KeyboardEvent) {
   if (event.defaultPrevented) {
     // Event has already been handled.
     return;

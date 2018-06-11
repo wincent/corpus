@@ -27,7 +27,7 @@ const styles = {
 
 import type {ChildrenArray, Node as ReactNode} from 'react';
 type Props = {|
-  children: ChildrenArray<ReactNode>,
+  children: $ReadOnlyArray<ChildrenArray<ReactNode>>,
 |};
 type State = {|
   left: number,
