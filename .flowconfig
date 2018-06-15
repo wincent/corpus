@@ -6,3 +6,11 @@
 [options]
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
 suppress_type=$FlowFixMe
+
+[strict]
+nonstrict-import
+sketchy-null
+unclear-type
+unsafe-getters-setters
+untyped-import
+untyped-type-import

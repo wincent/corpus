@@ -12,6 +12,8 @@ import process from 'process';
 import Actions from '../Actions';
 import * as log from '../log';
 
+import type {ConfigFields, ConfigT} from '../stores/ConfigStore';
+
 const defaults = {
   notesDirectory: path.join(
     process.env.HOME,
@@ -62,7 +64,12 @@ function merge(state, maybeObject) {
   return state;
 }
 
-export default function config(state = new Config({}), action) {
+/* eslint-disable new-cap */
+export default function config(
+  state: ConfigT = Config({}),
+  action: {type: string, config: ConfigFields},
+) {
+  /* eslint-enable new-cap */
   switch (action.type) {
     case Actions.CONFIG_LOADED:
       if (action.config) {

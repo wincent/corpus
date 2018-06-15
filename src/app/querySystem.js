@@ -9,6 +9,8 @@ import Promise from 'bluebird';
 import * as log from './log';
 import run from './run';
 
+import type {ConfigT} from './stores/ConfigStore';
+
 function parseValue(value: string) {
   return parseInt(value.trim(), 10);
 }
@@ -16,7 +18,7 @@ function parseValue(value: string) {
 /**
  * Interrogates the system for information.
  */
-export default async function querySystem(config) {
+export default async function querySystem(config: ConfigT) {
   const {notesDirectory} = config;
   let nameMax = null;
   let pathMax = null;

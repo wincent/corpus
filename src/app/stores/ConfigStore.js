@@ -15,6 +15,15 @@ import configFile from '../configFile';
 import loadConfig from '../loadConfig';
 import * as log from '../log';
 
+import type {RecordFactory, RecordOf} from 'immutable';
+
+export type ConfigFields = {|
+  notesDirectory: string,
+  noteFontFamily: string,
+  noteFontSize: string,
+|};
+export type ConfigT = RecordOf<ConfigFields>;
+
 const defaults = {
   notesDirectory: path.join(
     process.env.HOME,
@@ -27,8 +36,10 @@ const defaults = {
   noteFontSize: '12',
 };
 
-const Config = ImmutableRecord(defaults);
-let config = new Config({});
+const Config: RecordFactory<ConfigFields> = ImmutableRecord(defaults);
+/* eslint-disable new-cap*/
+let config: ConfigT = Config({});
+/* eslint-enable new-cap*/
 
 const mergerConfig = {
   notesDirectory(value, key) {
