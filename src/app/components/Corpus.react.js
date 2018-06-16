@@ -68,7 +68,7 @@ type Props = {||};
 export default class Corpus extends React.Component<Props> {
   _selectionCount: number;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this._selectionCount = 0;
   }

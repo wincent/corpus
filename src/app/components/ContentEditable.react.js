@@ -60,7 +60,7 @@ export default withStore(
     }
 
     componentDidMount() {
-      this._restoreViewState(this.props.note.get('id'));
+      this._restoreViewState();
       FocusStore.on('change', this._updateFocus);
       this._updateFocus();
     }

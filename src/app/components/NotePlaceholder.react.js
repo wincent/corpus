@@ -2,11 +2,14 @@
  * Copyright 2015-present Greg Hurrell. All rights reserved.
  * Licensed under the terms of the MIT license.
  *
- * @flow
+ * @flow strict-local
  */
 
-import PropTypes from 'prop-types';
 import React from 'react';
+
+type Props = {|
+  count: number,
+|};
 
 const styles = {
   root: {
@@ -30,12 +33,8 @@ const styles = {
   },
 };
 
-export default class NotePlaceholder extends React.Component {
-  static propTypes = {
-    count: PropTypes.number.isRequired,
-  };
-
-  _onMouseDown(event) {
+export default class NotePlaceholder extends React.Component<Props> {
+  _onMouseDown(event: Event) {
     event.preventDefault(); // Disallow focus.
   }
 
