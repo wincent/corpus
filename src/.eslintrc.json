@@ -12,6 +12,7 @@
     "SyntheticMouseEvent": false,
     "TimeoutID": false,
     "global": true,
+    "require": false,
     "setImmediate": false
   },
   "rules": {}

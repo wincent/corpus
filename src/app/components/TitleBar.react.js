@@ -6,44 +6,31 @@
  */
 
 import React from 'react';
-import {connect} from 'react-redux';
 import simplifyPath from '../simplifyPath';
+import {withStore} from '../store';
 
-type Props = {|
-  config: $FlowFixMe, // PropTypes.instanceOf(Immutable.Record),
-|};
+import type {StoreProps} from '../store';
 
-// TODO: make this a pure functional component
-class TitleBar extends React.Component<Props> {
-  _getStyles() {
-    return {
-      root: {
-        WebkitAppRegion: 'drag',
-        WebkitUserSelect: 'none',
-        bottom: '36px',
-        cursor: 'default',
-        fontFamily: 'BlinkMacSystemFont',
-        fontSize: '14px',
-        position: 'absolute',
-        textAlign: 'center',
-        width: '100%',
-      },
-    };
-  }
+const styles = {
+  root: {
+    WebkitAppRegion: 'drag',
+    WebkitUserSelect: 'none',
+    bottom: '36px',
+    cursor: 'default',
+    fontFamily: 'BlinkMacSystemFont',
+    fontSize: '14px',
+    position: 'absolute',
+    textAlign: 'center',
+    width: '100%',
+  },
+};
 
-  render() {
-    const styles = this._getStyles();
-    const title = simplifyPath(this.props.config.notesDirectory);
-    return (
-      <div style={styles.root}>
-        <span>{title}</span>
-      </div>
-    );
-  }
-}
-
-function mapStateToProps({config}) {
-  return {config};
-}
-
-export default connect(mapStateToProps)(TitleBar);
+export default withStore(({store}: StoreProps) => {
+  const notesDirectory = store.get('config.notesDirectory');
+  const title = notesDirectory ? simplifyPath(notesDirectory) : 'Corpus';
+  return (
+    <div style={styles.root}>
+      <span>{title}</span>
+    </div>
+  );
+});

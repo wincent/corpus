@@ -25,8 +25,6 @@ const actionTypes = {
   CONFIG_LOADED: 'CONFIG_LOADED',
   FIRST_NOTE_SELECTED: 'FIRST_NOTE_SELECTED',
   LAST_NOTE_SELECTED: 'LAST_NOTE_SELECTED',
-  LOG_ERROR: 'LOG_ERROR',
-  LOG_WARNING: 'LOG_WARNING',
   NEXT_NOTE_SELECTED: 'NEXT_NOTE_SELECTED',
   NOTES_LOADED: 'NOTES_LOADED',
   NOTE_BUBBLED: 'NOTE_BUBBLED',
@@ -73,15 +71,6 @@ const actionCreators = {
 
   configLoaded() {
     dispatch(actionTypes.CONFIG_LOADED);
-  },
-
-  // Temporary hack: pass in Redux store to get access to `dispatch`.
-  logError(message: string, store: $FlowFixMe) {
-    store.dispatch({
-      type: actionTypes.LOG_ERROR,
-      level: 'ERROR',
-      message,
-    });
   },
 
   firstNoteSelected() {
@@ -166,15 +155,6 @@ const actionCreators = {
 
   selectedNotesDeleted(ids: Array<number>) {
     dispatch(actionTypes.SELECTED_NOTES_DELETED, {ids});
-  },
-
-  // Temporary hack: pass in Redux store to get access to `dispatch`.
-  logWarning(message: string, store: $FlowFixMe) {
-    store.dispatch({
-      type: actionTypes.LOG_WARNING,
-      level: 'WARNING',
-      message,
-    });
   },
 };
 

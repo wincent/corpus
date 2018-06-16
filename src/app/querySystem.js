@@ -2,23 +2,34 @@
  * Copyright 2015-present Greg Hurrell. All rights reserved.
  * Licensed under the terms of the MIT license.
  *
- * @flow
+ * @flow strict-local
  */
 
-import Promise from 'bluebird';
 import * as log from './log';
 import run from './run';
 
 import type {ConfigT} from './stores/ConfigStore';
 
-function parseValue(value: string) {
+type SystemInfo = {|
+  +nameMax: ?number,
+  +pathMax: ?number,
+|};
+
+export const defaults = {
+  nameMax: 255,
+  pathMax: 1024,
+};
+
+function parseValue(value: string): number {
   return parseInt(value.trim(), 10);
 }
 
 /**
- * Interrogates the system for information.
+ * Query the system for information.
  */
-export default async function querySystem(config: ConfigT) {
+export default async function querySystem(
+  config: ConfigT,
+): Promise<SystemInfo> {
   const {notesDirectory} = config;
   let nameMax = null;
   let pathMax = null;
@@ -32,5 +43,8 @@ export default async function querySystem(config: ConfigT) {
     log.warn(error);
   }
 
-  return {nameMax, pathMax};
+  return {
+    nameMax: nameMax || defaults.nameMax,
+    pathMax: pathMax || defaults.pathMax,
+  };
 }

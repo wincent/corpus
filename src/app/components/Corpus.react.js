@@ -6,8 +6,6 @@
  */
 
 import React from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
 import {ipcRenderer} from 'electron';
 
 import Actions from '../Actions';
@@ -21,21 +19,6 @@ import SplitView from '../components/SplitView.react';
 import Viewport from '../components/Viewport.react';
 import * as log from '../log';
 import run from '../run';
-
-const ReduxActions = {};
-
-function mapStateToProps(state) {
-  return {
-    ...state,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-    ...bindActionCreators(ReduxActions, dispatch),
-  };
-}
 
 function deleteSelectedNotes() {
   const selection = NotesSelectionStore.selection;
@@ -82,7 +65,7 @@ function reveal() {
 
 type Props = {||};
 
-class Corpus extends React.Component<Props> {
+export default class Corpus extends React.Component<Props> {
   _selectionCount: number;
 
   constructor(props) {
@@ -138,8 +121,3 @@ class Corpus extends React.Component<Props> {
     );
   }
 }
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Corpus);

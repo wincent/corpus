@@ -5,15 +5,29 @@
  * @flow
  */
 
-import Actions from './Actions';
+// import store from './store';
+
+let store = null;
+
+export type LogMessage = {|
+  +level: 'ERROR' | 'WARNING',
+  +message: string,
+|};
+
+function log(logMessage: LogMessage): void {
+  if (!store) {
+    store = require('./store');
+  }
+  const previous = store.get('log');
+  store.set('log')([...previous, logMessage]);
+}
 
 export function error(message: string) {
   console.error(message); // eslint-disable-line no-console
-
-  // Yes, hideous global state; see explaination in src/index.js.
-  if (global.store) {
-    Actions.logError(message, global.store);
-  }
+  log({
+    level: 'ERROR',
+    message,
+  });
 }
 
 export function info(message: string) {
@@ -22,9 +36,8 @@ export function info(message: string) {
 
 export function warn(message: string) {
   console.warn(message); // eslint-disable-line no-console
-
-  // Yes, hideous global state; see explanation in src/index.js.
-  if (global.store) {
-    Actions.logWarning(message, global.store);
-  }
+  log({
+    level: 'WARNING',
+    message,
+  });
 }

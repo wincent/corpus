@@ -6,10 +6,10 @@
  */
 
 import React from 'react';
-import {connect} from 'react-redux';
 
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
+import {withStore} from '../store';
 import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
@@ -17,197 +17,219 @@ import colors from '../colors';
 import debounce from 'simple-debounce';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
+import type {StoreProps} from '../store';
+
 type Props = {
-  // PropTypes.instanceOf(Immutable.Record),
-  config: $FlowFixMe,
+  ...StoreProps,
   // PropTypes.instanceOf(Immutable.Map).isRequired,
   note: $FlowFixMe,
-  // PropTypes.func.isRequired,
-  onBlur: $FlowFixMe,
   tabIndex: number,
 };
 
 type State = {|
+  id: number,
   value: string,
 |};
 
-class ContentEditable extends React.Component<Props, State> {
-  _node: ?HTMLTextAreaElement;
-  _pendingSave: boolean;
+const viewStates = {};
 
-  _autosave = debounce(() => this._persistChanges(true), 5000);
+export default withStore(
+  class ContentEditable extends React.Component<Props, State> {
+    _node: ?HTMLTextAreaElement;
+    _pendingSave: boolean;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: this.props.note.get('text'),
-    };
-  }
+    _autosave = debounce(() => this._persistChanges(true), 5000);
 
-  componentDidMount() {
-    FocusStore.on('change', this._updateFocus);
-    this._updateFocus();
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    // Check for note identity ('id') rather than using `===`. Attributes of a
-    // note may change (for example, 'index' will change in response to
-    // bubbling).
-    if (nextProps.note.get('id') !== this.props.note.get('id')) {
-      this._persistChanges();
-      this.setState({
-        value: nextProps.note.get('text'),
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    FocusStore.removeListener('change', this._updateFocus);
-    this._persistChanges();
-  }
-
-  _getNode(): HTMLTextAreaElement {
-    if (!this._node) {
-      throw new Error('Expected HTMLTextAreaElement');
-    }
-    return this._node;
-  }
-
-  getViewState() {
-    const node = this._getNode();
-    return {
-      scrollTop: node.scrollTop,
-      selectionEnd: node.selectionEnd,
-      selectionStart: node.selectionStart,
-    };
-  }
-
-  setViewState({scrollTop, selectionEnd, selectionStart}) {
-    const node = this._getNode();
-    node.scrollTop = scrollTop;
-    node.selectionEnd = selectionEnd;
-    node.selectionStart = selectionStart;
-  }
-
-  _getStyles() {
-    const {config} = this.props;
-    return {
-      root: {
-        background: colors.background,
-        border: 0,
-        fontFamily: config.noteFontFamily,
-        fontSize: config.noteFontSize + 'px',
-        minHeight: 'calc(100vh - 36px)',
-        outline: 0,
-        overflowWrap: 'break-word',
-        padding: '8px',
-        whiteSpace: 'pre-wrap',
-        width: '100%',
-      },
-    };
-  }
-
-  _persistChanges(isAutosave: boolean = false) {
-    if (!this._pendingSave && isAutosave) {
-      // No need to complete the autosave; an eager save already happened.
-      return;
+    static getDerivedStateFromProps(props, state) {
+      const id = props.note.get('id');
+      if (id === state.id) {
+        return state;
+      }
+      return {
+        id,
+        value: props.note.get('text'),
+      };
     }
 
-    const text = this.state.value;
-    if (text !== this.props.note.get('text')) {
-      Actions.noteTextChanged({
-        index: this.props.note.get('index'),
-        isAutosave,
-        text,
-      });
+    constructor(props) {
+      super(props);
+      this.state = {
+        id: props.note.get('id'),
+        value: props.note.get('text'),
+      };
     }
 
-    this._pendingSave = false;
-  }
-
-  _onBlur = (event: SyntheticInputEvent<HTMLTextAreaElement>) => {
-    if (this.props.onBlur) {
-      this.props.onBlur(event);
+    componentDidMount() {
+      this._restoreViewState(this.props.note.get('id'));
+      FocusStore.on('change', this._updateFocus);
+      this._updateFocus();
     }
-    if (!Dispatcher.isDispatching()) {
+
+    getSnapshotBeforeUpdate(prevProps) {
+      // Check for note identity ('id') rather than using `===`. Attributes of a
+      // note may change (for example, 'index' will change in response to
+      // bubbling).
+      if (prevProps.note.get('id') !== this.props.note.get('id')) {
+        this._recordViewState(prevProps.note.get('id'));
+      }
+      return null;
+    }
+
+    componentWillUnmount() {
+      this._recordViewState(this.props.note.get('id'));
+      FocusStore.removeListener('change', this._updateFocus);
       this._persistChanges();
     }
-  };
 
-  _onChange = (event: SyntheticInputEvent<HTMLTextAreaElement>) => {
-    const index = NotesSelectionStore.selection.first();
-    if (index) {
-      // Not at top of list, so bubble note to top.
-      Actions.noteBubbled(this.props.note.get('index'), index);
+    _getNode(): HTMLTextAreaElement {
+      if (!this._node) {
+        throw new Error('Expected HTMLTextAreaElement');
+      }
+      return this._node;
     }
-    this.setState({value: event.currentTarget.value});
-    this._pendingSave = true;
-    this._autosave();
-  };
 
-  _onKeyDown(event) {
-    // Prevent undesired fallthrough to `performKeyboardNavigation` for some
-    // keys.
-    switch (event.keyCode) {
-      case Keys.DOWN:
-      case Keys.UP:
+    _recordViewState(id: number) {
+      const node = this._getNode();
+      const viewState = {
+        scrollTop: node.scrollTop,
+        selectionEnd: node.selectionEnd,
+        selectionStart: node.selectionStart,
+      };
+      viewStates[id] = viewState;
+    }
+
+    _restoreViewState() {
+      const id = this.props.note.get('id');
+      const node = this._getNode();
+      let viewState = viewStates[id];
+      if (!viewState) {
+        viewState = {
+          scrollTop: 0,
+          selectionEnd: 0,
+          selectionStart: 0,
+        };
+        viewStates[id] = viewState;
+      }
+      node.scrollTop = viewState.scrollTop;
+      node.selectionEnd = viewState.selectionEnd;
+      node.selectionStart = viewState.selectionStart;
+    }
+
+    componentDidUpdate(prevProps: Props) {
+      if (this.props.note.get('id') !== prevProps.note.get('id')) {
+        this._restoreViewState();
+      }
+      this._persistChanges();
+    }
+
+    _getStyles() {
+      const {store} = this.props;
+      return {
+        root: {
+          background: colors.background,
+          border: 0,
+          fontFamily: store.get('config.noteFontFamily'),
+          fontSize: store.get('config.noteFontSize') + 'px',
+          minHeight: 'calc(100vh - 36px)',
+          outline: 0,
+          overflowWrap: 'break-word',
+          padding: '8px',
+          whiteSpace: 'pre-wrap',
+          width: '100%',
+        },
+      };
+    }
+
+    _persistChanges(isAutosave: boolean = false) {
+      if (!this._pendingSave && isAutosave) {
+        // No need to complete the autosave; an eager save already happened.
         return;
+      }
 
-      case Keys.ESCAPE:
-        event.preventDefault();
-        Actions.searchRequested('');
-        Actions.omniBarFocused();
-        Actions.allNotesDeselected();
-        return;
+      const text = this.state.value;
+      if (text !== this.props.note.get('text')) {
+        Actions.noteTextChanged({
+          index: this.props.note.get('index'),
+          isAutosave,
+          text,
+        });
+      }
 
-      case Keys.J:
-      case Keys.K:
-        if (!event.metaKey) {
+      this._pendingSave = false;
+    }
+
+    _onBlur = () => {
+      this._recordViewState(this.props.note.get('id'));
+
+      if (!Dispatcher.isDispatching()) {
+        this._persistChanges();
+      }
+    };
+
+    _onChange = (event: SyntheticInputEvent<HTMLTextAreaElement>) => {
+      const index = NotesSelectionStore.selection.first();
+      if (index) {
+        // Not at top of list, so bubble note to top.
+        Actions.noteBubbled(this.props.note.get('index'), index);
+      }
+      this.setState({value: event.currentTarget.value});
+      this._pendingSave = true;
+      this._autosave();
+    };
+
+    _onKeyDown(event) {
+      // Prevent undesired fallthrough to `performKeyboardNavigation` for some
+      // keys.
+      switch (event.keyCode) {
+        case Keys.DOWN:
+        case Keys.UP:
           return;
-        }
-        break;
 
-      case Keys.TAB:
-        // Prevent the <body> from becoming `document.activeElement`.
-        if (!event.shiftKey) {
+        case Keys.ESCAPE:
           event.preventDefault();
+          Actions.searchRequested('');
           Actions.omniBarFocused();
+          Actions.allNotesDeselected();
           return;
-        }
-        break;
+
+        case Keys.J:
+        case Keys.K:
+          if (!event.metaKey) {
+            return;
+          }
+          break;
+
+        case Keys.TAB:
+          // Prevent the <body> from becoming `document.activeElement`.
+          if (!event.shiftKey) {
+            event.preventDefault();
+            Actions.omniBarFocused();
+            return;
+          }
+          break;
+      }
+
+      performKeyboardNavigation(event);
     }
 
-    performKeyboardNavigation(event);
-  }
+    _updateFocus = () => {
+      if (FocusStore.focus === 'Note') {
+        this._getNode().focus();
+      }
+    };
 
-  _updateFocus = () => {
-    if (FocusStore.focus === 'Note') {
-      this._getNode().focus();
+    render() {
+      return (
+        <textarea
+          onBlur={this._onBlur}
+          onChange={this._onChange}
+          onKeyDown={this._onKeyDown}
+          ref={node => (this._node = node)}
+          style={this._getStyles().root}
+          tabIndex={this.props.tabIndex}
+          value={this.state.value}
+        />
+      );
     }
-  };
-
-  render() {
-    return (
-      <textarea
-        onBlur={this._onBlur}
-        onChange={this._onChange}
-        onKeyDown={this._onKeyDown}
-        ref={node => (this._node = node)}
-        style={this._getStyles().root}
-        tabIndex={this.props.tabIndex}
-        value={this.state.value}
-      />
-    );
-  }
-}
-
-function mapStateToProps({config}) {
-  return {config};
-}
-
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  {withRef: true},
-)(ContentEditable);
+  },
+);
