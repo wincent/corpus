@@ -24,15 +24,15 @@ type State = {|
   'system.pathMax': number,
 |};
 
-// TODO: use this if we load config file and it doesn't have a value for
-// notesDirectory.
-const defaultNotesDirectory = path.join(
-  process.env.HOME,
-  'Library',
-  'Application Support',
-  'Corpus',
-  'Notes',
-);
+const defaultConfig = {
+  notesDirectory: path.join(
+    process.env.HOME,
+    'Library',
+    'Application Support',
+    'Corpus',
+    'Notes',
+  ),
+};
 
 const initialState: State = {
   'config.notesDirectory': null,
@@ -46,7 +46,7 @@ const initialState: State = {
 const store = createStore(initialState);
 
 store.on('config.notesDirectory').subscribe(value => {
-  // log.info('new value is ' + value);
+  log.info('Using notesDirectory: ' + value);
 });
 
 export const withStore = connect(store);
@@ -76,22 +76,6 @@ const mergerConfig = {
   },
 };
 
-/*
-function validateAndStore(maybeObject: mixed) {
-  Object.keys(maybeObject).forEach(key => {
-    try {
-      const value =
-        key in mergerConfig
-          ? mergerConfig[key](maybeObject[key], key)
-          : requireString(maybeObject[key], key);
-      config = config.set(key, value);
-    } catch (error) {
-      log.warn(`Problem with key ${key} in ${configFile}: ${error}`);
-    }
-  });
-}
-*/
-
 loadConfig()
   .then(config => {
     Object.keys(config).forEach(key => {
@@ -104,17 +88,19 @@ loadConfig()
       }
     });
 
+    Object.entries(defaultConfig).forEach(([key, value]) => {
+      if (!config.hasOwnProperty(key)) {
+        store.set(`config.${key}`)(value);
+      }
+    });
+
     querySystem(config)
       .then(({nameMax, pathMax}) => {
         store.set('system.nameMax')(nameMax);
         store.set('system.pathMax')(pathMax);
       })
-      .catch(error => {
-        // TODO: handle
-      });
+      .catch(log.error);
   })
-  .catch(error => {
-    // TODO: handle
-  });
+  .catch(log.error);
 
 export default store;

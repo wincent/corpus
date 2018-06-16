@@ -16,7 +16,7 @@ export type LogMessage = {|
 
 function log(logMessage: LogMessage): void {
   if (!store) {
-    store = require('./store');
+    store = require('./store').default;
   }
   const previous = store.get('log');
   store.set('log')([...previous, logMessage]);
