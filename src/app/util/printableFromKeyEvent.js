@@ -15,22 +15,18 @@ import Keys from '../Keys';
  * Deal with the keyIdentifier property instead, which is unambiguous, and
  * Chrome supports.
  */
-export default function printableFromKeyEvent(event: Event): ?string {
+export default function printableFromKeyEvent(
+  event: SyntheticKeyboardEvent<>,
+): ?string {
   if (event.metaKey) {
     // Potential menu short-cuts should never be printable.
     return null;
   }
 
-  const match = event.keyIdentifier.match(/^U\+([0-9A-F]{4})$/);
-  if (match) {
-    let codePoint = parseInt(match[1], 16);
-    if (codePoint >= Keys.SPACE && codePoint <= Keys.TILDE) {
-      // Printable ASCII.
-      if (codePoint >= Keys.A && codePoint <= Keys.Z && !event.shiftKey) {
-        codePoint += 32; // Make lowercase.
-      }
-      return String.fromCodePoint(codePoint);
-    }
+  if (event.key.length === 1) {
+    // Non-printable keys will have length > 1 (eg. "Shift", "F1" etc).
+    return event.key;
   }
+
   return null;
 }
