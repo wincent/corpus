@@ -2,19 +2,9 @@
  * Copyright 2015-present Greg Hurrell. All rights reserved.
  * Licensed under the terms of the MIT license.
  *
- * @flow
+ * @flow strict
  */
 
-import Keys from '../Keys';
-
-/**
- * Browser keycode handling is kind of crazy. In "keypress" handlers you get
- * ASCII values for keycodes, but in "keydown" handlers you get some crazy
- * JS-specific value.
- *
- * Deal with the keyIdentifier property instead, which is unambiguous, and
- * Chrome supports.
- */
 export default function printableFromKeyEvent(
   event: SyntheticKeyboardEvent<>,
 ): ?string {
