@@ -7,6 +7,7 @@
 
 import 'babel-polyfill';
 import {BrowserWindow, Menu, MenuItem, app, ipcMain} from 'electron';
+import nullthrows from 'fbjs/lib/nullthrows';
 import path from 'path';
 
 import template from './menu/template';
@@ -32,7 +33,9 @@ app.on('ready', () => {
     titleBarStyle: 'hidden',
   });
   mainWindow.loadURL('file://' + path.join(__dirname, '/../index.html'));
-  mainWindow.webContents.on('did-finish-load', () => mainWindow.show());
+  mainWindow.webContents.on('did-finish-load', () =>
+    nullthrows(mainWindow).show(),
+  );
 
   ipcMain.on('title-menu', () => {
     const menu = new Menu();
@@ -50,7 +53,7 @@ app.on('ready', () => {
     contextualMenu.append(
       new MenuItem({
         accelerator: 'Shift+Command+P',
-        click: () => mainWindow.webContents.send('preview'),
+        click: () => nullthrows(mainWindow).webContents.send('preview'),
         enabled: previewEnabled,
         label: 'Preview',
       }),
@@ -58,7 +61,7 @@ app.on('ready', () => {
     contextualMenu.append(
       new MenuItem({
         accelerator: 'Shift+Command+R',
-        click: () => mainWindow.webContents.send('reveal'),
+        click: () => nullthrows(mainWindow).webContents.send('reveal'),
         enabled: revealEnabled,
         label: 'Show in Finder',
       }),
@@ -67,7 +70,7 @@ app.on('ready', () => {
     contextualMenu.append(
       new MenuItem({
         accelerator: 'Command+R',
-        click: () => mainWindow.webContents.send('rename'),
+        click: () => nullthrows(mainWindow).webContents.send('rename'),
         enabled: renameEnabled,
         label: 'Rename',
       }),
@@ -75,7 +78,7 @@ app.on('ready', () => {
     contextualMenu.append(
       new MenuItem({
         accelerator: 'Command+Backspace',
-        click: () => mainWindow.webContents.send('delete'),
+        click: () => nullthrows(mainWindow).webContents.send('delete'),
         enabled: deleteEnabled,
         label: 'Delete...',
       }),
@@ -87,10 +90,10 @@ app.on('ready', () => {
   Menu.setApplicationMenu(menu);
 
   ipcMain.on('selection-count-changed', (event, newCount) => {
-    const deleteItem = menu.items[1].submenu.items[1];
-    const renameItem = menu.items[1].submenu.items[0];
-    const previewItem = menu.items[1].submenu.items[5];
-    const revealItem = menu.items[1].submenu.items[6];
+    const deleteItem = nullthrows(menu).items[1].submenu.items[1];
+    const renameItem = nullthrows(menu).items[1].submenu.items[0];
+    const previewItem = nullthrows(menu).items[1].submenu.items[5];
+    const revealItem = nullthrows(menu).items[1].submenu.items[6];
     if (newCount === 0) {
       deleteItem.enabled = deleteEnabled = false;
       previewItem.enabled = previewEnabled = false;
@@ -110,7 +113,7 @@ app.on('ready', () => {
   });
 
   mainWindow
-    .on('blur', () => mainWindow.webContents.send('blur'))
+    .on('blur', () => nullthrows(mainWindow).webContents.send('blur'))
     .on('closed', () => {
       // Allow GC:
       mainWindow = null;
@@ -121,5 +124,5 @@ app.on('ready', () => {
         app.quit();
       }
     })
-    .on('focus', () => mainWindow.webContents.send('focus'));
+    .on('focus', () => nullthrows(mainWindow).webContents.send('focus'));
 });
