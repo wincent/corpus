@@ -2,7 +2,7 @@
  * Copyright 2015-present Greg Hurrell. All rights reserved.
  * Licensed under the terms of the MIT license.
  *
- * @flow
+ * @flow strict
  */
 
 /**
@@ -10,15 +10,14 @@
  * If a call comes in when a pending call is yet to be processed, it replaces
  * the pending call.
  */
-// TODO: mark this as always returning void.
-export default function throttle<TArgs: Iterable<mixed>, TReturn>(
-  fn: (...TArgs) => TReturn,
+export default function throttle<TArgs: Iterable<mixed>>(
+  fn: (...TArgs) => void,
   interval: number,
-): (...TArgs) => TReturn {
+): (...TArgs) => void {
   let timeout = null;
   let last = null;
   return function() {
-    const args = arguments;
+    const args: TArgs = arguments;
     const context = this;
     const now = Date.now();
     if (timeout === null) {
