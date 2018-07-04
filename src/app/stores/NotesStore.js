@@ -13,6 +13,7 @@ import {
 } from 'immutable';
 
 import Promise from 'bluebird';
+import nullthrows from 'fbjs/lib/nullthrows';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
@@ -389,11 +390,11 @@ class NotesStore extends Store {
             path: getPathForTitle(payload.title),
             title: payload.title,
           };
-          const originalNote = notes.get(payload.index);
+          const originalNote = nullthrows(notes.get(payload.index));
           notes = notes.mergeIn([payload.index], update);
 
           // Bump note to top of list.
-          const newNote = notes.get(payload.index);
+          const newNote = nullthrows(notes.get(payload.index));
           notes = notes.delete(payload.index).unshift(newNote);
 
           // Persist changes to disk.
