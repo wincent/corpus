@@ -5,11 +5,15 @@
  * @flow
  */
 
-import {EventEmitter} from 'events';
+import EventEmitter from 'events';
 
 import Dispatcher from '../Dispatcher';
 
+import type {DispatchToken} from 'flux/lib/Dispatcher';
+
 export default class Store extends EventEmitter {
+  dispatchToken: DispatchToken;
+
   constructor() {
     super();
     this.dispatchToken = Dispatcher.register(this.handleDispatch.bind(this));
@@ -23,7 +27,7 @@ export default class Store extends EventEmitter {
     );
   }
 
-  waitFor(...tokens) {
+  waitFor(...tokens: Array<DispatchToken>) {
     Dispatcher.waitFor(tokens);
   }
 }
