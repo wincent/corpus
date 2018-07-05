@@ -21,7 +21,7 @@ import clamp from '../clamp';
  * {next,previous}-note action"; in this case the "next" note is defined as the
  * note after the last note added to the set.
  */
-let selection = ImmutableOrderedSet();
+let selection: any = (ImmutableOrderedSet(): any);
 
 /**
  * We keep track of the total delta (how far we've moved up/down) when adjusting
