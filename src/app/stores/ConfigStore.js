@@ -5,7 +5,6 @@
  * @flow
  */
 
-import {Record as ImmutableRecord} from 'immutable';
 import path from 'path';
 import process from 'process';
 
@@ -15,14 +14,11 @@ import configFile from '../configFile';
 import loadConfig from '../loadConfig';
 import * as log from '../log';
 
-import type {RecordFactory, RecordOf} from 'immutable';
-
-export type ConfigFields = {|
+export type Config = {|
   notesDirectory: string,
   noteFontFamily: string,
   noteFontSize: string,
 |};
-export type ConfigT = RecordOf<ConfigFields>;
 
 const defaults = {
   notesDirectory: path.join(
@@ -36,10 +32,7 @@ const defaults = {
   noteFontSize: '12',
 };
 
-const Config: RecordFactory<ConfigFields> = ImmutableRecord(defaults);
-/* eslint-disable new-cap*/
-let config: ConfigT = Config({});
-/* eslint-enable new-cap*/
+let config: Config = {...defaults};
 
 const mergerConfig = {
   notesDirectory(value, key) {
@@ -64,7 +57,7 @@ function validateAndStore(maybeObject) {
         key in mergerConfig
           ? mergerConfig[key](maybeObject[key], key)
           : requireString(maybeObject[key], key);
-      config = config.set(key, value);
+      config[key] = value;
     } catch (error) {
       log.warn(`Problem with key ${key} in ${configFile}: ${error}`);
     }
