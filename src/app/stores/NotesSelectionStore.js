@@ -6,22 +6,23 @@
  */
 
 // https://github.com/eslint/eslint/issues/2584
-import {
-  OrderedSet as ImmutableOrderedSet,
-  Range as ImmutableRange,
-} from 'immutable';
+import {Range as ImmutableRange} from 'immutable';
 
 import Actions from '../Actions';
 import FilteredNotesStore from './FilteredNotesStore';
 import Store from './Store';
 import clamp from '../clamp';
+import getLastInSet from '../getLastInSet';
 
 /**
- * We use an OrderedSet to support the "multiple selection followed by
- * {next,previous}-note action"; in this case the "next" note is defined as the
- * note after the last note added to the set.
+ * We use a Set (ordered by insertion) to support the "multiple
+ * selection followed by {next,previous}-note action"; in this case the
+ * "next" note is defined as the note after the last note added to the
+ * set.
+ *
+ * TODO: consider just maintaining first/last in separate variable.
  */
-let selection: any = (ImmutableOrderedSet(): any);
+let selection = new Set();
 
 /**
  * We keep track of the total delta (how far we've moved up/down) when adjusting
@@ -42,9 +43,10 @@ function resetSelectionTracking() {
 }
 
 function adjustSelection(delta) {
-  const lastLocation = selection.last();
+  const lastLocation = getLastInSet(selection);
   if (lastLocation == null) {
-    return delta ? selectFirst() : selectLast();
+    delta ? selectFirst() : selectLast();
+    return;
   } else if (initialLocation == null) {
     // Starting selection.
     resetSelectionTracking();
@@ -62,20 +64,22 @@ function adjustSelection(delta) {
     // Moving upwards.
     if (totalDelta >= 0) {
       // Reducing downwards selection.
-      return selection.remove(initialLocation + totalDelta + 1);
+      selection = new Set(selection);
+      selection.delete(initialLocation + totalDelta + 1);
     } else {
       // Extending upwards selection.
       if (selection.has(initialLocation + totalDelta)) {
         // Need to skip already-selected selection; recurse.
         if (initialLocation + totalDelta === 0) {
           // Unless we're already at the top.
-          return selection;
+          return;
         } else {
           totalDelta = previousDelta;
-          return adjustSelection(delta - 1);
+          adjustSelection(delta - 1);
         }
       } else {
-        return selection.add(initialLocation + totalDelta);
+        selection = new Set(selection);
+        selection.add(initialLocation + totalDelta);
       }
     }
   } else if (totalDelta > previousDelta) {
@@ -89,71 +93,63 @@ function adjustSelection(delta) {
           FilteredNotesStore.notes.size - 1
         ) {
           // Unless we're already at the bottom.
-          return selection;
+          return;
         } else {
           totalDelta = previousDelta;
-          return adjustSelection(delta + 1);
+          adjustSelection(delta + 1);
         }
       } else {
-        return selection.add(initialLocation + totalDelta);
+        selection = new Set(selection);
+        selection.add(initialLocation + totalDelta);
       }
     } else {
       // Reducing upwards selection.
-      return selection.remove(initialLocation + totalDelta - 1);
+      selection = new Set(selection);
+      selection.delete(initialLocation + totalDelta - 1);
     }
-  } else {
-    return selection; // nothing to do
   }
-}
-
-function clearSelection() {
-  return selection.clear();
 }
 
 function selectAll() {
   const range = ImmutableRange(0, FilteredNotesStore.notes.size);
-  return selection.clear().merge(range);
+  selection = new Set(range.toJS());
 }
 
 function selectFirst() {
   if (FilteredNotesStore.notes.size) {
-    return clearSelection().add(0);
+    selection = new Set([0]);
   } else {
-    return clearSelection();
+    selection = new Set();
   }
 }
 
 function selectLast() {
   if (FilteredNotesStore.notes.size) {
-    return clearSelection().add(FilteredNotesStore.notes.size - 1);
+    selection = new Set([FilteredNotesStore.notes.size - 1]);
   } else {
-    return clearSelection();
+    selection = new Set();
   }
 }
 
 function selectNext() {
-  const mostRecent = selection.last();
+  const mostRecent = getLastInSet(selection);
   if (mostRecent == null) {
-    return selectFirst();
+    selectFirst();
   } else {
     const maxSelectionIndex = FilteredNotesStore.notes.size - 1;
     if (mostRecent < maxSelectionIndex) {
-      return clearSelection().add(mostRecent + 1);
-    } else {
-      return selection;
+      selection = new Set([mostRecent + 1]);
     }
   }
 }
 
 function selectPrevious() {
-  const mostRecent = selection.last();
+  const mostRecent = getLastInSet(selection);
   if (mostRecent == null) {
-    return selectLast();
+    selectLast();
   } else {
     if (mostRecent > 0) {
-      return clearSelection().add(mostRecent - 1);
-    } else {
-      return selection;
+      selection = new Set([mostRecent - 1]);
     }
   }
 }
@@ -162,7 +158,7 @@ class NotesSelectionStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.ALL_NOTES_DESELECTED:
-        this._change(payload.type, clearSelection);
+        this._change(payload.type, () => (selection = new Set()));
         break;
 
       case Actions.ALL_NOTES_SELECTED:
@@ -196,27 +192,32 @@ class NotesSelectionStore extends Store {
         break;
 
       case Actions.NOTE_DESELECTED:
-        this._change(payload.type, () => selection.remove(payload.index));
+        this._change(payload.type, () => {
+          selection = new Set(selection);
+          selection.delete(payload.index);
+        });
         break;
 
       case Actions.NOTE_RANGE_SELECTED:
         this._change(payload.type, () => {
-          const start = selection.last() || 0;
+          const start = getLastInSet(selection) || 0;
           const end = payload.index;
           const range = ImmutableRange(
             Math.min(start, end),
             Math.max(start, end) + 1,
           );
-          return selection.union(range);
+          selection = new Set(selection);
+          range.forEach(index => selection.add(index));
         });
         break;
 
       case Actions.NOTE_SELECTED:
         this._change(payload.type, () => {
           if (payload.exclusive) {
-            return selection.clear().add(payload.index);
+            selection = new Set([payload.index]);
           } else {
-            return selection.add(payload.index);
+            selection = new Set(selection);
+            selection.add(payload.index);
           }
         });
         break;
@@ -231,10 +232,11 @@ class NotesSelectionStore extends Store {
         this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, () => {
           // TODO: persist last selection across restarts
-          if (selection.size) {
-            return selection;
-          } else {
-            return FilteredNotesStore.notes.size ? selection.add(0) : selection;
+          if (!selection.size) {
+            if (FilteredNotesStore.notes.size) {
+              selection = new Set(selection);
+              selection.add(0);
+            }
           }
         });
         break;
@@ -247,11 +249,11 @@ class NotesSelectionStore extends Store {
         this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, () => {
           if (payload.value === '') {
-            return clearSelection();
+            selection = new Set();
           } else if (payload.isDeletion) {
             // Special case: we don't want anything being selected if this is
             // the result of the user pressing BACKSPACE.
-            return clearSelection();
+            selection = new Set();
           } else {
             // Find first matching title and select it, if there is one.
             let matchingIndex = null;
@@ -267,9 +269,9 @@ class NotesSelectionStore extends Store {
               }
             });
             if (matchingIndex !== null) {
-              return clearSelection().add(matchingIndex);
+              selection = new Set([matchingIndex]);
             } else {
-              return clearSelection();
+              selection = new Set();
             }
           }
         });
@@ -277,7 +279,7 @@ class NotesSelectionStore extends Store {
 
       case Actions.SELECTED_NOTES_DELETED:
         this.waitFor(FilteredNotesStore.dispatchToken);
-        this._change(payload.type, clearSelection);
+        this._change(payload.type, () => (selection = new Set()));
         break;
     }
   }
@@ -290,7 +292,7 @@ class NotesSelectionStore extends Store {
       resetSelectionTracking();
     }
     const previousSelection = selection;
-    selection = changer.call();
+    changer.call();
     if (selection !== previousSelection) {
       this.emit('change');
     }

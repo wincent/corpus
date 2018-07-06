@@ -24,7 +24,7 @@ function deleteSelectedNotes() {
   const selection = NotesSelectionStore.selection;
   let warning;
   if (selection.size === 1) {
-    const note = FilteredNotesStore.notes.get(selection.first());
+    const note = FilteredNotesStore.notes.get(selection.values().next().value);
     warning = `Delete the note titled "${note.get('title')}"?`;
   } else {
     warning = `Delete ${selection.size} notes?`;
@@ -35,18 +35,18 @@ function deleteSelectedNotes() {
 
   // Convert selection indices within the FilteredNotesStore to
   // canonical indices within the NotesStore.
-  Actions.selectedNotesDeleted(
-    selection
-      .map(index => FilteredNotesStore.notes.get(index))
-      .map(note => note.get('index'))
-      .toSet(),
-  );
+  const indices = new Set();
+  for (const index of selection) {
+    const note = FilteredNotesStore.notes.get(index);
+    indices.add(note.get('index'));
+  }
+  Actions.selectedNotesDeleted(indices);
 }
 
 function preview() {
   const selection = NotesSelectionStore.selection;
   if (selection.size === 1) {
-    const note = FilteredNotesStore.notes.get(selection.first());
+    const note = FilteredNotesStore.notes.get(selection.values().next().value);
     // TODO: show link to get a previewer if not available
     // TODO: make previewer configurable
     run('open', note.get('path'), '-b', 'com.brettterpstra.marked2').catch(
@@ -58,7 +58,7 @@ function preview() {
 function reveal() {
   const selection = NotesSelectionStore.selection;
   if (selection.size === 1) {
-    const note = FilteredNotesStore.notes.get(selection.first());
+    const note = FilteredNotesStore.notes.get(selection.values().next().value);
     run('open', '-R', note.get('path')).catch(log.warn);
   }
 }

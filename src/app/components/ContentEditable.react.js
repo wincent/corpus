@@ -167,7 +167,7 @@ export default withStore(
     };
 
     _onChange = (event: SyntheticInputEvent<HTMLTextAreaElement>) => {
-      const index = NotesSelectionStore.selection.first();
+      const index = NotesSelectionStore.selection.values().next().value;
       if (index) {
         // Not at top of list, so bubble note to top.
         Actions.noteBubbled(this.props.note.get('index'), index);

@@ -17,6 +17,7 @@ import NotesSelectionStore from '../stores/NotesSelectionStore';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import FocusStore from '../stores/FocusStore';
 import colors from '../colors';
+import getLastInSet from '../getLastInSet';
 import printableFromKeyEvent from '../util/printableFromKeyEvent';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 import throttle from '../throttle';
@@ -100,7 +101,7 @@ export default class NoteList extends React.PureComponent<Props, State> {
 
     // Always keep last-selected note in the range, even if it means
     // over-rendering.
-    const mostRecent = this.state.selection.last();
+    const mostRecent = getLastInSet(this.state.selection);
     if (mostRecent != null) {
       return Math.min(mostRecent, first);
     } else {
@@ -123,7 +124,7 @@ export default class NoteList extends React.PureComponent<Props, State> {
 
     // Always keep last-selected note in the range, even if it means
     // over-rendering.
-    const mostRecent = this.state.selection.last();
+    const mostRecent = getLastInSet(this.state.selection);
     if (mostRecent != null) {
       return Math.max(mostRecent, last);
     } else {
@@ -290,7 +291,7 @@ export default class NoteList extends React.PureComponent<Props, State> {
     if (prevState.selection !== this.state.selection) {
       if (this.state.selection.size) {
         // Maintain last selection within view.
-        const lastIndex = this.state.selection.last();
+        const lastIndex = getLastInSet(this.state.selection);
         const last = this.refs[lastIndex]; // eslint-disable-line react/no-string-refs
         last.ref.scrollIntoViewIfNeeded(false);
       } else {

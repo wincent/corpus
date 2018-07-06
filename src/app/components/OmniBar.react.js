@@ -21,7 +21,7 @@ import type {StoreProps} from '../store';
 function getCurrentNote() {
   const selection = NotesSelectionStore.selection;
   if (selection.size === 1) {
-    return FilteredNotesStore.notes.get(selection.first());
+    return FilteredNotesStore.notes.get(selection.values().next().value);
   } else {
     return null;
   }
