@@ -5,9 +5,6 @@
  * @flow
  */
 
-// https://github.com/eslint/eslint/issues/2584
-import {Range as ImmutableRange} from 'immutable';
-
 import Actions from '../Actions';
 import FilteredNotesStore from './FilteredNotesStore';
 import Store from './Store';
@@ -111,8 +108,9 @@ function adjustSelection(delta) {
 }
 
 function selectAll() {
-  const range = ImmutableRange(0, FilteredNotesStore.notes.size);
-  selection = new Set(range.toJS());
+  const size = FilteredNotesStore.notes.size;
+  const range = Array.from(new Array(size), (_, i) => i);
+  selection = new Set(range);
 }
 
 function selectFirst() {
@@ -202,12 +200,14 @@ class NotesSelectionStore extends Store {
         this._change(payload.type, () => {
           const start = getLastInSet(selection) || 0;
           const end = payload.index;
-          const range = ImmutableRange(
-            Math.min(start, end),
-            Math.max(start, end) + 1,
-          );
           selection = new Set(selection);
-          range.forEach(index => selection.add(index));
+          for (
+            let i = Math.min(start, end), max = Math.max(start, end) + 1;
+            i < max;
+            i++
+          ) {
+            selection.add(i);
+          }
         });
         break;
 
