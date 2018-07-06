@@ -146,7 +146,7 @@ export default [
         label: 'Reload',
       },
       {
-        accelerator: 'Alt+Command+I',
+        accelerator: 'Alt+Command+J',
         click: () => BrowserWindow.getFocusedWindow().toggleDevTools(),
         label: 'Toggle Developer Tools',
       },
