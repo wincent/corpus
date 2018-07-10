@@ -16,6 +16,7 @@ import Constants from '../Constants';
 import OperationsQueue from '../OperationsQueue';
 import Repo from '../Repo';
 import Store from './Store';
+import commitChanges from '../commitChanges';
 import getNotesDirectory from '../getNotesDirectory';
 import handleError from '../handleError';
 import * as log from '../log';
@@ -206,7 +207,7 @@ function createNote(title) {
       ];
       pathMap[notePath] = true;
       Actions.noteCreationCompleted();
-      Actions.changePersisted();
+      commitChanges();
     } catch (error) {
       handleError(error, `Failed to open ${notePath} for writing`);
     }
@@ -215,17 +216,7 @@ function createNote(title) {
 
 // TODO: make this force a write for unsaved changes in active text area
 function deleteNotes(deletedNotes) {
-  OperationsQueue.enqueue(async () => {
-    try {
-      const notesDirectory = await getNotesDirectory();
-      const repo = new Repo(notesDirectory);
-      await repo.add('*.md');
-      await repo.commit('Corpus (pre-deletion) snapshot');
-    } catch (error) {
-      handleError(error, 'Failed to create Git commit');
-    }
-  }, OperationsQueue.DEFAULT_PRIORITY - 20);
-
+  commitChanges('Corpus (pre-deletion) snapshot');
   deletedNotes.forEach(note => {
     OperationsQueue.enqueue(async () => {
       const notePath = note.path;
@@ -252,7 +243,7 @@ function updateNote(note) {
       await write(fd, noteText);
       await utimes(notePath, time, time);
       await fsync(fd);
-      Actions.changePersisted();
+      commitChanges();
     } catch (error) {
       handleError(error, `Failed to write ${notePath}`);
     } finally {
@@ -272,7 +263,7 @@ function renameNote(oldPath, newPath) {
       await utimes(newPath, time, time);
       delete pathMap[oldPath];
       pathMap[newPath] = true;
-      Actions.changePersisted();
+      commitChanges();
     } catch (error) {
       handleError(error, `Failed to rename ${oldPath} to ${newPath}`);
     }
