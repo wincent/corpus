@@ -57,13 +57,13 @@ dispatch.
                                  ^
                                  |
                       /---------------------\
-           /--------->| NotesSelectionStore |
-           |          \---------------------/
-           |                     ^
-           |                     |
-/--------------------\    /------------\
-| NoteAnimationStore |    | FocusStore |
-\--------------------/    \------------/
+                      | NotesSelectionStore |
+                      \---------------------/
+                                 ^
+                                 |
+                      /--------------------\
+                      | NoteAnimationStore |
+                      \--------------------/
 ```
 
 - `NotesStore`: Manages the set of all notes currently on disk.
@@ -72,9 +72,6 @@ dispatch.
   (based on search terms) has been applied.
 - `NotesSelectionStore`: Reflects the (possibly empty) subset of notes from the
   `FilteredNotesStore` that is currently selected.
-- `FocusStore`: Tracks focus within the application between the three main areas
-  of the UI (`OmniBar.react` across the top of the window, `NoteList.react` on
-  the left side, and `Note.react` on the right side).
 - `NoteAnimationStore`: Tracks note animations ("bubbling" within
   `NoteList.react`).
 

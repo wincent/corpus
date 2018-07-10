@@ -11,7 +11,6 @@ import Actions from '../Actions';
 import Keys from '../Keys';
 import {withStore} from '../store';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
-import FocusStore from '../stores/FocusStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 import TitleBar from './TitleBar.react';
@@ -150,15 +149,22 @@ export default withStore(
       });
       ipcRenderer.on('focus', () => this.setState({foreground: true}));
       this._inputRef.focus();
-      FocusStore.on('change', this._updateFocus);
       NotesSelectionStore.on('change', this._onNotesSelectionChange);
       FilteredNotesStore.on('change', this._onNotesChange);
+    }
+
+    componentDidUpdate(prevProps) {
+      const focus = this.props.store.get('focus');
+      if (focus === 'OmniBar' && prevProps.store.get('focus') !== 'OmniBar') {
+        const input = this._inputRef;
+        input.focus();
+        input.setSelectionRange(0, input.value.length);
+      }
     }
 
     componentWillUnmount() {
       ipcRenderer.removeAllListeners('blur');
       ipcRenderer.removeAllListeners('focus');
-      FocusStore.removeListener('change', this._updateFocus);
       NotesSelectionStore.removeListener(
         'change',
         this._onNotesSelectionChange,
@@ -171,14 +177,6 @@ export default withStore(
         ? 'linear-gradient(#d3d3d3, #d0d0d0)'
         : '#f6f6f6';
     }
-
-    _updateFocus = () => {
-      if (FocusStore.focus === 'OmniBar') {
-        const input = this._inputRef;
-        input.focus();
-        input.setSelectionRange(0, input.value.length);
-      }
-    };
 
     _onNotesChange = (query: ?string) => {
       this._query = query || '';
@@ -289,7 +287,7 @@ export default withStore(
             if (this.state.value) {
               const title = getCurrentTitle();
               if (this.state.value === title) {
-                Actions.noteFocused();
+                this.props.store.set('focus')('Note');
               } else {
                 Actions.noteCreationRequested(this.state.value);
               }
@@ -306,12 +304,12 @@ export default withStore(
 
             const size = NotesSelectionStore.selection.size;
             if (size === 0) {
-              Actions.noteListFocused();
+              this.props.store.set('focus')('NoteList');
               Actions.firstNoteSelected();
             } else if (size === 1) {
-              Actions.noteFocused();
+              this.props.store.set('focus')('Note');
             } else {
-              Actions.noteListFocused();
+              this.props.store.set('focus')('NoteList');
             }
           }
           return;

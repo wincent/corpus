@@ -7,6 +7,7 @@
 
 import Actions from './Actions';
 import Keys from './Keys';
+import store from './store';
 
 /**
  * Common keyboard navigation code used by NoteList and OmniBar components.
@@ -31,7 +32,7 @@ function performKeyboardNavigation(event: KeyboardEvent) {
 
     case Keys.ESCAPE:
       Actions.allNotesDeselected();
-      Actions.omniBarFocused();
+      store.set('focus')('OmniBar');
       event.preventDefault();
       break;
 

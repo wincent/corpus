@@ -10,7 +10,6 @@ import React from 'react';
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
 import {withStore} from '../store';
-import FocusStore from '../stores/FocusStore';
 import Keys from '../Keys';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';
@@ -60,8 +59,9 @@ export default withStore(
 
     componentDidMount() {
       this._restoreViewState();
-      FocusStore.on('change', this._updateFocus);
-      this._updateFocus();
+      if (this.props.store.get('focus') === 'Note') {
+        this._getNode().focus();
+      }
     }
 
     getSnapshotBeforeUpdate(prevProps) {
@@ -76,7 +76,6 @@ export default withStore(
 
     componentWillUnmount() {
       this._recordViewState(this.props.note.id);
-      FocusStore.removeListener('change', this._updateFocus);
       this._persistChanges();
     }
 
@@ -119,6 +118,10 @@ export default withStore(
         this._restoreViewState();
       }
       this._persistChanges();
+      const focus = this.props.store.get('focus');
+      if (focus === 'Note' && prevProps.store.get('focus') !== 'Note') {
+        this._getNode().focus();
+      }
     }
 
     _getStyles() {
@@ -187,7 +190,7 @@ export default withStore(
         case Keys.ESCAPE:
           event.preventDefault();
           Actions.searchRequested('');
-          Actions.omniBarFocused();
+          this.props.store.set('focus')('OmniBar');
           Actions.allNotesDeselected();
           return;
 
@@ -202,7 +205,7 @@ export default withStore(
           // Prevent the <body> from becoming `document.activeElement`.
           if (!event.shiftKey) {
             event.preventDefault();
-            Actions.omniBarFocused();
+            this.props.store.set('focus')('OmniBar');
             return;
           }
           break;
@@ -210,12 +213,6 @@ export default withStore(
 
       performKeyboardNavigation(event);
     }
-
-    _updateFocus = () => {
-      if (FocusStore.focus === 'Note') {
-        this._getNode().focus();
-      }
-    };
 
     render() {
       return (

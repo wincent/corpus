@@ -15,10 +15,13 @@ import querySystem, {defaults as systemDefaults} from './querySystem';
 
 import type {LogMessage} from './log';
 
+type Focus = 'Note' | 'NoteList' | 'OmniBar' | 'TitleInput';
+
 type State = {|
   'config.notesDirectory': ?string,
   'config.noteFontFamily': string,
   'config.noteFontSize': string,
+  focus: Focus,
   log: Array<LogMessage>,
   'system.nameMax': number,
   'system.pathMax': number,
@@ -38,6 +41,7 @@ const initialState: State = {
   'config.notesDirectory': null,
   'config.noteFontFamily': 'Monaco',
   'config.noteFontSize': '12',
+  focus: 'OmniBar',
   log: [],
   'system.nameMax': systemDefaults.nameMax,
   'system.pathMax': systemDefaults.pathMax,

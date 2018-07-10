@@ -30,14 +30,10 @@ const actionTypes = {
   NOTE_CREATION_COMPLETED: 'NOTE_CREATION_COMPLETED',
   NOTE_CREATION_REQUESTED: 'NOTE_CREATION_REQUESTED',
   NOTE_DESELECTED: 'NOTE_DESELECTED',
-  NOTE_FOCUS_REQUESTED: 'NOTE_FOCUS_REQUESTED',
-  NOTE_LIST_FOCUS_REQUESTED: 'NOTE_LIST_FOCUS_REQUESTED',
   NOTE_RANGE_SELECTED: 'NOTE_RANGE_SELECTED',
-  NOTE_RENAME_REQUESTED: 'NOTE_RENAME_REQUESTED',
   NOTE_SELECTED: 'NOTE_SELECTED',
   NOTE_TITLE_CHANGED: 'NOTE_TITLE_CHANGED',
   NOTE_TEXT_CHANGED: 'NOTE_TEXT_CHANGED',
-  OMNI_BAR_FOCUS_REQUESTED: 'OMNI_BAR_FOCUS_REQUESTED',
   PREVIOUS_NOTE_SELECTED: 'PREVIOUS_NOTE_SELECTED',
   SEARCH_REQUESTED: 'SEARCH_REQUESTED',
   SELECTED_NOTES_DELETED: 'SELECTED_NOTES_DELETED',
@@ -100,14 +96,6 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_DESELECTED, {index});
   },
 
-  noteFocused() {
-    dispatch(actionTypes.NOTE_FOCUS_REQUESTED);
-  },
-
-  noteListFocused() {
-    dispatch(actionTypes.NOTE_LIST_FOCUS_REQUESTED);
-  },
-
   noteRangeSelected(index: number) {
     dispatch(actionTypes.NOTE_RANGE_SELECTED, {index});
   },
@@ -128,16 +116,8 @@ const actionCreators = {
     dispatch(actionTypes.NOTES_LOADED);
   },
 
-  omniBarFocused() {
-    dispatch(actionTypes.OMNI_BAR_FOCUS_REQUESTED);
-  },
-
   previousNoteSelected() {
     dispatch(actionTypes.PREVIOUS_NOTE_SELECTED);
-  },
-
-  renameRequested() {
-    dispatch(actionTypes.NOTE_RENAME_REQUESTED);
   },
 
   searchRequested(value: string, isDeletion: boolean = false) {

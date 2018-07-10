@@ -19,6 +19,13 @@ import SplitView from '../components/SplitView.react';
 import Viewport from '../components/Viewport.react';
 import * as log from '../log';
 import run from '../run';
+import {withStore} from '../store';
+
+import type {StoreProps} from '../store';
+
+type Props = {|
+  ...StoreProps,
+|};
 
 function deleteSelectedNotes() {
   const selection = NotesSelectionStore.selection;
@@ -61,61 +68,62 @@ function reveal() {
   }
 }
 
-type Props = {||};
+export default withStore(
+  class Corpus extends React.Component<Props> {
+    _selectionCount: number;
 
-export default class Corpus extends React.Component<Props> {
-  _selectionCount: number;
-
-  constructor(props: Props) {
-    super(props);
-    this._selectionCount = 0;
-  }
-
-  componentDidMount() {
-    ipcRenderer.on('delete', deleteSelectedNotes);
-    ipcRenderer.on('next', Actions.nextNoteSelected);
-    ipcRenderer.on('preview', preview);
-    ipcRenderer.on('previous', Actions.previousNoteSelected);
-    ipcRenderer.on('rename', Actions.renameRequested);
-    ipcRenderer.on('reveal', reveal);
-    ipcRenderer.on('search', Actions.omniBarFocused);
-    NotesSelectionStore.on('change', this._updateSelection);
-  }
-
-  componentWillUnmount() {
-    ipcRenderer.removeAllListeners('delete');
-    ipcRenderer.removeAllListeners('next');
-    ipcRenderer.removeAllListeners('preview');
-    ipcRenderer.removeAllListeners('previous');
-    ipcRenderer.removeAllListeners('rename');
-    ipcRenderer.removeAllListeners('reveal');
-    ipcRenderer.removeAllListeners('search');
-    NotesSelectionStore.removeListener('change', this._updateSelection);
-  }
-
-  _updateSelection = () => {
-    // Notify of changes to selection size so that the main process can
-    // enable/disable menu items.
-    const size = NotesSelectionStore.selection.size;
-    if (
-      (size === 0 && this._selectionCount !== 0) ||
-      (size === 1 && this._selectionCount !== 1) ||
-      (size > 1 && this._selectionCount <= 1)
-    ) {
-      ipcRenderer.send('selection-count-changed', size);
+    constructor(props: Props) {
+      super(props);
+      this._selectionCount = 0;
     }
-    this._selectionCount = size;
-  };
 
-  render() {
-    return (
-      <Viewport>
-        <OmniBar />
-        <SplitView>
-          <NoteList />
-          <NoteView />
-        </SplitView>
-      </Viewport>
-    );
-  }
-}
+    componentDidMount() {
+      const setFocus = this.props.store.set('focus');
+      ipcRenderer.on('delete', deleteSelectedNotes);
+      ipcRenderer.on('next', Actions.nextNoteSelected);
+      ipcRenderer.on('preview', preview);
+      ipcRenderer.on('previous', Actions.previousNoteSelected);
+      ipcRenderer.on('rename', () => setFocus('TitleInput'));
+      ipcRenderer.on('reveal', reveal);
+      ipcRenderer.on('search', () => setFocus('OmniBar'));
+      NotesSelectionStore.on('change', this._updateSelection);
+    }
+
+    componentWillUnmount() {
+      ipcRenderer.removeAllListeners('delete');
+      ipcRenderer.removeAllListeners('next');
+      ipcRenderer.removeAllListeners('preview');
+      ipcRenderer.removeAllListeners('previous');
+      ipcRenderer.removeAllListeners('rename');
+      ipcRenderer.removeAllListeners('reveal');
+      ipcRenderer.removeAllListeners('search');
+      NotesSelectionStore.removeListener('change', this._updateSelection);
+    }
+
+    _updateSelection = () => {
+      // Notify of changes to selection size so that the main process can
+      // enable/disable menu items.
+      const size = NotesSelectionStore.selection.size;
+      if (
+        (size === 0 && this._selectionCount !== 0) ||
+        (size === 1 && this._selectionCount !== 1) ||
+        (size > 1 && this._selectionCount <= 1)
+      ) {
+        ipcRenderer.send('selection-count-changed', size);
+      }
+      this._selectionCount = size;
+    };
+
+    render() {
+      return (
+        <Viewport>
+          <OmniBar />
+          <SplitView>
+            <NoteList />
+            <NoteView />
+          </SplitView>
+        </Viewport>
+      );
+    }
+  },
+);
