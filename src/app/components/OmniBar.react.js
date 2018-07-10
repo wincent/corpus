@@ -21,7 +21,7 @@ import type {StoreProps} from '../store';
 function getCurrentNote() {
   const selection = NotesSelectionStore.selection;
   if (selection.size === 1) {
-    return FilteredNotesStore.notes.get(selection.values().next().value);
+    return FilteredNotesStore.notes[selection.values().next().value];
   } else {
     return null;
   }
@@ -32,7 +32,7 @@ function getCurrentTitle() {
   if (note === null) {
     return '';
   } else {
-    return note.get('title');
+    return note.title;
   }
 }
 
@@ -190,7 +190,7 @@ export default withStore(
 
     _onNotesSelectionChange = () => {
       const note = getCurrentNote();
-      const currentValue = note ? note.get('title').toLowerCase() : '';
+      const currentValue = note ? note.title.toLowerCase() : '';
       const pendingValue = this._query ? this._query.toLowerCase() : '';
       if (this.state.note !== note || pendingValue !== currentValue) {
         let value;

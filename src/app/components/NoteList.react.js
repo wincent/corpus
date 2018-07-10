@@ -118,7 +118,7 @@ export default class NoteList extends React.PureComponent<Props, State> {
       (this.state.scrollTop + visibleHeight) / Constants.PREVIEW_ROW_HEIGHT,
     );
     const last = Math.min(
-      this.state.notes.size - 1,
+      this.state.notes.length - 1,
       bottomEdge + OFF_VIEWPORT_NOTE_BUFFER_COUNT,
     );
 
@@ -148,7 +148,7 @@ export default class NoteList extends React.PureComponent<Props, State> {
       },
       root: {
         background: colors.background,
-        height: FilteredNotesStore.notes.size * Constants.PREVIEW_ROW_HEIGHT,
+        height: FilteredNotesStore.notes.length * Constants.PREVIEW_ROW_HEIGHT,
         minHeight: 'calc(100vh - 36px)', // ensure full background coverage
         position: 'relative',
       },
@@ -326,13 +326,13 @@ export default class NoteList extends React.PureComponent<Props, State> {
     const notes = [];
     for (var i = first; i <= last; i++) {
       const selected = this.state.selection.has(i);
-      const note = this.state.notes.get(i);
+      const note = this.state.notes[i];
       notes.push(
         <NotePreview
           animating={this.state.animating}
           focused={this.state.focused && selected}
           index={i}
-          key={note.get('id')}
+          key={note.id}
           note={note}
           ref={String(i)}
           selected={selected}

@@ -54,7 +54,7 @@ function adjustSelection(delta) {
   totalDelta = clamp(
     totalDelta + delta, // desired distance from where we started
     -initialLocation, // limit of upwards selection
-    FilteredNotesStore.notes.size - initialLocation - 1, // limit of downwards selection
+    FilteredNotesStore.notes.length - initialLocation - 1, // limit of downwards selection
   );
 
   if (totalDelta < previousDelta) {
@@ -87,7 +87,7 @@ function adjustSelection(delta) {
         // Need to skip already-selected selection; recurse.
         if (
           initialLocation + totalDelta ===
-          FilteredNotesStore.notes.size - 1
+          FilteredNotesStore.notes.length - 1
         ) {
           // Unless we're already at the bottom.
           return;
@@ -108,13 +108,13 @@ function adjustSelection(delta) {
 }
 
 function selectAll() {
-  const size = FilteredNotesStore.notes.size;
-  const range = Array.from(new Array(size), (_, i) => i);
+  const length = FilteredNotesStore.notes.length;
+  const range = Array.from(new Array(length), (_, i) => i);
   selection = new Set(range);
 }
 
 function selectFirst() {
-  if (FilteredNotesStore.notes.size) {
+  if (FilteredNotesStore.notes.length) {
     selection = new Set([0]);
   } else {
     selection = new Set();
@@ -122,8 +122,8 @@ function selectFirst() {
 }
 
 function selectLast() {
-  if (FilteredNotesStore.notes.size) {
-    selection = new Set([FilteredNotesStore.notes.size - 1]);
+  if (FilteredNotesStore.notes.length) {
+    selection = new Set([FilteredNotesStore.notes.length - 1]);
   } else {
     selection = new Set();
   }
@@ -134,7 +134,7 @@ function selectNext() {
   if (mostRecent == null) {
     selectFirst();
   } else {
-    const maxSelectionIndex = FilteredNotesStore.notes.size - 1;
+    const maxSelectionIndex = FilteredNotesStore.notes.length - 1;
     if (mostRecent < maxSelectionIndex) {
       selection = new Set([mostRecent + 1]);
     }
@@ -233,7 +233,7 @@ class NotesSelectionStore extends Store {
         this._change(payload.type, () => {
           // TODO: persist last selection across restarts
           if (!selection.size) {
-            if (FilteredNotesStore.notes.size) {
+            if (FilteredNotesStore.notes.length) {
               selection = new Set(selection);
               selection.add(0);
             }
@@ -259,10 +259,7 @@ class NotesSelectionStore extends Store {
             let matchingIndex = null;
             FilteredNotesStore.notes.find((note, index) => {
               if (
-                note
-                  .get('title')
-                  .toLowerCase()
-                  .startsWith(payload.value.toLowerCase())
+                note.title.toLowerCase().startsWith(payload.value.toLowerCase())
               ) {
                 matchingIndex = index;
                 return true;

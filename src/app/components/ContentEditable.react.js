@@ -21,7 +21,6 @@ import type {StoreProps} from '../store';
 
 type Props = {
   ...StoreProps,
-  // PropTypes.instanceOf(Immutable.Map).isRequired,
   note: $FlowFixMe,
   tabIndex: number,
 };
@@ -41,21 +40,21 @@ export default withStore(
     _autosave = debounce(() => this._persistChanges(true), 5000);
 
     static getDerivedStateFromProps(props, state) {
-      const id = props.note.get('id');
+      const id = props.note.id;
       if (id === state.id) {
         return state;
       }
       return {
         id,
-        value: props.note.get('text'),
+        value: props.note.text,
       };
     }
 
     constructor(props) {
       super(props);
       this.state = {
-        id: props.note.get('id'),
-        value: props.note.get('text'),
+        id: props.note.id,
+        value: props.note.text,
       };
     }
 
@@ -69,14 +68,14 @@ export default withStore(
       // Check for note identity ('id') rather than using `===`. Attributes of a
       // note may change (for example, 'index' will change in response to
       // bubbling).
-      if (prevProps.note.get('id') !== this.props.note.get('id')) {
-        this._recordViewState(prevProps.note.get('id'));
+      if (prevProps.note.id !== this.props.note.id) {
+        this._recordViewState(prevProps.note.id);
       }
       return null;
     }
 
     componentWillUnmount() {
-      this._recordViewState(this.props.note.get('id'));
+      this._recordViewState(this.props.note.id);
       FocusStore.removeListener('change', this._updateFocus);
       this._persistChanges();
     }
@@ -99,7 +98,7 @@ export default withStore(
     }
 
     _restoreViewState() {
-      const id = this.props.note.get('id');
+      const id = this.props.note.id;
       const node = this._getNode();
       let viewState = viewStates[id];
       if (!viewState) {
@@ -116,7 +115,7 @@ export default withStore(
     }
 
     componentDidUpdate(prevProps: Props) {
-      if (this.props.note.get('id') !== prevProps.note.get('id')) {
+      if (this.props.note.id !== prevProps.note.id) {
         this._restoreViewState();
       }
       this._persistChanges();
@@ -147,9 +146,9 @@ export default withStore(
       }
 
       const text = this.state.value;
-      if (text !== this.props.note.get('text')) {
+      if (text !== this.props.note.text) {
         Actions.noteTextChanged({
-          index: this.props.note.get('index'),
+          index: this.props.note.index,
           isAutosave,
           text,
         });
@@ -159,7 +158,7 @@ export default withStore(
     }
 
     _onBlur = () => {
-      this._recordViewState(this.props.note.get('id'));
+      this._recordViewState(this.props.note.id);
 
       if (!Dispatcher.isDispatching()) {
         this._persistChanges();
@@ -170,7 +169,7 @@ export default withStore(
       const index = NotesSelectionStore.selection.values().next().value;
       if (index) {
         // Not at top of list, so bubble note to top.
-        Actions.noteBubbled(this.props.note.get('index'), index);
+        Actions.noteBubbled(this.props.note.index, index);
       }
       this.setState({value: event.currentTarget.value});
       this._pendingSave = true;

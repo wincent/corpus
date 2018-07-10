@@ -5,8 +5,6 @@
  * @flow
  */
 
-import type {List as ImmutableList} from 'immutable';
-
 import Actions from '../Actions';
 import NotesStore from './NotesStore';
 import Store from './Store';
@@ -15,7 +13,7 @@ import stringFinder from '../util/stringFinder';
 let query = null;
 let notes = filter(query);
 
-function filter(value: ?string): ImmutableList {
+function filter(value: ?string): $FlowFixMe {
   const patterns =
     value != null &&
     value
@@ -38,15 +36,16 @@ function filter(value: ?string): ImmutableList {
     const indices = [];
     return NotesStore.notes
       .filter((note, index) => {
+        // TODO: only return new array if the filtering operation excluded any items
         if (
           patterns.every(pattern => {
             if (pattern.type === 'tag') {
-              return note.get('tags').has(pattern.tag);
+              return note.tags.has(pattern.tag);
             } else {
               // Plain text search.
               return (
-                note.get('title').search(pattern.finder) !== -1 ||
-                note.get('text').search(pattern.finder) !== -1
+                note.title.search(pattern.finder) !== -1 ||
+                note.text.search(pattern.finder) !== -1
               );
             }
           })
@@ -56,15 +55,17 @@ function filter(value: ?string): ImmutableList {
         }
         return false;
       })
-      .map((note, index) =>
+      .map((note, index) => ({
         // Augment note with its index within the NotesStore.
-        note.set('index', indices[index]),
-      );
+        ...note,
+        index: indices[index],
+      }));
   } else {
-    return NotesStore.notes.map((note, index) =>
+    return NotesStore.notes.map((note, index) => ({
       // Augment note with its index within the NoteStore.
-      note.set('index', index),
-    );
+      ...note,
+      index,
+    }));
   }
 }
 

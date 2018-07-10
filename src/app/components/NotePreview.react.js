@@ -46,7 +46,6 @@ const Tag = ({focused, tag}: {|focused: boolean, tag: $FlowFixMe|}) => {
   );
 };
 
-// PropTypes.instanceOf(Immutable.Set).isRequired,
 const Tags = ({tags, focused}: {|tags: $FlowFixMe, focused: boolean|}) => {
   const styles = {
     bottom: '4px',
@@ -55,7 +54,9 @@ const Tags = ({tags, focused}: {|tags: $FlowFixMe, focused: boolean|}) => {
   };
   return (
     <div style={styles}>
-      {tags.map(tag => <Tag focused={focused} key={tag} tag={tag} />)}
+      {Array.from(tags).map(tag => (
+        <Tag focused={focused} key={tag} tag={tag} />
+      ))}
     </div>
   );
 };
@@ -64,7 +65,6 @@ type Props = {|
   animating: boolean,
   focused: boolean,
   index: number,
-  // PropTypes.instanceOf(Immutable.Map).isRequired,
   note: $FlowFixMe,
   selected: boolean,
   translate: ?number,
@@ -117,7 +117,7 @@ export default class NotePreview extends React.PureComponent<Props> {
 
   _getStyles() {
     const {focused, note, selected} = this.props;
-    const isPrivate = note.get('tags').has('private');
+    const isPrivate = note.tags.has('private');
     return {
       root: {
         background: focused ? '#6f6f73' : selected ? '#c8c8c8' : 'inherit',
@@ -169,7 +169,7 @@ export default class NotePreview extends React.PureComponent<Props> {
     this.setState(
       {
         isEditing: true,
-        pendingTitle: this.props.note.get('title'),
+        pendingTitle: this.props.note.title,
       },
       () => this.ref.scrollIntoViewIfNeeded(false),
     );
@@ -177,7 +177,7 @@ export default class NotePreview extends React.PureComponent<Props> {
 
   _endEditing(event) {
     const title = event.currentTarget.value;
-    if (title !== this.props.note.get('title')) {
+    if (title !== this.props.note.title) {
       Actions.noteTitleChanged({
         index: this.props.index,
         title,
@@ -293,7 +293,7 @@ export default class NotePreview extends React.PureComponent<Props> {
       );
     } else {
       const styles = this._getStyles();
-      const title = this.props.note.get('title').substr(0, TITLE_LENGTH);
+      const title = this.props.note.title.substr(0, TITLE_LENGTH);
       return (
         <p onDoubleClick={this._onDoubleClick} style={styles.title}>
           {title}
@@ -328,7 +328,7 @@ export default class NotePreview extends React.PureComponent<Props> {
       }
     }
     const {focused, note} = this.props;
-    const text = note.get('body').substr(0, PREVIEW_LENGTH);
+    const text = note.body.substr(0, PREVIEW_LENGTH);
     return (
       <li
         className="animatable"
@@ -339,7 +339,7 @@ export default class NotePreview extends React.PureComponent<Props> {
         style={styles.root}>
         {this._renderTitle()}
         <p style={styles.text}>{text}</p>
-        <Tags focused={focused} tags={note.get('tags')} />
+        <Tags focused={focused} tags={note.tags} />
       </li>
     );
   }

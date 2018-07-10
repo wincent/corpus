@@ -5,15 +5,7 @@
  * @flow
  */
 
-// https://github.com/eslint/eslint/issues/2584
-import {
-  List as ImmutableList,
-  Map as ImmutableMap,
-  Set as ImmutableSet,
-} from 'immutable';
-
 import Promise from 'bluebird';
-import nullthrows from 'fbjs/lib/nullthrows';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
@@ -58,7 +50,7 @@ const PRELOAD_COUNT =
 /**
  * Ordered collection of notes (as they appear in the NoteList).
  */
-let notes = ImmutableList();
+let notes = [];
 
 /**
  * Monotonically increasing, unique ID for each note.
@@ -109,7 +101,7 @@ function filterFilenames(filenames: Array<string>): Array<string> {
   return filenames.filter(fileName => path.extname(fileName) === '.md');
 }
 
-async function getStatInfo(fileName: string): Promise<ImmutableMap> {
+async function getStatInfo(fileName: string): Promise<any> {
   const notePath = path.join(notesDirectory, fileName);
   const title = getTitleFromPath(notePath);
   let statResult;
@@ -120,17 +112,17 @@ async function getStatInfo(fileName: string): Promise<ImmutableMap> {
     // Do nothing.
   }
 
-  return ImmutableMap({
+  return {
     id: noteID++,
     mtime: statResult && statResult.mtime.getTime(),
     path: notePath,
     title,
-  });
+  };
 }
 
 function compareMTime(a, b) {
-  const aTime = a.get('mtime');
-  const bTime = b.get('mtime');
+  const aTime = a.mtime;
+  const bTime = b.mtime;
   if (aTime > bTime) {
     return -1;
   } else if (aTime < bTime) {
@@ -140,15 +132,16 @@ function compareMTime(a, b) {
   }
 }
 
-async function readContents(info: ImmutableMap): Promise<ImmutableMap> {
+async function readContents(info: $FlowFixMe): Promise<$FlowFixMe> {
   try {
-    const content = (await readFile(info.get('path'))).toString();
+    const content = (await readFile(info.path)).toString();
     const unpacked = unpackContent(content);
-    return info.merge({
+    return {
+      ...info,
       body: unpacked.body,
       text: content,
-      tags: ImmutableSet(unpacked.tags),
-    });
+      tags: new Set(unpacked.tags),
+    };
   } catch (error) {
     // Soft-ignore the error. We return `null` here because we don't want views
     // to blow up trying to access `body`, `text` and `tags` (and we don't want
@@ -161,8 +154,8 @@ async function readContents(info: ImmutableMap): Promise<ImmutableMap> {
 
 function appendResults(results) {
   if (results.length) {
-    notes = notes.push(...results);
-    results.forEach(note => (pathMap[note.get('path')] = true));
+    notes = [...notes, ...results];
+    results.forEach(note => (pathMap[note.path] = true));
     Actions.notesLoaded();
   }
 }
@@ -199,17 +192,18 @@ function createNote(title) {
       );
       await fsync(fd);
       await close(fd);
-      notes = notes.unshift(
-        ImmutableMap({
+      notes = [
+        {
           body: '',
           id: noteID++,
           mtime: Date.now(),
           path: notePath,
-          tags: ImmutableSet([]),
+          tags: new Set(),
           text: '',
           title,
-        }),
-      );
+        },
+        ...notes,
+      ];
       pathMap[notePath] = true;
       Actions.noteCreationCompleted();
       Actions.changePersisted();
@@ -235,7 +229,7 @@ function deleteNotes(deletedNotes) {
 
   deletedNotes.forEach(note => {
     OperationsQueue.enqueue(async () => {
-      const notePath = note.get('path');
+      const notePath = note.path;
       notifyChanges(notePath);
       try {
         await unlink(notePath);
@@ -250,11 +244,11 @@ function deleteNotes(deletedNotes) {
 function updateNote(note) {
   OperationsQueue.enqueue(async () => {
     let fd = null;
-    const notePath = note.get('path');
+    const notePath = note.path;
     notifyChanges(notePath);
     try {
       const time = new Date();
-      const noteText = normalizeText(note.get('text'));
+      const noteText = normalizeText(note.text);
       fd = await open(notePath, 'w'); // w = write
       await write(fd, noteText);
       await utimes(notePath, time, time);
@@ -344,8 +338,11 @@ class NotesStore extends Store {
       case Actions.NOTE_BUBBLED:
         {
           // Bump note to top.
-          const note = notes.get(payload.index);
-          notes = notes.delete(payload.index).unshift(note);
+          notes = [
+            notes[payload.index],
+            ...notes.slice(0, payload.index),
+            ...notes.slice(payload.index + 1),
+          ];
           this.emit('change');
         }
         break;
@@ -361,20 +358,26 @@ class NotesStore extends Store {
       case Actions.NOTE_TEXT_CHANGED:
         {
           const unpacked = unpackContent(payload.text);
-          const update = {
+          const note = {
+            ...notes[payload.index],
             body: unpacked.body,
             mtime: Date.now(),
-            tags: ImmutableSet(unpacked.tags),
+            tags: new Set(unpacked.tags),
             text: payload.text,
           };
-          notes = notes.mergeIn([payload.index], update);
-          const note = notes.get(payload.index);
-
-          if (!payload.isAutosave) {
-            if (payload.index) {
-              // Note is not at top, bump to top.
-              notes = notes.delete(payload.index).unshift(note);
-            }
+          if (payload.isAutosave) {
+            // Don't bubble note to top for autosave events.
+            notes = [
+              ...notes.slice(0, payload.index),
+              note,
+              ...notes.slice(payload.index + 1),
+            ];
+          } else {
+            notes = [
+              note,
+              ...notes.slice(0, payload.index),
+              ...notes.slice(payload.index + 1),
+            ];
           }
 
           // Persist changes to disk.
@@ -385,20 +388,22 @@ class NotesStore extends Store {
 
       case Actions.NOTE_TITLE_CHANGED:
         {
-          const update = {
-            mtime: Date.now(),
-            path: getPathForTitle(payload.title),
-            title: payload.title,
-          };
-          const originalNote = nullthrows(notes.get(payload.index));
-          notes = notes.mergeIn([payload.index], update);
-
-          // Bump note to top of list.
-          const newNote = nullthrows(notes.get(payload.index));
-          notes = notes.delete(payload.index).unshift(newNote);
+          // Update note and bump to top of list.
+          const originalPath = notes[payload.index].path;
+          const newPath = getPathForTitle(payload.title);
+          notes = [
+            {
+              ...notes[payload.index],
+              mtime: Date.now(),
+              path: newPath,
+              title: payload.title,
+            },
+            ...notes.slice(0, payload.index),
+            ...notes.slice(payload.index + 1),
+          ];
 
           // Persist changes to disk.
-          renameNote(originalNote.get('path'), newNote.get('path'));
+          renameNote(originalPath, newPath);
           this.emit('change');
         }
         break;
@@ -410,12 +415,12 @@ class NotesStore extends Store {
       case Actions.SELECTED_NOTES_DELETED:
         {
           const deletedNotes = [];
-          notes = notes.filterNot((note, index) => {
+          notes = notes.filter((note, index) => {
             if (payload.ids.has(index)) {
               deletedNotes.push(note);
-              return true;
+              return false;
             }
-            return false;
+            return true;
           });
           deleteNotes(deletedNotes);
           this.emit('change');

@@ -10,7 +10,6 @@ import React from 'react';
 import ContentEditable from './ContentEditable.react';
 
 type Props = {|
-  // PropTypes.instanceOf(Immutable.Map).isRequired
   note: $FlowFixMe,
 |};
 
