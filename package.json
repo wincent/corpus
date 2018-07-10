@@ -39,9 +39,9 @@
     "prop-types": "^15.5.10",
     "react": "16.4.0",
     "react-dom": "16.4.0",
-    "rxjs": "6.2.0",
+    "rxjs": "^6.0",
     "simple-debounce": "*",
-    "undux": "4.6.2",
+    "undux": "^4.0",
     "unpack-content": "*"
   },
   "devDependencies": {

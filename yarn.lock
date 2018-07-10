@@ -2073,8 +2073,8 @@ eslint-plugin-flowtype@2.49.3:
     lodash "^4.17.10"
 
 eslint-plugin-prettier@^2.1.2:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-2.6.1.tgz#de902b4a66b7bca24296429a59a1cc04020ccbbd"
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-2.6.2.tgz#71998c60aedfa2141f7bfcbf9d1c459bf98b4fad"
   dependencies:
     fast-diff "^1.1.1"
     jest-docblock "^21.0.0"
@@ -2527,8 +2527,8 @@ flat-cache@^1.2.1:
     write "^0.2.1"
 
 flow-bin@*:
-  version "0.75.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.75.0.tgz#b96d1ee99d3b446a3226be66b4013224ce9df260"
+  version "0.76.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.76.0.tgz#eb00036991c3abc106743fcbc7ee321f02aa4faa"
 
 flow-bin@^0.30.0:
   version "0.30.0"
@@ -5434,9 +5434,9 @@ rx-lite@*, rx-lite@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
-rxjs@6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.2.0.tgz#e024d0e180b72756a83c2aaea8f25423751ba978"
+rxjs@^6.0:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.2.1.tgz#246cebec189a6cbc143a3ef9f62d6f4c91813ca1"
   dependencies:
     tslib "^1.9.0"
 
@@ -6160,9 +6160,9 @@ underscore@^1.8.3:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
 
-undux@4.6.2:
-  version "4.6.2"
-  resolved "https://registry.yarnpkg.com/undux/-/undux-4.6.2.tgz#c1a3880013110000fdbcdde0a822cc4c48250e22"
+undux@^4.0:
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/undux/-/undux-4.7.2.tgz#d2cf7ad530401567b19b75f6d8976a67a85dcbac"
   dependencies:
     typed-rx-emitter "^1.1.2"
 
