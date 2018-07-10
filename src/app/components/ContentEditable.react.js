@@ -179,7 +179,7 @@ export default withStore(
       this._autosave();
     };
 
-    _onKeyDown(event) {
+    _onKeyDown = event => {
       // Prevent undesired fallthrough to `performKeyboardNavigation` for some
       // keys.
       switch (event.keyCode) {
@@ -212,7 +212,7 @@ export default withStore(
       }
 
       performKeyboardNavigation(event);
-    }
+    };
 
     render() {
       return (
