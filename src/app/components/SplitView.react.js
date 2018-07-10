@@ -48,7 +48,8 @@ export default class SplitView extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this._onResize);
+    // No need to do clean-up; component never gets unmounted.
+    throw new Error('SplitView.react: Unexpected componentWillUnmount().');
   }
 
   _getPaneDimensions(desiredLeftPaneWidth: number) {

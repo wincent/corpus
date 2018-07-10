@@ -83,16 +83,8 @@ export default withStore(
     }
 
     componentWillUnmount() {
-      NoteAnimationStore.removeListener('change', this._updateBubbling);
-      NotesSelectionStore.removeListener('change', this._updateNoteSelection);
-      FilteredNotesStore.removeListener('change', this._updateNotes);
-      this._removeListeners();
-
-      const node = nullthrows(this._ref);
-      node.removeEventListener('transitionend', this._onTransitionEnd);
-      const parent = nullthrows(node.parentElement);
-      parent.removeEventListener('scroll', this._onScroll);
-      this._ref = null;
+      // No need to do clean-up; component never gets unmounted.
+      throw new Error('NoteList.react: Unexpected componentWillUnmount().');
     }
 
     /**

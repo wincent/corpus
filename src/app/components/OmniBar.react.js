@@ -163,13 +163,8 @@ export default withStore(
     }
 
     componentWillUnmount() {
-      ipcRenderer.removeAllListeners('blur');
-      ipcRenderer.removeAllListeners('focus');
-      NotesSelectionStore.removeListener(
-        'change',
-        this._onNotesSelectionChange,
-      );
-      FilteredNotesStore.removeListener('change', this._onNotesChange);
+      // No need to do clean-up; component never gets unmounted.
+      throw new Error('OmniBar.react: Unexpected componentWillUnmount().');
     }
 
     _getBackgroundStyle() {

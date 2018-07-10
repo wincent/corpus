@@ -38,8 +38,8 @@ export default class NoteView extends React.Component {
   }
 
   componentWillUnmount() {
-    NotesSelectionStore.removeListener('change', this._updateNote);
-    FilteredNotesStore.removeListener('change', this._updateNote);
+    // No need to do clean-up; component never gets unmounted.
+    throw new Error('NoteView.react: Unexpected componentWillUnmount().');
   }
 
   _updateNote = () => {

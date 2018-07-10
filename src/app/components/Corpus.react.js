@@ -90,14 +90,8 @@ export default withStore(
     }
 
     componentWillUnmount() {
-      ipcRenderer.removeAllListeners('delete');
-      ipcRenderer.removeAllListeners('next');
-      ipcRenderer.removeAllListeners('preview');
-      ipcRenderer.removeAllListeners('previous');
-      ipcRenderer.removeAllListeners('rename');
-      ipcRenderer.removeAllListeners('reveal');
-      ipcRenderer.removeAllListeners('search');
-      NotesSelectionStore.removeListener('change', this._updateSelection);
+      // No need to do clean-up; component never gets unmounted.
+      throw new Error('Corpus.react: Unexpected componentWillUnmount().');
     }
 
     _updateSelection = () => {
