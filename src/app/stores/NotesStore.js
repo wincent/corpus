@@ -12,11 +12,11 @@ import path from 'path';
 import unpackContent from 'unpack-content';
 
 import Actions from '../Actions';
-import ConfigStore from './ConfigStore';
 import Constants from '../Constants';
 import OperationsQueue from '../OperationsQueue';
 import Repo from '../Repo';
 import Store from './Store';
+import getNotesDirectory from '../getNotesDirectory';
 import handleError from '../handleError';
 import * as log from '../log';
 import normalizeText from '../util/normalizeText';
@@ -213,13 +213,12 @@ function createNote(title) {
   });
 }
 
+// TODO: make this force a write for unsaved changes in active text area
 function deleteNotes(deletedNotes) {
-  // Ideally, we'd have the GitStore do this, but I can't introduce a
-  // `waitFor(GitStore.dispatchToken` here without adding a circular dependency.
-  // TODO: make this force a write for unsaved changes in active text area
-  const repo = new Repo(ConfigStore.config.notesDirectory);
   OperationsQueue.enqueue(async () => {
     try {
+      const notesDirectory = await getNotesDirectory();
+      const repo = new Repo(notesDirectory);
       await repo.add('*.md');
       await repo.commit('Corpus (pre-deletion) snapshot');
     } catch (error) {
@@ -303,9 +302,10 @@ function initWatcher(notesDirectory: string) {
 
 function loadNotes() {
   OperationsQueue.enqueue(async () => {
-    notesDirectory = ConfigStore.config.notesDirectory;
+    notesDirectory = await getNotesDirectory();
     try {
       await mkdir(notesDirectory);
+      new Repo(notesDirectory).init();
       initWatcher(notesDirectory);
       const filenames = await readdir(notesDirectory);
       const filtered = filterFilenames(filenames);
@@ -327,14 +327,11 @@ function loadNotes() {
   });
 }
 
+getNotesDirectory().then(loadNotes);
+
 class NotesStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
-      case Actions.CONFIG_LOADED:
-        // Can't load notes without config telling us where to look.
-        loadNotes();
-        break;
-
       case Actions.NOTE_BUBBLED:
         {
           // Bump note to top.

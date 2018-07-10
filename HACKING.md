@@ -46,16 +46,11 @@ arrow in `A <- B` indicates that `B` depends on `A` and may `waitFor` it during
 dispatch.
 
 ```
-                          /-------------\
-            /------------>| ConfigStore |
-            |             \-------------/
-            |                    ^
-            |                    |
-            |             /------------\
-            | /---------->| NotesStore |
-            | |           \------------/
-            | |                  ^
-            | |                  |
+                          /------------\
+              /---------->| NotesStore |
+              |           \------------/
+              |                  ^
+              |                  |
         /----------\  /--------------------\
         | GitStore |  | FilteredNotesStore |
         \----------/  \--------------------/
@@ -71,7 +66,6 @@ dispatch.
 \--------------------/    \------------/
 ```
 
-- `ConfigStore`: Reads configuration information from `~/.corpusrc`.
 - `NotesStore`: Manages the set of all notes currently on disk.
 - `FilteredNotesStore`: Manages the subset of notes from the `NotesStore` that
   are currently shown in the `NoteList.react` component, after any filtering

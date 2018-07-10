@@ -8,7 +8,7 @@
 import * as log from './log';
 import run from './run';
 
-import type {Config} from './stores/ConfigStore';
+import type {Config} from './loadConfig';
 
 type SystemInfo = {|
   +nameMax: ?number,

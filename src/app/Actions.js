@@ -69,10 +69,6 @@ const actionCreators = {
     dispatch(actionTypes.CHANGE_PERSISTED);
   },
 
-  configLoaded() {
-    dispatch(actionTypes.CONFIG_LOADED);
-  },
-
   firstNoteSelected() {
     dispatch(actionTypes.FIRST_NOTE_SELECTED);
   },

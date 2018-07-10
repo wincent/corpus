@@ -13,6 +13,12 @@ import stripComments from './stripComments';
 
 const readFile = promisify(fs.readFile);
 
+export type Config = {|
+  notesDirectory: string,
+  noteFontFamily: string,
+  noteFontSize: string,
+|};
+
 export default async function loadConfig(): {[key: string]: mixed} {
   try {
     const data = await readFile(configFile);
