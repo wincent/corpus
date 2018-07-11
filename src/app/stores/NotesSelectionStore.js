@@ -15,8 +15,8 @@ import store from '../store';
 /**
  * We use a Set (ordered by insertion) to support the "multiple
  * selection followed by {next,previous}-note action"; in this case the
- * "next" note is defined as the note after the last note added to the
- * set.
+ * "next"/"previous" note is defined as the note after/before the last
+ * note added to the set.
  *
  * TODO: consider just maintaining first/last in separate variable.
  */
