@@ -10,7 +10,6 @@ import {ipcRenderer} from 'electron';
 
 import Actions from '../Actions';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
-import GitStore from '../stores/GitStore'; // eslint-disable-line no-unused-vars
 import NoteView from '../components/NoteView.react';
 import NoteList from '../components/NoteList.react';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
