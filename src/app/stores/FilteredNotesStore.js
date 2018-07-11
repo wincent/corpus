@@ -110,8 +110,6 @@ class FilteredNotesStore extends Store {
   _change() {
     const previous = notes;
     notes = filter(query);
-    // BUG: filter() always returns a new list, so this `if` is basically
-    // pointless...
     if (notes !== previous) {
       this.emit('change', query);
     }
