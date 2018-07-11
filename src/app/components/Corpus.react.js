@@ -40,8 +40,7 @@ function deleteSelectedNotes() {
     return;
   }
 
-  // Convert selection indices within the FilteredNotesStore to
-  // canonical indices within the NotesStore.
+  // Convert selection indices to canonical indices.
   const indices = new Set();
   for (const index of selection) {
     const note = FilteredNotesStore.notes[index];

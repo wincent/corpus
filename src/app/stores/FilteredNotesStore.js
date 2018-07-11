@@ -56,13 +56,13 @@ function filter(value: ?string): $FlowFixMe {
         return false;
       })
       .map((note, index) => ({
-        // Augment note with its index within the NotesStore.
+        // Augment note with its index.
         ...note,
         index: indices[index],
       }));
   } else {
     return NotesStore.notes.map((note, index) => ({
-      // Augment note with its index within the NoteStore.
+      // Augment note with its index.
       ...note,
       index,
     }));

@@ -67,8 +67,6 @@ dispatch.
   (based on search terms) has been applied.
 - `NotesSelectionStore`: Reflects the (possibly empty) subset of notes from the
   `FilteredNotesStore` that is currently selected.
-- `NoteAnimationStore`: Tracks note animations ("bubbling" within
-  `NoteList.react`).
 
 ## I/O operations
 

@@ -17,6 +17,16 @@ import type {LogMessage} from './log';
 
 type Focus = 'Note' | 'NoteList' | 'OmniBar' | 'TitleInput';
 
+type Note = {|
+  body: string,
+  id: number,
+  mtime: ?number,
+  path: string,
+  tags: Set<string>,
+  text: string,
+  title: string,
+|};
+
 type State = {|
   bubbling: ?number,
   'config.notesDirectory': ?string,
@@ -24,6 +34,7 @@ type State = {|
   'config.noteFontSize': string,
   focus: Focus,
   log: Array<LogMessage>,
+  notes: Array<Note>,
   'system.nameMax': number,
   'system.pathMax': number,
 |};
@@ -45,6 +56,7 @@ const initialState: State = {
   'config.noteFontSize': '12',
   focus: 'OmniBar',
   log: [],
+  notes: [],
   'system.nameMax': systemDefaults.nameMax,
   'system.pathMax': systemDefaults.pathMax,
 };

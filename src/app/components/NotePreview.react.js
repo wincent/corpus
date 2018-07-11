@@ -307,9 +307,10 @@ export default withStore(
         if (this.props.animating) {
           styles.root.transition = 'transform .5s ease-in-out';
         } else {
-          // Not ready to start animating yet, but the note has been reordered
-          // within the `NotesStore` and within the DOM, so we have to offset it
-          // to make it appear like it was still in its original location.
+          // Not ready to start animating yet, but the note has been
+          // reordered within the store and within the DOM, so we have
+          // to offset it to make it appear like it was still in its
+          // original location.
           styles.root.transform = `translate3d(0, ${offset}px, 0)`;
         }
       }
