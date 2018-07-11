@@ -5,8 +5,6 @@
  * @flow
  */
 
-import type Promise from 'bluebird';
-
 import git from './git';
 
 /**
@@ -24,18 +22,18 @@ export default class Repo {
    *
    * Handles deletions as well.
    */
-  add(pathspec: string): Promise {
+  add(pathspec: string): Promise<string> {
     return git('-C', this._path, 'add', '--', pathspec);
   }
 
   /**
    * Create a new commit
    */
-  commit(message: string): Promise {
+  commit(message: string): Promise<string> {
     return git('-C', this._path, 'commit', '--allow-empty', '-m', message);
   }
 
-  init(): Promise {
+  init(): Promise<string> {
     return git('init', this._path);
   }
 

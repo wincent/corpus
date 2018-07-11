@@ -5,14 +5,14 @@
  * @flow
  */
 
-import Promise from 'bluebird';
 import {spawn} from 'child_process';
 
-function run(command, ...args: Array<string>): Promise {
-  const promise = new Promise((resolve, reject) => {
+function run(command: string, ...args: Array<string>): Promise<string> {
+  return new Promise((resolve, reject) => {
     const child = spawn(command, args);
     let stdout = '';
     let stderr = '';
+    let pending = true;
 
     function log(message) {
       /* eslint-disable no-console */
@@ -26,7 +26,8 @@ function run(command, ...args: Array<string>): Promise {
     child.stdout.on('data', data => (stdout += data));
 
     child.on('error', error => {
-      if (promise.isPending()) {
+      if (pending) {
+        pending = false;
         log(`error: ${error}`);
         reject(error);
       }
@@ -34,17 +35,17 @@ function run(command, ...args: Array<string>): Promise {
 
     child.on('close', code => {
       if (code) {
-        if (promise.isPending()) {
+        if (pending) {
+          pending = false;
           log(`exit code: ${code}`);
           reject(code);
         }
       } else {
+        pending = false;
         resolve(stdout);
       }
     });
   });
-
-  return promise;
 }
 
 export default run;

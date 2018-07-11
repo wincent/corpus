@@ -5,11 +5,9 @@
  * @flow
  */
 
-import type Promise from 'bluebird';
-
 import run from './run';
 
-function git(...args: Array<string>): Promise {
+function git(...args: Array<string>): Promise<string> {
   return run('git', ...args);
 }
 

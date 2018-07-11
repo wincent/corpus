@@ -5,10 +5,10 @@
  * @flow
  */
 
-import Promise from 'bluebird';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
+import {promisify} from 'util';
 import unpackContent from 'unpack-content';
 
 import Actions from '../Actions';
@@ -23,17 +23,17 @@ import * as log from '../log';
 import normalizeText from '../util/normalizeText';
 import chokidar from 'chokidar';
 
-const close = Promise.promisify(fs.close);
-const fsync = Promise.promisify(fs.fsync);
-const mkdir = Promise.promisify(mkdirp);
-const open = Promise.promisify(fs.open);
-const readdir = Promise.promisify(fs.readdir);
-const readFile = Promise.promisify(fs.readFile);
-const rename = Promise.promisify(fs.rename);
-const stat = Promise.promisify(fs.stat);
-const unlink = Promise.promisify(fs.unlink);
-const utimes = Promise.promisify(fs.utimes);
-const write = Promise.promisify(fs.write);
+const close = promisify(fs.close);
+const fsync = promisify(fs.fsync);
+const mkdir = promisify(mkdirp);
+const open = promisify(fs.open);
+const readdir = promisify(fs.readdir);
+const readFile = promisify(fs.readFile);
+const rename = promisify(fs.rename);
+const stat = promisify(fs.stat);
+const unlink = promisify(fs.unlink);
+const utimes = promisify(fs.utimes);
+const write = promisify(fs.write);
 
 type PathMap = {
   [path: string]: boolean,

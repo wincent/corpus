@@ -5,11 +5,9 @@
  * @flow
  */
 
-import type Promise from 'bluebird';
-
 import Heap from './Heap';
 
-type Operation = () => Promise;
+type Operation = () => Promise<void>;
 type Job = {|
   operation: Operation,
   priority: number,
