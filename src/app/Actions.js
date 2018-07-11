@@ -20,7 +20,6 @@ const actionTypes = {
   ALL_NOTES_SELECTED: 'ALL_NOTES_SELECTED',
   ADJUST_NOTE_SELECTION_DOWN: 'ADJUST_NOTE_SELECTION_DOWN',
   ADJUST_NOTE_SELECTION_UP: 'ADJUST_NOTE_SELECTION_UP',
-  BUBBLE_ANIMATION_FINISHED: 'BUBBLE_ANIMATION_FINISHED',
   CONFIG_LOADED: 'CONFIG_LOADED',
   FIRST_NOTE_SELECTED: 'FIRST_NOTE_SELECTED',
   LAST_NOTE_SELECTED: 'LAST_NOTE_SELECTED',
@@ -56,10 +55,6 @@ const actionCreators = {
     dispatch(actionTypes.ALL_NOTES_SELECTED);
   },
 
-  bubbleAnimationFinished() {
-    dispatch(actionTypes.BUBBLE_ANIMATION_FINISHED);
-  },
-
   firstNoteSelected() {
     dispatch(actionTypes.FIRST_NOTE_SELECTED);
   },
@@ -72,16 +67,8 @@ const actionCreators = {
     dispatch(actionTypes.NEXT_NOTE_SELECTED);
   },
 
-  /**
-   * Called when a note starts getting bubbled (animated) towards the top of
-   * the notes list as the result of a change to its contents or title.
-   *
-   * In order to maintain an internally coherent state, the bubbling is actually
-   * immediate (ie. we move the note in our internal data structures) and the
-   * animation is shown after the fact.
-   */
-  noteBubbled(index: number, position: number) {
-    dispatch(actionTypes.NOTE_BUBBLED, {index, position});
+  noteBubbled(index: number) {
+    dispatch(actionTypes.NOTE_BUBBLED, {index});
   },
 
   noteCreationRequested(title: string) {

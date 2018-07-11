@@ -172,7 +172,8 @@ export default withStore(
       const index = NotesSelectionStore.selection.values().next().value;
       if (index) {
         // Not at top of list, so bubble note to top.
-        Actions.noteBubbled(this.props.note.index, index);
+        Actions.noteBubbled(this.props.note.index);
+        this.props.store.set('bubbling')(this.props.note.index);
       }
       this.setState({value: event.currentTarget.value});
       this._pendingSave = true;

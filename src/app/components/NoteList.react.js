@@ -13,7 +13,6 @@ import Actions from '../Actions';
 import Constants from '../Constants';
 import Keys from '../Keys';
 import NotePreview from './NotePreview.react';
-import NoteAnimationStore from '../stores/NoteAnimationStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import colors from '../colors';
@@ -72,7 +71,6 @@ export default withStore(
     }
 
     componentDidMount() {
-      NoteAnimationStore.on('change', this._updateBubbling);
       NotesSelectionStore.on('change', this._updateNoteSelection);
       FilteredNotesStore.on('change', this._updateNotes);
 
@@ -177,14 +175,6 @@ export default withStore(
       }
     };
 
-    _updateBubbling = () => {
-      const bubbling = NoteAnimationStore.bubbling;
-      this.setState({
-        animating: false,
-        bubbling,
-      });
-    };
-
     _updateNoteSelection = () => {
       this.setState({selection: NotesSelectionStore.selection});
     };
@@ -256,11 +246,12 @@ export default withStore(
       SCROLL_THROTTLE_INTERVAL,
     );
 
+    // BUG: fix animations (they aren't working)
     _onTransitionEnd = () => {
       // A note has bubbled to the top, make sure we can see it still.
       const parent = nullthrows(this._ref).parentElement;
       nullthrows(parent).scrollTop = 0;
-      Actions.bubbleAnimationFinished();
+      this.props.store.set('bubbling')(null);
     };
 
     _onScroll = (event: Event): mixed => {

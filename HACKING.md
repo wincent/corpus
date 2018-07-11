@@ -59,11 +59,6 @@ dispatch.
                       /---------------------\
                       | NotesSelectionStore |
                       \---------------------/
-                                 ^
-                                 |
-                      /--------------------\
-                      | NoteAnimationStore |
-                      \--------------------/
 ```
 
 - `NotesStore`: Manages the set of all notes currently on disk.

@@ -18,6 +18,7 @@ import type {LogMessage} from './log';
 type Focus = 'Note' | 'NoteList' | 'OmniBar' | 'TitleInput';
 
 type State = {|
+  bubbling: ?number,
   'config.notesDirectory': ?string,
   'config.noteFontFamily': string,
   'config.noteFontSize': string,
@@ -38,6 +39,7 @@ const defaultConfig = {
 };
 
 const initialState: State = {
+  bubbling: null,
   'config.notesDirectory': null,
   'config.noteFontFamily': 'Monaco',
   'config.noteFontSize': '12',
