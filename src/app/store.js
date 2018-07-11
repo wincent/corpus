@@ -35,8 +35,10 @@ type State = {|
   focus: Focus,
   log: Array<LogMessage>,
   notes: Array<Note>,
+  selection: Set<number>,
   'system.nameMax': number,
   'system.pathMax': number,
+  query: ?string,
 |};
 
 const defaultConfig = {
@@ -57,8 +59,10 @@ const initialState: State = {
   focus: 'OmniBar',
   log: [],
   notes: [],
+  selection: new Set(),
   'system.nameMax': systemDefaults.nameMax,
   'system.pathMax': systemDefaults.pathMax,
+  query: null,
 };
 
 const store = createStore(initialState);

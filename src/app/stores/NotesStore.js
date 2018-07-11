@@ -20,6 +20,7 @@ import commitChanges from '../commitChanges';
 import getNotesDirectory from '../getNotesDirectory';
 import handleError from '../handleError';
 import * as log from '../log';
+import store from '../store';
 import normalizeText from '../util/normalizeText';
 import chokidar from 'chokidar';
 
@@ -158,6 +159,10 @@ function appendResults(results) {
     notes = [...notes, ...results];
     results.forEach(note => (pathMap[note.path] = true));
     Actions.notesLoaded();
+
+    // Stash the notes here redundantly for now.
+    store.set('notes')([...store.get('notes'), ...results]);
+    window.store = store;
   }
 }
 
