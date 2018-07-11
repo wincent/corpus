@@ -11,8 +11,8 @@ import run from './run';
 import type {Config} from './loadConfig';
 
 type SystemInfo = {|
-  +nameMax: ?number,
-  +pathMax: ?number,
+  +nameMax: number,
+  +pathMax: number,
 |};
 
 export const defaults = {
