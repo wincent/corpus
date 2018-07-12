@@ -98,31 +98,28 @@ const mergerConfig = {
   },
 };
 
-loadConfig()
-  .then(config => {
-    Object.keys(config).forEach(key => {
-      const prefixedKey = `config.${key}`;
-      if (prefixedKey in initialState) {
-        const value = config[key];
-        store.set(prefixedKey)((mergerConfig[key] || requireString)(value));
-      } else {
-        log.warn(`Ignoring unsupported key ${key} in ${configFile}`);
-      }
-    });
+(async function() {
+  const config = await loadConfig();
 
-    Object.entries(defaultConfig).forEach(([key, value]) => {
-      if (!config.hasOwnProperty(key)) {
-        store.set(`config.${key}`)(value);
-      }
-    });
+  Object.keys(config).forEach(key => {
+    const prefixedKey = `config.${key}`;
+    if (prefixedKey in initialState) {
+      const value = config[key];
+      store.set(prefixedKey)((mergerConfig[key] || requireString)(value));
+    } else {
+      log.warn(`Ignoring unsupported key ${key} in ${configFile}`);
+    }
+  });
 
-    querySystem(config)
-      .then(({nameMax, pathMax}) => {
-        store.set('system.nameMax')(nameMax);
-        store.set('system.pathMax')(pathMax);
-      })
-      .catch(log.error);
-  })
-  .catch(log.error);
+  Object.entries(defaultConfig).forEach(([key, value]) => {
+    if (!config.hasOwnProperty(key)) {
+      store.set(`config.${key}`)(value);
+    }
+  });
+
+  const {nameMax, pathMax} = await querySystem(config);
+  store.set('system.nameMax')(nameMax);
+  store.set('system.pathMax')(pathMax);
+})();
 
 export default store;
