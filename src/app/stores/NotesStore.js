@@ -20,7 +20,6 @@ import commitChanges from '../commitChanges';
 import getNotesDirectory from '../getNotesDirectory';
 import handleError from '../handleError';
 import * as log from '../log';
-import store from '../store';
 import normalizeText from '../util/normalizeText';
 import chokidar from 'chokidar';
 
@@ -28,8 +27,8 @@ const close = promisify(fs.close);
 const fsync = promisify(fs.fsync);
 const mkdir = promisify(mkdirp);
 const open = promisify(fs.open);
-const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
+const readdir = promisify(fs.readdir);
 const rename = promisify(fs.rename);
 const stat = promisify(fs.stat);
 const unlink = promisify(fs.unlink);
@@ -159,10 +158,6 @@ function appendResults(results) {
     notes = [...notes, ...results];
     results.forEach(note => (pathMap[note.path] = true));
     Actions.notesLoaded();
-
-    // Stash the notes here redundantly for now.
-    store.set('notes')([...store.get('notes'), ...results]);
-    window.store = store;
   }
 }
 
