@@ -14,6 +14,16 @@ export default function getNotesDirectory(): Promise<string> {
   notesDirectory = notesDirectory || store.get('config.notesDirectory');
   if (notesDirectory) {
     return Promise.resolve(notesDirectory);
+  } else if (subscription) {
+    return new Promise((resolve, reject) => {
+      subscription.add(() => {
+        if (notesDirectory) {
+          resolve(notesDirectory);
+        } else {
+          reject(new Error('No notesDirectory is set'));
+        }
+      });
+    });
   } else {
     return new Promise((resolve, reject) => {
       subscription = store.on('config.notesDirectory').subscribe(directory => {
