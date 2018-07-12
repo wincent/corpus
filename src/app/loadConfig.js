@@ -19,7 +19,7 @@ export type Config = {|
   noteFontSize: string,
 |};
 
-export default async function loadConfig(): {[key: string]: mixed} {
+export default async function loadConfig(): Promise<{[key: string]: mixed}> {
   try {
     const data = await readFile(configFile);
     return JSON.parse(stripComments(data.toString()));
