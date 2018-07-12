@@ -33,6 +33,7 @@ const mkdir = promisify(mkdirp);
 const open = promisify(fs.open);
 const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);
+const rename = promisify(fs.rename);
 const stat = promisify(fs.stat);
 const utimes = promisify(fs.utimes);
 const write = promisify(fs.write);
@@ -400,6 +401,38 @@ export function updateNote(
       if (fd) {
         await close(fd);
       }
+    }
+  });
+}
+
+export async function renameNote(index: number, title: string): void {
+  // Update note and bump to top of list.
+  const oldPath = notes[index].path;
+  const newPath = await getPathForTitle(title);
+  notes = [
+    {
+      ...notes[index],
+      mtime: Date.now(),
+      path: newPath,
+      title: title,
+    },
+    ...notes.slice(0, index),
+    ...notes.slice(index + 1),
+  ];
+  store.set('notes')(notes);
+
+  // Persist changes to disk.
+  OperationsQueue.enqueue(async () => {
+    notifyChanges(oldPath, newPath);
+    try {
+      const time = new Date();
+      await rename(oldPath, newPath);
+      await utimes(newPath, time, time);
+      delete pathMap[oldPath];
+      pathMap[newPath] = true;
+      commitChanges();
+    } catch (error) {
+      handleError(error, `Failed to rename ${oldPath} to ${newPath}`);
     }
   });
 }

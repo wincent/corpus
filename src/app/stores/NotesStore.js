@@ -20,7 +20,6 @@ import commitChanges from '../commitChanges';
 import getNotesDirectory from '../getNotesDirectory';
 import handleError from '../handleError';
 import * as log from '../log';
-import normalizeText from '../util/normalizeText';
 
 const close = promisify(fs.close);
 const fsync = promisify(fs.fsync);
@@ -28,15 +27,8 @@ const mkdir = promisify(mkdirp);
 const open = promisify(fs.open);
 const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);
-const rename = promisify(fs.rename);
 const stat = promisify(fs.stat);
 const unlink = promisify(fs.unlink);
-const utimes = promisify(fs.utimes);
-const write = promisify(fs.write);
-
-type PathMap = {
-  [path: string]: boolean,
-};
 
 /**
  * The number of notes to load immediately on start-up. Remaining notes are
@@ -58,27 +50,6 @@ let notes = [];
 let noteID = 0;
 
 let notesDirectory;
-
-/**
- * Map of note paths on disk to a boolean (`true`) indicating the path is in
- * use.
- *
- * Duplicate titles are disambiguated using a numeric prefix before the '.md'
- * extension; eg: `foo.md`, `foo.1.md`, `foo.2.md` etc.
- */
-const pathMap: PathMap = {};
-
-/**
- * Whenever we make changes we record the affected paths in this set. At the
- * same time, we monitor the filesystem for changes made by other processes. If
- * we detect a change to a path that we didn't make, we know that we have to
- * reload from disk.
- */
-const changedPaths = new Set();
-
-function notifyChanges(...notePaths: Array<string>): void {
-  notePaths.forEach(notePath => changedPaths.add(notePath));
-}
 
 // TODO: handle edge case where notes directory has a long filename in it (not
 // created by Corpus), which would overflow NAME_MAX or PATH_MAX if we end up
@@ -142,7 +113,6 @@ async function readContents(info: $FlowFixMe): Promise<$FlowFixMe> {
 function appendResults(results) {
   if (results.length) {
     notes = [...notes, ...results];
-    results.forEach(note => (pathMap[note.path] = true));
     Actions.notesLoaded();
   }
 }
@@ -159,9 +129,7 @@ function getPathForTitle(title: string): string {
   for (var ii = 0; ii <= 999; ii++) {
     const number = ii ? `.${ii}` : '';
     const notePath = path.join(notesDirectory, sanitizedTitle + number + '.md');
-    if (!(notePath in pathMap)) {
-      return notePath;
-    }
+    return notePath;
   }
 
   // TODO: decide on better strategy here
@@ -171,7 +139,7 @@ function getPathForTitle(title: string): string {
 function createNote(title) {
   OperationsQueue.enqueue(async () => {
     const notePath = getPathForTitle(title);
-    notifyChanges(notePath);
+    // notifyChanges(notePath);
     try {
       const fd = await open(
         notePath,
@@ -191,7 +159,6 @@ function createNote(title) {
         },
         ...notes,
       ];
-      pathMap[notePath] = true;
       Actions.noteCreationCompleted();
       commitChanges();
     } catch (error) {
@@ -206,53 +173,14 @@ function deleteNotes(deletedNotes) {
   deletedNotes.forEach(note => {
     OperationsQueue.enqueue(async () => {
       const notePath = note.path;
-      notifyChanges(notePath);
+      // notifyChanges(notePath);
       try {
         await unlink(notePath);
-        delete pathMap[notePath];
+        // delete pathMap[notePath];
       } catch (error) {
         handleError(error, `Failed to delete ${notePath}`);
       }
     });
-  });
-}
-
-function updateNote(note) {
-  OperationsQueue.enqueue(async () => {
-    let fd = null;
-    const notePath = note.path;
-    notifyChanges(notePath);
-    try {
-      const time = new Date();
-      const noteText = normalizeText(note.text);
-      fd = await open(notePath, 'w'); // w = write
-      await write(fd, noteText);
-      await utimes(notePath, time, time);
-      await fsync(fd);
-      commitChanges();
-    } catch (error) {
-      handleError(error, `Failed to write ${notePath}`);
-    } finally {
-      if (fd) {
-        await close(fd);
-      }
-    }
-  });
-}
-
-function renameNote(oldPath, newPath) {
-  OperationsQueue.enqueue(async () => {
-    notifyChanges(oldPath, newPath);
-    try {
-      const time = new Date();
-      await rename(oldPath, newPath);
-      await utimes(newPath, time, time);
-      delete pathMap[oldPath];
-      pathMap[newPath] = true;
-      commitChanges();
-    } catch (error) {
-      handleError(error, `Failed to rename ${oldPath} to ${newPath}`);
-    }
   });
 }
 
@@ -337,15 +265,15 @@ class NotesStore extends Store {
           }
 
           // Persist changes to disk.
-          updateNote(note);
+          // updateNote(note); // Legacy/duplicative.
           this.emit('change');
         }
         break;
 
+      // TODO: delete this (it is ported to store.js)
       case Actions.NOTE_TITLE_CHANGED:
         {
           // Update note and bump to top of list.
-          const originalPath = notes[payload.index].path;
           const newPath = getPathForTitle(payload.title);
           notes = [
             {
@@ -358,8 +286,6 @@ class NotesStore extends Store {
             ...notes.slice(payload.index + 1),
           ];
 
-          // Persist changes to disk.
-          renameNote(originalPath, newPath);
           this.emit('change');
         }
         break;

@@ -12,7 +12,7 @@ import Actions from '../Actions';
 import Constants from '../Constants';
 import Keys from '../Keys';
 import Mouse from '../Mouse';
-import {withStore} from '../store';
+import {renameNote, withStore} from '../store';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 
 import type {StoreProps} from '../store';
@@ -175,10 +175,14 @@ export default withStore(
     _endEditing(event) {
       const title = event.currentTarget.value;
       if (title !== this.props.note.title) {
+        // TODO: delete legacy (once NotesStore, FilteredNotesStore,
+        // NotesSelectionStore are removed)
         Actions.noteTitleChanged({
           index: this.props.index,
           title,
         });
+        // END: legacy section
+        renameNote(this.props.index, title);
       }
       this.setState({
         isEditing: false,
