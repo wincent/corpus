@@ -236,7 +236,8 @@ export default withStore(
         if (printable != null) {
           event.preventDefault();
           this.props.store.set('focus')('OmniBar');
-          Actions.searchRequested(printable);
+          Actions.searchRequested(printable); // TODO: kill legacy
+          this.props.store.set('query')(printable);
         }
       }
     };

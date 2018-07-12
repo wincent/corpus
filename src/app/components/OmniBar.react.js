@@ -212,11 +212,13 @@ export default withStore(
       this._pendingDeletion = null;
       const value = event.currentTarget.value;
       this.setState({value});
-      Actions.searchRequested(value);
+      Actions.searchRequested(value); // TODO: kill legacy
+      this.props.store.set('query')(value);
     };
 
     _onCancelClick = () => {
-      Actions.searchRequested('');
+      Actions.searchRequested(''); // TODO: kill legacy
+      this.props.store.set('query')('');
       this.setState({value: ''}, () => this._inputRef.focus());
     };
 
@@ -264,14 +266,16 @@ export default withStore(
                 return; // Nothing to do (already at start of input field).
               }
               this.setState({value: this._pendingDeletion});
-              Actions.searchRequested(this._pendingDeletion, true);
+              Actions.searchRequested(this._pendingDeletion, true); // TODO: kill legacy, but also figure out what to do about isDeletion boolean flag
+              this.props.store.set('query')(this._pendingDeletion);
             }
           }
           return;
 
         case Keys.ESCAPE:
           this.setState({value: ''});
-          Actions.searchRequested('');
+          Actions.searchRequested(''); // TODO: kill legacy
+          this.props.store.set('query')('');
           return;
 
         case Keys.RETURN:

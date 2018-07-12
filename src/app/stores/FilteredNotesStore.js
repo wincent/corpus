@@ -35,7 +35,8 @@ function filter(value: ?string): $FlowFixMe {
       });
   if (patterns && patterns.length) {
     const indices = [];
-    return store.get('notes')
+    return store
+      .get('notes')
       .filter((note, index) => {
         // TODO: only return new array if the filtering operation excluded any items
         if (

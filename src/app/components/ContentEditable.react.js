@@ -194,7 +194,8 @@ export default withStore(
 
         case Keys.ESCAPE:
           event.preventDefault();
-          Actions.searchRequested('');
+          Actions.searchRequested(''); // TODO: kill legacy
+          this.props.store.set('query')('');
           this.props.store.set('focus')('OmniBar');
           Actions.allNotesDeselected();
           return;

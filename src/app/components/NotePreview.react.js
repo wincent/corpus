@@ -24,7 +24,12 @@ import type {StoreProps} from '../store';
 const PREVIEW_LENGTH = 250;
 const TITLE_LENGTH = 125;
 
-const Tag = ({focused, tag}: {|focused: boolean, tag: $FlowFixMe|}) => {
+type TagProps = {|
+  ...StoreProps,
+  focused: boolean,
+  tag: $FlowFixMe,
+|};
+const Tag = withStore(({focused, store, tag}: TagProps) => {
   const styles = {
     backgroundColor: focused ? '#fff' : '#9e9e9e',
     borderRadius: '2px',
@@ -40,13 +45,14 @@ const Tag = ({focused, tag}: {|focused: boolean, tag: $FlowFixMe|}) => {
       onClick={event => {
         // Don't want to select note that was clicked on.
         event.stopPropagation();
-        Actions.searchRequested(`#${tag}`);
+        Actions.searchRequested(`#${tag}`); // TODO: kill legacy
+        store.set('query')(`#${tag}`);
       }}
       style={styles}>
       {tag}
     </span>
   );
-};
+});
 
 const Tags = ({tags, focused}: {|tags: $FlowFixMe, focused: boolean|}) => {
   const styles = {
