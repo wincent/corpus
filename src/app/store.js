@@ -35,6 +35,7 @@ const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);
 const rename = promisify(fs.rename);
 const stat = promisify(fs.stat);
+const unlink = promisify(fs.unlink);
 const utimes = promisify(fs.utimes);
 const write = promisify(fs.write);
 
@@ -435,6 +436,29 @@ export async function renameNote(index: number, title: string): void {
       handleError(error, `Failed to rename ${oldPath} to ${newPath}`);
     }
   });
+}
+
+// TODO: make this force a write for unsaved changes in active text area
+export function deleteNotes(deletedNotes: Set<number>): void {
+  commitChanges('Corpus (pre-deletion) snapshot');
+  notes = notes.filter((note, index) => {
+    if (deletedNotes.has(index)) {
+      OperationsQueue.enqueue(async () => {
+        const notePath = note.path;
+        notifyChanges(notePath);
+        try {
+          await unlink(notePath);
+          delete pathMap[notePath];
+        } catch (error) {
+          handleError(error, `Failed to delete ${notePath}`);
+        }
+      });
+      return false;
+    }
+    return true;
+  });
+  store.set('notes')(notes);
+  store.set('selection')(new Set());
 }
 
 (async function() {

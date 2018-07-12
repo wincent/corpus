@@ -28,7 +28,6 @@ const open = promisify(fs.open);
 const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
-const unlink = promisify(fs.unlink);
 
 /**
  * The number of notes to load immediately on start-up. Remaining notes are
@@ -167,23 +166,6 @@ function createNote(title) {
   });
 }
 
-// TODO: make this force a write for unsaved changes in active text area
-function deleteNotes(deletedNotes) {
-  commitChanges('Corpus (pre-deletion) snapshot');
-  deletedNotes.forEach(note => {
-    OperationsQueue.enqueue(async () => {
-      const notePath = note.path;
-      // notifyChanges(notePath);
-      try {
-        await unlink(notePath);
-        // delete pathMap[notePath];
-      } catch (error) {
-        handleError(error, `Failed to delete ${notePath}`);
-      }
-    });
-  });
-}
-
 function loadNotes() {
   OperationsQueue.enqueue(async () => {
     notesDirectory = await getNotesDirectory();
@@ -295,17 +277,15 @@ class NotesStore extends Store {
         this.emit('change');
         break;
 
+      // TODO: delete this (it is ported to store.js)
       case Actions.SELECTED_NOTES_DELETED:
         {
-          const deletedNotes = [];
           notes = notes.filter((note, index) => {
             if (payload.ids.has(index)) {
-              deletedNotes.push(note);
               return false;
             }
             return true;
           });
-          deleteNotes(deletedNotes);
           this.emit('change');
         }
         break;

@@ -18,7 +18,7 @@ import SplitView from '../components/SplitView.react';
 import Viewport from '../components/Viewport.react';
 import * as log from '../log';
 import run from '../run';
-import {withStore} from '../store';
+import {deleteNotes, withStore} from '../store';
 
 import type {StoreProps} from '../store';
 
@@ -45,7 +45,8 @@ function deleteSelectedNotes() {
     const note = FilteredNotesStore.notes[index];
     indices.add(note.index);
   }
-  Actions.selectedNotesDeleted(indices);
+  Actions.selectedNotesDeleted(indices); // TODO: delete legacy once NotesStore, FilteredNotesStore, NotesSelectionStore are gone
+  deleteNotes(indices);
 }
 
 function preview() {
