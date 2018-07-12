@@ -50,6 +50,7 @@ type Note = {|
   tags: Set<string>,
   text: string,
   title: string,
+  version: number,
 |};
 
 type FilteredNote = {|
@@ -229,7 +230,16 @@ function appendResults(results) {
   }
 }
 
-async function getStatInfo(fileName: string): Promise<any> {
+type StatInfo = {|
+  +id: number,
+  +mtime: ?number,
+  +path: string,
+  +title: string,
+|};
+
+// TODO: make this actually return only stat info (not the extra crap that is
+// currently in there)
+async function getStatInfo(fileName: string): Promise<StatInfo> {
   let notesDirectory = await getNotesDirectory();
   const notePath = path.join(notesDirectory, fileName);
   const title = getTitleFromPath(notePath);
@@ -261,7 +271,7 @@ function compareMTime(a, b) {
   }
 }
 
-async function readContents(info: $FlowFixMe): Promise<$FlowFixMe> {
+async function readContents(info: $FlowFixMe): Promise<Note> {
   try {
     const content = (await readFile(info.path)).toString();
     const unpacked = unpackContent(content);
@@ -270,6 +280,7 @@ async function readContents(info: $FlowFixMe): Promise<$FlowFixMe> {
       body: unpacked.body,
       text: content,
       tags: new Set(unpacked.tags),
+      version: 0,
     };
   } catch (error) {
     // Soft-ignore the error. We return `null` here because we don't want views
@@ -353,6 +364,7 @@ export function createNote(title: string): void {
           tags: new Set(),
           text: '',
           title,
+          version: 0,
         },
         ...notes,
       ];
@@ -378,6 +390,7 @@ export function updateNote(
     mtime: Date.now(),
     tags: new Set(unpacked.tags),
     text,
+    version: notes[index].version + 1,
   };
   if (isAutosave) {
     // Don't bubble note to top for autosave events.
@@ -420,6 +433,7 @@ export async function renameNote(index: number, title: string): void {
       mtime: Date.now(),
       path: newPath,
       title: title,
+      version: notes[index].version + 1,
     },
     ...notes.slice(0, index),
     ...notes.slice(index + 1),
