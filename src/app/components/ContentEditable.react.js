@@ -9,7 +9,7 @@ import React from 'react';
 
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
-import {bubbleNote, withStore} from '../store';
+import {bubbleNote, updateNote, withStore} from '../store';
 import Keys from '../Keys';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';
@@ -150,11 +150,14 @@ export default withStore(
 
       const text = this.state.value;
       if (text !== this.props.note.text) {
+        // TODO: <-- remove (legacy) once NotesStore is gone
         Actions.noteTextChanged({
           index: this.props.note.index,
           isAutosave,
           text,
         });
+        // END: legacy section
+        updateNote(this.props.note.index, text, isAutosave);
       }
 
       this._pendingSave = false;

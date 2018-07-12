@@ -310,6 +310,7 @@ class NotesStore extends Store {
         createNote(payload.title);
         break;
 
+      // TODO: delete this (it is ported to store.js)
       case Actions.NOTE_TEXT_CHANGED:
         {
           const unpacked = unpackContent(payload.text);

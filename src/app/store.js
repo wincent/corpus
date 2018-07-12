@@ -23,6 +23,7 @@ import handleError from './handleError';
 import loadConfig from './loadConfig';
 import * as log from './log';
 import querySystem, {defaults as systemDefaults} from './querySystem';
+import normalizeText from './util/normalizeText';
 
 import type {LogMessage} from './log';
 
@@ -33,6 +34,8 @@ const open = promisify(fs.open);
 const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
+const utimes = promisify(fs.utimes);
+const write = promisify(fs.write);
 
 type Focus = 'Note' | 'NoteList' | 'OmniBar' | 'TitleInput';
 
@@ -211,11 +214,11 @@ function getTitleFromPath(notePath: string): string {
 
 function appendResults(results) {
   if (results.length) {
-    notes = [...notes, ...results];
     results.forEach(note => (pathMap[note.path] = true));
-    // Actions.notesLoaded();
+    notes = [...notes, ...results];
+    store.set('notes')(notes);
 
-    store.set('notes')([...store.get('notes'), ...results]);
+    // TODO: remove debugging code
     window.store = store;
   }
 }
@@ -303,11 +306,8 @@ function loadNotes() {
  * Bump note to top.
  */
 export function bubbleNote(index: number) {
-  store.set('notes')([
-    notes[index],
-    ...notes.slice(0, index),
-    ...notes.slice(index + 1),
-  ]);
+  notes = [notes[index], ...notes.slice(0, index), ...notes.slice(index + 1)];
+  store.set('notes')(notes);
 }
 
 async function getPathForTitle(title: string): string {
@@ -326,7 +326,7 @@ async function getPathForTitle(title: string): string {
   throw new Error(`Failed to find unique path name for title "${title}"`);
 }
 
-export function createNote(title: string) {
+export function createNote(title: string): void {
   OperationsQueue.enqueue(async () => {
     const notePath = await getPathForTitle(title);
     notifyChanges(notePath);
@@ -337,6 +337,7 @@ export function createNote(title: string) {
       );
       await fsync(fd);
       await close(fd);
+      pathMap[notePath] = true;
       notes = [
         {
           body: '',
@@ -349,12 +350,56 @@ export function createNote(title: string) {
         },
         ...notes,
       ];
-      pathMap[notePath] = true;
+      store.set('notes')(notes);
       // Actions.noteCreationCompleted();
       // NOTE: we are double-committing here until we delete NotesStore
       commitChanges();
     } catch (error) {
       handleError(error, `Failed to open ${notePath} for writing`);
+    }
+  });
+}
+
+export function updateNote(
+  index: number,
+  text: string,
+  isAutosave: boolean,
+): void {
+  const unpacked = unpackContent(text);
+  const note = {
+    ...notes[index],
+    body: unpacked.body,
+    mtime: Date.now(),
+    tags: new Set(unpacked.tags),
+    text,
+  };
+  if (isAutosave) {
+    // Don't bubble note to top for autosave events.
+    notes = [...notes.slice(0, index), note, ...notes.slice(index + 1)];
+    store.set('notes')(notes);
+  } else {
+    bubbleNote(index); // Does store.set().
+  }
+
+  // Persist changes to disk.
+  OperationsQueue.enqueue(async () => {
+    let fd = null;
+    const notePath = note.path;
+    notifyChanges(notePath);
+    try {
+      const time = new Date();
+      const noteText = normalizeText(note.text);
+      fd = await open(notePath, 'w'); // w = write
+      await write(fd, noteText);
+      await utimes(notePath, time, time);
+      await fsync(fd);
+      commitChanges();
+    } catch (error) {
+      handleError(error, `Failed to write ${notePath}`);
+    } finally {
+      if (fd) {
+        await close(fd);
+      }
     }
   });
 }
