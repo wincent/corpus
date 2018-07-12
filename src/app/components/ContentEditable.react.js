@@ -7,7 +7,7 @@
 
 import React from 'react';
 
-import Actions from '../Actions';
+import {default as Actions, bubbleNote} from '../Actions';
 import Dispatcher from '../Dispatcher';
 import {withStore} from '../store';
 import Keys from '../Keys';
@@ -172,7 +172,8 @@ export default withStore(
       const index = NotesSelectionStore.selection.values().next().value;
       if (index) {
         // Not at top of list, so bubble note to top.
-        Actions.noteBubbled(this.props.note.index);
+        Actions.noteBubbled(this.props.note.index); // TODO: <-- remove (legacy)
+        bubbleNote(this.props.note.index);
         this.props.store.set('bubbling')(this.props.note.index);
       }
       this.setState({value: event.currentTarget.value});

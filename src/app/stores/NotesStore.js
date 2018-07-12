@@ -287,6 +287,7 @@ getNotesDirectory().then(loadNotes);
 class NotesStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
+      // TODO: delete this (it is ported to store.js)
       case Actions.NOTE_BUBBLED:
         {
           // Bump note to top.
