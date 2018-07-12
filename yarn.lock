@@ -6157,8 +6157,8 @@ underscore@^1.8.3:
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
 
 undux@^4.0:
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/undux/-/undux-4.7.2.tgz#d2cf7ad530401567b19b75f6d8976a67a85dcbac"
+  version "4.7.3"
+  resolved "https://registry.yarnpkg.com/undux/-/undux-4.7.3.tgz#0cb2f0f28fe8ab26735015efcb30d87f5ba436a9"
   dependencies:
     typed-rx-emitter "^1.1.2"
 
