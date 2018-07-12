@@ -21,7 +21,6 @@ import getNotesDirectory from '../getNotesDirectory';
 import handleError from '../handleError';
 import * as log from '../log';
 import normalizeText from '../util/normalizeText';
-import chokidar from 'chokidar';
 
 const close = promisify(fs.close);
 const fsync = promisify(fs.fsync);
@@ -79,19 +78,6 @@ const changedPaths = new Set();
 
 function notifyChanges(...notePaths: Array<string>): void {
   notePaths.forEach(notePath => changedPaths.add(notePath));
-}
-
-const OPTION_KEY = '\u2325';
-const COMMAND_KEY = '\u2318';
-
-function confirmChange(notePath: string): void {
-  const expected = changedPaths.delete(notePath);
-  if (!expected) {
-    log.error(
-      `File changed outside of Corpus: ${notePath}\n` +
-        `Reload with ${OPTION_KEY}${COMMAND_KEY}R`,
-    );
-  }
 }
 
 // TODO: handle edge case where notes directory has a long filename in it (not
@@ -270,34 +256,12 @@ function renameNote(oldPath, newPath) {
   });
 }
 
-let watcher;
-
-function initWatcher(notesDirectory: string) {
-  if (watcher) {
-    watcher.close();
-  }
-  watcher = chokidar
-    .watch(notesDirectory, {
-      awaitWriteFinish: {
-        pollInterval: 1000,
-      },
-      depth: 1,
-      disableGlobbing: true,
-      ignoreInitial: true,
-      ignored: /(^|\/)\../,
-    })
-    .on('all', (event, file) => {
-      confirmChange(file);
-    });
-}
-
 function loadNotes() {
   OperationsQueue.enqueue(async () => {
     notesDirectory = await getNotesDirectory();
     try {
       await mkdir(notesDirectory);
       new Repo(notesDirectory).init();
-      initWatcher(notesDirectory);
       const filenames = await readdir(notesDirectory);
       const filtered = filterFilenames(filenames);
       const info = await Promise.all(filtered.map(getStatInfo));
