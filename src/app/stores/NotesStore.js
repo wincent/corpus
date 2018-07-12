@@ -300,10 +300,12 @@ class NotesStore extends Store {
         }
         break;
 
+      // TODO: delete this (not needed with Undux)
       case Actions.NOTE_CREATION_COMPLETED:
         this.emit('change');
         break;
 
+      // TODO: delete this (it is ported to store.js)
       case Actions.NOTE_CREATION_REQUESTED:
         createNote(payload.title);
         break;
@@ -361,6 +363,7 @@ class NotesStore extends Store {
         }
         break;
 
+      // TODO: delete this (not needed with Undux)
       case Actions.NOTES_LOADED:
         this.emit('change');
         break;

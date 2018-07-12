@@ -7,9 +7,9 @@
 
 import React from 'react';
 
-import {default as Actions, bubbleNote} from '../Actions';
+import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
-import {withStore} from '../store';
+import {bubbleNote, withStore} from '../store';
 import Keys from '../Keys';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';

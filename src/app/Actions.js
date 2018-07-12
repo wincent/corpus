@@ -118,18 +118,4 @@ const actionCreators = {
 
 const Actions = {...actionTypes, ...actionCreators};
 
-import store from './store';
-
-/**
- * Bump note to top.
- */
-export function bubbleNote(index: number) {
-  const notes = store.get('notes');
-  store.set('notes')([
-    notes[index],
-    ...notes.slice(0, index),
-    ...notes.slice(index + 1),
-  ]);
-}
-
 export default Actions;

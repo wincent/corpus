@@ -16,6 +16,7 @@ import {promisify} from 'util';
 import Constants from './Constants';
 import OperationsQueue from './OperationsQueue';
 import Repo from './Repo';
+import commitChanges from './commitChanges';
 import configFile from './configFile';
 import getNotesDirectory from './getNotesDirectory';
 import handleError from './handleError';
@@ -25,7 +26,10 @@ import querySystem, {defaults as systemDefaults} from './querySystem';
 
 import type {LogMessage} from './log';
 
+const close = promisify(fs.close);
+const fsync = promisify(fs.fsync);
 const mkdir = promisify(mkdirp);
+const open = promisify(fs.open);
 const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
@@ -152,6 +156,10 @@ const mergerConfig = {
  * reload from disk.
  */
 const changedPaths = new Set();
+
+function notifyChanges(...notePaths: Array<string>): void {
+  notePaths.forEach(notePath => changedPaths.add(notePath));
+}
 
 const OPTION_KEY = '\u2325';
 const COMMAND_KEY = '\u2318';
@@ -287,6 +295,66 @@ function loadNotes() {
       }
     } catch (error) {
       handleError(error, 'Failed to read notes from disk');
+    }
+  });
+}
+
+/**
+ * Bump note to top.
+ */
+export function bubbleNote(index: number) {
+  store.set('notes')([
+    notes[index],
+    ...notes.slice(0, index),
+    ...notes.slice(index + 1),
+  ]);
+}
+
+async function getPathForTitle(title: string): string {
+  const sanitizedTitle = title.replace('/', '-');
+  const notesDirectory = await getNotesDirectory();
+
+  for (var i = 0; i <= 999; i++) {
+    const number = i ? `.${i}` : '';
+    const notePath = path.join(notesDirectory, sanitizedTitle + number + '.md');
+    if (!(notePath in pathMap)) {
+      return notePath;
+    }
+  }
+
+  // TODO: decide on better strategy here
+  throw new Error(`Failed to find unique path name for title "${title}"`);
+}
+
+export function createNote(title: string) {
+  OperationsQueue.enqueue(async () => {
+    const notePath = await getPathForTitle(title);
+    notifyChanges(notePath);
+    try {
+      const fd = await open(
+        notePath,
+        'wx', // w = write, x = fail if already exists
+      );
+      await fsync(fd);
+      await close(fd);
+      notes = [
+        {
+          body: '',
+          id: noteID++,
+          mtime: Date.now(),
+          path: notePath,
+          tags: new Set(),
+          text: '',
+          title,
+        },
+        ...notes,
+      ];
+      pathMap[notePath] = true;
+      // Actions.noteCreationCompleted();
+      // NOTE: we are double-committing here until we delete NotesStore
+      commitChanges();
+    } catch (error) {
+      handleError(error, `Failed to open ${notePath} for writing`);
     }
   });
 }

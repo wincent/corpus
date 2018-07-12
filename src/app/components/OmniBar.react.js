@@ -9,7 +9,7 @@ import {ipcRenderer, remote} from 'electron';
 import React from 'react';
 import Actions from '../Actions';
 import Keys from '../Keys';
-import {withStore} from '../store';
+import {createNote, withStore} from '../store';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import performKeyboardNavigation from '../performKeyboardNavigation';
@@ -284,10 +284,12 @@ export default withStore(
               if (this.state.value === title) {
                 this.props.store.set('focus')('Note');
               } else {
-                Actions.noteCreationRequested(this.state.value);
+                Actions.noteCreationRequested(this.state.value); // TODO: delete (legacy) call
+                createNote(this.state.value);
               }
             } else {
-              Actions.noteCreationRequested('Untitled Note');
+              Actions.noteCreationRequested('Untitled Note'); // TODO: delete (legacy) call
+              createNote('Untitled Note');
             }
           }
           return;
