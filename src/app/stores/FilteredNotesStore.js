@@ -8,6 +8,7 @@
 import Actions from '../Actions';
 import NotesStore from './NotesStore';
 import Store from './Store';
+import store from '../store';
 import stringFinder from '../util/stringFinder';
 
 let query = null;
@@ -34,7 +35,7 @@ function filter(value: ?string): $FlowFixMe {
       });
   if (patterns && patterns.length) {
     const indices = [];
-    return NotesStore.notes
+    return store.get('notes')
       .filter((note, index) => {
         // TODO: only return new array if the filtering operation excluded any items
         if (
@@ -61,7 +62,7 @@ function filter(value: ?string): $FlowFixMe {
         index: indices[index],
       }));
   } else {
-    return NotesStore.notes.map((note, index) => ({
+    return store.get('notes').map((note, index) => ({
       // Augment note with its index.
       ...note,
       index,
