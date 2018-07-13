@@ -38,36 +38,6 @@ For a full listing, run `gulp --tasks`
 
 # Architecture
 
-## Flux Stores
-
-The following diagram shows the data flow among the main Flux stores in the
-application. Arrows indicate `waitFor` and dependency relationships (ie. the
-arrow in `A <- B` indicates that `B` depends on `A` and may `waitFor` it during
-dispatch.
-
-```
-                          /------------\
-                          | NotesStore |
-                          \------------/
-                                 ^
-                                 |
-                      /--------------------\
-                      | FilteredNotesStore |
-                      \--------------------/
-                                 ^
-                                 |
-                      /---------------------\
-                      | NotesSelectionStore |
-                      \---------------------/
-```
-
-- `NotesStore`: Manages the set of all notes currently on disk.
-- `FilteredNotesStore`: Manages the subset of notes from the `NotesStore` that
-  are currently shown in the `NoteList.react` component, after any filtering
-  (based on search terms) has been applied.
-- `NotesSelectionStore`: Reflects the (possibly empty) subset of notes from the
-  `FilteredNotesStore` that is currently selected.
-
 ## I/O operations
 
 I/O operations are asynchronous and may depend on one another (for example, a
@@ -83,6 +53,7 @@ of operations ends up looking like this:
 2. Create a Git commit.
 3. Update note contents (update filesystem).
 4. Create a Git commit.
+5. ...
 
 # Branching model
 
