@@ -2,7 +2,7 @@
 
 set -e
 
-if tmux has-session -t corpus 2> /dev/null; then
+if tmux has-session -t=corpus 2> /dev/null; then
   tmux attach -t corpus
   exit
 fi
