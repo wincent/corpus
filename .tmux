@@ -9,7 +9,7 @@ fi
 
 # Window 1, left pane: vim.
 tmux new-session -d -s corpus -n vim -x $(tput cols) -y $(tput lines)
-$(sleep 2; tmux send-keys -t corpus:vim "vim -c CommandT" Enter) &
+tmux send-keys -t corpus:vim "vim -c CommandTBoot" Enter
 
 # Window 1, (top) right pane: gulp
 tmux split-window -t corpus:vim -h
