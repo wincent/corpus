@@ -139,10 +139,10 @@ export default withStore(
           color: isPrivate
             ? 'transparent'
             : focused
-              ? '#fff'
-              : selected
-                ? '#4e4e4e'
-                : '#a3a3a3',
+            ? '#fff'
+            : selected
+            ? '#4e4e4e'
+            : '#a3a3a3',
           display: '-webkit-box',
           fontWeight: 'normal',
           overflow: 'hidden',
@@ -150,8 +150,8 @@ export default withStore(
             isPrivate && focused
               ? '0 0 5px rgba(255, 255, 255, .5)'
               : isPrivate
-                ? '0 0 5px rgba(0, 0, 0, .25)'
-                : 'unset',
+              ? '0 0 5px rgba(0, 0, 0, .25)'
+              : 'unset',
         },
         title: {
           color: focused ? '#fff' : selected ? '#4e4e4e' : '#4f4f4f',

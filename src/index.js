@@ -5,7 +5,7 @@
  * @flow strict-local
  */
 
-import 'babel-polyfill';
+import '@babel/polyfill';
 import React from 'react';
 import {render} from 'react-dom';
 import Corpus from './app/components/Corpus.react';
