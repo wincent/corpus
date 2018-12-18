@@ -45,21 +45,13 @@ const PRELOAD_COUNT =
   Math.floor(window.innerHeight / Constants.PREVIEW_ROW_HEIGHT) + 5;
 
 /**
- * Ordered collection of notes (as they appear in the NoteList).
- */
-let notes = [];
-
-/**
  * Whenever we make changes we record the affected paths in this set. At the
  * same time, we monitor the filesystem for changes made by other processes. If
  * we detect a change to a path that we didn't make, we know that we have to
  * reload from disk.
  */
 const changedPaths = new Set();
-
-function notifyChanges(...notePaths: Array<string>): void {
-  notePaths.forEach(notePath => changedPaths.add(notePath));
-}
+// TODO ^^ fix this (unused)
 
 const OPTION_KEY = '\u2325';
 const COMMAND_KEY = '\u2318';
@@ -118,10 +110,7 @@ type StatInfo = {|
 
 // TODO: make this actually return only stat info (not the extra crap that is
 // currently in there)
-async function getStatInfo(
-  filename: string,
-  notesDirectory: string,
-): Promise<StatInfo> {
+async function getStatInfo(filename: string, notesDirectory: string): Promise<StatInfo> {
   const notePath = path.join(notesDirectory, filename);
   const title = getTitleFromPath(notePath);
   let statResult;
@@ -173,9 +162,7 @@ async function readContents(info: $FlowFixMe): Promise<Note> {
   }
 }
 
-export default function loadNotes(
-  notesDirectory: string,
-): rxjs$Observable<$ReadOnlyArray<Note>> {
+export default function loadNotes(notesDirectory: string): rxjs$Observable<$ReadOnlyArray<Note>> {
   return Observable.create(observer => {
     OperationsQueue.enqueue(async () => {
       try {
@@ -184,11 +171,9 @@ export default function loadNotes(
         initWatcher(notesDirectory);
         const filenames = await readdir(notesDirectory);
         const filtered = filterFilenames(filenames);
-        const info = await Promise.all(
-          filtered.map(filename => {
-            return getStatInfo(filename, notesDirectory);
-          }),
-        );
+        const info = await Promise.all(filtered.map(filename => {
+          return getStatInfo(filename, notesDirectory);
+        }));
         const sorted = info.sort(compareMTime);
 
         // Load in batches. First batch of size PRELOAD_COUNT is to improve

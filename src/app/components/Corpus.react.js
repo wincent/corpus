@@ -19,11 +19,9 @@ import Viewport from '../components/Viewport.react';
 import loadConfig from '../loadConfig';
 import * as log from '../log';
 import processConfig from '../processConfig';
-import querySystem from '../querySystem';
 import run from '../run';
 // TODO: change this
 import Store, {deleteNotes} from '../Store';
-import loadNotes from '../store/loadNotes';
 
 import type {StoreProps} from '../Store';
 
@@ -94,20 +92,15 @@ export default Store.withStore(
 
       const rawConfig = await loadConfig();
       const config = processConfig(rawConfig);
-      const {noteFontFamily, noteFontSize, notesDirectory} = config;
-      const {nameMax, pathMax} = await querySystem(config);
+      const {
+        noteFontFamily,
+        noteFontSize,
+        notesDirectory,
+      } = config;
       const {store} = this.props;
       store.set('config.noteFontFamily')(noteFontFamily);
       store.set('config.noteFontSize')(noteFontSize);
       store.set('config.notesDirectory')(notesDirectory);
-      store.set('system.nameMax')(nameMax);
-      store.set('system.pathMax')(pathMax);
-
-      loadNotes(notesDirectory).subscribe(notes => {
-        store.setFrom_EXPERIMENTAL(store =>
-          store.set('notes')([...store.get('notes'), ...notes]),
-        );
-      });
     }
 
     componentWillUnmount() {

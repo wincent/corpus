@@ -23,6 +23,7 @@ import stringFinder from './util/stringFinder';
 
 import type {Effects, Store} from 'undux';
 import type {LogMessage} from './log';
+import type {FilteredNote} from './store/filterNotes';
 
 const close = promisify(fs.close);
 const fsync = promisify(fs.fsync);
@@ -46,11 +47,6 @@ type Note = {|
   text: string,
   title: string,
   version: number,
-|};
-
-type FilteredNote = {|
-  ...Note,
-  index: number, // The index within the primary notes array.
 |};
 
 type PathMap = {
@@ -301,94 +297,3 @@ export function deleteNotes(deletedNotes: Set<number>): void {
   store.set('notes')(notes);
   store.set('selection')(new Set());
 }
-
-function filter(value: ?string): Array<FilteredNote> {
-  // TODO: compare against prev
-  // const previous = store.get('filteredNotes');
-  const patterns =
-    value != null &&
-    value
-      .trim()
-      .split(/\s+/)
-      .map(string => {
-        if (string.startsWith('#')) {
-          return {
-            tag: string.slice(1),
-            type: 'tag',
-          };
-        } else {
-          return {
-            finder: stringFinder(string),
-            type: 'string',
-          };
-        }
-      });
-  if (patterns && patterns.length) {
-    const indices = [];
-    return notes
-      .filter((note, index) => {
-        // TODO: only return new array if the filtering operation excluded any items
-        if (
-          patterns.every(pattern => {
-            if (pattern.type === 'tag') {
-              return note.tags.has(pattern.tag);
-            } else {
-              // Plain text search.
-              return (
-                note.title.search(pattern.finder) !== -1 ||
-                note.text.search(pattern.finder) !== -1
-              );
-            }
-          })
-        ) {
-          // TODO: re-use pre-existing objects if they haven't changed
-          // (will need a version number property to make change detection
-          // cheap).
-          indices.push(index);
-          return true;
-        }
-        return false;
-      })
-      .map((note, index) => ({
-        // Augment note with its index.
-        ...note,
-        index: indices[index],
-      }));
-  } else {
-    return notes.map((note, index) => ({
-      // Augment note with its index.
-      ...note,
-      index,
-    }));
-  }
-}
-
-// FAKE STORE UNTIL I MOVE IT
-const store = {
-  on() {
-    return {
-      subscribe() {},
-    };
-  },
-};
-store.on('config.notesDirectory').subscribe(value => {
-  log.info('Using notesDirectory: ' + value);
-});
-
-store.on('notes').subscribe(value => {
-  const query = store.get('query');
-  const previous = store.get('filteredNotes');
-  const filtered = filter(query);
-  if (filtered !== previous) {
-    store.set('filteredNotes')(filtered);
-  }
-});
-
-// TODO: de-dupe this and the above
-store.on('query').subscribe(query => {
-  const previous = store.get('filteredNotes');
-  const filtered = filter(query);
-  if (filtered !== previous) {
-    store.set('filteredNotes')(filtered);
-  }
-});
