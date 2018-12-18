@@ -132,8 +132,8 @@ function copyPlist(env) {
 
 function watch() {
   watching = true;
-  gulp.watch('src/**/*.html', ['html']);
-  gulp.watch('src/**/*.js', ['js']);
+  gulp.watch('src/**/*.html', html);
+  gulp.watch('src/**/*.js', js);
 }
 
 function copyOrLinkResources(env) {
