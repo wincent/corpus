@@ -140,12 +140,15 @@ function createNote(title) {
     const notePath = getPathForTitle(title);
     // notifyChanges(notePath);
     try {
+      // TESTING, so don't touch file system
+      /*
       const fd = await open(
         notePath,
         'wx', // w = write, x = fail if already exists
       );
       await fsync(fd);
       await close(fd);
+      */
       notes = [
         {
           body: '',

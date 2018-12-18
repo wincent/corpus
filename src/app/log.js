@@ -20,6 +20,10 @@ function log(logMessage: LogMessage): void {
   store.set('log')([...previous, logMessage]);
 }
 
+export function debug(message: string) {
+  console.log(message);
+}
+
 export function error(message: string) {
   console.error(message); // eslint-disable-line no-console
   log({

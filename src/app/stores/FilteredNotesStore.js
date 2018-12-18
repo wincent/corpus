@@ -8,13 +8,15 @@
 import Actions from '../Actions';
 import NotesStore from './NotesStore';
 import Store from './Store';
-import store from '../store';
+// import store from '../Store';
 import stringFinder from '../util/stringFinder';
 
 let query = null;
 let notes = filter(query);
 
 function filter(value: ?string): $FlowFixMe {
+  // BUG: can't use store here:
+  return [];
   const patterns =
     value != null &&
     value

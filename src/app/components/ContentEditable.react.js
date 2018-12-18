@@ -9,14 +9,15 @@ import React from 'react';
 
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
-import {bubbleNote, updateNote, withStore} from '../store';
+// TODO: move these actions
+import Store, {bubbleNote, updateNote} from '../Store';
 import Keys from '../Keys';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';
 import debounce from 'simple-debounce';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
-import type {StoreProps} from '../store';
+import type {StoreProps} from '../Store';
 
 type Props = {
   ...StoreProps,
@@ -31,7 +32,7 @@ type State = {|
 
 const viewStates = {};
 
-export default withStore(
+export default Store.withStore(
   class ContentEditable extends React.Component<Props, State> {
     _node: ?HTMLTextAreaElement;
     _pendingSave: boolean;

@@ -40,7 +40,7 @@
     "react-dom": "^16.0",
     "rxjs": "^6.0",
     "simple-debounce": "*",
-    "undux": "5.0.0-beta.18",
+    "undux": "5.0.0-beta.19",
     "unpack-content": "*"
   },
   "devDependencies": {
@@ -63,7 +63,7 @@
     "eslint-plugin-prettier": "*",
     "eslint-plugin-react": "*",
     "fancy-log": "1.3.3",
-    "flow-bin": "*",
+    "flow-bin": "0.89.0",
     "gulp": "*",
     "gulp-babel": "*",
     "gulp-eslint": "*",

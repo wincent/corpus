@@ -8,7 +8,7 @@
 import * as log from './log';
 import run from './run';
 
-import type {Config} from './loadConfig';
+import type {Config} from './processConfig';
 
 type SystemInfo = {|
   +nameMax: number,
@@ -27,8 +27,10 @@ function parseValue(value: string): number {
 /**
  * Query the system for information.
  */
-export default async function querySystem(config: Config): Promise<SystemInfo> {
-  const {notesDirectory} = config;
+export default async function querySystem({
+  notesDirectory,
+}: Config): Promise<SystemInfo> {
+  log.debug('Querying system information');
   let nameMax = null;
   let pathMax = null;
 
@@ -42,7 +44,7 @@ export default async function querySystem(config: Config): Promise<SystemInfo> {
   }
 
   return {
-    nameMax: nameMax || defaults.nameMax,
-    pathMax: pathMax || defaults.pathMax,
+    nameMax: nameMax != null ? nameMax : defaults.nameMax,
+    pathMax: pathMax != null ? pathMax : defaults.pathMax,
   };
 }

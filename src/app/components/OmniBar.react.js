@@ -9,13 +9,13 @@ import {ipcRenderer, remote} from 'electron';
 import React from 'react';
 import Actions from '../Actions';
 import Keys from '../Keys';
-import {createNote, withStore} from '../store';
+import Store, {createNote} from '../Store';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 import TitleBar from './TitleBar.react';
 
-import type {StoreProps} from '../store';
+import type {StoreProps} from '../Store';
 
 function getCurrentNote() {
   const selection = NotesSelectionStore.selection;
@@ -46,7 +46,7 @@ type State = {|
   value: string,
 |};
 
-export default withStore(
+export default Store.withStore(
   class OmniBar extends React.Component<Props, State> {
     _blurred: ?boolean;
     _inputRef: ?HTMLInputElement;

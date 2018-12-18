@@ -3,6 +3,12 @@ module.exports = function(api) {
 
   return {
     plugins: [
+      [
+        './scripts/babel/debug',
+        {
+          env: process.env.NODE_ENV,
+        },
+      ],
       "@babel/plugin-proposal-class-properties",
       "@babel/plugin-syntax-object-rest-spread",
       "@babel/plugin-transform-react-constant-elements",

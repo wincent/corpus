@@ -12,10 +12,11 @@ import Actions from '../Actions';
 import Constants from '../Constants';
 import Keys from '../Keys';
 import Mouse from '../Mouse';
-import {renameNote, withStore} from '../store';
+// TODO: move actions
+import Store, {renameNote} from '../Store';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 
-import type {StoreProps} from '../store';
+import type {StoreProps} from '../Store';
 
 /**
  * Don't want the DOM to contain all the text of all the notes.
@@ -29,7 +30,7 @@ type TagProps = {|
   focused: boolean,
   tag: $FlowFixMe,
 |};
-const Tag = withStore(({focused, store, tag}: TagProps) => {
+const Tag = Store.withStore(({focused, store, tag}: TagProps) => {
   const styles = {
     backgroundColor: focused ? '#fff' : '#9e9e9e',
     borderRadius: '2px',
@@ -79,7 +80,7 @@ type Props = {|
   translate: ?number,
 |};
 
-export default withStore(
+export default Store.withStore(
   class NotePreview extends React.PureComponent<Props> {
     static defaultProps = {
       focused: false,

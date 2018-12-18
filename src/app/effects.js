@@ -5,10 +5,12 @@
  * @flow
  */
 
-import type {StoreEffects} from './store';
+import {withLogger} from 'undux';
+
+import type {StoreEffects} from './Store';
 
 const effects: StoreEffects = store => {
-  return store;
+  return withLogger(store);
 };
 
 export default effects;

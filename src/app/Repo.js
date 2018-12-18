@@ -30,7 +30,8 @@ export default class Repo {
    * Create a new commit
    */
   commit(message: string): Promise<string> {
-    return git('-C', this._path, 'commit', '--allow-empty', '-m', message);
+    return Promise.resolve(); // don't touch filesystem during migration
+    // return git('-C', this._path, 'commit', '--allow-empty', '-m', message);
   }
 
   init(): Promise<string> {

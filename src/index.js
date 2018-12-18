@@ -8,6 +8,7 @@
 import '@babel/polyfill';
 import React from 'react';
 import {render} from 'react-dom';
+import Store from './app/Store';
 import Corpus from './app/components/Corpus.react';
 
 const root = document.getElementById('app-root');
@@ -16,4 +17,9 @@ if (!root) {
   throw new Error('Failed to get #app-root');
 }
 
-render(<Corpus />, root);
+render(
+  <Store.Container>
+    <Corpus />
+  </Store.Container>,
+  root,
+);

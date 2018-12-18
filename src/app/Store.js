@@ -5,32 +5,27 @@
  * @flow strict-local
  */
 
-import chokidar from 'chokidar';
 import fs from 'fs';
-import mkdirp from 'mkdirp';
 import path from 'path';
 import process from 'process';
-import {connect, createStore} from 'undux';
+import {createConnectedStore} from 'undux';
 import unpackContent from 'unpack-content';
 import {promisify} from 'util';
-import Constants from './Constants';
 import OperationsQueue from './OperationsQueue';
-import Repo from './Repo';
 import commitChanges from './commitChanges';
-import configFile from './configFile';
+import effects from './effects';
 import getNotesDirectory from './getNotesDirectory';
 import handleError from './handleError';
-import loadConfig from './loadConfig';
 import * as log from './log';
-import querySystem, {defaults as systemDefaults} from './querySystem';
+import {defaults as systemDefaults} from './querySystem';
 import normalizeText from './util/normalizeText';
 import stringFinder from './util/stringFinder';
 
+import type {Effects, Store} from 'undux';
 import type {LogMessage} from './log';
 
 const close = promisify(fs.close);
 const fsync = promisify(fs.fsync);
-const mkdir = promisify(mkdirp);
 const open = promisify(fs.open);
 const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);
@@ -102,22 +97,13 @@ const initialState: State = {
   query: null,
 };
 
-const store = createStore(initialState);
-
-export const withStore = connect(store);
+export default createConnectedStore(initialState, effects);
 
 export type StoreProps = {|
-  store: typeof store,
+  store: Store<State>,
 |};
 
-/**
- * The number of notes to load immediately on start-up. Remaining notes are
- * retrieved in a second pass.
- *
- * Intended to increase perceived responsiveness.
- */
-const PRELOAD_COUNT =
-  Math.floor(window.innerHeight / Constants.PREVIEW_ROW_HEIGHT) + 5;
+export type StoreEffects = Effects<State>;
 
 /**
  * Ordered collection of notes (as they appear in the NoteList).
@@ -138,27 +124,6 @@ let noteID = 0;
  */
 const pathMap: PathMap = {};
 
-function requireString(maybeString: mixed, key: string): string {
-  // We can use a simple `typeof` check here instead of the more exotic
-  // `Object.prototype.toString.call(maybeString) === '[object String]'`
-  // because `maybeString` here comes from `loadConfig()` (and therefore
-  // `JSON.parse()`), so we know we don't have to catch anything
-  // "interesting" like strings created with `new String('...')` (which
-  // have a `typeof` of "object").
-  if (typeof maybeString === 'string') {
-    return maybeString;
-  }
-  log.warn(`Reading ${configFile}: expected string value for key: ${key}`);
-  return String(maybeString);
-}
-
-const mergerConfig = {
-  notesDirectory(value: mixed, key: string) {
-    const stringValue = requireString(value, key);
-    return stringValue.replace(/^~/, process.env.HOME);
-  },
-};
-
 /**
  * Whenever we make changes we record the affected paths in this set. At the
  * same time, we monitor the filesystem for changes made by other processes. If
@@ -169,154 +134,6 @@ const changedPaths = new Set();
 
 function notifyChanges(...notePaths: Array<string>): void {
   notePaths.forEach(notePath => changedPaths.add(notePath));
-}
-
-const OPTION_KEY = '\u2325';
-const COMMAND_KEY = '\u2318';
-
-function confirmChange(notePath: string): void {
-  const expected = changedPaths.delete(notePath);
-  if (!expected) {
-    log.error(
-      `File changed outside of Corpus: ${notePath}\n` +
-        `Reload with ${OPTION_KEY}${COMMAND_KEY}R`,
-    );
-  }
-}
-
-let watcher;
-
-function initWatcher(notesDirectory: string) {
-  if (watcher) {
-    watcher.close();
-  }
-  watcher = chokidar
-    .watch(notesDirectory, {
-      awaitWriteFinish: {
-        pollInterval: 1000,
-      },
-      depth: 1,
-      disableGlobbing: true,
-      ignoreInitial: true,
-      ignored: /(^|\/)\../,
-    })
-    .on('all', (event, file) => {
-      confirmChange(file);
-    });
-}
-
-// TODO: handle edge case where notes directory has a long filename in it (not
-// created by Corpus), which would overflow NAME_MAX or PATH_MAX if we end up
-// appending .999 to the name...
-
-function filterFilenames(filenames: Array<string>): Array<string> {
-  return filenames.filter(fileName => path.extname(fileName) === '.md');
-}
-
-// TODO: make this a separate module so it can be tested separately
-function getTitleFromPath(notePath: string): string {
-  const title = path.basename(notePath, '.md');
-  return title.replace(/\.\d{1,3}$/, '');
-}
-
-function appendResults(results) {
-  if (results.length) {
-    results.forEach(note => (pathMap[note.path] = true));
-    notes = [...notes, ...results];
-    store.set('notes')(notes);
-
-    // TODO: remove debugging code
-    window.store = store;
-  }
-}
-
-type StatInfo = {|
-  +id: number,
-  +mtime: ?number,
-  +path: string,
-  +title: string,
-|};
-
-// TODO: make this actually return only stat info (not the extra crap that is
-// currently in there)
-async function getStatInfo(fileName: string): Promise<StatInfo> {
-  let notesDirectory = await getNotesDirectory();
-  const notePath = path.join(notesDirectory, fileName);
-  const title = getTitleFromPath(notePath);
-  let statResult;
-  try {
-    statResult = await stat(notePath);
-  } catch (error) {
-    // eslint-disable-line no-empty
-    // Do nothing.
-  }
-
-  return {
-    id: noteID++,
-    mtime: statResult && statResult.mtime.getTime(),
-    path: notePath,
-    title,
-  };
-}
-
-function compareMTime(a, b) {
-  const aTime = a.mtime;
-  const bTime = b.mtime;
-  if (aTime > bTime) {
-    return -1;
-  } else if (aTime < bTime) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-async function readContents(info: $FlowFixMe): Promise<Note> {
-  try {
-    const content = (await readFile(info.path)).toString();
-    const unpacked = unpackContent(content);
-    return {
-      ...info,
-      body: unpacked.body,
-      text: content,
-      tags: new Set(unpacked.tags),
-      version: 0,
-    };
-  } catch (error) {
-    // Soft-ignore the error. We return `null` here because we don't want views
-    // to blow up trying to access `body`, `text` and `tags` (and we don't want
-    // to provide default values for `body` etc because the user could use those
-    // to overwrite real content on the disk).
-    log.error(error);
-    return null;
-  }
-}
-
-function loadNotes() {
-  OperationsQueue.enqueue(async () => {
-    let notesDirectory = await getNotesDirectory();
-    try {
-      await mkdir(notesDirectory);
-      new Repo(notesDirectory).init();
-      initWatcher(notesDirectory);
-      const filenames = await readdir(notesDirectory);
-      const filtered = filterFilenames(filenames);
-      const info = await Promise.all(filtered.map(getStatInfo));
-      const sorted = info.sort(compareMTime);
-
-      // Load in batches. First batch of size PRELOAD_COUNT is to improve
-      // perceived responsiveness. Subsequent batches are to avoid running afoul
-      // of miniscule macOS file count limits.
-      const filterErrors = note => note;
-      while (sorted.length) {
-        const batch = sorted.splice(0, PRELOAD_COUNT);
-        let results = await Promise.all(batch.map(readContents));
-        appendResults(results.filter(filterErrors));
-      }
-    } catch (error) {
-      handleError(error, 'Failed to read notes from disk');
-    }
-  });
 }
 
 /**
@@ -348,12 +165,15 @@ export function createNote(title: string): void {
     const notePath = await getPathForTitle(title);
     notifyChanges(notePath);
     try {
+      // JUST PRETENDING FOR NOW
+      /*
       const fd = await open(
         notePath,
         'wx', // w = write, x = fail if already exists
       );
       await fsync(fd);
       await close(fd);
+      */
       pathMap[notePath] = true;
       notes = [
         {
@@ -408,10 +228,11 @@ export function updateNote(
     try {
       const time = new Date();
       const noteText = normalizeText(note.text);
-      fd = await open(notePath, 'w'); // w = write
+      // JUST PRETENDING FOR NOW
+      /* fd = await open(notePath, 'w'); // w = write
       await write(fd, noteText);
       await utimes(notePath, time, time);
-      await fsync(fd);
+      await fsync(fd); */
       commitChanges();
     } catch (error) {
       handleError(error, `Failed to write ${notePath}`);
@@ -445,7 +266,8 @@ export async function renameNote(index: number, title: string): void {
     notifyChanges(oldPath, newPath);
     try {
       const time = new Date();
-      await rename(oldPath, newPath);
+      // JUST PRETENDING DURING MIGRATION
+      // await rename(oldPath, newPath);
       await utimes(newPath, time, time);
       delete pathMap[oldPath];
       pathMap[newPath] = true;
@@ -465,7 +287,8 @@ export function deleteNotes(deletedNotes: Set<number>): void {
         const notePath = note.path;
         notifyChanges(notePath);
         try {
-          await unlink(notePath);
+          // JUST PRETENDING DURING MIGRATION
+          // await unlink(notePath);
           delete pathMap[notePath];
         } catch (error) {
           handleError(error, `Failed to delete ${notePath}`);
@@ -540,6 +363,14 @@ function filter(value: ?string): Array<FilteredNote> {
   }
 }
 
+// FAKE STORE UNTIL I MOVE IT
+const store = {
+  on() {
+    return {
+      subscribe() {},
+    };
+  },
+};
 store.on('config.notesDirectory').subscribe(value => {
   log.info('Using notesDirectory: ' + value);
 });
@@ -561,32 +392,3 @@ store.on('query').subscribe(query => {
     store.set('filteredNotes')(filtered);
   }
 });
-
-(async function() {
-  const config = await loadConfig();
-
-  Object.keys(config).forEach(key => {
-    const prefixedKey = `config.${key}`;
-    if (prefixedKey in initialState) {
-      const value = config[key];
-      store.set(prefixedKey)((mergerConfig[key] || requireString)(value));
-    } else {
-      log.warn(`Ignoring unsupported key ${key} in ${configFile}`);
-    }
-  });
-
-  Object.entries(defaultConfig).forEach(([key, value]) => {
-    if (!config.hasOwnProperty(key)) {
-      store.set(`config.${key}`)(value);
-    }
-  });
-
-  const {nameMax, pathMax} = await querySystem(config);
-  store.set('system.nameMax')(nameMax);
-  store.set('system.pathMax')(pathMax);
-
-  const notesDirectory = await getNotesDirectory();
-  loadNotes(notesDirectory);
-})();
-
-export default store;

@@ -189,6 +189,13 @@ function pruneApp() {
   return exec('rm -r release/Corpus.app/Contents/Resources/app');
 }
 
+function withNodeEnv(env, cb) {
+  if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = env;
+  }
+  return cb();
+}
+
 module.exports = {
   html,
   js,
@@ -196,7 +203,7 @@ module.exports = {
   fix,
   flow,
   watch,
-  release: gulp.series(
+  release: withNodeEnv('production', () => gulp.series(
     'build',
     copyApp('release'),
     renameApp('release'),
@@ -206,8 +213,8 @@ module.exports = {
     copyOrLinkNodeModules('release'),
     asar,
     pruneApp,
-  ),
-  debug: gulp.series(
+  )),
+  debug: withNodeEnv('development', () => gulp.series(
     'build',
     copyApp('debug'),
     renameApp('debug'),
@@ -215,5 +222,5 @@ module.exports = {
     copyIcon('debug'),
     copyOrLinkResources('debug'),
     copyOrLinkNodeModules('debug'),
-  ),
+  )),
 };

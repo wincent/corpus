@@ -10,7 +10,7 @@ import FilteredNotesStore from './FilteredNotesStore';
 import Store from './Store';
 import clamp from '../clamp';
 import getLastInSet from '../getLastInSet';
-import store from '../store';
+// import store from '../Store';
 
 /**
  * We use a Set (ordered by insertion) to support the "multiple
@@ -188,7 +188,8 @@ class NotesSelectionStore extends Store {
       case Actions.NOTE_CREATION_COMPLETED:
         this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, selectFirst);
-        store.set('focus')('Note');
+        // BUG: store not accessible here
+        //store.set('focus')('Note');
         break;
 
       case Actions.NOTE_DESELECTED:

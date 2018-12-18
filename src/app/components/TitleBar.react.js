@@ -7,9 +7,9 @@
 
 import React from 'react';
 import simplifyPath from '../simplifyPath';
-import {withStore} from '../store';
+import Store from '../Store';
 
-import type {StoreProps} from '../store';
+import type {StoreProps} from '../Store';
 
 const styles = {
   root: {
@@ -25,7 +25,7 @@ const styles = {
   },
 };
 
-export default withStore(({store}: StoreProps) => {
+export default Store.withStore(({store}: StoreProps) => {
   const notesDirectory = store.get('config.notesDirectory');
   const title = notesDirectory ? simplifyPath(notesDirectory) : 'Corpus';
   return (

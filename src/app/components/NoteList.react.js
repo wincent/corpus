@@ -19,7 +19,7 @@ import colors from '../colors';
 import getLastInSet from '../getLastInSet';
 import printableFromKeyEvent from '../util/printableFromKeyEvent';
 import performKeyboardNavigation from '../performKeyboardNavigation';
-import {withStore} from '../store';
+import Store from '../Store';
 import throttle from '../throttle';
 
 /**
@@ -33,7 +33,7 @@ const OFF_VIEWPORT_NOTE_BUFFER_COUNT = 20;
  */
 const SCROLL_THROTTLE_INTERVAL = 250;
 
-import type {StoreProps} from '../store';
+import type {StoreProps} from '../Store';
 
 type Props = {|
   ...StoreProps,
@@ -48,7 +48,7 @@ type State = {|
   selection: $FlowFixMe, // NotesSelectionStore.selection,
 |};
 
-export default withStore(
+export default Store.withStore(
   class NoteList extends React.PureComponent<Props, State> {
     _lastKeyDown: ?number;
     _listening: boolean;

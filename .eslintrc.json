@@ -27,14 +27,7 @@
     "new-cap": [
       2,
       {
-        "capIsNewExceptions": [
-          "ImmutableList",
-          "ImmutableMap",
-          "ImmutableOrderedSet",
-          "ImmutableRange",
-          "ImmutableRecord",
-          "ImmutableSet"
-        ]
+        "capIsNewExceptions": []
       }
     ],
     "no-alert": [0],

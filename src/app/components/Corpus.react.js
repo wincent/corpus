@@ -16,11 +16,16 @@ import NotesSelectionStore from '../stores/NotesSelectionStore';
 import OmniBar from '../components/OmniBar.react';
 import SplitView from '../components/SplitView.react';
 import Viewport from '../components/Viewport.react';
+import loadConfig from '../loadConfig';
 import * as log from '../log';
+import processConfig from '../processConfig';
+import querySystem from '../querySystem';
 import run from '../run';
-import {deleteNotes, withStore} from '../store';
+// TODO: change this
+import Store, {deleteNotes} from '../Store';
+import loadNotes from '../store/loadNotes';
 
-import type {StoreProps} from '../store';
+import type {StoreProps} from '../Store';
 
 type Props = {|
   ...StoreProps,
@@ -67,7 +72,7 @@ function reveal() {
   }
 }
 
-export default withStore(
+export default Store.withStore(
   class Corpus extends React.Component<Props> {
     _selectionCount: number;
 
@@ -76,7 +81,7 @@ export default withStore(
       this._selectionCount = 0;
     }
 
-    componentDidMount() {
+    async componentDidMount() {
       const setFocus = this.props.store.set('focus');
       ipcRenderer.on('delete', deleteSelectedNotes);
       ipcRenderer.on('next', Actions.nextNoteSelected);
@@ -86,6 +91,23 @@ export default withStore(
       ipcRenderer.on('reveal', reveal);
       ipcRenderer.on('search', () => setFocus('OmniBar'));
       NotesSelectionStore.on('change', this._updateSelection);
+
+      const rawConfig = await loadConfig();
+      const config = processConfig(rawConfig);
+      const {noteFontFamily, noteFontSize, notesDirectory} = config;
+      const {nameMax, pathMax} = await querySystem(config);
+      const {store} = this.props;
+      store.set('config.noteFontFamily')(noteFontFamily);
+      store.set('config.noteFontSize')(noteFontSize);
+      store.set('config.notesDirectory')(notesDirectory);
+      store.set('system.nameMax')(nameMax);
+      store.set('system.pathMax')(pathMax);
+
+      loadNotes(notesDirectory).subscribe(notes => {
+        store.setFrom_EXPERIMENTAL(store =>
+          store.set('notes')([...store.get('notes'), ...notes]),
+        );
+      });
     }
 
     componentWillUnmount() {

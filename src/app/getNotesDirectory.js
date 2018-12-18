@@ -5,13 +5,13 @@
  * @flow
  */
 
-import store from './store';
+// import store from './Store';
 
 let notesDirectory;
 let subscription;
 
 export default function getNotesDirectory(): Promise<string> {
-  notesDirectory = notesDirectory || store.get('config.notesDirectory');
+  notesDirectory = notesDirectory; /*|| store.get('config.notesDirectory');*/ // BUG: can't use store here at this time
   if (notesDirectory) {
     return Promise.resolve(notesDirectory);
   } else if (subscription) {
@@ -25,6 +25,8 @@ export default function getNotesDirectory(): Promise<string> {
       });
     });
   } else {
+    // BUG: hack to not blow up in absence of store
+    return Promise.resolve();
     return new Promise((resolve, reject) => {
       subscription = store.on('config.notesDirectory').subscribe(directory => {
         notesDirectory = directory;

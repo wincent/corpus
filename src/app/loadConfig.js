@@ -21,6 +21,7 @@ export type Config = {|
 
 export default async function loadConfig(): Promise<{[key: string]: mixed}> {
   try {
+    log.debug(`Loading configuration file: ${configFile}`);
     const data = await readFile(configFile);
     return JSON.parse(stripComments(data.toString()));
   } catch (error) {
