@@ -114,6 +114,7 @@ function selectAll() {
   selection = new Set(range);
 }
 
+// TODO: delete; use store/selectFirst.js instead.
 function selectFirst() {
   if (FilteredNotesStore.notes.length) {
     selection = new Set([0]);
@@ -170,10 +171,6 @@ class NotesSelectionStore extends Store {
 
       case Actions.ADJUST_NOTE_SELECTION_UP:
         this._change(payload.type, () => adjustSelection(-1));
-        break;
-
-      case Actions.FIRST_NOTE_SELECTED:
-        this._change(payload.type, selectFirst);
         break;
 
       case Actions.LAST_NOTE_SELECTED:

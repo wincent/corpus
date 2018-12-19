@@ -5,6 +5,8 @@
  * @flow
  */
 
+import {combineLatest} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {withLogger} from 'undux';
 import * as log from './log';
 import querySystem from './querySystem';
@@ -38,7 +40,7 @@ const effects: StoreEffects = store => {
     }
   });
 
-  // TODO: de-dupe this and the above
+  // TODO: de-dupe this and the above?
   store.on('query').subscribe(query => {
     const notes = store.get('notes');
     const previous = store.get('filteredNotes');
@@ -47,6 +49,17 @@ const effects: StoreEffects = store => {
       store.set('filteredNotes')(filtered);
     }
   });
+
+  combineLatest(store.on('filteredNotes'), store.on('selection'))
+    .pipe(
+      map(([filteredNotes, selection]) =>
+        filteredNotes.filter((note, index) => selection.has(index)),
+      ),
+    )
+    .subscribe(store.set('selectedNotes'));
+
+  // store.on('filteredNotes').subscribe(notes => {});
+  // store.on('selection').subscribe(selection => {});
 
   return withLogger(store);
 };

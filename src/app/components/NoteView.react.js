@@ -9,9 +9,10 @@ import React from 'react';
 
 import Note from './Note.react';
 import NotePlaceholder from './NotePlaceholder.react';
-import NotesSelectionStore from '../stores/NotesSelectionStore';
-import FilteredNotesStore from '../stores/FilteredNotesStore';
+import Store from '../Store';
 import colors from '../colors';
+
+import type {StoreProps} from '../Store';
 
 const styles = {
   root: {
@@ -20,49 +21,22 @@ const styles = {
   },
 };
 
-export default class NoteView extends React.Component {
-  constructor(props) {
-    super(props);
-    const {selection} = NotesSelectionStore;
-    const count = selection.size;
-    const note =
-      count === 1
-        ? FilteredNotesStore.notes[selection.values().next().value]
-        : null;
-    this.state = {count, note};
-  }
-
-  componentDidMount() {
-    NotesSelectionStore.on('change', this._updateNote);
-    FilteredNotesStore.on('change', this._updateNote);
-  }
-
-  componentWillUnmount() {
-    // No need to do clean-up; component never gets unmounted.
-    throw new Error('NoteView.react: Unexpected componentWillUnmount().');
-  }
-
-  _updateNote = () => {
-    // TODO: make a convenience method for this, probably on the store, to DRY
-    // this up (we'll be doing it in a few places)
-    const {selection} = NotesSelectionStore;
-    const count = selection.size;
-    const note =
-      count === 1
-        ? FilteredNotesStore.notes[selection.values().next().value]
-        : null;
-    if (this.state.note !== note || this.state.count !== count) {
-      this.setState({count, note});
+// TODO: make this stateless functional
+export default Store.withStore(
+  class NoteView extends React.Component<StoreProps> {
+    componentWillUnmount() {
+      // No need to do clean-up; component never gets unmounted.
+      throw new Error('NoteView.react: Unexpected componentWillUnmount().');
     }
-  };
 
-  render() {
-    let note;
-    if (this.state.note) {
-      note = <Note note={this.state.note} />;
-    } else {
-      note = <NotePlaceholder count={this.state.count} />;
+    render() {
+      const notes = this.props.store.get('selectedNotes');
+      const count = notes.length;
+      return (
+        <div style={styles.root}>
+          {count ? <Note note={notes[0]} /> : <NotePlaceholder count={count} />}
+        </div>
+      );
     }
-    return <div style={styles.root}>{note}</div>;
-  }
-}
+  },
+);

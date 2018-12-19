@@ -5,8 +5,6 @@
  * @flow
  */
 
-import process from 'process';
-
 /**
  * Simplifies path, replacing "$HOME" with "~".
  */

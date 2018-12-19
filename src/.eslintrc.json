@@ -1,6 +1,7 @@
 {
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true
   },
   "globals": {
     "$FlowFixMe": false,
@@ -13,10 +14,7 @@
     "SyntheticKeyboardEvent": false,
     "SyntheticMouseEvent": false,
     "TimeoutID": false,
-    "global": true,
-    "require": false,
-    "rxjs$Observable": false,
-    "setImmediate": false
+    "rxjs$Observable": false
   },
   "rules": {}
 }

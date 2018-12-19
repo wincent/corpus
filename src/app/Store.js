@@ -7,7 +7,6 @@
 
 import fs from 'fs';
 import path from 'path';
-import process from 'process';
 import {createConnectedStore} from 'undux';
 import unpackContent from 'unpack-content';
 import {promisify} from 'util';
@@ -62,7 +61,8 @@ type State = {|
   filteredNotes: $ReadOnlyArray<FilteredNote>,
   log: Array<LogMessage>,
   notes: $ReadOnlyArray<Note>,
-  selection: Set<number>,
+  selectedNotes: $ReadOnlyArray<FilteredNote>, // TODO: rename FilteredNote type
+  selection: Set<number>, // TODO: rename to selectedIndices (or whatever it actually is: these are indices into filteredNotes)
   'system.nameMax': number,
   'system.pathMax': number,
   query: ?string,
@@ -87,6 +87,7 @@ const initialState: State = {
   focus: 'OmniBar',
   log: [],
   notes: [],
+  selectedNotes: [],
   selection: new Set(),
   'system.nameMax': systemDefaults.nameMax,
   'system.pathMax': systemDefaults.pathMax,
@@ -95,8 +96,9 @@ const initialState: State = {
 
 export default createConnectedStore(initialState, effects);
 
+export type StoreT = Store<State>;
 export type StoreProps = {|
-  store: Store<State>,
+  store: StoreT,
 |};
 
 export type StoreEffects = Effects<State>;

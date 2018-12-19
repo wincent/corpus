@@ -12,6 +12,7 @@ import Keys from '../Keys';
 import Store, {createNote} from '../Store';
 import * as log from '../log';
 import performKeyboardNavigation from '../performKeyboardNavigation';
+import selectFirst from '../store/selectFirst';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import TitleBar from './TitleBar.react';
@@ -39,6 +40,7 @@ function getCurrentTitle() {
 type Props = {|
   ...StoreProps,
 |};
+
 type State = {|
   lastSeenLogIndex: number,
   foreground: boolean,
@@ -76,7 +78,7 @@ export default Store.withStore(
 
     constructor(props) {
       super(props);
-      const note = getCurrentNote();
+      const note = getCurrentNote(); // TODO update
       this.state = {
         lastSeenLogIndex: -1,
         foreground: true,
@@ -257,6 +259,7 @@ export default Store.withStore(
     };
 
     _onKeyDown = event => {
+      const {store} = this.props;
       switch (event.keyCode) {
         case Keys.BACKSPACE:
         case Keys.DELETE:
@@ -281,7 +284,7 @@ export default Store.withStore(
               }
               this.setState({value: this._pendingDeletion});
               Actions.searchRequested(this._pendingDeletion, true); // TODO: kill legacy, but also figure out what to do about isDeletion boolean flag
-              this.props.store.set('query')(this._pendingDeletion);
+              store.set('query')(this._pendingDeletion);
             }
           }
           return;
@@ -289,7 +292,7 @@ export default Store.withStore(
         case Keys.ESCAPE:
           this.setState({value: ''});
           Actions.searchRequested(''); // TODO: kill legacy
-          this.props.store.set('query')('');
+          store.set('query')('');
           return;
 
         case Keys.RETURN:
@@ -300,7 +303,7 @@ export default Store.withStore(
             if (this.state.value) {
               const title = getCurrentTitle();
               if (this.state.value === title) {
-                this.props.store.set('focus')('Note');
+                store.set('focus')('Note');
               } else {
                 Actions.noteCreationRequested(this.state.value); // TODO: delete (legacy) call
                 createNote(this.state.value);
@@ -317,14 +320,14 @@ export default Store.withStore(
             // Prevent the <body> from becoming `document.activeElement`.
             event.preventDefault();
 
-            const size = NotesSelectionStore.selection.size;
+            const size = store.get('selection').size;
             if (size === 0) {
-              this.props.store.set('focus')('NoteList');
-              Actions.firstNoteSelected();
+              store.set('focus')('NoteList');
+              selectFirst(store);
             } else if (size === 1) {
-              this.props.store.set('focus')('Note');
+              store.set('focus')('Note');
             } else {
-              this.props.store.set('focus')('NoteList');
+              store.set('focus')('NoteList');
             }
           }
           return;

@@ -16,8 +16,8 @@ export type FilteredNote = {|
 
 export default function filter(
   value: ?string,
-  notes: Array<Note>,
-): Array<FilteredNote> {
+  notes: $ReadOnlyArray<Note>,
+): $ReadOnlyArray<FilteredNote> {
   // TODO: compare against prev
   // const previous = store.get('filteredNotes');
   const patterns =

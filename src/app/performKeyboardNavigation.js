@@ -57,7 +57,8 @@ function performKeyboardNavigation(event: KeyboardEvent) {
 
     case Keys.UP:
       if (event.metaKey) {
-        Actions.firstNoteSelected();
+        // TODO: this becomes store.set('selection')(...)
+        // Actions.firstNoteSelected();
       } else if (event.shiftKey) {
         Actions.adjustNoteSelectionUp();
       } else {

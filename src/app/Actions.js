@@ -21,7 +21,6 @@ const actionTypes = {
   ADJUST_NOTE_SELECTION_DOWN: 'ADJUST_NOTE_SELECTION_DOWN',
   ADJUST_NOTE_SELECTION_UP: 'ADJUST_NOTE_SELECTION_UP',
   CONFIG_LOADED: 'CONFIG_LOADED',
-  FIRST_NOTE_SELECTED: 'FIRST_NOTE_SELECTED',
   LAST_NOTE_SELECTED: 'LAST_NOTE_SELECTED',
   NEXT_NOTE_SELECTED: 'NEXT_NOTE_SELECTED',
   NOTES_LOADED: 'NOTES_LOADED',
@@ -53,10 +52,6 @@ const actionCreators = {
 
   allNotesSelected() {
     dispatch(actionTypes.ALL_NOTES_SELECTED);
-  },
-
-  firstNoteSelected() {
-    dispatch(actionTypes.FIRST_NOTE_SELECTED);
   },
 
   lastNoteSelected() {
