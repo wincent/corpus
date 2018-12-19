@@ -5,6 +5,7 @@
   "main": "dist/browser/main.js",
   "scripts": {
     "build": "env NODE_ENV=development gulp build",
+    "clean": "env NODE_ENV=development gulp clean",
     "debug": "env NODE_ENV=development gulp debug",
     "eslint-check": "scripts/eslint-check",
     "fix": "env NODE_ENV=development gulp fix",

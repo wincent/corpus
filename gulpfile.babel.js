@@ -81,7 +81,7 @@ function html() {
 
 function js() {
   return gulp
-    .src('src/**/*.js')
+    .src(['src/**/*.js', '!**/__tests__/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(wrap(babel()))
@@ -106,6 +106,10 @@ function fix() {
 
 function flow() {
   return exec('flow check --color=always src');
+}
+
+function clean() {
+  return exec(`rm -rf debug/* dist/* release/*`);
 }
 
 function copyApp(env) {
@@ -165,13 +169,18 @@ function copyOrLinkResources(env) {
 function copyOrLinkNodeModules(env) {
   return function copyOrLinkNodeModules() {
     if (env === 'release') {
+      // Beware! Yarn blows away top-level node_modules despite
+      // --modules-folder, requiring some song and dance:
+      //   https://github.com/yarnpkg/yarn/issues/6839
       return exec(
-        'yarn install ' +
-          '--prod ' +
+        'mv node_modules node_modules.backup && ' +
+          'yarn install ' +
+          '--production ' +
+          '--frozen-lockfile ' +
           '--no-bin-links ' +
           '--modules-folder ' +
-          'release/Corpus.app/Contents/Resources/app/node_modules && ' +
-          'yarn',
+          'release/Corpus.app/Contents/Resources/app/node_modules; ' +
+          'mv node_modules.backup node_modules',
       );
     } else if (env === 'debug') {
       return exec(
@@ -185,17 +194,22 @@ function copyOrLinkNodeModules(env) {
 
 function asar() {
   return exec(
-    'asar pack ' +
+    'yarn run asar pack ' +
       'release/Corpus.app/Contents/Resources/app ' +
       'release/Corpus.app/Contents/Resources/app.asar',
   );
 }
 
 function pruneApp() {
-  return exec('rm -r release/Corpus.app/Contents/Resources/app');
+  return exec(
+    'rm -rf release/Corpus.app/Contents/Resources/app ' +
+      'release/Corpus.app/Contents/Resources/default_app.asar ' +
+      'release/Corpus.app/Contents/Resources/electron.icns',
+  );
 }
 
 module.exports = {
+  clean,
   html,
   js,
   lint,
