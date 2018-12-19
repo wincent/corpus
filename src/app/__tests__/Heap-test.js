@@ -3,8 +3,6 @@
  * Licensed under the terms of the MIT license.
  */
 
-jest.dontMock('../Heap');
-
 describe('Heap', () => {
   let Heap;
   let heap;

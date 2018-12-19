@@ -3,8 +3,6 @@
  * Licensed under the terms of the MIT license.
  */
 
-jest.dontMock('../normalizeText');
-
 import normalizeText from '../normalizeText';
 
 describe('normalizeText()', () => {

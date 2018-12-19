@@ -3,8 +3,6 @@
  * Licensed under the terms of the MIT license.
  */
 
-jest.dontMock('../Store');
-
 describe('Store', () => {
   let Dispatcher;
   let Store;
@@ -15,7 +13,7 @@ describe('Store', () => {
     Dispatcher = require('../../Dispatcher');
     Store = require('../Store');
 
-    Dispatcher.register = jest.genMockFunction();
+    Dispatcher.register = jest.fn();
   });
 
   xit("registers the class's handleDispatch method", () => {

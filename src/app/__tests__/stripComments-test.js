@@ -3,8 +3,6 @@
  * Licensed under the terms of the MIT license.
  */
 
-jest.dontMock('../stripComments');
-
 import stripComments from '../stripComments';
 
 it('groks simple JSON with strings', () => {

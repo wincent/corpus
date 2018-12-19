@@ -3,8 +3,6 @@
  * Licensed under the terms of the MIT license.
  */
 
-jest.dontMock('../clamp');
-
 import clamp from '../clamp';
 
 describe('clamp', () => {

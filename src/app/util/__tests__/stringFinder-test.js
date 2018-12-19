@@ -3,8 +3,6 @@
  * Licensed under the terms of the MIT license.
  */
 
-jest.dontMock('../stringFinder');
-
 import stringFinder from '../stringFinder';
 
 describe('stringFinder', () => {

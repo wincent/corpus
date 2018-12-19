@@ -3,15 +3,13 @@
  * Licensed under the terms of the MIT license.
  */
 
-jest.dontMock('../throttle');
-
 import throttle from '../throttle';
 
 describe('throttle()', () => {
   let mockFunction;
 
   beforeEach(() => {
-    mockFunction = jest.genMockFunction();
+    mockFunction = jest.fn();
   });
 
   it('does nothing if the throttled function is not called', () => {
