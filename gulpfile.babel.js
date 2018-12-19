@@ -9,6 +9,7 @@ import eslint from 'gulp-eslint';
 import gulp from 'gulp';
 import htmlmin from 'gulp-htmlmin';
 import path from 'path';
+import through2 from 'through2';
 
 const electronBase = 'node_modules/electron/dist';
 let watching = false;
@@ -88,9 +89,10 @@ function js() {
     .pipe(gulp.dest('dist'));
 }
 
+const LINT_GLOBS = ['*.js', 'scripts/**/*.js', 'src/**/*.js'];
 function lint() {
   return gulp
-    .src('src/**/*.js')
+    .src(LINT_GLOBS)
     .pipe(eslint())
     .pipe(eslint.format());
 }
@@ -98,9 +100,22 @@ function lint() {
 function fix() {
   // Fix lints in place with `base` trickery.
   return gulp
-    .src(['*.js', 'scripts/**/*.js', 'src/**/*.js'], {base: './'})
+    .src(LINT_GLOBS, {base: './'})
     .pipe(eslint({fix: true}))
     .pipe(eslint.format())
+    .pipe(
+      through2.obj(function(file, _, cb) {
+        // Based on: https://stackoverflow.com/a/52303073/2103996
+        // Without this, modification date won't get updated and Vim won't pick
+        // up changes.
+        if (file.eslint && file.eslint.fixed) {
+          const date = new Date();
+          file.stat.atime = date;
+          file.stat.mtime = date;
+        }
+        cb(null, file);
+      }),
+    )
     .pipe(gulp.dest('./'));
 }
 

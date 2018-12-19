@@ -4,6 +4,8 @@
   },
   "globals": {
     "$FlowFixMe": false,
+    "$Keys": false,
+    "$NonMaybeType": false,
     "$ReadOnlyArray": false,
     "Iterable": false,
     "SyntheticEvent": false,

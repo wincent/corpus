@@ -74,7 +74,8 @@
     "gulp-eslint": "*",
     "gulp-htmlmin": "5.0.1",
     "jest": "*",
-    "prettier": "*"
+    "prettier": "*",
+    "through2": "*"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
