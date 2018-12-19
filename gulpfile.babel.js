@@ -1,24 +1,14 @@
 // Copyright 2015-present Greg Hurrell. All rights reserved.
 // Licensed under the terms of the MIT license.
 
-// BUG: babel.config.js is not being consulted...
-// import colors from 'ansi-colors';
-// import log from 'fancy-log';
-// import babel from 'gulp-babel';
-// import child_process from 'child_process';
-// import eslint from 'gulp-eslint';
-// import gulp from 'gulp';
-// import htmlmin from 'gulp-htmlmin';
-// import path from 'path';
-
-const colors = require('ansi-colors');
-const log = require('fancy-log');
-const babel = require('gulp-babel');
-const child_process = require('child_process');
-const eslint = require('gulp-eslint');
-const gulp = require('gulp');
-const htmlmin = require('gulp-htmlmin');
-const path = require('path');
+import colors from 'ansi-colors';
+import log from 'fancy-log';
+import babel from 'gulp-babel';
+import child_process from 'child_process';
+import eslint from 'gulp-eslint';
+import gulp from 'gulp';
+import htmlmin from 'gulp-htmlmin';
+import path from 'path';
 
 const electronBase = 'node_modules/electron/dist';
 let watching = false;

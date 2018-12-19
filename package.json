@@ -52,6 +52,7 @@
     "@babel/preset-env": "*",
     "@babel/preset-flow": "7.0.0",
     "@babel/preset-react": "*",
+    "@babel/register": "*",
     "asar": "*",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "*",
