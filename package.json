@@ -9,7 +9,7 @@
     "debug": "env NODE_ENV=development gulp debug",
     "eslint-check": "scripts/eslint-check",
     "fix": "env NODE_ENV=development gulp fix",
-    "flow": "env NODE_ENV=development gulp flow",
+    "flow": "flow",
     "lint": "env NODE_ENV=development gulp lint",
     "test": "env NODE_ENV=development jest",
     "jest": "env NODE_ENV=development jest",
