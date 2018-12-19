@@ -39,5 +39,10 @@
       "bracketSpacing": false,
       "jsxBracketSameLine": true
     }]
+  },
+  "settings": {
+    "react": {
+      "version": "16.6.3"
+    }
   }
 }
