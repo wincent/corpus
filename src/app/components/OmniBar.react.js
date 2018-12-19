@@ -10,9 +10,10 @@ import React from 'react';
 import Actions from '../Actions';
 import Keys from '../Keys';
 import Store, {createNote} from '../Store';
+import * as log from '../log';
+import performKeyboardNavigation from '../performKeyboardNavigation';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
-import performKeyboardNavigation from '../performKeyboardNavigation';
 import TitleBar from './TitleBar.react';
 
 import type {StoreProps} from '../Store';
@@ -39,7 +40,7 @@ type Props = {|
   ...StoreProps,
 |};
 type State = {|
-  errorCount: number,
+  lastSeenLogIndex: number,
   foreground: boolean,
   showError: boolean,
   note: $FlowFixMe,
@@ -53,13 +54,20 @@ export default Store.withStore(
     _pendingDeletion: ?string;
     _query: ?string;
 
-    // TODO: decide whether I actually need this
     static getDerivedStateFromProps(props: Props, state: State): State {
-      const logLength = props.store.get('log').length;
-      if (logLength > state.errorCount) {
+      // Check to see whether any WARNING or ERROR log messages have been
+      // published since last time we rendered.
+      const messages = props.store.get('log');
+      const lastLogIndex = messages.length - 1;
+      const {LOG_LEVEL} = log;
+      if (
+        messages
+          .slice(state.lastSeenLogIndex + 1)
+          .some(({level}) => LOG_LEVEL[level] <= LOG_LEVEL.WARNING)
+      ) {
         return {
           ...state,
-          errorCount: logLength,
+          lastSeenLogIndex: lastLogIndex,
           showError: true,
         };
       }
@@ -70,7 +78,7 @@ export default Store.withStore(
       super(props);
       const note = getCurrentNote();
       this.state = {
-        errorCount: 0,
+        lastSeenLogIndex: -1,
         foreground: true,
         showError: false,
         note,
@@ -151,6 +159,12 @@ export default Store.withStore(
       this._inputRef.focus();
       NotesSelectionStore.on('change', this._onNotesSelectionChange);
       FilteredNotesStore.on('change', this._onNotesChange);
+
+      log.subscribe(message => {
+        this.props.store.setFrom_EXPERIMENTAL(store =>
+          store.set('log')([...store.get('log'), message]),
+        );
+      });
     }
 
     componentDidUpdate(prevProps) {
