@@ -6,9 +6,20 @@
 [libs]
 ./flow-typed
 
+[lints]
+all=warn
+
 [options]
-suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+
+# Used to suppress errors caused by Flow limitations.
+suppress_type=$FlowIssue
+
+# Used to suppress errors caused by our code.
 suppress_type=$FlowFixMe
+
+# Comment form of the above; requires a clarifying reason to be supplied.
+suppress_comment=\\(.\\|\n\\)*\\$\\(FlowFixMe\\|FlowIssue\\).+
+
 
 [strict]
 nonstrict-import
