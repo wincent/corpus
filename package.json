@@ -4,14 +4,16 @@
   "description": "A note-management application for OS X.",
   "main": "dist/browser/main.js",
   "scripts": {
-    "build": "gulp build",
+    "build": "env NODE_ENV=development gulp build",
+    "debug": "env NODE_ENV=development gulp debug",
     "eslint-check": "scripts/eslint-check",
-    "fix": "gulp fix",
-    "flow": "gulp flow",
-    "lint": "gulp lint",
-    "test": "jest",
-    "jest": "jest",
-    "watch": "gulp"
+    "fix": "env NODE_ENV=development gulp fix",
+    "flow": "env NODE_ENV=development gulp flow",
+    "lint": "env NODE_ENV=development gulp lint",
+    "test": "env NODE_ENV=development jest",
+    "jest": "env NODE_ENV=development jest",
+    "release": "env NODE_ENV=production gulp release",
+    "watch": "env NODE_ENV=development gulp"
   },
   "jest": {
     "rootDir": "src",
@@ -57,6 +59,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "*",
     "babel-jest": "*",
+    "babel-plugin-minify-replace": "0.5.0",
     "electron": "*",
     "eslint": "*",
     "eslint-config-prettier": "*",

@@ -22,13 +22,11 @@ const effects: StoreEffects = store => {
       store.set('system.pathMax')(pathMax);
     });
 
-    loadNotes(notesDirectory).subscribe(
-      notes => {
-        store.setFrom_EXPERIMENTAL(
-          store => store.set('notes')([...store.get('notes'), ...notes])
-        );
-      },
-    );
+    loadNotes(notesDirectory).subscribe(notes => {
+      store.setFrom_EXPERIMENTAL(store =>
+        store.set('notes')([...store.get('notes'), ...notes]),
+      );
+    });
   });
 
   store.on('notes').subscribe(notes => {

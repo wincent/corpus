@@ -110,7 +110,10 @@ type StatInfo = {|
 
 // TODO: make this actually return only stat info (not the extra crap that is
 // currently in there)
-async function getStatInfo(filename: string, notesDirectory: string): Promise<StatInfo> {
+async function getStatInfo(
+  filename: string,
+  notesDirectory: string,
+): Promise<StatInfo> {
   const notePath = path.join(notesDirectory, filename);
   const title = getTitleFromPath(notePath);
   let statResult;
@@ -162,7 +165,9 @@ async function readContents(info: $FlowFixMe): Promise<Note> {
   }
 }
 
-export default function loadNotes(notesDirectory: string): rxjs$Observable<$ReadOnlyArray<Note>> {
+export default function loadNotes(
+  notesDirectory: string,
+): rxjs$Observable<$ReadOnlyArray<Note>> {
   return Observable.create(observer => {
     OperationsQueue.enqueue(async () => {
       try {
@@ -171,9 +176,11 @@ export default function loadNotes(notesDirectory: string): rxjs$Observable<$Read
         initWatcher(notesDirectory);
         const filenames = await readdir(notesDirectory);
         const filtered = filterFilenames(filenames);
-        const info = await Promise.all(filtered.map(filename => {
-          return getStatInfo(filename, notesDirectory);
-        }));
+        const info = await Promise.all(
+          filtered.map(filename => {
+            return getStatInfo(filename, notesDirectory);
+          }),
+        );
         const sorted = info.sort(compareMTime);
 
         // Load in batches. First batch of size PRELOAD_COUNT is to improve

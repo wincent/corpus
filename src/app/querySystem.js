@@ -25,7 +25,9 @@ function parseValue(value: string): number {
 /**
  * Query the system for information.
  */
-export default async function querySystem(notesDirectory: string): Promise<SystemInfo> {
+export default async function querySystem(
+  notesDirectory: string,
+): Promise<SystemInfo> {
   log.debug('Querying system information');
   let nameMax = null;
   let pathMax = null;

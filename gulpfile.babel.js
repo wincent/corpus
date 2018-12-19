@@ -13,11 +13,26 @@ import path from 'path';
 const electronBase = 'node_modules/electron/dist';
 let watching = false;
 
+const {NODE_ENV} = process.env;
+if (NODE_ENV !== 'development' && NODE_ENV !== 'production') {
+  const warning = `Expected NODE_ENV of "production" or "development"; got ${JSON.stringify(
+    NODE_ENV,
+  )}`;
+  // prettier-ignore
+  [
+    '*'.repeat(warning.length),
+    warning,
+    '*'.repeat(warning.length),
+  ].forEach(
+    line => log(colors.red(line)),
+  );
+}
+
 /**
  * Ring the terminal bell.
  */
 function ringBell() {
-  process.stderr.write("\x07");
+  process.stderr.write('\x07');
 }
 
 /**
@@ -25,14 +40,11 @@ function ringBell() {
  */
 function exec(command) {
   return new Promise((resolve, reject) => {
-    child_process.exec(
-      command,
-      (error, stdout, stderr) => {
-        log(stdout);
-        log(stderr);
-        error ? reject(error) : resolve();
-      }
-    );
+    child_process.exec(command, (error, stdout, stderr) => {
+      log(stdout);
+      log(stderr);
+      error ? reject(error) : resolve();
+    });
   });
 }
 
@@ -61,13 +73,15 @@ gulp.task('default', watch);
 gulp.task('build', gulp.parallel(html, js));
 
 function html() {
-  return gulp.src('src/**/*.html')
+  return gulp
+    .src('src/**/*.html')
     .pipe(wrap(htmlmin({collapseWhitespace: true})))
     .pipe(gulp.dest('dist'));
 }
 
 function js() {
-  return gulp.src('src/**/*.js')
+  return gulp
+    .src('src/**/*.js')
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(wrap(babel()))
@@ -75,14 +89,16 @@ function js() {
 }
 
 function lint() {
-  return gulp.src('src/**/*.js')
+  return gulp
+    .src('src/**/*.js')
     .pipe(eslint())
-    .pipe(eslint.format())
+    .pipe(eslint.format());
 }
 
 function fix() {
   // Fix lints in place with `base` trickery.
-  return gulp.src('src/**/*.js', {base: './'})
+  return gulp
+    .src(['*.js', 'scripts/**/*.js', 'src/**/*.js'], {base: './'})
     .pipe(eslint({fix: true}))
     .pipe(eslint.format())
     .pipe(gulp.dest('./'));
@@ -107,15 +123,17 @@ function renameApp(env) {
 
 function copyIcon(env) {
   return function copyIcon() {
-    return gulp.src(`gfx/${env}/corpus.icns`)
+    return gulp
+      .src(`gfx/${env}/corpus.icns`)
       .pipe(gulp.dest(`${env}/Corpus.app/Contents/Resources/`));
-  }
+  };
 }
 
 // TODO put version number from package.json in plist
 function copyPlist(env) {
   return function copyPlist() {
-    return gulp.src('pkg/Info.plist')
+    return gulp
+      .src('pkg/Info.plist')
       .pipe(gulp.dest(`${env}/Corpus.app/Contents/`));
   };
 }
@@ -129,18 +147,16 @@ function watch() {
 function copyOrLinkResources(env) {
   return function copyOrLinkResources() {
     if (env === 'release') {
-      return gulp.src([
-          'package.json',
-          '*dist/**/*',
-          '*vendor/**/*',
-        ]).pipe(gulp.dest('release/Corpus.app/Contents/Resources/app/'));
+      return gulp
+        .src(['package.json', '*dist/**/*', '*vendor/**/*'])
+        .pipe(gulp.dest('release/Corpus.app/Contents/Resources/app/'));
     } else if (env === 'debug') {
       return exec(
         'mkdir -p debug/Corpus.app/Contents/Resources/app && ' +
-        'cd debug/Corpus.app/Contents/Resources/app && ' +
-        'ln -s ../../../../../package.json && ' +
-        'ln -s ../../../../../dist && ' +
-        'ln -s ../../../../../vendor'
+          'cd debug/Corpus.app/Contents/Resources/app && ' +
+          'ln -s ../../../../../package.json && ' +
+          'ln -s ../../../../../dist && ' +
+          'ln -s ../../../../../vendor',
       );
     }
   };
@@ -151,17 +167,17 @@ function copyOrLinkNodeModules(env) {
     if (env === 'release') {
       return exec(
         'yarn install ' +
-        '--prod ' +
-        '--no-bin-links ' +
-        '--modules-folder ' +
-        'release/Corpus.app/Contents/Resources/app/node_modules && ' +
-        'yarn'
+          '--prod ' +
+          '--no-bin-links ' +
+          '--modules-folder ' +
+          'release/Corpus.app/Contents/Resources/app/node_modules && ' +
+          'yarn',
       );
     } else if (env === 'debug') {
       return exec(
         'mkdir -p debug/Corpus.app/Contents/Resources/app && ' +
-        'cd debug/Corpus.app/Contents/Resources/app && ' +
-        'ln -s ../../../../../node_modules'
+          'cd debug/Corpus.app/Contents/Resources/app && ' +
+          'ln -s ../../../../../node_modules',
       );
     }
   };
@@ -170,20 +186,13 @@ function copyOrLinkNodeModules(env) {
 function asar() {
   return exec(
     'asar pack ' +
-    'release/Corpus.app/Contents/Resources/app ' +
-    'release/Corpus.app/Contents/Resources/app.asar'
+      'release/Corpus.app/Contents/Resources/app ' +
+      'release/Corpus.app/Contents/Resources/app.asar',
   );
 }
 
 function pruneApp() {
   return exec('rm -r release/Corpus.app/Contents/Resources/app');
-}
-
-function withNodeEnv(env, cb) {
-  if (!process.env.NODE_ENV) {
-    process.env.NODE_ENV = env;
-  }
-  return cb();
 }
 
 module.exports = {
@@ -193,7 +202,7 @@ module.exports = {
   fix,
   flow,
   watch,
-  release: withNodeEnv('production', () => gulp.series(
+  release: gulp.series(
     'build',
     copyApp('release'),
     renameApp('release'),
@@ -203,8 +212,8 @@ module.exports = {
     copyOrLinkNodeModules('release'),
     asar,
     pruneApp,
-  )),
-  debug: withNodeEnv('development', () => gulp.series(
+  ),
+  debug: gulp.series(
     'build',
     copyApp('debug'),
     renameApp('debug'),
@@ -212,5 +221,5 @@ module.exports = {
     copyIcon('debug'),
     copyOrLinkResources('debug'),
     copyOrLinkNodeModules('debug'),
-  )),
+  ),
 };

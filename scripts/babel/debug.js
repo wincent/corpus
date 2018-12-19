@@ -14,20 +14,21 @@ module.exports = function(babel) {
     visitor: {
       CallExpression: {
         exit(path, state) {
-          if (state.opts.env === 'development') {
+          if (state.opts.strip) {
+            const callee = path.get('callee');
+            if (
+              callee.isMemberExpression() &&
+              callee.get('object').isIdentifier({name: 'log'}) &&
+              callee.get('property').isIdentifier({name: 'debug'})
+            ) {
+              const noop = t.unaryExpression('void', t.numericLiteral(0));
+              path.replaceWith(noop);
+            }
+          } else {
             return;
           }
-          const callee = path.get('callee');
-          if (
-            callee.isMemberExpression() &&
-            callee.get('object').isIdentifier({name: 'log'}) &&
-            callee.get('property').isIdentifier({name: 'debug'})
-          ) {
-            const noop = t.unaryExpression('void', t.numericLiteral(0));
-            path.replaceWith(noop);
-          }
-        }
-      }
-    }
+        },
+      },
+    },
   };
 };

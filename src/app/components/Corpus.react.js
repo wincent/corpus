@@ -92,11 +92,7 @@ export default Store.withStore(
 
       const rawConfig = await loadConfig();
       const config = processConfig(rawConfig);
-      const {
-        noteFontFamily,
-        noteFontSize,
-        notesDirectory,
-      } = config;
+      const {noteFontFamily, noteFontSize, notesDirectory} = config;
       const {store} = this.props;
       store.set('config.noteFontFamily')(noteFontFamily);
       store.set('config.noteFontSize')(noteFontSize);
