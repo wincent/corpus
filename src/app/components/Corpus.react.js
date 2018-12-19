@@ -80,6 +80,7 @@ export default Store.withStore(
     }
 
     async componentDidMount() {
+      // TODO: maybe don't cache setFocus
       const setFocus = this.props.store.set('focus');
       ipcRenderer.on('delete', deleteSelectedNotes);
       ipcRenderer.on('next', Actions.nextNoteSelected);
