@@ -140,7 +140,9 @@ export default Store.withStore(
         },
         root: {
           background: colors.background,
-          height: this.props.store.get('filteredNotes').length * Constants.PREVIEW_ROW_HEIGHT,
+          height:
+            this.props.store.get('filteredNotes').length *
+            Constants.PREVIEW_ROW_HEIGHT,
           minHeight: 'calc(100vh - 36px)', // ensure full background coverage
           position: 'relative',
         },

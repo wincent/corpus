@@ -24,7 +24,7 @@ const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
 
-type Note = {|
+export type Note = {|
   body: string,
   +id: number,
   mtime: ?number,

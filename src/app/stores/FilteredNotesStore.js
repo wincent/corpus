@@ -6,7 +6,6 @@
  */
 
 import Actions from '../Actions';
-import NotesStore from './NotesStore';
 import Store from './Store';
 // import store from '../Store';
 import stringFinder from '../util/stringFinder';
@@ -80,13 +79,13 @@ class FilteredNotesStore extends Store {
       case Actions.NOTE_BUBBLED:
       case Actions.NOTE_CREATION_COMPLETED:
       case Actions.SELECTED_NOTES_DELETED:
-        this.waitFor(NotesStore.dispatchToken);
+        // this.waitFor(NotesStore.dispatchToken);
         this._change();
         break;
 
       case Actions.NOTE_TITLE_CHANGED:
         // Forget the query; the note will be bumped to the top.
-        this.waitFor(NotesStore.dispatchToken);
+        // this.waitFor(NotesStore.dispatchToken);
         query = null;
         this._change();
         break;
@@ -94,7 +93,7 @@ class FilteredNotesStore extends Store {
       case Actions.NOTE_TEXT_CHANGED:
         if (!payload.isAutosave) {
           // Forget the query; the note will be bumped to the top.
-          this.waitFor(NotesStore.dispatchToken);
+          // this.waitFor(NotesStore.dispatchToken);
           query = null;
           this._change();
         }
