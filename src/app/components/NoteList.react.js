@@ -14,7 +14,6 @@ import Constants from '../Constants';
 import Keys from '../Keys';
 import NotePreview from './NotePreview.react';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
-import FilteredNotesStore from '../stores/FilteredNotesStore';
 import colors from '../colors';
 import getLastInSet from '../getLastInSet';
 import printableFromKeyEvent from '../util/printableFromKeyEvent';
@@ -34,6 +33,7 @@ const OFF_VIEWPORT_NOTE_BUFFER_COUNT = 20;
 const SCROLL_THROTTLE_INTERVAL = 250;
 
 import type {StoreProps} from '../Store';
+import type {Note} from '../store/loadNotes';
 
 type Props = {|
   ...StoreProps,
@@ -43,7 +43,6 @@ type State = {|
   animating: boolean,
   bubbling: ?number,
   focused: boolean,
-  notes: $FlowFixMe, // FilteredNotesStore.notes,
   scrollTop: number,
   selection: $FlowFixMe, // NotesSelectionStore.selection,
 |};
@@ -64,7 +63,6 @@ export default Store.withStore(
         animating: false,
         bubbling: null,
         focused: false,
-        notes: FilteredNotesStore.notes,
         scrollTop: 0,
         selection: NotesSelectionStore.selection,
       };
@@ -72,7 +70,6 @@ export default Store.withStore(
 
     componentDidMount() {
       NotesSelectionStore.on('change', this._updateNoteSelection);
-      FilteredNotesStore.on('change', this._updateNotes);
 
       const node = nullthrows(this._ref);
       node.addEventListener('transitionend', this._onTransitionEnd);
@@ -113,7 +110,7 @@ export default Store.withStore(
         (this.state.scrollTop + visibleHeight) / Constants.PREVIEW_ROW_HEIGHT,
       );
       const last = Math.min(
-        this.state.notes.length - 1,
+        this.props.store.get('filteredNotes').length - 1,
         bottomEdge + OFF_VIEWPORT_NOTE_BUFFER_COUNT,
       );
 
@@ -143,8 +140,7 @@ export default Store.withStore(
         },
         root: {
           background: colors.background,
-          height:
-            FilteredNotesStore.notes.length * Constants.PREVIEW_ROW_HEIGHT,
+          height: this.props.store.get('filteredNotes').length * Constants.PREVIEW_ROW_HEIGHT,
           minHeight: 'calc(100vh - 36px)', // ensure full background coverage
           position: 'relative',
         },
@@ -177,10 +173,6 @@ export default Store.withStore(
 
     _updateNoteSelection = () => {
       this.setState({selection: NotesSelectionStore.selection});
-    };
-
-    _updateNotes = () => {
-      this.setState({notes: FilteredNotesStore.notes});
     };
 
     _onBlur = () => {
@@ -316,11 +308,12 @@ export default Store.withStore(
     _renderNotes() {
       const first = this._getFirstRenderedNote();
       const last = this._getLastRenderedNote();
-      const notes = [];
+      const notes = this.props.store.get('filteredNotes');
+      const previews = [];
       for (var i = first; i <= last; i++) {
         const selected = this.state.selection.has(i);
-        const note = this.state.notes[i];
-        notes.push(
+        const note = notes[i];
+        previews.push(
           <NotePreview
             animating={this.state.animating}
             focused={this.state.focused && selected}
@@ -333,7 +326,7 @@ export default Store.withStore(
           />,
         );
       }
-      return notes;
+      return previews;
     }
 
     render() {
