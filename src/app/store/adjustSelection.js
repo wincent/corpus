@@ -84,7 +84,7 @@ function adjust(
     }
   } else if (totalDelta > previousDelta) {
     // We're moving downwards.
-    if (totalDelta >= 0) {
+    if (totalDelta > 0) {
       // Extending downwards selection.
       if (selection.has(initialLocation + totalDelta)) {
         // Need to skip already-selected selection; recurse.
