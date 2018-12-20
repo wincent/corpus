@@ -215,7 +215,7 @@ export default Store.withStore(
           break;
       }
 
-      performKeyboardNavigation(event);
+      performKeyboardNavigation(event, store);
 
       // If event not handled yet, focus the OmniBar and initiate a search.
       if (!event.defaultPrevented) {
@@ -260,7 +260,9 @@ export default Store.withStore(
       }
 
       // TODO; check whether this works at all
-      if (prevProps.store.get('selection') !== this.props.store.get('selection')) {
+      if (
+        prevProps.store.get('selection') !== this.props.store.get('selection')
+      ) {
         if (this.props.store.get('selection').size) {
           // Maintain last selection within view.
           const lastIndex = getLastInSet(this.props.store.get('selection'));

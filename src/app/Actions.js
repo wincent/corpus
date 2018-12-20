@@ -21,8 +21,6 @@ const actionTypes = {
   ADJUST_NOTE_SELECTION_DOWN: 'ADJUST_NOTE_SELECTION_DOWN',
   ADJUST_NOTE_SELECTION_UP: 'ADJUST_NOTE_SELECTION_UP',
   CONFIG_LOADED: 'CONFIG_LOADED',
-  LAST_NOTE_SELECTED: 'LAST_NOTE_SELECTED',
-  NEXT_NOTE_SELECTED: 'NEXT_NOTE_SELECTED',
   NOTES_LOADED: 'NOTES_LOADED',
   NOTE_BUBBLED: 'NOTE_BUBBLED',
   NOTE_CREATION_COMPLETED: 'NOTE_CREATION_COMPLETED',
@@ -32,7 +30,6 @@ const actionTypes = {
   NOTE_SELECTED: 'NOTE_SELECTED',
   NOTE_TITLE_CHANGED: 'NOTE_TITLE_CHANGED',
   NOTE_TEXT_CHANGED: 'NOTE_TEXT_CHANGED',
-  PREVIOUS_NOTE_SELECTED: 'PREVIOUS_NOTE_SELECTED',
   SEARCH_REQUESTED: 'SEARCH_REQUESTED',
   SELECTED_NOTES_DELETED: 'SELECTED_NOTES_DELETED',
 };
@@ -52,14 +49,6 @@ const actionCreators = {
 
   allNotesSelected() {
     dispatch(actionTypes.ALL_NOTES_SELECTED);
-  },
-
-  lastNoteSelected() {
-    dispatch(actionTypes.LAST_NOTE_SELECTED);
-  },
-
-  nextNoteSelected() {
-    dispatch(actionTypes.NEXT_NOTE_SELECTED);
   },
 
   noteBubbled(index: number) {
@@ -96,10 +85,6 @@ const actionCreators = {
 
   notesLoaded() {
     dispatch(actionTypes.NOTES_LOADED);
-  },
-
-  previousNoteSelected() {
-    dispatch(actionTypes.PREVIOUS_NOTE_SELECTED);
   },
 
   searchRequested(value: string, isDeletion: boolean = false) {

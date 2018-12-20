@@ -123,34 +123,12 @@ function selectFirst() {
   }
 }
 
+// TODO: delete; use store/selectLast.js instead
 function selectLast() {
   if (FilteredNotesStore.notes.length) {
     selection = new Set([FilteredNotesStore.notes.length - 1]);
   } else {
     selection = new Set();
-  }
-}
-
-function selectNext() {
-  const mostRecent = getLastInSet(selection);
-  if (mostRecent == null) {
-    selectFirst();
-  } else {
-    const maxSelectionIndex = FilteredNotesStore.notes.length - 1;
-    if (mostRecent < maxSelectionIndex) {
-      selection = new Set([mostRecent + 1]);
-    }
-  }
-}
-
-function selectPrevious() {
-  const mostRecent = getLastInSet(selection);
-  if (mostRecent == null) {
-    selectLast();
-  } else {
-    if (mostRecent > 0) {
-      selection = new Set([mostRecent - 1]);
-    }
   }
 }
 
@@ -171,14 +149,6 @@ class NotesSelectionStore extends Store {
 
       case Actions.ADJUST_NOTE_SELECTION_UP:
         this._change(payload.type, () => adjustSelection(-1));
-        break;
-
-      case Actions.LAST_NOTE_SELECTED:
-        this._change(payload.type, selectLast);
-        break;
-
-      case Actions.NEXT_NOTE_SELECTED:
-        this._change(payload.type, selectNext);
         break;
 
       case Actions.NOTE_BUBBLED:
@@ -239,10 +209,6 @@ class NotesSelectionStore extends Store {
             }
           }
         });
-        break;
-
-      case Actions.PREVIOUS_NOTE_SELECTED:
-        this._change(payload.type, selectPrevious);
         break;
 
       case Actions.SEARCH_REQUESTED:

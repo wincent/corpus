@@ -186,6 +186,8 @@ export default Store.withStore(
     };
 
     _onKeyDown = event => {
+      const {store} = this.props;
+
       // Prevent undesired fallthrough to `performKeyboardNavigation` for some
       // keys.
       switch (event.keyCode) {
@@ -196,8 +198,8 @@ export default Store.withStore(
         case Keys.ESCAPE:
           event.preventDefault();
           Actions.searchRequested(''); // TODO: kill legacy
-          this.props.store.set('query')('');
-          this.props.store.set('focus')('OmniBar');
+          store.set('query')('');
+          store.set('focus')('OmniBar');
           Actions.allNotesDeselected();
           return;
 
@@ -212,13 +214,13 @@ export default Store.withStore(
           // Prevent the <body> from becoming `document.activeElement`.
           if (!event.shiftKey) {
             event.preventDefault();
-            this.props.store.set('focus')('OmniBar');
+            store.set('focus')('OmniBar');
             return;
           }
           break;
       }
 
-      performKeyboardNavigation(event);
+      performKeyboardNavigation(event, store);
     };
 
     render() {

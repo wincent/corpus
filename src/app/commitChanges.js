@@ -18,6 +18,7 @@ export default function commitChanges(
 ): void {
   OperationsQueue.enqueue(async () => {
     try {
+      // TODO: pass store here as well
       const directory = await getNotesDirectory();
       const repo = new Repo(directory);
       await repo.add('*.md');

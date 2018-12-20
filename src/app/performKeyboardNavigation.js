@@ -7,12 +7,17 @@
 
 import Actions from './Actions';
 import Keys from './Keys';
-// import store from './Store';
+import selectFirst from './store/selectFirst';
+import selectLast from './store/selectLast';
+import selectNext from './store/selectNext';
+import selectPrevious from './store/selectPrevious';
+
+import type {StoreT} from './Store';
 
 /**
  * Common keyboard navigation code used by NoteList and OmniBar components.
  */
-function performKeyboardNavigation(event: KeyboardEvent) {
+function performKeyboardNavigation(event: KeyboardEvent, store: StoreT) {
   if (event.defaultPrevented) {
     // Event has already been handled.
     return;
@@ -21,11 +26,11 @@ function performKeyboardNavigation(event: KeyboardEvent) {
   switch (event.keyCode) {
     case Keys.DOWN:
       if (event.metaKey) {
-        Actions.lastNoteSelected();
+        selectLast(store);
       } else if (event.shiftKey) {
         Actions.adjustNoteSelectionDown();
       } else {
-        Actions.nextNoteSelected();
+        selectNext(store);
       }
       event.preventDefault();
       break;
@@ -38,31 +43,32 @@ function performKeyboardNavigation(event: KeyboardEvent) {
       break;
 
     case Keys.J:
-      // Intercept before the menu shortcut gets fired to avoid annoying
-      // flicker and slowdown.
       if (event.metaKey && !event.shiftKey && !event.altKey) {
-        Actions.nextNoteSelected();
+        selectNext(store);
+
+        // Intercept before the menu shortcut gets fired to avoid annoying
+        // flicker and slowdown.
         event.preventDefault();
       }
       break;
 
     case Keys.K:
-      // Intercept before the menu shortcut gets fired to avoid annoying
-      // flicker and slowdown.
       if (event.metaKey && !event.shiftKey && !event.altKey) {
-        Actions.previousNoteSelected();
+        selectPrevious(store);
+
+        // Intercept before the menu shortcut gets fired to avoid annoying
+        // flicker and slowdown.
         event.preventDefault();
       }
       break;
 
     case Keys.UP:
       if (event.metaKey) {
-        // TODO: this becomes store.set('selection')(...)
-        // Actions.firstNoteSelected();
+        selectFirst(store);
       } else if (event.shiftKey) {
         Actions.adjustNoteSelectionUp();
       } else {
-        Actions.previousNoteSelected();
+        selectPrevious(store);
       }
       event.preventDefault();
       break;

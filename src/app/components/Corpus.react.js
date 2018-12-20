@@ -17,6 +17,8 @@ import Viewport from './Viewport.react';
 // TODO: change this
 import Store, {deleteNotes} from '../Store';
 import Actions from '../Actions';
+import selectNext from '../store/selectNext';
+import selectPrevious from '../store/selectPrevious';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import loadConfig from '../loadConfig';
@@ -81,15 +83,15 @@ export default Store.withStore(
     }
 
     async componentDidMount() {
-      // TODO: maybe don't cache setFocus
-      const setFocus = this.props.store.set('focus');
       ipcRenderer.on('delete', deleteSelectedNotes);
-      ipcRenderer.on('next', Actions.nextNoteSelected);
+      ipcRenderer.on('next', () => selectNext(this.props.store));
       ipcRenderer.on('preview', preview);
-      ipcRenderer.on('previous', Actions.previousNoteSelected);
-      ipcRenderer.on('rename', () => setFocus('TitleInput'));
+      ipcRenderer.on('previous', () => selectPrevious(this.props.store));
+      ipcRenderer.on('rename', () =>
+        this.props.store.set('focus')('TitleInput'),
+      );
       ipcRenderer.on('reveal', reveal);
-      ipcRenderer.on('search', () => setFocus('OmniBar'));
+      ipcRenderer.on('search', () => this.props.store.set('focus')('OmniBar'));
       NotesSelectionStore.on('change', this._updateSelection);
 
       const rawConfig = await loadConfig();

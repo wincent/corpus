@@ -333,8 +333,7 @@ export default Store.withStore(
           return;
       }
 
-      // TODO: pass store in here.
-      performKeyboardNavigation(event);
+      performKeyboardNavigation(event, store);
     };
 
     render() {

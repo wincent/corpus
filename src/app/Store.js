@@ -130,7 +130,8 @@ export function bubbleNote(index: number) {
 
 async function getPathForTitle(title: string): string {
   const sanitizedTitle = title.replace('/', '-');
-  const notesDirectory = await getNotesDirectory();
+  // TODO: pass store here...
+  const notesDirectory = await getNotesDirectory(/*store*/);
 
   for (var i = 0; i <= 999; i++) {
     const number = i ? `.${i}` : '';
