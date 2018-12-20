@@ -5,8 +5,8 @@
  * @flow
  */
 
-import Actions from './Actions';
 import Keys from './Keys';
+import adjustSelection from './store/adjustSelection';
 import deselectAll from './store/deselectAll';
 import selectFirst from './store/selectFirst';
 import selectLast from './store/selectLast';
@@ -29,7 +29,7 @@ function performKeyboardNavigation(event: KeyboardEvent, store: StoreT) {
       if (event.metaKey) {
         selectLast(store);
       } else if (event.shiftKey) {
-        Actions.adjustNoteSelectionDown();
+        adjustSelection('down', store);
       } else {
         selectNext(store);
       }
@@ -66,7 +66,7 @@ function performKeyboardNavigation(event: KeyboardEvent, store: StoreT) {
       if (event.metaKey) {
         selectFirst(store);
       } else if (event.shiftKey) {
-        Actions.adjustNoteSelectionUp();
+        adjustSelection('up', store);
       } else {
         selectPrevious(store);
       }

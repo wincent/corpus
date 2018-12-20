@@ -8,8 +8,6 @@
 import Actions from '../Actions';
 import FilteredNotesStore from './FilteredNotesStore';
 import Store from './Store';
-import clamp from '../clamp';
-import getLastInSet from '../getLastInSet';
 // import store from '../Store';
 
 /**
@@ -22,105 +20,10 @@ import getLastInSet from '../getLastInSet';
  */
 let selection = new Set();
 
-/**
- * We keep track of the total delta (how far we've moved up/down) when adjusting
- * the selection upwards or downwards. Changing direction (decrementing a
- * positive totalDelta, or incrementing a negative one) and "crossing" past 0
- * both represent a change of mode (from extending the selection in a particular
- * direction to reducing it).
- *
- * @see adjustSelection
- */
-let totalDelta = 0;
-
-let initialLocation = null;
-
-function resetSelectionTracking() {
-  totalDelta = 0;
-  initialLocation = null;
-}
-
-function adjustSelection(delta) {
-  const lastLocation = getLastInSet(selection);
-  if (lastLocation == null) {
-    delta ? selectFirst() : selectLast();
-    return;
-  } else if (initialLocation == null) {
-    // Starting selection.
-    resetSelectionTracking();
-    initialLocation = lastLocation;
-  }
-
-  const previousDelta = totalDelta;
-  totalDelta = clamp(
-    totalDelta + delta, // desired distance from where we started
-    -initialLocation, // limit of upwards selection
-    FilteredNotesStore.notes.length - initialLocation - 1, // limit of downwards selection
-  );
-
-  if (totalDelta < previousDelta) {
-    // Moving upwards.
-    if (totalDelta >= 0) {
-      // Reducing downwards selection.
-      selection = new Set(selection);
-      selection.delete(initialLocation + totalDelta + 1);
-    } else {
-      // Extending upwards selection.
-      if (selection.has(initialLocation + totalDelta)) {
-        // Need to skip already-selected selection; recurse.
-        if (initialLocation + totalDelta === 0) {
-          // Unless we're already at the top.
-          return;
-        } else {
-          totalDelta = previousDelta;
-          adjustSelection(delta - 1);
-        }
-      } else {
-        selection = new Set(selection);
-        selection.add(initialLocation + totalDelta);
-      }
-    }
-  } else if (totalDelta > previousDelta) {
-    // We're moving downwards.
-    if (totalDelta >= 0) {
-      // Extending downwards selection.
-      if (selection.has(initialLocation + totalDelta)) {
-        // Need to skip already-selected selection; recurse.
-        if (
-          initialLocation + totalDelta ===
-          FilteredNotesStore.notes.length - 1
-        ) {
-          // Unless we're already at the bottom.
-          return;
-        } else {
-          totalDelta = previousDelta;
-          adjustSelection(delta + 1);
-        }
-      } else {
-        selection = new Set(selection);
-        selection.add(initialLocation + totalDelta);
-      }
-    } else {
-      // Reducing upwards selection.
-      selection = new Set(selection);
-      selection.delete(initialLocation + totalDelta - 1);
-    }
-  }
-}
-
 // TODO: delete; use store/selectFirst.js instead.
 function selectFirst() {
   if (FilteredNotesStore.notes.length) {
     selection = new Set([0]);
-  } else {
-    selection = new Set();
-  }
-}
-
-// TODO: delete; use store/selectLast.js instead
-function selectLast() {
-  if (FilteredNotesStore.notes.length) {
-    selection = new Set([FilteredNotesStore.notes.length - 1]);
   } else {
     selection = new Set();
   }
@@ -131,14 +34,6 @@ class NotesSelectionStore extends Store {
     switch (payload.type) {
       case Actions.ALL_NOTES_DESELECTED:
         this._change(payload.type, () => (selection = new Set()));
-        break;
-
-      case Actions.ADJUST_NOTE_SELECTION_DOWN:
-        this._change(payload.type, () => adjustSelection(+1));
-        break;
-
-      case Actions.ADJUST_NOTE_SELECTION_UP:
-        this._change(payload.type, () => adjustSelection(-1));
         break;
 
       case Actions.NOTE_BUBBLED:
@@ -192,12 +87,6 @@ class NotesSelectionStore extends Store {
   }
 
   _change(action, changer) {
-    if (
-      action !== Actions.ADJUST_NOTE_SELECTION_DOWN &&
-      action !== Actions.ADJUST_NOTE_SELECTION_UP
-    ) {
-      resetSelectionTracking();
-    }
     const previousSelection = selection;
     changer.call();
     if (selection !== previousSelection) {

@@ -64,7 +64,7 @@ const initialState: State = {
   log: [],
   notes: [],
   selectedNotes: [],
-  selection: new FrozenSet(),
+  selection: new FrozenSet<number>(),
   'system.nameMax': systemDefaults.nameMax,
   'system.pathMax': systemDefaults.pathMax,
   query: null,
