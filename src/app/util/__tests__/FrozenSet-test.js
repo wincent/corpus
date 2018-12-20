@@ -78,4 +78,26 @@ describe('FrozenSet', () => {
       expect(set.has(4)).toBe(true);
     });
   });
+
+  describe('clone()', () => {
+    let set;
+
+    beforeEach(() => {
+      set = new FrozenSet([1, 2, 3]);
+    });
+
+    it('returns a modified clone of the original', () => {
+      const clone = set.clone(mutable => {
+        mutable.delete(2);
+        mutable.add(4);
+      });
+      expect(Array.from(clone.values())).toEqual([1, 3, 4]);
+      expect(clone).not.toBe(set);
+    });
+
+    it('leaves the original object unchanged', () => {
+      const clone = set.clone(mutable => mutable.clear());
+      expect(Array.from(set.values())).toEqual([1, 2, 3]);
+    });
+  });
 });

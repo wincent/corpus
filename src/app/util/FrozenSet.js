@@ -14,7 +14,7 @@
  * NOTE: Implements "shallow" immutability only.
  */
 export default class FrozenSet<T> extends Set<T> {
-  _isFrozen: bool;
+  _isFrozen: boolean;
 
   constructor(iterable: ?Iterable<T>, callback: ?(Set<T>) => void) {
     super(iterable);
@@ -23,6 +23,10 @@ export default class FrozenSet<T> extends Set<T> {
       callback.call(this, this);
     }
     this.freeze();
+  }
+
+  clone(callback: (Set<T>) => void): FrozenSet<T> {
+    return new FrozenSet(this, callback);
   }
 
   freeze() {

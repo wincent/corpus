@@ -5,13 +5,11 @@
  * @flow strict
  */
 
-import FrozenSet from '../util/FrozenSet';
-
 import type {StoreT} from '../Store';
 
 export default function deselectNote(index: number, store: StoreT) {
   store.setFrom_EXPERIMENTAL(store => {
-    const selection = new FrozenSet(store.get('selection'), set => {
+    const selection = store.get('selection').clone(set => {
       set.delete(index);
     });
     store.set('selection')(selection);
