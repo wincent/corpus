@@ -149,13 +149,6 @@ class NotesSelectionStore extends Store {
         //store.set('focus')('Note');
         break;
 
-      case Actions.NOTE_DESELECTED:
-        this._change(payload.type, () => {
-          selection = new Set(selection);
-          selection.delete(payload.index);
-        });
-        break;
-
       case Actions.NOTE_RANGE_SELECTED:
         this._change(payload.type, () => {
           const start = getLastInSet(selection) || 0;
@@ -167,17 +160,6 @@ class NotesSelectionStore extends Store {
             i++
           ) {
             selection.add(i);
-          }
-        });
-        break;
-
-      case Actions.NOTE_SELECTED:
-        this._change(payload.type, () => {
-          if (payload.exclusive) {
-            selection = new Set([payload.index]);
-          } else {
-            selection = new Set(selection);
-            selection.add(payload.index);
           }
         });
         break;

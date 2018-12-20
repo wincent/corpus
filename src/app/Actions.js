@@ -23,9 +23,7 @@ const actionTypes = {
   NOTE_BUBBLED: 'NOTE_BUBBLED',
   NOTE_CREATION_COMPLETED: 'NOTE_CREATION_COMPLETED',
   NOTE_CREATION_REQUESTED: 'NOTE_CREATION_REQUESTED',
-  NOTE_DESELECTED: 'NOTE_DESELECTED',
   NOTE_RANGE_SELECTED: 'NOTE_RANGE_SELECTED',
-  NOTE_SELECTED: 'NOTE_SELECTED',
   NOTE_TITLE_CHANGED: 'NOTE_TITLE_CHANGED',
   NOTE_TEXT_CHANGED: 'NOTE_TEXT_CHANGED',
   SEARCH_REQUESTED: 'SEARCH_REQUESTED',
@@ -53,16 +51,8 @@ const actionCreators = {
     dispatch(actionTypes.NOTE_CREATION_COMPLETED);
   },
 
-  noteDeselected(index: number) {
-    dispatch(actionTypes.NOTE_DESELECTED, {index});
-  },
-
   noteRangeSelected(index: number) {
     dispatch(actionTypes.NOTE_RANGE_SELECTED, {index});
-  },
-
-  noteSelected(index: number, exclusive: boolean = false) {
-    dispatch(actionTypes.NOTE_SELECTED, {exclusive, index});
   },
 
   noteTextChanged(payload: {index: number, text: string}) {

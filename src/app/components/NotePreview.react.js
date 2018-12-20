@@ -14,6 +14,9 @@ import Keys from '../Keys';
 import Mouse from '../Mouse';
 // TODO: move actions
 import Store, {renameNote} from '../Store';
+import addNoteToSelection from '../store/addNoteToSelection';
+import deselectNote from '../store/deselectNote';
+import selectNote from '../store/selectNote';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 
 import type {StoreProps} from '../Store';
@@ -206,20 +209,21 @@ export default Store.withStore(
     };
 
     _onClick = event => {
+      const {index, selected, store} = this.props;
       if (event.metaKey && event.shiftKey) {
         // TODO: in nvALT this is some kind of drag;
         // eg. to a text document -> copies path
         // to desktop -> copies document
       } else if (event.metaKey) {
-        if (this.props.selected) {
-          Actions.noteDeselected(this.props.index);
+        if (selected) {
+          deselectNote(index, store);
         } else {
-          Actions.noteSelected(this.props.index);
+          addNoteToSelection(index, store);
         }
       } else if (event.shiftKey) {
-        Actions.noteRangeSelected(this.props.index);
+        Actions.noteRangeSelected(index);
       } else {
-        Actions.noteSelected(this.props.index, true);
+        selectNote(index, store);
       }
     };
 
@@ -266,10 +270,10 @@ export default Store.withStore(
         event.button === Mouse.RIGHT_BUTTON
       ) {
         // Context menu is about to appear.
-        const selection = NotesSelectionStore.selection;
-        if (!selection.has(this.props.index)) {
+        const {index, store} = this.props;
+        if (!store.get('selection').has(index)) {
           // We weren't selected (or among a multiple selection); change that.
-          Actions.noteSelected(this.props.index, true);
+          selectNote(index, store);
         }
       }
     };
