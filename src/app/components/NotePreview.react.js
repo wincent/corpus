@@ -17,6 +17,7 @@ import Store, {renameNote} from '../Store';
 import addNoteToSelection from '../store/addNoteToSelection';
 import deselectNote from '../store/deselectNote';
 import selectNote from '../store/selectNote';
+import selectNoteRange from '../store/selectNoteRange';
 
 import type {StoreProps} from '../Store';
 
@@ -218,7 +219,7 @@ export default Store.withStore(
           addNoteToSelection(index, store);
         }
       } else if (event.shiftKey) {
-        Actions.noteRangeSelected(index);
+        selectNoteRange(index, store);
       } else {
         selectNote(index, store);
       }

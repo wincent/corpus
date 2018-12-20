@@ -8,7 +8,6 @@
 import Actions from './Actions';
 import Keys from './Keys';
 import deselectAll from './store/deselectAll';
-import selectAll from './store/selectAll';
 import selectFirst from './store/selectFirst';
 import selectLast from './store/selectLast';
 import selectNext from './store/selectNext';

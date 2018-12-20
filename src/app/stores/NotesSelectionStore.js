@@ -149,21 +149,6 @@ class NotesSelectionStore extends Store {
         //store.set('focus')('Note');
         break;
 
-      case Actions.NOTE_RANGE_SELECTED:
-        this._change(payload.type, () => {
-          const start = getLastInSet(selection) || 0;
-          const end = payload.index;
-          selection = new Set(selection);
-          for (
-            let i = Math.min(start, end), max = Math.max(start, end) + 1;
-            i < max;
-            i++
-          ) {
-            selection.add(i);
-          }
-        });
-        break;
-
       case Actions.NOTE_TITLE_CHANGED:
         // A note was bumped to the top, so select it.
         this.waitFor(FilteredNotesStore.dispatchToken);
