@@ -55,10 +55,10 @@ function deleteSelectedNotes() {
   deleteNotes(indices);
 }
 
-function preview() {
-  const selection = NotesSelectionStore.selection;
+function preview(store) {
+  const selection = store.get('selection');
   if (selection.size === 1) {
-    const note = FilteredNotesStore.notes[selection.values().next().value];
+    const note = store.get('selectedNotes')[0];
     // TODO: show link to get a previewer if not available
     // TODO: make previewer configurable
     run('open', note.path, '-b', 'com.brettterpstra.marked2').catch(log.warn);
@@ -83,7 +83,7 @@ export default Store.withStore(
     async componentDidMount() {
       ipcRenderer.on('delete', deleteSelectedNotes);
       ipcRenderer.on('next', () => selectNext(this.props.store));
-      ipcRenderer.on('preview', preview);
+      ipcRenderer.on('preview', () => preview(this.props.store));
       ipcRenderer.on('previous', () => selectPrevious(this.props.store));
       ipcRenderer.on('rename', () =>
         this.props.store.set('focus')('TitleInput'),
