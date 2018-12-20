@@ -27,7 +27,9 @@ export default class FrozenSet extends Set {
 
   freeze() {
     this._isFrozen = true;
-    Object.freeze(this);
+    if (__DEV__) {
+      Object.freeze(this);
+    }
   }
 
   _assert() {
