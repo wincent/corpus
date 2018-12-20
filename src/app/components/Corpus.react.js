@@ -17,6 +17,7 @@ import Viewport from './Viewport.react';
 // TODO: change this
 import Store, {deleteNotes} from '../Store';
 import Actions from '../Actions';
+import getCurrentNote from '../store/getCurrentNote';
 import selectNext from '../store/selectNext';
 import selectPrevious from '../store/selectPrevious';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
@@ -56,9 +57,8 @@ function deleteSelectedNotes() {
 }
 
 function preview(store) {
-  const selection = store.get('selection');
-  if (selection.size === 1) {
-    const note = store.get('selectedNotes')[0];
+  const note = getCurrentNote(store);
+  if (note) {
     // TODO: show link to get a previewer if not available
     // TODO: make previewer configurable
     run('open', note.path, '-b', 'com.brettterpstra.marked2').catch(log.warn);
@@ -66,9 +66,8 @@ function preview(store) {
 }
 
 function reveal(store) {
-  const selection = store.get('selection');
-  if (selection.size === 1) {
-    const note = store.get('selectedNotes')[0];
+  const note = getCurrentNote(store);
+  if (note) {
     run('open', '-R', note.path).catch(log.warn);
   }
 }

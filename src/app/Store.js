@@ -33,17 +33,6 @@ const write = promisify(fs.write);
 
 type Focus = 'Note' | 'NoteList' | 'OmniBar' | 'TitleInput';
 
-type Note = {|
-  body: string,
-  id: number,
-  mtime: ?number,
-  path: string,
-  tags: Set<string>,
-  text: string,
-  title: string,
-  version: number,
-|};
-
 type PathMap = {
   [path: string]: boolean,
 };
@@ -88,6 +77,17 @@ export type StoreProps = {|
 |};
 
 export type StoreEffects = Effects<State>;
+
+export type Note = {|
+  body: string,
+  +id: number,
+  mtime: ?number,
+  path: string,
+  tags: Set<string>,
+  text: string,
+  title: string,
+  version: number,
+|};
 
 /**
  * Ordered collection of notes (as they appear in the NoteList).

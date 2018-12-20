@@ -19,21 +19,12 @@ import getUUID from '../getUUID';
 import handleError from '../handleError';
 import * as log from '../log';
 
+import type {Note} from '../Store';
+
 const mkdir = promisify(mkdirp);
 const readFile = promisify(fs.readFile);
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
-
-export type Note = {|
-  body: string,
-  +id: number,
-  mtime: ?number,
-  path: string,
-  tags: Set<string>,
-  text: string,
-  title: string,
-  version: number,
-|};
 
 /**
  * The number of notes to load immediately on start-up. Remaining notes are

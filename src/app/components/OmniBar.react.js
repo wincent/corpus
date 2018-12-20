@@ -12,20 +12,13 @@ import Keys from '../Keys';
 import Store, {createNote} from '../Store';
 import * as log from '../log';
 import performKeyboardNavigation from '../performKeyboardNavigation';
+import getCurrentNote from '../store/getCurrentNote';
 import selectFirst from '../store/selectFirst';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import TitleBar from './TitleBar.react';
 
 import type {StoreProps} from '../Store';
-
-function getCurrentNote(store) {
-  if (store.get('selection').size === 1) {
-    return store.get('selectedNotes')[0];
-  } else {
-    return null;
-  }
-}
 
 function getCurrentTitle(store) {
   const note = getCurrentNote(store);

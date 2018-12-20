@@ -7,7 +7,7 @@
 
 import stringFinder from '../util/stringFinder';
 
-import type {Note} from './loadNotes';
+import type {Note} from '../Store';
 
 export type FilteredNote = {|
   ...Note,

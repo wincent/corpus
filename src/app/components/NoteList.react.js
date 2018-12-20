@@ -33,8 +33,7 @@ const OFF_VIEWPORT_NOTE_BUFFER_COUNT = 20;
  */
 const SCROLL_THROTTLE_INTERVAL = 250;
 
-import type {StoreProps} from '../Store';
-import type {Note} from '../store/loadNotes';
+import type {Note, StoreProps} from '../Store';
 
 type Props = {|
   ...StoreProps,
