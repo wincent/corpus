@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import nullthrows from 'fbjs/lib/nullthrows';
+import nullthrows from '../nullthrows';
 
 const styles = {
   root: {

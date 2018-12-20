@@ -7,7 +7,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import nullthrows from 'fbjs/lib/nullthrows';
 
 import Actions from '../Actions';
 import Constants from '../Constants';
@@ -16,6 +15,7 @@ import NotePreview from './NotePreview.react';
 import colors from '../colors';
 import getLastInSet from '../getLastInSet';
 import * as log from '../log';
+import nullthrows from '../nullthrows';
 import printableFromKeyEvent from '../util/printableFromKeyEvent';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 import Store from '../Store';

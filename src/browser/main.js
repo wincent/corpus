@@ -7,7 +7,7 @@
 
 import '@babel/polyfill';
 import {BrowserWindow, Menu, MenuItem, app, ipcMain} from 'electron';
-import nullthrows from 'fbjs/lib/nullthrows';
+import nullthrows from '../app/nullthrows';
 import path from 'path';
 
 import template from './menu/template';
