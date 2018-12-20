@@ -7,6 +7,7 @@
 
 import Actions from './Actions';
 import Keys from './Keys';
+import deselectAll from './store/deselectAll';
 import selectFirst from './store/selectFirst';
 import selectLast from './store/selectLast';
 import selectNext from './store/selectNext';
@@ -36,9 +37,8 @@ function performKeyboardNavigation(event: KeyboardEvent, store: StoreT) {
       break;
 
     case Keys.ESCAPE:
-      Actions.allNotesDeselected();
-      // BUG Can't access store here...
-      // store.set('focus')('OmniBar');
+      deselectAll(store);
+      store.set('focus')('OmniBar');
       event.preventDefault();
       break;
 

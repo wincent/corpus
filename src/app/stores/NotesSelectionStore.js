@@ -198,19 +198,6 @@ class NotesSelectionStore extends Store {
         this._change(payload.type, selectFirst);
         break;
 
-      case Actions.NOTES_LOADED:
-        this.waitFor(FilteredNotesStore.dispatchToken);
-        this._change(payload.type, () => {
-          // TODO: persist last selection across restarts
-          if (!selection.size) {
-            if (FilteredNotesStore.notes.length) {
-              selection = new Set(selection);
-              selection.add(0);
-            }
-          }
-        });
-        break;
-
       case Actions.SEARCH_REQUESTED:
         this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, () => {

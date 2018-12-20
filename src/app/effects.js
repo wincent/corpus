@@ -29,6 +29,8 @@ const effects: StoreEffects = store => {
         store.set('notes')([...store.get('notes'), ...notes]),
       );
     });
+
+    // TODO: persist last selection across restarts
   });
 
   store.on('notes').subscribe(notes => {

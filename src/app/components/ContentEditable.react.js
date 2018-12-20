@@ -13,6 +13,7 @@ import Dispatcher from '../Dispatcher';
 // TODO: move these actions
 import Store, {bubbleNote, updateNote} from '../Store';
 import Keys from '../Keys';
+import deselectAll from '../store/deselectAll';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';
 import performKeyboardNavigation from '../performKeyboardNavigation';
@@ -200,7 +201,7 @@ export default Store.withStore(
           Actions.searchRequested(''); // TODO: kill legacy
           store.set('query')('');
           store.set('focus')('OmniBar');
-          Actions.allNotesDeselected();
+          deselectAll(store);
           return;
 
         case Keys.J:
