@@ -6,9 +6,12 @@
  */
 
 /**
- * Set subclass for programming in an immutable style.
+ * This is an ES6 Set subclass for programming in an immutable style.
  *
- * In __DEV__ will throw an error on attempted mutation.
+ * In __DEV__ will throw an error on attempted mutation (use of `add()`,
+ * `clear()` or `delete()`.
+ *
+ * NOTE: Implements "shallow" immutability only.
  */
 export default class FrozenSet extends Set {
   _isFrozen: bool;
@@ -24,7 +27,6 @@ export default class FrozenSet extends Set {
 
   freeze() {
     this._isFrozen = true;
-    // TODO: make properties not configurable etc
     Object.freeze(this);
   }
 
