@@ -17,7 +17,6 @@ import Store, {renameNote} from '../Store';
 import addNoteToSelection from '../store/addNoteToSelection';
 import deselectNote from '../store/deselectNote';
 import selectNote from '../store/selectNote';
-import NotesSelectionStore from '../stores/NotesSelectionStore';
 
 import type {StoreProps} from '../Store';
 
@@ -99,17 +98,15 @@ export default Store.withStore(
     }
 
     componentDidUpdate(prevProps) {
-      if (this.props.focused && NotesSelectionStore.selection.size === 1) {
+      const {focused, store} = this.props;
+      if (focused && store.get('selection').size === 1) {
         // We are the only selected note. Listen for (input title) focus events.
         if (
           this.props.store.get('focus') === 'TitleInput' &&
           prevProps.store.get('focus') !== 'TitleInput'
         ) {
-          const selection = NotesSelectionStore.selection;
-          if (selection.size === 1) {
-            if (this.props.selected) {
-              this._startEditing();
-            }
+          if (this.props.selected) {
+            this._startEditing();
           }
           // BUG: if you get focused as the second item in a set, and then the first
           // item gets removed, we never set up the listeners, even though you

@@ -75,8 +75,6 @@ function reveal() {
 
 export default Store.withStore(
   class Corpus extends React.Component<Props> {
-    _selectionCount: number;
-
     constructor(props: Props) {
       super(props);
       this._selectionCount = 0;
@@ -92,7 +90,6 @@ export default Store.withStore(
       );
       ipcRenderer.on('reveal', reveal);
       ipcRenderer.on('search', () => this.props.store.set('focus')('OmniBar'));
-      NotesSelectionStore.on('change', this._updateSelection);
 
       const rawConfig = await loadConfig();
       const config = processConfig(rawConfig);
@@ -108,19 +105,21 @@ export default Store.withStore(
       throw new Error('Corpus.react: Unexpected componentWillUnmount().');
     }
 
-    _updateSelection = () => {
+    componentDidUpdate(prevProps, prevState) {
       // Notify of changes to selection size so that the main process can
-      // enable/disable menu items.
-      const size = NotesSelectionStore.selection.size;
+      // enable/disable menu items. We only notify of pertinent size
+      // changes (that is, to/from 0, to/from 1, or between singular and
+      // plural).
+      const previous = prevProps.store.get('selection').size;
+      const current = this.props.store.get('selection').size;
       if (
-        (size === 0 && this._selectionCount !== 0) ||
-        (size === 1 && this._selectionCount !== 1) ||
-        (size > 1 && this._selectionCount <= 1)
+        (current === 0 && previous !== 0) ||
+        (current === 1 && previous !== 1) ||
+        (current > 1 && previous <= 1)
       ) {
-        ipcRenderer.send('selection-count-changed', size);
+        ipcRenderer.send('selection-count-changed', current);
       }
-      this._selectionCount = size;
-    };
+    }
 
     render() {
       return (
