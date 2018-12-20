@@ -8,20 +8,21 @@
 import React from 'react';
 import {ipcRenderer} from 'electron';
 
+import NoteView from './NoteView.react';
+import NoteList from './NoteList.react';
+import OmniBar from './OmniBar.react';
+import SplitView from './SplitView.react';
+import Viewport from './Viewport.react';
+
+// TODO: change this
+import Store, {deleteNotes} from '../Store';
 import Actions from '../Actions';
 import FilteredNotesStore from '../stores/FilteredNotesStore';
-import NoteView from '../components/NoteView.react';
-import NoteList from '../components/NoteList.react';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
-import OmniBar from '../components/OmniBar.react';
-import SplitView from '../components/SplitView.react';
-import Viewport from '../components/Viewport.react';
 import loadConfig from '../loadConfig';
 import * as log from '../log';
 import processConfig from '../processConfig';
 import run from '../run';
-// TODO: change this
-import Store, {deleteNotes} from '../Store';
 
 import type {StoreProps} from '../Store';
 
