@@ -5,12 +5,14 @@
  * @flow strict
  */
 
+import FrozenSet from '../util/FrozenSet';
+
 import type {StoreT} from '../Store';
 
 export default function selectAll(store: StoreT) {
   store.setFrom_EXPERIMENTAL(store => {
     const length = store.get('filteredNotes').length;
     const range = Array.from(new Array(length), (_, i) => i);
-    store.set('selection')(new Set(range));
+    store.set('selection')(new FrozenSet(range));
   });
 }

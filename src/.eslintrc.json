@@ -3,6 +3,7 @@
     "browser": true
   },
   "globals": {
+    "__DEV__": false,
     "SyntheticEvent": false,
     "SyntheticInputEvent": false,
     "SyntheticKeyboardEvent": false,

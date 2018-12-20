@@ -6,6 +6,7 @@
  */
 
 import getLastInSet from '../getLastInSet';
+import FrozenSet from '../util/FrozenSet';
 
 import type {StoreT} from '../Store';
 
@@ -16,15 +17,16 @@ import type {StoreT} from '../Store';
  */
 export default function selectNoteRange(index: number, store: StoreT) {
   store.setFrom_EXPERIMENTAL(store => {
-    const selection = new Set(store.get('selection'));
-    const start = getLastInSet(selection) || 0;
-    for (
-      let i = Math.min(start, index), max = Math.max(start, index) + 1;
-      i < max;
-      i++
-    ) {
-      selection.add(i);
-    }
+    const selection = new FrozenSet(store.get('selection'), set => {
+      const start = getLastInSet(set) || 0;
+      for (
+        let i = Math.min(start, index), max = Math.max(start, index) + 1;
+        i < max;
+        i++
+      ) {
+        set.add(i);
+      }
+    });
     store.set('selection')(selection);
   });
 }

@@ -5,6 +5,8 @@
  * @flow strict
  */
 
+import FrozenSet from '../util/FrozenSet';
+
 import type {StoreT} from '../Store';
 
 /**
@@ -13,5 +15,5 @@ import type {StoreT} from '../Store';
  * See `addNoteToSelection()` for the non-exclusive alternative.
  */
 export default function selectNote(index: number, store: StoreT) {
-  store.set('selection')(new Set([index]));
+  store.set('selection')(new FrozenSet([index]));
 }

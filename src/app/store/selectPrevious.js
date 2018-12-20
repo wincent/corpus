@@ -7,6 +7,7 @@
 
 import selectLast from './selectLast';
 import getLastInSet from '../getLastInSet';
+import FrozenSet from '../util/FrozenSet';
 
 import type {StoreT} from '../Store';
 
@@ -16,7 +17,7 @@ export default function selectPrevious(store: StoreT) {
     if (mostRecent == null) {
       selectLast(store);
     } else if (mostRecent > 0) {
-      store.set('selection')(new Set([mostRecent - 1]));
+      store.set('selection')(new FrozenSet([mostRecent - 1]));
     }
   });
 }

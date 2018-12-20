@@ -17,6 +17,7 @@ import getNotesDirectory from './getNotesDirectory';
 import handleError from './handleError';
 import * as log from './log';
 import {defaults as systemDefaults} from './querySystem';
+import FrozenSet from './util/FrozenSet';
 import normalizeText from './util/normalizeText';
 
 import type {Effects, Store} from 'undux';
@@ -47,7 +48,7 @@ type State = {|
   log: Array<LogMessage>,
   notes: $ReadOnlyArray<Note>,
   selectedNotes: $ReadOnlyArray<FilteredNote>, // TODO: rename FilteredNote type
-  selection: Set<number>, // TODO: rename to selectedIndices (or whatever it actually is: these are indices into filteredNotes)
+  selection: FrozenSet<number>, // TODO: rename to selectedIndices (or whatever it actually is: these are indices into filteredNotes)
   'system.nameMax': number,
   'system.pathMax': number,
   query: ?string,
@@ -63,7 +64,7 @@ const initialState: State = {
   log: [],
   notes: [],
   selectedNotes: [],
-  selection: new Set(),
+  selection: new FrozenSet(),
   'system.nameMax': systemDefaults.nameMax,
   'system.pathMax': systemDefaults.pathMax,
   query: null,
@@ -284,5 +285,5 @@ export function deleteNotes(deletedNotes: Set<number>): void {
     return true;
   });
   store.set('notes')(notes);
-  store.set('selection')(new Set());
+  store.set('selection')(new FrozenSet());
 }

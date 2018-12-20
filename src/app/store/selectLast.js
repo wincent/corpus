@@ -5,6 +5,8 @@
  * @flow strict
  */
 
+import FrozenSet from '../util/FrozenSet';
+
 import type {StoreT} from '../Store';
 
 export default function selectLast(store: StoreT) {
@@ -12,9 +14,9 @@ export default function selectLast(store: StoreT) {
     let selection;
     const filteredNotes = store.get('filteredNotes');
     if (filteredNotes.length) {
-      selection = new Set([filteredNotes.length - 1]);
+      selection = new FrozenSet([filteredNotes.length - 1]);
     } else {
-      selection = new Set();
+      selection = new FrozenSet();
     }
     store.set('selection')(selection);
   });

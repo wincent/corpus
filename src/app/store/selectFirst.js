@@ -5,15 +5,17 @@
  * @flow strict
  */
 
+import FrozenSet from '../util/FrozenSet';
+
 import type {StoreT} from '../Store';
 
 export default function selectFirst(store: StoreT) {
   store.setFrom_EXPERIMENTAL(store => {
     let selection;
     if (store.get('filteredNotes').length) {
-      selection = new Set([0]);
+      selection = new FrozenSet([0]);
     } else {
-      selection = new Set();
+      selection = new FrozenSet();
     }
     store.set('selection')(selection);
   });

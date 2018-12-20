@@ -7,6 +7,7 @@
 
 import selectFirst from './selectFirst';
 import getLastInSet from '../getLastInSet';
+import FrozenSet from '../util/FrozenSet';
 
 import type {StoreT} from '../Store';
 
@@ -18,7 +19,7 @@ export default function selectNext(store: StoreT) {
     } else {
       const maxSelectionIndex = store.get('filteredNotes').length - 1;
       if (mostRecent < maxSelectionIndex) {
-        store.set('selection')(new Set([mostRecent + 1]));
+        store.set('selection')(new FrozenSet([mostRecent + 1]));
       }
     }
   });

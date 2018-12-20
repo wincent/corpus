@@ -5,8 +5,10 @@
  * @flow strict
  */
 
+import FrozenSet from '../util/FrozenSet';
+
 import type {StoreT} from '../Store';
 
 export default function deselectAll(store: StoreT) {
-  store.set('selection')(new Set());
+  store.set('selection')(new FrozenSet());
 }

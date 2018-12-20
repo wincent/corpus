@@ -5,6 +5,8 @@
  * @flow strict
  */
 
+import FrozenSet from '../util/FrozenSet';
+
 import type {StoreT} from '../Store';
 
 /**
@@ -15,8 +17,9 @@ import type {StoreT} from '../Store';
  */
 export default function addNoteToSelection(index: number, store: StoreT) {
   store.setFrom_EXPERIMENTAL(store => {
-    const selection = new Set(store.get('selection'));
-    selection.add(index);
+    const selection = new FrozenSet(store.get('selection'), set => {
+      set.add(index);
+    });
     store.set('selection')(selection);
   });
 }
