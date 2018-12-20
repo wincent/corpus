@@ -65,10 +65,10 @@ function preview(store) {
   }
 }
 
-function reveal() {
-  const selection = NotesSelectionStore.selection;
+function reveal(store) {
+  const selection = store.get('selection');
   if (selection.size === 1) {
-    const note = FilteredNotesStore.notes[selection.values().next().value];
+    const note = store.get('selectedNotes')[0];
     run('open', '-R', note.path).catch(log.warn);
   }
 }
@@ -88,7 +88,7 @@ export default Store.withStore(
       ipcRenderer.on('rename', () =>
         this.props.store.set('focus')('TitleInput'),
       );
-      ipcRenderer.on('reveal', reveal);
+      ipcRenderer.on('reveal', () => reveal(this.props.store));
       ipcRenderer.on('search', () => this.props.store.set('focus')('OmniBar'));
 
       const rawConfig = await loadConfig();
