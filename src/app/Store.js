@@ -18,7 +18,6 @@ import handleError from './handleError';
 import * as log from './log';
 import {defaults as systemDefaults} from './querySystem';
 import normalizeText from './util/normalizeText';
-import stringFinder from './util/stringFinder';
 
 import type {Effects, Store} from 'undux';
 import type {LogMessage} from './log';
@@ -27,10 +26,7 @@ import type {FilteredNote} from './store/filterNotes';
 const close = promisify(fs.close);
 const fsync = promisify(fs.fsync);
 const open = promisify(fs.open);
-const readFile = promisify(fs.readFile);
-const readdir = promisify(fs.readdir);
 const rename = promisify(fs.rename);
-const stat = promisify(fs.stat);
 const unlink = promisify(fs.unlink);
 const utimes = promisify(fs.utimes);
 const write = promisify(fs.write);
@@ -67,16 +63,6 @@ type State = {|
   'system.pathMax': number,
   query: ?string,
 |};
-
-const defaultConfig = {
-  notesDirectory: path.join(
-    process.env.HOME,
-    'Library',
-    'Application Support',
-    'Corpus',
-    'Notes',
-  ),
-};
 
 const initialState: State = {
   bubbling: null,

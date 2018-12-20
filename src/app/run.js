@@ -7,7 +7,7 @@
 
 import {spawn} from 'child_process';
 
-function run(command: string, ...args: Array<string>): Promise<string> {
+function run(command: string, ...args: $ReadOnlyArray<string>): Promise<string> {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args);
     let stdout = '';

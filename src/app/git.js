@@ -7,7 +7,7 @@
 
 import run from './run';
 
-function git(...args: Array<string>): Promise<string> {
+function git(...args: $ReadOnlyArray<string>): Promise<string> {
   return run('git', ...args);
 }
 

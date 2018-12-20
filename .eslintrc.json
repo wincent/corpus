@@ -33,6 +33,7 @@
     "no-alert": [0],
     "no-underscore-dangle": [0],
     "no-use-before-define": [0],
+    "flowtype/define-flow-type": 1,
     "prettier/prettier": ["error", {
       "singleQuote": true,
       "trailingComma": "all",

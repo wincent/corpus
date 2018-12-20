@@ -19,17 +19,16 @@ import TitleBar from './TitleBar.react';
 
 import type {StoreProps} from '../Store';
 
-function getCurrentNote() {
-  const selection = NotesSelectionStore.selection;
-  if (selection.size === 1) {
-    return FilteredNotesStore.notes[selection.values().next().value];
+function getCurrentNote(store) {
+  if (store.get('selection').size === 1) {
+    return store.get('selectedNotes')[0];
   } else {
     return null;
   }
 }
 
-function getCurrentTitle() {
-  const note = getCurrentNote();
+function getCurrentTitle(store) {
+  const note = getCurrentNote(store);
   if (note === null) {
     return '';
   } else {
@@ -78,13 +77,13 @@ export default Store.withStore(
 
     constructor(props) {
       super(props);
-      const note = getCurrentNote(); // TODO update
+      const note = getCurrentNote(props.store); // TODO update
       this.state = {
         lastSeenLogIndex: -1,
         foreground: true,
         showError: false,
         note,
-        value: getCurrentTitle(),
+        value: getCurrentTitle(props.store),
       };
     }
 
@@ -198,7 +197,8 @@ export default Store.withStore(
     };
 
     _onNotesSelectionChange = () => {
-      const note = getCurrentNote();
+      const {store} = this.props;
+      const note = getCurrentNote(store);
       const currentValue = note ? note.title.toLowerCase() : '';
       const pendingValue = this._query ? this._query.toLowerCase() : '';
       if (this.state.note !== note || pendingValue !== currentValue) {
@@ -207,7 +207,7 @@ export default Store.withStore(
           value = this._pendingDeletion;
           this._pendingDeletion = null;
         } else {
-          value = getCurrentTitle() || this._query || '';
+          value = getCurrentTitle(store) || this._query || '';
         }
         this.setState({note, value}, () => {
           const input = this._inputRef;
@@ -301,7 +301,7 @@ export default Store.withStore(
             event.preventDefault();
 
             if (this.state.value) {
-              const title = getCurrentTitle();
+              const title = getCurrentTitle(store);
               if (this.state.value === title) {
                 store.set('focus')('Note');
               } else {
@@ -333,6 +333,7 @@ export default Store.withStore(
           return;
       }
 
+      // TODO: pass store in here.
       performKeyboardNavigation(event);
     };
 

@@ -13,9 +13,9 @@ import Actions from '../Actions';
 import Constants from '../Constants';
 import Keys from '../Keys';
 import NotePreview from './NotePreview.react';
-import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';
 import getLastInSet from '../getLastInSet';
+import * as log from '../log';
 import printableFromKeyEvent from '../util/printableFromKeyEvent';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 import Store from '../Store';
@@ -44,7 +44,6 @@ type State = {|
   bubbling: ?number,
   focused: boolean,
   scrollTop: number,
-  selection: $FlowFixMe, // NotesSelectionStore.selection,
 |};
 
 export default Store.withStore(
@@ -64,13 +63,10 @@ export default Store.withStore(
         bubbling: null,
         focused: false,
         scrollTop: 0,
-        selection: NotesSelectionStore.selection,
       };
     }
 
     componentDidMount() {
-      NotesSelectionStore.on('change', this._updateNoteSelection);
-
       const node = nullthrows(this._ref);
       node.addEventListener('transitionend', this._onTransitionEnd);
       const parent = nullthrows(node.parentElement);
@@ -93,7 +89,7 @@ export default Store.withStore(
 
       // Always keep last-selected note in the range, even if it means
       // over-rendering.
-      const mostRecent = getLastInSet(this.state.selection);
+      const mostRecent = getLastInSet(this.props.store.get('selection'));
       if (mostRecent != null) {
         return Math.min(mostRecent, first);
       } else {
@@ -116,7 +112,7 @@ export default Store.withStore(
 
       // Always keep last-selected note in the range, even if it means
       // over-rendering.
-      const mostRecent = getLastInSet(this.state.selection);
+      const mostRecent = getLastInSet(this.props.store.get('selection'));
       if (mostRecent != null) {
         return Math.max(mostRecent, last);
       } else {
@@ -173,10 +169,6 @@ export default Store.withStore(
       }
     };
 
-    _updateNoteSelection = () => {
-      this.setState({selection: NotesSelectionStore.selection});
-    };
-
     _onBlur = () => {
       this._removeListeners();
       this.setState({focused: false});
@@ -196,6 +188,7 @@ export default Store.withStore(
     };
 
     _onKeyDown = (event: SyntheticKeyboardEvent<HTMLUListElement>) => {
+      const {store} = this.props;
       this._lastKeyDown = event.keyCode; // teh hax!
 
       switch (event.keyCode) {
@@ -212,11 +205,11 @@ export default Store.withStore(
           if (event.shiftKey) {
             this.props.store.set('focus')('OmniBar');
           } else {
-            if (NotesSelectionStore.selection.size === 1) {
-              this.props.store.set('focus')('Note');
+            if (store.get('selection').size === 1) {
+              store.set('focus')('Note');
             } else {
               // Multiple notes are selected, otherwise we wouldn't have focus.
-              this.props.store.set('focus')('OmniBar');
+              store.set('focus')('OmniBar');
             }
           }
           break;
@@ -266,15 +259,24 @@ export default Store.withStore(
         this.setState({animating: true}); // eslint-disable-line react/no-did-update-set-state
       }
 
-      if (prevState.selection !== this.state.selection) {
-        if (this.state.selection.size) {
+      // TODO; check whether this works at all
+      if (prevProps.store.get('selection') !== this.props.store.get('selection')) {
+        if (this.props.store.get('selection').size) {
           // Maintain last selection within view.
-          const lastIndex = getLastInSet(this.state.selection);
+          const lastIndex = getLastInSet(this.props.store.get('selection'));
           const last = this.refs[lastIndex]; // eslint-disable-line react/no-string-refs
 
           // Using findDOMNode because Undux wraps the NotePreviews, breaking
           // the refs.
-          ReactDOM.findDOMNode(last).scrollIntoViewIfNeeded(false); // eslint-disable-line react/no-find-dom-node
+          try {
+            ReactDOM.findDOMNode(last).scrollIntoViewIfNeeded(false); // eslint-disable-line react/no-find-dom-node
+          } catch (error) {
+            // BUG: fixme!
+            // refs don't seem to be working, should be using forwarded refs
+            // anyway:
+            // https://github.com/bcherny/undux/issues/75
+            log.error(error);
+          }
         } else {
           // If we cleared the selection by pressing Escape or entering a
           // non-exact title match, we want to scroll to the top.
@@ -308,12 +310,13 @@ export default Store.withStore(
     }
 
     _renderNotes() {
+      const {store} = this.props;
       const first = this._getFirstRenderedNote();
       const last = this._getLastRenderedNote();
-      const notes = this.props.store.get('filteredNotes');
+      const notes = store.get('filteredNotes');
       const previews = [];
       for (var i = first; i <= last; i++) {
-        const selected = this.state.selection.has(i);
+        const selected = store.get('selection').has(i);
         const note = notes[i];
         previews.push(
           <NotePreview
