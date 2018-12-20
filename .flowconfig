@@ -3,8 +3,11 @@
 # TODO: use Flow even in __tests__
 .*/__tests__/.*
 
+[include]
+
 [libs]
 ./flow-typed
+./flow-libdefs.js
 
 [lints]
 all=warn

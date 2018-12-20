@@ -2,7 +2,7 @@
  * Copyright 2015-present Greg Hurrell. All rights reserved.
  * Licensed under the terms of the MIT license.
  *
- * @flow
+ * @flow strict
  */
 
 /**
@@ -13,10 +13,10 @@
  *
  * NOTE: Implements "shallow" immutability only.
  */
-export default class FrozenSet extends Set {
+export default class FrozenSet<T> extends Set<T> {
   _isFrozen: bool;
 
-  constructor(iterable, callback) {
+  constructor(iterable: ?Iterable<T>, callback: ?(Set<T>) => void) {
     super(iterable);
     this._isFrozen = false;
     if (callback != null) {
@@ -38,7 +38,7 @@ export default class FrozenSet extends Set {
     }
   }
 
-  add(value) {
+  add(value: T): FrozenSet<T> {
     if (__DEV__) {
       this._assert();
     }
@@ -46,14 +46,14 @@ export default class FrozenSet extends Set {
     return this;
   }
 
-  delete(value) {
+  delete(value: T): boolean {
     if (__DEV__) {
       this._assert();
     }
-    super.delete(value);
+    return super.delete(value);
   }
 
-  clear() {
+  clear(): void {
     if (__DEV__) {
       this._assert();
     }
