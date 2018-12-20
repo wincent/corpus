@@ -19,6 +19,7 @@ import nullthrows from '../nullthrows';
 import printableFromKeyEvent from '../util/printableFromKeyEvent';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 import Store from '../Store';
+import selectAll from '../store/selectAll';
 import throttle from '../throttle';
 
 /**
@@ -161,11 +162,12 @@ export default Store.withStore(
       }
     }
 
+    // TODO: remind myself what this is for...
     _selectionChanged = () => {
       // Don't want to trigger on descdendant (eg. NotePreview title) selection
       // changes.
       if (document.activeElement === this._ref) {
-        Actions.allNotesSelected();
+        selectAll(this.props.store);
       }
     };
 
@@ -194,7 +196,7 @@ export default Store.withStore(
       switch (event.keyCode) {
         case Keys.A:
           if (event.metaKey) {
-            Actions.allNotesSelected();
+            selectAll(store);
             event.preventDefault();
           }
           break;

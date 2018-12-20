@@ -108,12 +108,6 @@ function adjustSelection(delta) {
   }
 }
 
-function selectAll() {
-  const length = FilteredNotesStore.notes.length;
-  const range = Array.from(new Array(length), (_, i) => i);
-  selection = new Set(range);
-}
-
 // TODO: delete; use store/selectFirst.js instead.
 function selectFirst() {
   if (FilteredNotesStore.notes.length) {
@@ -137,10 +131,6 @@ class NotesSelectionStore extends Store {
     switch (payload.type) {
       case Actions.ALL_NOTES_DESELECTED:
         this._change(payload.type, () => (selection = new Set()));
-        break;
-
-      case Actions.ALL_NOTES_SELECTED:
-        this._change(payload.type, selectAll);
         break;
 
       case Actions.ADJUST_NOTE_SELECTION_DOWN:

@@ -16,7 +16,6 @@ function dispatch(type: string, payload?: Object): void {
 }
 
 const actionTypes = {
-  ALL_NOTES_SELECTED: 'ALL_NOTES_SELECTED',
   ADJUST_NOTE_SELECTION_DOWN: 'ADJUST_NOTE_SELECTION_DOWN',
   ADJUST_NOTE_SELECTION_UP: 'ADJUST_NOTE_SELECTION_UP',
   CONFIG_LOADED: 'CONFIG_LOADED',
@@ -40,10 +39,6 @@ const actionCreators = {
 
   adjustNoteSelectionUp() {
     dispatch(actionTypes.ADJUST_NOTE_SELECTION_UP);
-  },
-
-  allNotesSelected() {
-    dispatch(actionTypes.ALL_NOTES_SELECTED);
   },
 
   noteBubbled(index: number) {
