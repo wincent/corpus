@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import debounce from 'simple-debounce';
 
 import Actions from '../Actions';
 import Dispatcher from '../Dispatcher';
@@ -14,7 +15,6 @@ import Store, {bubbleNote, updateNote} from '../Store';
 import Keys from '../Keys';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
 import colors from '../colors';
-import debounce from 'simple-debounce';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 
 import type {StoreProps} from '../Store';
