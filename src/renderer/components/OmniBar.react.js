@@ -78,6 +78,7 @@ export default Store.withStore(
         note,
         value: getCurrentTitle(props.store),
       };
+      this._inputRef = React.createRef();
     }
 
     /**
@@ -150,7 +151,7 @@ export default Store.withStore(
         this.setState({foreground: false});
       });
       ipcRenderer.on('focus', () => this.setState({foreground: true}));
-      this._inputRef.focus();
+      this._inputRef.current.focus();
       NotesSelectionStore.on('change', this._onNotesSelectionChange);
       FilteredNotesStore.on('change', this._onNotesChange);
 
@@ -164,7 +165,7 @@ export default Store.withStore(
     componentDidUpdate(prevProps) {
       const focus = this.props.store.get('focus');
       if (focus === 'OmniBar' && prevProps.store.get('focus') !== 'OmniBar') {
-        const input = this._inputRef;
+        const input = this._inputRef.current;
         input.focus();
         input.setSelectionRange(0, input.value.length);
       }
@@ -203,7 +204,7 @@ export default Store.withStore(
           value = getCurrentTitle(store) || this._query || '';
         }
         this.setState({note, value}, () => {
-          const input = this._inputRef;
+          const input = this._inputRef.current;
           if (document.activeElement === input) {
             if (currentValue && currentValue.startsWith(pendingValue)) {
               input.setSelectionRange(pendingValue.length, input.value.length);
@@ -228,7 +229,7 @@ export default Store.withStore(
     _onCancelClick = () => {
       Actions.searchRequested(''); // TODO: kill legacy
       this.props.store.set('query')('');
-      this.setState({value: ''}, () => this._inputRef.focus());
+      this.setState({value: ''}, () => this._inputRef.current.focus());
     };
 
     _onAttentionClick = () => {
@@ -346,7 +347,7 @@ export default Store.withStore(
             onFocus={this._onFocus}
             onKeyDown={this._onKeyDown}
             placeholder="Search or Create"
-            ref={ref => (this._inputRef = ref)}
+            ref={this._inputRef}
             style={styles.input}
             tabIndex={1}
             type="text"
