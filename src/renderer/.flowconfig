@@ -1,13 +1,17 @@
+#
+# WARNING: See also src/main/.flowconfig
+#
 [ignore]
-<PROJECT_ROOT>/dist/.*
 # TODO: use Flow even in __tests__
 .*/__tests__/.*
 
 [include]
+../common/
 
 [libs]
-./flow-typed
-./flow-libdefs.js
+../../flow-typed
+../../flow-libdefs/index.js
+../../flow-libdefs/electron-renderer-v4.0.0.js
 
 [lints]
 all=warn

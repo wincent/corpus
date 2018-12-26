@@ -134,7 +134,7 @@ function fix() {
 }
 
 function flow() {
-  return exec('flow check --color=always src');
+  return exec('yarn flow');
 }
 
 function clean() {
