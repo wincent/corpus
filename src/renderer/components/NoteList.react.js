@@ -58,6 +58,7 @@ export default Store.withStore(
       super(props);
       this._listening = false;
       this._listenerTimeout = null;
+      this._ref = React.createRef();
       this.state = {
         animating: false,
         bubbling: null,
@@ -67,7 +68,7 @@ export default Store.withStore(
     }
 
     componentDidMount() {
-      const node = nullthrows(this._ref);
+      const node = nullthrows(this._ref.current);
       node.addEventListener('transitionend', this._onTransitionEnd);
       const parent = nullthrows(node.parentElement);
       parent.addEventListener('scroll', this._onScroll);
@@ -165,7 +166,7 @@ export default Store.withStore(
     _selectionChanged = () => {
       // Don't want to trigger on descdendant (eg. NotePreview title) selection
       // changes.
-      if (document.activeElement === this._ref) {
+      if (document.activeElement === this._ref.current) {
         selectAll(this.props.store);
       }
     };
@@ -238,7 +239,7 @@ export default Store.withStore(
     // BUG: fix animations (they aren't working)
     _onTransitionEnd = () => {
       // A note has bubbled to the top, make sure we can see it still.
-      const parent = nullthrows(this._ref).parentElement;
+      const parent = nullthrows(this._ref.current).parentElement;
       nullthrows(parent).scrollTop = 0;
       this.props.store.set('bubbling')(null);
     };
@@ -283,7 +284,7 @@ export default Store.withStore(
         } else {
           // If we cleared the selection by pressing Escape or entering a
           // non-exact title match, we want to scroll to the top.
-          const parent = nullthrows(this._ref).parentElement;
+          const parent = nullthrows(this._ref.current).parentElement;
           nullthrows(parent).scrollTop = 0;
         }
       }
@@ -340,7 +341,7 @@ export default Store.withStore(
     render() {
       const styles = this._getStyles();
       return (
-        <div ref={node => (this._ref = node)} style={styles.root}>
+        <div ref={this._ref} style={styles.root}>
           <ul
             onBlur={this._onBlur}
             onFocus={this._onFocus}

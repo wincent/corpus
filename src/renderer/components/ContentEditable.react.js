@@ -53,6 +53,7 @@ export default Store.withStore(
 
     constructor(props) {
       super(props);
+      this._node = React.createRef();
       this.state = {
         id: props.note.id,
         value: props.note.text,
@@ -82,10 +83,10 @@ export default Store.withStore(
     }
 
     _getNode(): HTMLTextAreaElement {
-      if (!this._node) {
+      if (!this._node.current) {
         throw new Error('Expected HTMLTextAreaElement');
       }
-      return this._node;
+      return this._node.current;
     }
 
     _recordViewState(id: number) {
@@ -230,7 +231,7 @@ export default Store.withStore(
           onBlur={this._onBlur}
           onChange={this._onChange}
           onKeyDown={this._onKeyDown}
-          ref={node => (this._node = node)}
+          ref={this._node}
           style={this._getStyles().root}
           tabIndex={this.props.tabIndex}
           value={this.state.value}
