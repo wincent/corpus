@@ -340,6 +340,7 @@ export default Store.withStore(
           <TitleBar />
           <span className={iconClass} style={styles.icon} />
           <input
+            key="BUG"
             maxLength={this._getMaxLength()}
             onChange={this._onChange}
             onFocus={this._onFocus}
