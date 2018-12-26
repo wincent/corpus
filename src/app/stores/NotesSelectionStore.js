@@ -33,7 +33,7 @@ class NotesSelectionStore extends Store {
   handleDispatch(payload) {
     switch (payload.type) {
       case Actions.ALL_NOTES_DESELECTED:
-        this._change(payload.type, () => (selection = new Set()));
+        this._change(payload.type, () => (selection = new Set<any>()));
         break;
 
       case Actions.NOTE_BUBBLED:
@@ -54,11 +54,11 @@ class NotesSelectionStore extends Store {
         this.waitFor(FilteredNotesStore.dispatchToken);
         this._change(payload.type, () => {
           if (payload.value === '') {
-            selection = new Set();
+            selection = new Set<any>();
           } else if (payload.isDeletion) {
             // Special case: we don't want anything being selected if this is
             // the result of the user pressing BACKSPACE.
-            selection = new Set();
+            selection = new Set<any>();
           } else {
             // Find first matching title and select it, if there is one.
             let matchingIndex = null;
@@ -71,9 +71,9 @@ class NotesSelectionStore extends Store {
               }
             });
             if (matchingIndex !== null) {
-              selection = new Set([matchingIndex]);
+              selection = new Set<any>([matchingIndex]);
             } else {
-              selection = new Set();
+              selection = new Set<any>();
             }
           }
         });
@@ -81,12 +81,12 @@ class NotesSelectionStore extends Store {
 
       case Actions.SELECTED_NOTES_DELETED:
         this.waitFor(FilteredNotesStore.dispatchToken);
-        this._change(payload.type, () => (selection = new Set()));
+        this._change(payload.type, () => (selection = new Set<any>()));
         break;
     }
   }
 
-  _change(action, changer) {
+  _change(action: string, changer: () => mixed) {
     const previousSelection = selection;
     changer.call();
     if (selection !== previousSelection) {

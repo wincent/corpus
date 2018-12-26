@@ -2,7 +2,7 @@
  * Copyright 2015-present Greg Hurrell. All rights reserved.
  * Licensed under the terms of the MIT license.
  *
- * @flow strict-local
+ * @flow strict
  */
 
 import fs from 'fs';
@@ -26,5 +26,6 @@ export default async function loadConfig(): Promise<{[key: string]: mixed}> {
     return JSON.parse(stripComments(data.toString()));
   } catch (error) {
     log.warn(`Reading ${configFile}: ${error.message}`);
+    return {};
   }
 }

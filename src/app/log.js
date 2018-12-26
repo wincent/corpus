@@ -2,16 +2,16 @@
  * Copyright 2015-present Greg Hurrell. All rights reserved.
  * Licensed under the terms of the MIT license.
  *
- * @flow strict-local
+ * @flow strict
  */
 
 /**
  * @file Logging utilities
  *
- * These are low-level logging utilities for producing messages of differing
- * severities. The `debug()`, `error()`, `info()` and `warn()` functions log to
- * the console and additionally notify subscribers registered via the
- * `subscribe()` function.
+ * These are low-level logging utilities for producing messages of
+ * differing severities. The `debug()`, `error()`, `info()` and `warn()`
+ * functions log to the console and additionally notify subscribers
+ * registered via the `subscribe()` function.
  *
  * In the context of Corpus, we want the log messages to appear in
  * the Undux store for debuggability, but Undux is tightly coupled

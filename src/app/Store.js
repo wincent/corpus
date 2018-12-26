@@ -70,7 +70,7 @@ const initialState: State = {
   query: null,
 };
 
-export default createConnectedStore(initialState, effects);
+export default createConnectedStore<State>(initialState, effects);
 
 export type StoreT = Store<State>;
 export type StoreProps = {|

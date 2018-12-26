@@ -2,7 +2,7 @@
  * Copyright 2015-present Greg Hurrell. All rights reserved.
  * Licensed under the terms of the MIT license.
  *
- * @flow
+ * @flow strict
  */
 
 type WrappedValue<T> = {|
@@ -83,6 +83,7 @@ export default class Heap<T: mixed> {
     }
   }
 
+  // flowlint-next-line unsafe-getters-setters:off
   get size(): number {
     return this._emptySlot;
   }
