@@ -12,8 +12,6 @@ import path from 'path';
 
 import template from './menu/template';
 
-import OperationsQueue from '../app/OperationsQueue';
-
 // Global references to avoid premature GC.
 let menu = null;
 let mainWindow = null;
@@ -119,10 +117,9 @@ app.on('ready', () => {
       mainWindow = null;
       menu = null;
 
+      // TODO: use IPC to determine if OperationsQueue is empty
       // TODO: wait for queue to empty and exit; possibly show UI
-      if (!OperationsQueue.size) {
-        app.quit();
-      }
+      app.quit();
     })
     .on('focus', () => nullthrows(mainWindow).webContents.send('focus'));
 });
