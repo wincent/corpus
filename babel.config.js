@@ -39,7 +39,7 @@ module.exports = function(api) {
         '@babel/preset-env',
         {
           debug: false,
-          targets: 'electron 3.0',
+          targets: 'electron 4.0',
           useBuiltIns: 'entry',
         },
       ],
