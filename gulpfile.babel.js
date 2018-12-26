@@ -52,6 +52,18 @@ function exec(command) {
 }
 
 /**
+ * Convenience wrapper around `child_process.execSync` that captures subcommand
+ * stdout and optionally provides input over stdin as well.
+ *
+ * The non-sync version is generally preferable but you can't pipe anything into
+ * stdin with it.
+ */
+function execSync(command, input) {
+  const options = input != null ? {input} : {};
+  return child_process.execSync(command, options).toString();
+}
+
+/**
  * Wrap a stream in an error-handler (until Gulp 4, needed to prevent "watch"
  * task from dying on error).
  */
@@ -150,12 +162,20 @@ function copyIcon(env) {
   };
 }
 
-// TODO put version number from package.json in plist
-function copyPlist(env) {
-  return function copyPlist() {
-    return gulp
-      .src('pkg/Info.plist')
-      .pipe(gulp.dest(`${env}/Corpus.app/Contents/`));
+function createPlist(env) {
+  return function createPlist() {
+    const version = require('./package').version;
+    const json = JSON.parse(
+      execSync('plutil -convert json -o - pkg/Info.plist'),
+    );
+    const updated = JSON.stringify({
+      ...json,
+      CFBundleShortVersionString: version,
+      CFBundleVersion: version,
+    });
+    const target = `${env}/Corpus.app/Contents/Info.plist`;
+    execSync(`plutil -convert xml1 -o ${target} -`, updated);
+    return Promise.resolve();
   };
 }
 
@@ -237,7 +257,7 @@ module.exports = {
     'build',
     copyApp('release'),
     renameApp('release'),
-    copyPlist('release'),
+    createPlist('release'),
     copyIcon('release'),
     copyOrLinkResources('release'),
     copyOrLinkNodeModules('release'),
@@ -248,7 +268,7 @@ module.exports = {
     'build',
     copyApp('debug'),
     renameApp('debug'),
-    copyPlist('debug'),
+    createPlist('debug'),
     copyIcon('debug'),
     copyOrLinkResources('debug'),
     copyOrLinkNodeModules('debug'),
