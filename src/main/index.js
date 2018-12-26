@@ -7,7 +7,7 @@
 
 import '@babel/polyfill';
 import {BrowserWindow, Menu, MenuItem, app, ipcMain} from 'electron';
-import nullthrows from '../app/nullthrows';
+import nullthrows from '../renderer/nullthrows';
 import path from 'path';
 
 import template from './menu/template';
@@ -30,7 +30,8 @@ app.on('ready', () => {
     width: 1200,
     titleBarStyle: 'hidden',
   });
-  mainWindow.loadURL('file://' + path.join(__dirname, '/../index.html'));
+  const html = path.join(__dirname, '../renderer/index.html');
+  mainWindow.loadURL('file://' + html);
   mainWindow.webContents.on('did-finish-load', () =>
     nullthrows(mainWindow).show(),
   );
