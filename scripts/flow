@@ -1,6 +1,7 @@
 #!/bin/sh
 
-for ROOT in src/main src/renderer; do
+for CONFIG in $(find src -name .flowconfig); do
+  ROOT=$(dirname $CONFIG)
   echo "Running flow in $ROOT"
   (cd $ROOT && flow "$@")
   echo "Ran flow in $ROOT"
