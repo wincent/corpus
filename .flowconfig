@@ -1,18 +1,17 @@
 #
-# WARNING: See also src/main/.flowconfig
+# WARNING: Dummy file for the benefit of the LSP integration in Vim only.
 #
 [ignore]
+<PROJECT_ROOT>/dist/.*
 # TODO: use Flow even in __tests__
 .*/__tests__/.*
 
 [include]
-../common/
-../../node_modules/
 
 [libs]
-../../flow-typed
-../../flow-libdefs/index.js
-../../flow-libdefs/electron-renderer-v4.0.0.js
+./flow-typed
+./flow-libdefs/index.js
+./flow-libdefs/electron-renderer-v4.0.0.js
 
 [lints]
 all=warn
