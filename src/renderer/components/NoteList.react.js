@@ -15,12 +15,12 @@ import NotePreview from './NotePreview.react';
 import colors from '../colors';
 import getLastInSet from '../getLastInSet';
 import * as log from '../log';
-import nullthrows from '../nullthrows';
 import printableFromKeyEvent from '../util/printableFromKeyEvent';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 import Store from '../Store';
 import selectAll from '../store/selectAll';
 import throttle from '../throttle';
+import nullthrows from '../../common/nullthrows';
 
 /**
  * How many notes will be rendered beyond the edges of the viewport (above and

@@ -7,10 +7,9 @@
 
 import '@babel/polyfill';
 import {BrowserWindow, Menu, MenuItem, app, ipcMain} from 'electron';
-import nullthrows from '../renderer/nullthrows';
 import path from 'path';
-
 import template from './menu/template';
+import nullthrows from '../common/nullthrows';
 
 // Global references to avoid premature GC.
 let menu = null;

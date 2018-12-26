@@ -6,7 +6,7 @@
  */
 
 import path from 'path';
-import nullthrows from './nullthrows';
+import nullthrows from '../common/nullthrows';
 
 const configFile =
   process.env.CORPUSRC ?? path.join(nullthrows(process.env.HOME), '.corpusrc');

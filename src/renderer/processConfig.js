@@ -7,7 +7,7 @@
 
 import path from 'path';
 import * as log from './log';
-import nullthrows from './nullthrows';
+import nullthrows from '../common/nullthrows';
 
 export type Config = {|
   +notesDirectory: string,

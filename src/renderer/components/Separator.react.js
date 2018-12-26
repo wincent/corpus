@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import nullthrows from '../nullthrows';
+import nullthrows from '../../common/nullthrows';
 
 const styles = {
   root: {
