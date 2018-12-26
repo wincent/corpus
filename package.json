@@ -2,7 +2,7 @@
   "name": "corpus",
   "version": "0.0.1-pre",
   "description": "A note-management application for OS X.",
-  "main": "dist/browser/main.js",
+  "main": "dist/main/index.js",
   "scripts": {
     "build": "env NODE_ENV=development gulp build",
     "clean": "env NODE_ENV=development gulp clean",
