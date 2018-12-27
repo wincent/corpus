@@ -5686,9 +5686,9 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
 simple-debounce@*:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/simple-debounce/-/simple-debounce-0.0.3.tgz#237296bb60d01d86cc49c9ce4fc09cbfcd0430dd"
-  integrity sha1-I3KWu2DQHYbMScnOT8Ccv80EMN0=
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/simple-debounce/-/simple-debounce-0.0.4.tgz#1a01ffd381aca8bb87ca965c1be7e74c3ce3cf55"
+  integrity sha512-xjoy5KrIEvL/uCMKHeXF3tf2X3qc+CoDNnta7lqt8vYWpn+5uJblf4avD5gJc4WdFrEn7CW4u+HhWQ38vJOkng==
 
 single-line-log@^1.1.2:
   version "1.1.2"
