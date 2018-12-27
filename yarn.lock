@@ -6340,9 +6340,9 @@ universalify@^0.1.0:
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
 unpack-content@*:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/unpack-content/-/unpack-content-0.0.2.tgz#54cd01f5dd2dbaa5c77752d98ae338d786577405"
-  integrity sha1-VM0B9d0tuqXHd1LZiuM414ZXdAU=
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/unpack-content/-/unpack-content-0.0.3.tgz#f7d4cfc0b53dec632ccb0f9cd1e2ab9a9c1578dd"
+  integrity sha512-n6myF3EiNP4l90bbZSD6947zqtcSIclIHm62ZykAep5vXjYFivukohXX+LEWBapctklOf0GgVodoZ/KgEHTxnQ==
 
 unset-value@^1.0.0:
   version "1.0.0"
