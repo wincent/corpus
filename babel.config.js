@@ -30,6 +30,7 @@ module.exports = function(api) {
       ],
       '@babel/plugin-proposal-class-properties',
       '@babel/plugin-proposal-nullish-coalescing-operator',
+      '@babel/plugin-proposal-optional-chaining',
       '@babel/plugin-syntax-object-rest-spread',
       '@babel/plugin-transform-react-constant-elements',
       '@babel/plugin-transform-react-inline-elements',

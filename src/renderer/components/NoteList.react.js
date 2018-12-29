@@ -53,6 +53,7 @@ export default Store.withStore(
     _listenerTimeout: ?TimeoutID;
     _ref: {current: HTMLDivElement | null};
     _ulRef: {current: HTMLUListElement | null};
+    _previewRefs: {[key: string]: {current: any | null}};
 
     constructor(props: Props) {
       super(props);
@@ -60,6 +61,7 @@ export default Store.withStore(
       this._listenerTimeout = null;
       this._ref = React.createRef<HTMLDivElement>();
       this._ulRef = React.createRef<HTMLUListElement>();
+      this._previewRefs = {};
       this.state = {
         animating: false,
         bubbling: null,
@@ -232,10 +234,9 @@ export default Store.withStore(
       }
     };
 
-    _updateScrollTop = throttle(
-      scrollTop => requestAnimationFrame(() => this.setState({scrollTop})),
-      SCROLL_THROTTLE_INTERVAL,
-    );
+    _updateScrollTop = throttle(scrollTop => {
+      requestAnimationFrame(() => this.setState({scrollTop}));
+    }, SCROLL_THROTTLE_INTERVAL);
 
     // BUG: fix animations (they aren't working)
     _onTransitionEnd = () => {
@@ -249,8 +250,10 @@ export default Store.withStore(
       // A layer of indirection here is needed because event objects are pooled;
       // if we passed them directly into the throttled function they may have
       // changed by the time the wrapped function gets executed.
-      const scrollTop = event.currentTarget.scrollTop;
-      this._updateScrollTop(scrollTop);
+      const target = event.currentTarget;
+      if (target instanceof Element) {
+        this._updateScrollTop(target.scrollTop);
+      }
     };
 
     componentDidUpdate(prevProps: Props, prevState: State) {
@@ -269,18 +272,13 @@ export default Store.withStore(
         if (this.props.store.get('selection').size) {
           // Maintain last selection within view.
           const lastIndex = getLastInSet(this.props.store.get('selection'));
-          const last = this.refs[lastIndex]; // eslint-disable-line react/no-string-refs
-
-          // Using findDOMNode because Undux wraps the NotePreviews, breaking
-          // the refs.
-          try {
-            ReactDOM.findDOMNode(last).scrollIntoViewIfNeeded(false); // eslint-disable-line react/no-find-dom-node
-          } catch (error) {
-            // BUG: fixme!
-            // refs don't seem to be working, should be using forwarded refs
-            // anyway:
-            // https://github.com/bcherny/undux/issues/75
-            log.error(error);
+          if (lastIndex != null) {
+            const last = this._previewRefs[String(lastIndex)];
+            if (last && last.current) {
+              const node = ReactDOM.findDOMNode(last.current); // eslint-disable-line react/no-find-dom-node
+              // $FlowFixMe: Non-standard property: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded
+              node.scrollIntoViewIfNeeded(false);
+            }
           }
         } else {
           // If we cleared the selection by pressing Escape or entering a
@@ -292,7 +290,7 @@ export default Store.withStore(
 
       const focus = this.props.store.get('focus');
       if (focus !== prevProps.store.get('focus') && focus === 'NoteList') {
-        nullthrows(this._ulRef).focus();
+        nullthrows(this._ulRef.current).focus();
       }
 
       this._lastKeyDown = null;
@@ -320,9 +318,12 @@ export default Store.withStore(
       const last = this._getLastRenderedNote();
       const notes = store.get('filteredNotes');
       const previews = [];
+      this._previewRefs = {};
       for (var i = first; i <= last; i++) {
         const selected = store.get('selection').has(i);
         const note = notes[i];
+        const ref = React.createRef<NotePreview>();
+        this._previewRefs[String(i)] = ref;
         previews.push(
           <NotePreview
             animating={this.state.animating}
@@ -330,7 +331,7 @@ export default Store.withStore(
             index={i}
             key={note.id}
             note={note}
-            ref={String(i)}
+            ref={ref}
             selected={selected}
             translate={this._getTranslate(i)}
           />,

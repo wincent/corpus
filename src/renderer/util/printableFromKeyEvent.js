@@ -5,9 +5,7 @@
  * @flow strict
  */
 
-export default function printableFromKeyEvent(
-  event: SyntheticKeyboardEvent<>,
-): ?string {
+export default function printableFromKeyEvent(event: KeyboardEvent): ?string {
   if (event.metaKey) {
     // Potential menu short-cuts should never be printable.
     return null;

@@ -83,8 +83,15 @@ type Props = {|
   translate: ?number,
 |};
 
+type State = {|
+  isEditing: boolean,
+  pendingTitle: ?string,
+|};
+
 export default Store.withStore(
-  class NotePreview extends React.PureComponent<Props> {
+  class NotePreview extends React.PureComponent<Props, State> {
+    _ref: {current: HTMLLIElement | null};
+
     static defaultProps = {
       focused: false,
       selected: false,
@@ -92,6 +99,7 @@ export default Store.withStore(
 
     constructor(props) {
       super(props);
+      this._ref = React.createRef<HTMLLIElement>();
       this.state = {
         isEditing: false,
         pendingTitle: null,
@@ -114,10 +122,6 @@ export default Store.withStore(
           // should be eligible to get renamed at this point
         }
       }
-    }
-
-    componentWillUnmount() {
-      this.ref = null;
     }
 
     _getStyles() {
@@ -176,7 +180,8 @@ export default Store.withStore(
           isEditing: true,
           pendingTitle: this.props.note.title,
         },
-        () => this.ref.scrollIntoViewIfNeeded(false),
+        // $FlowFixMe: Non-standard property: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded
+        () => this._ref.current.scrollIntoViewIfNeeded(false),
       );
     }
 
@@ -249,8 +254,14 @@ export default Store.withStore(
       event.stopPropagation();
       switch (event.keyCode) {
         case Keys.RETURN:
-          event.preventDefault();
-          this.ref.parentNode.focus(); // focus NoteList
+          {
+            // Focus NoteList.
+            event.preventDefault();
+            const element = this._ref.current?.parentElement;
+            if (element instanceof HTMLElement) {
+              element.focus();
+            }
+          }
           break;
         case Keys.ESCAPE:
           this._endEditing(event);
@@ -279,12 +290,13 @@ export default Store.withStore(
     _renderTitle() {
       if (this.state.isEditing) {
         return (
+          // TODO: add back focus-on-mount behavior; was:
+          // ref={input => input && input.focus()}
           <input
             onBlur={this._onBlurTitle}
             onChange={this._onChange}
             onFocus={this._onFocus}
             onKeyDown={this._onKeyDown}
-            ref={input => input && input.focus()}
             style={this._getStyles().titleInput}
             type="text"
             value={this.state.pendingTitle}
@@ -303,6 +315,7 @@ export default Store.withStore(
 
     render() {
       const styles = this._getStyles();
+      let root = styles.root;
       if (this.props.translate != null) {
         // We can't just animate `translate3d` because that would move the element
         // away from its new position; instead, we want it to appear to start at
@@ -318,13 +331,19 @@ export default Store.withStore(
         // to effectively `setState` twice, and render twice.
         const offset = Constants.PREVIEW_ROW_HEIGHT * this.props.translate;
         if (this.props.animating) {
-          styles.root.transition = 'transform .5s ease-in-out';
+          root = {
+            ...root,
+            transition: 'transform .5s ease-in-out',
+          };
         } else {
           // Not ready to start animating yet, but the note has been
           // reordered within the store and within the DOM, so we have
           // to offset it to make it appear like it was still in its
           // original location.
-          styles.root.transform = `translate3d(0, ${offset}px, 0)`;
+          root = {
+            ...root,
+            transform: `translate3d(0, ${offset}px, 0)`,
+          };
         }
       }
       const {focused, note} = this.props;
@@ -335,8 +354,8 @@ export default Store.withStore(
           onClick={this._onClick}
           onContextMenu={this._onContextMenu}
           onMouseDown={this._onMouseDown}
-          ref={node => (this.ref = node)}
-          style={styles.root}>
+          ref={this._ref}
+          style={root}>
           {this._renderTitle()}
           <p style={styles.text}>{text}</p>
           <Tags focused={focused} tags={note.tags} />

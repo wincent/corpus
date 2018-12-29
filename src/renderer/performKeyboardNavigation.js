@@ -18,7 +18,10 @@ import type {StoreT} from './Store';
 /**
  * Common keyboard navigation code used by NoteList and OmniBar components.
  */
-function performKeyboardNavigation(event: KeyboardEvent, store: StoreT) {
+function performKeyboardNavigation(
+  event: SythenticKeyboardEvent,
+  store: StoreT,
+) {
   if (event.defaultPrevented) {
     // Event has already been handled.
     return;

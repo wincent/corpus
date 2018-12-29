@@ -76,7 +76,6 @@ export default Store.withStore(
   class Corpus extends React.Component<Props> {
     constructor(props: Props) {
       super(props);
-      this._selectionCount = 0;
     }
 
     async componentDidMount() {

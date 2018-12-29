@@ -229,7 +229,9 @@ export default Store.withStore(
     _onCancelClick = () => {
       Actions.searchRequested(''); // TODO: kill legacy
       this.props.store.set('query')('');
-      this.setState({value: ''}, () => nullthrows(this._inputRef.current).focus());
+      this.setState({value: ''}, () =>
+        nullthrows(this._inputRef.current).focus(),
+      );
     };
 
     _onAttentionClick = () => {

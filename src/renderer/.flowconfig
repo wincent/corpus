@@ -18,6 +18,7 @@
 all=warn
 
 [options]
+esproposal.optional_chaining=enable
 
 # Used to suppress errors caused by Flow limitations.
 suppress_type=$FlowIssue
