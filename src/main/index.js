@@ -88,10 +88,10 @@ app.on('ready', () => {
   Menu.setApplicationMenu(menu);
 
   ipcMain.on('selection-count-changed', (event, newCount) => {
-    const deleteItem = nullthrows(menu).items[1].submenu.items[1];
-    const renameItem = nullthrows(menu).items[1].submenu.items[0];
-    const previewItem = nullthrows(menu).items[1].submenu.items[5];
-    const revealItem = nullthrows(menu).items[1].submenu.items[6];
+    const deleteItem = nullthrows(menu).getMenuItemById('delete');
+    const renameItem = nullthrows(menu).getMenuItemById('rename');
+    const previewItem = nullthrows(menu).getMenuItemById('preview');
+    const revealItem = nullthrows(menu).getMenuItemById('reveal');
     if (newCount === 0) {
       deleteItem.enabled = deleteEnabled = false;
       previewItem.enabled = previewEnabled = false;
@@ -110,16 +110,19 @@ app.on('ready', () => {
     }
   });
 
-  mainWindow
-    .on('blur', () => nullthrows(mainWindow).webContents.send('blur'))
-    .on('closed', () => {
-      // Allow GC:
-      mainWindow = null;
-      menu = null;
+  // Not chaining these `on()` calls because of:
+  // https://github.com/danielbuechele/electron-flowtype-definitions/issues/2
+  mainWindow.on('blur', () => nullthrows(mainWindow).webContents.send('blur'));
+  mainWindow.on('closed', () => {
+    // Allow GC:
+    mainWindow = null;
+    menu = null;
 
-      // TODO: use IPC to determine if OperationsQueue is empty
-      // TODO: wait for queue to empty and exit; possibly show UI
-      app.quit();
-    })
-    .on('focus', () => nullthrows(mainWindow).webContents.send('focus'));
+    // TODO: use IPC to determine if OperationsQueue is empty
+    // TODO: wait for queue to empty and exit; possibly show UI
+    app.quit();
+  });
+  mainWindow.on('focus', () =>
+    nullthrows(mainWindow).webContents.send('focus'),
+  );
 });

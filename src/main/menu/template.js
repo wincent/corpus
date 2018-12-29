@@ -7,6 +7,12 @@
 
 import {BrowserWindow, app} from 'electron';
 
+import nullthrows from '../../common/nullthrows';
+
+function getWebContents() {
+  return nullthrows(BrowserWindow.getFocusedWindow()).webContents;
+}
+
 export default [
   {
     label: 'Corpus',
@@ -49,37 +55,36 @@ export default [
     submenu: [
       {
         accelerator: 'Command+R',
-        click: () =>
-          BrowserWindow.getFocusedWindow().webContents.send('rename'),
+        click: () => getWebContents().send('rename'),
         enabled: false,
+        id: 'rename',
         label: 'Rename',
       },
       {
         accelerator: 'Command+Backspace',
-        click: () =>
-          BrowserWindow.getFocusedWindow().webContents.send('delete'),
+        click: () => getWebContents().send('delete'),
         enabled: false,
+        id: 'delete',
         label: 'Delete...',
       },
       {type: 'separator'},
       {
         accelerator: 'Command+L',
         label: 'Search or Create...', // TODO: use a real ellipsis?
-        click: () =>
-          BrowserWindow.getFocusedWindow().webContents.send('search'),
+        click: () => getWebContents().send('search'),
       },
       {type: 'separator'},
       {
         accelerator: 'Shift+Command+P',
+        click: () => getWebContents().send('preview'),
+        id: 'preview',
         label: 'Preview',
-        click: () =>
-          BrowserWindow.getFocusedWindow().webContents.send('preview'),
       },
       {
         accelerator: 'Shift+Command+R',
+        click: () => getWebContents().send('reveal'),
+        id: 'reveal',
         label: 'Show in Finder',
-        click: () =>
-          BrowserWindow.getFocusedWindow().webContents.send('reveal'),
       },
     ],
   },
@@ -125,13 +130,12 @@ export default [
     submenu: [
       {
         accelerator: 'Command+J',
-        click: () => BrowserWindow.getFocusedWindow().webContents.send('next'),
+        click: () => getWebContents().send('next'),
         label: 'Next Note',
       },
       {
         accelerator: 'Command+K',
-        click: () =>
-          BrowserWindow.getFocusedWindow().webContents.send('previous'),
+        click: () => getWebContents().send('previous'),
         label: 'Previous Note',
       },
     ],
@@ -141,13 +145,12 @@ export default [
     submenu: [
       {
         accelerator: 'Alt+Command+R',
-        click: () =>
-          BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache(),
+        click: () => getWebContents().reloadIgnoringCache(),
         label: 'Reload',
       },
       {
         accelerator: 'Alt+Command+J',
-        click: () => BrowserWindow.getFocusedWindow().toggleDevTools(),
+        click: () => getWebContents().toggleDevTools(),
         label: 'Toggle Developer Tools',
       },
     ],
