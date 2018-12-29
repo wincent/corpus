@@ -51,14 +51,15 @@ export default Store.withStore(
     _lastKeyDown: ?number;
     _listening: boolean;
     _listenerTimeout: ?TimeoutID;
-    _ref: ?HTMLDivElement;
-    _ulRef: ?HTMLUListElement;
+    _ref: {current: HTMLDivElement | null};
+    _ulRef: {current: HTMLUListElement | null};
 
     constructor(props: Props) {
       super(props);
       this._listening = false;
       this._listenerTimeout = null;
-      this._ref = React.createRef();
+      this._ref = React.createRef<HTMLDivElement>();
+      this._ulRef = React.createRef<HTMLUListElement>();
       this.state = {
         animating: false,
         bubbling: null,
@@ -346,7 +347,7 @@ export default Store.withStore(
             onBlur={this._onBlur}
             onFocus={this._onFocus}
             onKeyDown={this._onKeyDown}
-            ref={ref => (this._ulRef = ref)}
+            ref={this._ulRef}
             style={styles.list}
             tabIndex={2}>
             {this._renderNotes()}

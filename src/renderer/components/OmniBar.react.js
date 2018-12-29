@@ -7,6 +7,7 @@
 
 import {ipcRenderer, remote} from 'electron';
 import React from 'react';
+import TitleBar from './TitleBar.react';
 import Actions from '../Actions';
 import Keys from '../Keys';
 import Store, {createNote} from '../Store';
@@ -14,15 +15,14 @@ import * as log from '../log';
 import performKeyboardNavigation from '../performKeyboardNavigation';
 import getCurrentNote from '../store/getCurrentNote';
 import selectFirst from '../store/selectFirst';
-import FilteredNotesStore from '../stores/FilteredNotesStore';
 import NotesSelectionStore from '../stores/NotesSelectionStore';
-import TitleBar from './TitleBar.react';
+import nullthrows from '../../common/nullthrows';
 
-import type {StoreProps} from '../Store';
+import type {Note, StoreProps} from '../Store';
 
 function getCurrentTitle(store) {
   const note = getCurrentNote(store);
-  if (note === null) {
+  if (note == null) {
     return '';
   } else {
     return note.title;
@@ -37,14 +37,14 @@ type State = {|
   lastSeenLogIndex: number,
   foreground: boolean,
   showError: boolean,
-  note: $FlowFixMe,
+  note: Note,
   value: string,
 |};
 
 export default Store.withStore(
   class OmniBar extends React.Component<Props, State> {
     _blurred: ?boolean;
-    _inputRef: ?HTMLInputElement;
+    _inputRef: {current: HTMLInputElement | null};
     _pendingDeletion: ?string;
     _query: ?string;
 
@@ -78,7 +78,7 @@ export default Store.withStore(
         note,
         value: getCurrentTitle(props.store),
       };
-      this._inputRef = React.createRef();
+      this._inputRef = React.createRef<HTMLInputElement>();
     }
 
     /**
@@ -151,7 +151,7 @@ export default Store.withStore(
         this.setState({foreground: false});
       });
       ipcRenderer.on('focus', () => this.setState({foreground: true}));
-      this._inputRef.current.focus();
+      nullthrows(this._inputRef.current).focus();
       NotesSelectionStore.on('change', this._onNotesSelectionChange);
       FilteredNotesStore.on('change', this._onNotesChange);
 
@@ -165,7 +165,7 @@ export default Store.withStore(
     componentDidUpdate(prevProps) {
       const focus = this.props.store.get('focus');
       if (focus === 'OmniBar' && prevProps.store.get('focus') !== 'OmniBar') {
-        const input = this._inputRef.current;
+        const input = nullthrows(this._inputRef.current);
         input.focus();
         input.setSelectionRange(0, input.value.length);
       }
@@ -204,7 +204,7 @@ export default Store.withStore(
           value = getCurrentTitle(store) || this._query || '';
         }
         this.setState({note, value}, () => {
-          const input = this._inputRef.current;
+          const input = nullthrows(this._inputRef.current);
           if (document.activeElement === input) {
             if (currentValue && currentValue.startsWith(pendingValue)) {
               input.setSelectionRange(pendingValue.length, input.value.length);
@@ -229,11 +229,11 @@ export default Store.withStore(
     _onCancelClick = () => {
       Actions.searchRequested(''); // TODO: kill legacy
       this.props.store.set('query')('');
-      this.setState({value: ''}, () => this._inputRef.current.focus());
+      this.setState({value: ''}, () => nullthrows(this._inputRef.current).focus());
     };
 
     _onAttentionClick = () => {
-      remote.getCurrentWindow().openDevTools();
+      remote.getCurrentWindow().webContents.openDevTools();
       this.setState({showError: false});
     };
 

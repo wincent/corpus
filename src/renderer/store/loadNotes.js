@@ -135,7 +135,7 @@ function compareMTime(a, b) {
   }
 }
 
-async function readContents(info: $FlowFixMe): Promise<Note> {
+async function readContents(info: $FlowFixMe): Promise<?Note> {
   try {
     const content = (await readFile(info.path)).toString();
     const unpacked = unpackContent(content);

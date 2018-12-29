@@ -35,7 +35,7 @@ const viewStates = {};
 
 export default Store.withStore(
   class ContentEditable extends React.Component<Props, State> {
-    _node: ?HTMLTextAreaElement;
+    _node: {current: HTMLTextAreaElement | null};
     _pendingSave: boolean;
 
     _autosave = debounce(() => this._persistChanges(true), 5000);
@@ -53,7 +53,7 @@ export default Store.withStore(
 
     constructor(props) {
       super(props);
-      this._node = React.createRef();
+      this._node = React.createRef<HTMLTextAreaElement>();
       this.state = {
         id: props.note.id,
         value: props.note.text,
