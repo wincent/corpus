@@ -108,28 +108,25 @@ async function getStatInfo(
 ): Promise<StatInfo> {
   const notePath = path.join(notesDirectory, filename);
   const title = getTitleFromPath(notePath);
-  let statResult;
+  let mtime;
   try {
-    statResult = await stat(notePath);
+    mtime = (await stat(notePath)).mtimeMs;
   } catch {
-    // eslint-disable-line no-empty
-    // Do nothing.
+    mtime = 0;
   }
 
   return {
     id: getUUID(),
-    mtime: statResult ? statResult.mtime.getTime() : 0,
+    mtime,
     path: notePath,
     title,
   };
 }
 
-function compareMTime(a, b) {
-  const aTime = a.mtime;
-  const bTime = b.mtime;
-  if (aTime > bTime) {
+function compareMTime({mtime: a}, {mtime: b}) {
+  if (a > b) {
     return -1;
-  } else if (aTime < bTime) {
+  } else if (a < b) {
     return 1;
   } else {
     return 0;
