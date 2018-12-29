@@ -20,6 +20,7 @@ import handleError from '../handleError';
 import * as log from '../log';
 
 import type {Note} from '../Store';
+import type {UUID} from '../getUUID';
 
 const mkdir = promisify(mkdirp);
 const readFile = promisify(fs.readFile);
@@ -93,8 +94,8 @@ function getTitleFromPath(notePath: string): string {
 }
 
 type StatInfo = {|
-  +id: number,
-  +mtime: ?number,
+  +id: UUID,
+  +mtime: number,
   +path: string,
   +title: string,
 |};
@@ -117,7 +118,7 @@ async function getStatInfo(
 
   return {
     id: getUUID(),
-    mtime: statResult && statResult.mtime.getTime(),
+    mtime: statResult ? statResult.mtime.getTime() : 0,
     path: notePath,
     title,
   };
