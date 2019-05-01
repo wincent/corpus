@@ -2,7 +2,7 @@
   "name": "corpus",
   "version": "0.0.9000-pre",
   "description": "A note-management application for macOS",
-  "main": "dist/main.js",
+  "main": "dist/main/index.js",
   "repository": "https://github.com/wincent/corpus.git",
   "author": "Greg Hurrell <greg@hurrell.net>",
   "license": "MIT",
@@ -23,6 +23,7 @@
     "clean": "rm -r dist/*",
     "format": "prettier --write -- '*.{json,md}' 'src/**/*.{html,ts,tsx}'",
     "format:check": "prettier --list-different -- '*.{json,md}' 'src/**/*.{html,ts,tsx}'",
-    "start": "electron ."
+    "start": "electron .",
+    "watch": "tsc --watch"
   }
 }
