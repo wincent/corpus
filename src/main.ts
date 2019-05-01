@@ -6,6 +6,9 @@ function createWindow() {
     minHeight: 200,
     minWidth: 200,
     titleBarStyle: 'hiddenInset',
+    webPreferences: {
+      nodeIntegration: true,
+    },
     width: 1200,
   });
   win.loadFile('index.html');

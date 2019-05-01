@@ -8,17 +8,21 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "electron": "5.0.0"
+    "electron": "5.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "devDependencies": {
+    "@types/react": "16.8.15",
+    "@types/react-dom": "16.8.4",
     "prettier": "*",
     "typescript": "^3.4.5"
   },
   "scripts": {
     "build": "tsc",
     "clean": "rm -r dist/*",
-    "format": "prettier --write -- '*.{json,md}' 'src/**/*.{html,ts}'",
-    "format:check": "prettier --list-different -- '*.{json,md}' 'src/**/*.{html,ts}'",
+    "format": "prettier --write -- '*.{json,md}' 'src/**/*.{html,ts,tsx}'",
+    "format:check": "prettier --list-different -- '*.{json,md}' 'src/**/*.{html,ts,tsx}'",
     "start": "electron ."
   }
 }

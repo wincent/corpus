@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "module": "CommonJS",
     "moduleResolution": "node",
     "outDir": "./dist",
     "strict": true,
     "target": "ES2017"
   },
-  "include": ["./src/**/*.ts"]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
