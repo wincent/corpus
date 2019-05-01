@@ -11,11 +11,14 @@
     "electron": "5.0.0"
   },
   "devDependencies": {
+    "prettier": "*",
     "typescript": "^3.4.5"
   },
   "scripts": {
     "build": "tsc",
     "clean": "rm -r dist/*",
+    "format": "prettier --write -- '*.{json,md}' 'src/**/*.{html,ts}'",
+    "format:check": "prettier --list-different -- '*.{json,md}' 'src/**/*.{html,ts}'",
     "start": "electron ."
   }
 }
