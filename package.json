@@ -2,7 +2,7 @@
   "name": "corpus",
   "version": "0.0.9000-pre",
   "description": "A note-management application for macOS",
-  "main": "index.js",
+  "main": "main.js",
   "repository": "https://github.com/wincent/corpus.git",
   "author": "Greg Hurrell <greg@hurrell.net>",
   "license": "MIT",
@@ -12,5 +12,8 @@
   },
   "devDependencies": {
     "typescript": "^3.4.5"
+  },
+  "scripts": {
+    "start": "electron ."
   }
 }
