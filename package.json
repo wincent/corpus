@@ -15,6 +15,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "clean": "rm -r dist/*",
     "start": "electron ."
   }
 }
