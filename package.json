@@ -9,5 +9,8 @@
   "private": false,
   "dependencies": {
     "electron": "5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.4.5"
   }
 }
