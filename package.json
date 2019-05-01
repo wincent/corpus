@@ -1,0 +1,10 @@
+{
+  "name": "corpus",
+  "version": "0.0.9000-pre",
+  "description": "A note-management application for macOS",
+  "main": "index.js",
+  "repository": "https://github.com/wincent/corpus.git",
+  "author": "Greg Hurrell <greg@hurrell.net>",
+  "license": "MIT",
+  "private": false
+}
