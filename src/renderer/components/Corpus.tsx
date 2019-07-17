@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import Viewport from './Viewport';
+
 export default function Corpus() {
-  return <div>Corpus</div>;
+  return <Viewport>Corpus</Viewport>;
 }
