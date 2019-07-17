@@ -9,9 +9,9 @@ const styles = {
   } as React.CSSProperties,
 };
 
-type Props = {
+interface Props {
   children?: React.ReactNode;
-};
+}
 
 export default function Viewport({children}: Props) {
   return <div style={styles.root}>{children}</div>;
