@@ -21,12 +21,15 @@
     "eslint-config-prettier": "6.0.0",
     "eslint-plugin-react": "7.14.2",
     "prettier": "*",
-    "typescript": "^3.4.5"
+    "typescript": "^3.4.5",
+    "yarn-deduplicate": "1.1.1"
   },
   "scripts": {
     "build": "tsc",
-    "ci": "yarn format:check && yarn lint && yarn test",
+    "check": "yarn format:check && yarn lint && yarn test",
     "clean": "rm -r dist/*",
+    "deduplicate": "yarn-deduplicate yarn.lock",
+    "fix": "yarn format && yarn lint:fix && yarn deduplicate",
     "format": "prettier --write -- '*.{js,json,md}' 'src/**/*.{html,ts,tsx}'",
     "format:check": "prettier --list-different -- '*.{js,json,md}' 'src/**/*.{html,ts,tsx}'",
     "lint": "eslint '.*.js' 'src/**/*.{ts,tsx}'",
