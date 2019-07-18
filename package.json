@@ -38,7 +38,8 @@
     "lint": "eslint '.*.js' 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '.*.js' 'src/**/*.{ts,tsx}'",
     "start": "electron .",
-    "test": "true",
+    "test": "yarn typecheck",
+    "typecheck": "tsc --noEmit",
     "watch": "tsc --watch"
   }
 }
