@@ -15,12 +15,13 @@ module.exports = {
     'prettier/@typescript-eslint',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['notice', '@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'notice', 'react-hooks'],
   parserOptions: {
     project: './tsconfig.json',
   },
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-unused-vars': ['warn', {argsIgnorePattern: '^_'}],
     'notice/notice': [
       'error',
       {
@@ -32,6 +33,8 @@ module.exports = {
           '/**\n * @copyright Copyright (c) <%= YEAR %>-present Greg Hurrell\n * @license MIT\n */\n\n',
       },
     ],
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
   settings: {
     react: {

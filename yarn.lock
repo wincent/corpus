@@ -85,6 +85,13 @@
     lodash.unescape "4.0.1"
     semver "5.5.0"
 
+"@wincent/clamp@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@wincent/clamp/-/clamp-0.2.0.tgz#8053da57f02c571427b71a6b4c190e3ed23b7fb5"
+  integrity sha512-51cLHtMzCvsWbgTjH32q4PYtXZ5/rLWIacemSHn5YIY+LPNUW4XVlQnVw/DH4XQYcL0zQOgUjhJTrGjypKK02Q==
+  dependencies:
+    core-js "3.0.0"
+
 "@yarnpkg/lockfile@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
@@ -307,6 +314,11 @@ concat-stream@1.6.2:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
+core-js@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.0.0.tgz#a8dbfa978d29bfc263bfb66c556d0ca924c28957"
+  integrity sha512-WBmxlgH2122EzEJ6GH8o9L/FeoUKxxxZ6q6VUxoTlsE4EvbTWKJb447eyVxTEuq0LpXjlq/kCB2qgBvsYRkLvQ==
+
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -494,6 +506,11 @@ eslint-plugin-notice@0.8.8:
     find-root "^1.1.0"
     lodash "^4.17.11"
     metric-lcs "^0.1.2"
+
+eslint-plugin-react-hooks@1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-1.6.1.tgz#3c66a5515ea3e0a221ffc5d4e75c971c217b1a4c"
+  integrity sha512-wHhmGJyVuijnYIJXZJHDUF2WM+rJYTjulUTqF9k61d3BTk8etydz+M4dXUVH7M76ZRS85rqBTCx0Es/lLsrjnA==
 
 eslint-plugin-react@7.14.2:
   version "7.14.2"

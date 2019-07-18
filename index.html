@@ -3,6 +3,37 @@
   <head>
     <meta charset="UTF-8">
     <title>Corpus</title>
+    <style type="text/css">
+      /* Sane box sizing model by default */
+      html {
+        box-sizing: border-box;
+      }
+      *,
+      *:after,
+      *:before {
+        box-sizing: inherit;
+      }
+
+      /* Reset */
+      body {
+        margin: 0;
+      }
+
+      body.grabbing * {
+        cursor: -webkit-grabbing !important;
+      }
+
+      /* No rubber banding */
+      body,
+      html {
+        overflow: hidden;
+      }
+
+      /* hover etc (can't do with inline styles) */
+      .separator:hover {
+        cursor: col-resize;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

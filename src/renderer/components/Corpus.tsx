@@ -3,10 +3,18 @@
  * @license MIT
  */
 
-import * as React from 'react';
+import React from 'react';
 
+import SplitView from './SplitView';
 import Viewport from './Viewport';
 
 export default function Corpus() {
-  return <Viewport>Corpus</Viewport>;
+  return (
+    <Viewport>
+      <SplitView>
+        <div>left</div>
+        <div>right</div>
+      </SplitView>
+    </Viewport>
+  );
 }
