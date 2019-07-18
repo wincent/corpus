@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import React from 'react';
+import * as React from 'react';
 import {render} from 'react-dom';
 
 import Corpus from './components/Corpus';

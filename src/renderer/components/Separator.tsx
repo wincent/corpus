@@ -3,7 +3,9 @@
  * @license MIT
  */
 
-import React, {useEffect, useState} from 'react';
+import * as React from 'react';
+
+const {useEffect, useState} = React;
 
 const styles = {
   root: {

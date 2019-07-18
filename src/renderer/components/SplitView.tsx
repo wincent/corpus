@@ -4,9 +4,11 @@
  */
 
 import clamp from '@wincent/clamp';
-import React, {useEffect, useState} from 'react';
+import * as React from 'react';
 
 import Separator from './Separator';
+
+const {useEffect, useState} = React;
 
 const styles = {
   left: {

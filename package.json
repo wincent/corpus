@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@wincent/clamp": "0.2.0",
+    "@wincent/clamp": "0.3.0",
     "electron": "5.0.7",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"

@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import React from 'react';
+import * as React from 'react';
 
 import SplitView from './SplitView';
 import Viewport from './Viewport';

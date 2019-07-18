@@ -85,12 +85,10 @@
     lodash.unescape "4.0.1"
     semver "5.5.0"
 
-"@wincent/clamp@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@wincent/clamp/-/clamp-0.2.0.tgz#8053da57f02c571427b71a6b4c190e3ed23b7fb5"
-  integrity sha512-51cLHtMzCvsWbgTjH32q4PYtXZ5/rLWIacemSHn5YIY+LPNUW4XVlQnVw/DH4XQYcL0zQOgUjhJTrGjypKK02Q==
-  dependencies:
-    core-js "3.0.0"
+"@wincent/clamp@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@wincent/clamp/-/clamp-0.3.0.tgz#1f5fb06eeac59a52fc51db9a77918b03527dade8"
+  integrity sha512-NS7/YsEcwb0VMrDSsnDVVD6mws0OhxxWZGB3Cmag3ria+DTWfM/a27APIOmT0qQoFOCmPQbaskAL2FzUfHXuhg==
 
 "@yarnpkg/lockfile@^1.1.0":
   version "1.1.0"
@@ -313,11 +311,6 @@ concat-stream@1.6.2:
     inherits "^2.0.3"
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
-
-core-js@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.0.0.tgz#a8dbfa978d29bfc263bfb66c556d0ca924c28957"
-  integrity sha512-WBmxlgH2122EzEJ6GH8o9L/FeoUKxxxZ6q6VUxoTlsE4EvbTWKJb447eyVxTEuq0LpXjlq/kCB2qgBvsYRkLvQ==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
