@@ -20,8 +20,16 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
+    // One of the benefits of TypeScript is that inference works well. Seeing
+    // the inferred type is easy enough in any case.
     '@typescript-eslint/explicit-function-return-type': 'off',
+
+    // If it wasn't `foo!` it would be an assertion in the form of
+    // `nullthrows(foo)`. Used sparingly anyway.
+    '@typescript-eslint/no-non-null-assertion': 'off',
+
     '@typescript-eslint/no-unused-vars': ['warn', {argsIgnorePattern: '^_'}],
+
     'notice/notice': [
       'error',
       {
@@ -33,6 +41,7 @@ module.exports = {
           '/**\n * @copyright Copyright (c) <%= YEAR %>-present Greg Hurrell\n * @license MIT\n */\n\n',
       },
     ],
+
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
   },

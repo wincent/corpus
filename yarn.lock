@@ -90,6 +90,11 @@
   resolved "https://registry.yarnpkg.com/@wincent/clamp/-/clamp-0.3.0.tgz#1f5fb06eeac59a52fc51db9a77918b03527dade8"
   integrity sha512-NS7/YsEcwb0VMrDSsnDVVD6mws0OhxxWZGB3Cmag3ria+DTWfM/a27APIOmT0qQoFOCmPQbaskAL2FzUfHXuhg==
 
+"@wincent/nullthrows@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@wincent/nullthrows/-/nullthrows-0.1.0.tgz#f473e65826d163e934aa4f06c4325f3e0c105652"
+  integrity sha512-g+bN8H5ZrvSxCalcdqt2tpgktm0rOcKa0l82+dTHeRcUKg+1M2IZDfG56Wl7MYdXh6hd6YKbIYUeclUSqesSVA==
+
 "@yarnpkg/lockfile@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
