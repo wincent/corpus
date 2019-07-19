@@ -78,13 +78,17 @@ function getStyles({foreground, showError, value}: State) {
 
 export default function OmniBar() {
   const inputRef = useRef<HTMLInputElement>(null!);
+  const shouldFocus = useRef(true);
 
   const [foreground, setForeground] = useState(true);
   const [value, setValue] = useState('some phony value for now');
   const [showError, setShowError] = useState(false);
 
   useEffect(() => {
-    inputRef.current.focus();
+    if (shouldFocus.current) {
+      inputRef.current.focus();
+      shouldFocus.current = false;
+    }
   });
 
   const styles = getStyles({
@@ -101,7 +105,10 @@ export default function OmniBar() {
 
   function onAttentionClick() {}
 
-  function onCancelClick() {}
+  function onCancelClick() {
+    shouldFocus.current = true;
+    setValue('');
+  }
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
     setValue(event.currentTarget.value);
