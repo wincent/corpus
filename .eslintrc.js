@@ -24,6 +24,9 @@ module.exports = {
     // the inferred type is easy enough in any case.
     '@typescript-eslint/explicit-function-return-type': 'off',
 
+    // Freedom to choose.
+    '@typescript-eslint/prefer-interface': 'off',
+
     // If it wasn't `foo!` it would be an assertion in the form of
     // `nullthrows(foo)`. Used sparingly anyway.
     '@typescript-eslint/no-non-null-assertion': 'off',

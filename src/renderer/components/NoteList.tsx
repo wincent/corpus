@@ -7,6 +7,10 @@ import * as React from 'react';
 
 import * as colors from '../colors';
 import {PREVIEW_ROW_HEIGHT} from '../constants';
+import NotesContext from '../contexts/NotesContext';
+import NotesDispatch from '../contexts/NotesDispatch';
+
+const {useContext} = React;
 
 function getStyles() {
   const filteredNotesSize = 0; // TODO calc
@@ -36,11 +40,18 @@ function getStyles() {
 }
 
 export default function NoteList() {
+  const dispatch = useContext(NotesDispatch);
+  const {notes} = useContext(NotesContext);
+
   const styles = getStyles();
 
   return (
     <div style={styles.root}>
-      <ul style={styles.list}></ul>
+      <ul style={styles.list}>
+        {notes.map((note, i) => (
+          <li key={i}>{note.title}</li>
+        ))}
+      </ul>
     </div>
   );
 }
