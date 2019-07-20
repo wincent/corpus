@@ -1,7 +1,7 @@
 /**
  * This is an ES6 Set stand-in for programming in an immutable style.
  *
- * In __DEV__ will throw an error on attempted mutation (use of `add()`,
+ * In development will throw an error on attempted mutation (use of `add()`,
  * `clear()` or `delete()`.
  *
  * NOTE: Implements "shallow" immutability only.
@@ -30,7 +30,7 @@ export default class FrozenSet<T> implements Set<T> {
   freeze(this: FrozenSet<T>) {
     this.isFrozen = true;
 
-    if (__DEV__) {
+    if (process.env.NODE_ENV !== 'production') {
       Object.freeze(this.storage);
     }
   }
@@ -46,7 +46,7 @@ export default class FrozenSet<T> implements Set<T> {
   }
 
   add(value: T): this {
-    if (__DEV__) {
+    if (process.env.NODE_ENV !== 'production') {
       this.assert();
     }
 
@@ -56,7 +56,7 @@ export default class FrozenSet<T> implements Set<T> {
   }
 
   clear(this: FrozenSet<T>): void {
-    if (__DEV__) {
+    if (process.env.NODE_ENV !== 'production') {
       this.assert();
     }
 
@@ -64,7 +64,7 @@ export default class FrozenSet<T> implements Set<T> {
   }
 
   delete(this: FrozenSet<T>, value: T): boolean {
-    if (__DEV__) {
+    if (process.env.NODE_ENV !== 'production') {
       this.assert();
     }
 
