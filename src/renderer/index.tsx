@@ -3,6 +3,10 @@
  * @license MIT
  */
 
+// TODO: in prod builds, ignore this. transform all __DEV__ to false then
+// dead-code strip.
+global.__DEV__ = true;
+
 import * as React from 'react';
 import {render} from 'react-dom';
 

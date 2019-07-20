@@ -15,6 +15,7 @@
     "react-dom": "^16.8.6"
   },
   "devDependencies": {
+    "@types/jest": "24.0.15",
     "@types/react": "16.8.23",
     "@types/react-dom": "16.8.4",
     "@typescript-eslint/eslint-plugin": "1.12.0",
@@ -24,13 +25,15 @@
     "eslint-plugin-notice": "0.8.8",
     "eslint-plugin-react": "7.14.2",
     "eslint-plugin-react-hooks": "1.6.1",
+    "jest": "24.8.0",
     "prettier": "*",
+    "ts-jest": "24.0.2",
     "typescript": "^3.4.5",
     "yarn-deduplicate": "1.1.1"
   },
   "scripts": {
     "build": "tsc",
-    "check": "yarn format:check && yarn lint && yarn test",
+    "ci": "yarn format:check && yarn lint && yarn typecheck && yarn test",
     "clean": "rm -r dist/*",
     "deduplicate": "yarn-deduplicate yarn.lock",
     "fix": "yarn format && yarn lint:fix && yarn deduplicate",
@@ -39,7 +42,7 @@
     "lint": "eslint '.*.js' 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '.*.js' 'src/**/*.{ts,tsx}'",
     "start": "electron .",
-    "test": "yarn typecheck",
+    "test": "jest",
     "typecheck": "tsc --noEmit",
     "watch": "tsc --watch"
   }
