@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
 
+import {warn} from './log';
 import stripComments from './stripComments';
 
 const readFile = promisify(fs.readFile);
@@ -20,7 +21,7 @@ export default async function loadConfig(): Promise<Config> {
     const data = await readFile(configFile);
     return processConfig(JSON.parse(stripComments(data.toString())));
   } catch (error) {
-    console.warn(`Reading ${configFile}: ${error.message}`);
+    warn(`Reading ${configFile}: ${error.message}`);
     return processConfig();
   }
 }
@@ -41,7 +42,7 @@ function expectString(maybeString: unknown, key: string): string {
   if (typeof maybeString === 'string') {
     return maybeString;
   }
-  console.warn(
+  warn(
     `Expected string value for config key ${key} but got ${typeof maybeString}`,
   );
   return String(maybeString);
@@ -70,11 +71,11 @@ function processConfig(input: JSONValue = {}): Readonly<Config> {
       if (isValidConfigKey(key)) {
         output[key] = CONFIG_NORMALIZERS[key](value, key);
       } else {
-        console.warn(`Ignoring unsupported config key ${key}`);
+        warn(`Ignoring unsupported config key ${key}`);
       }
     }
   } else {
-    console.warn('input JSON is not an object');
+    warn('Configuration JSON is not an object');
   }
 
   return Object.freeze(output);

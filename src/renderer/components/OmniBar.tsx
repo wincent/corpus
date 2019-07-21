@@ -3,8 +3,10 @@
  * @license MIT
  */
 
+import {remote} from 'electron';
 import * as React from 'react';
 
+import * as log from '../util/log';
 import TitleBar from './TitleBar';
 
 const {useEffect, useRef, useState} = React;
@@ -85,6 +87,23 @@ export default function OmniBar() {
   const [showError, setShowError] = useState(false);
 
   useEffect(() => {
+    // On first render, subscribe to log events.
+    const {dispose, sequenceNumbers} = log.subscribe(({level}) => {
+      if (log.LOG_LEVEL[level] >= log.LOG_LEVEL.WARNING) {
+        setShowError(true);
+      }
+    });
+
+    // If there were any error or warning log events before we mounted,
+    // show icon.
+    if (sequenceNumbers['ERROR'] !== -1 || sequenceNumbers['WARNING'] !== -1) {
+      setShowError(true);
+    }
+
+    return dispose;
+  }, []);
+
+  useEffect(() => {
     if (shouldFocus.current) {
       inputRef.current.focus();
       shouldFocus.current = false;
@@ -103,7 +122,11 @@ export default function OmniBar() {
 
   const iconClass = selectionSize === 1 ? 'icon-pencil' : 'icon-search';
 
-  function onAttentionClick() {}
+  function onAttentionClick() {
+    remote.getCurrentWindow().webContents.openDevTools();
+
+    setShowError(false);
+  }
 
   function onCancelClick() {
     shouldFocus.current = true;
