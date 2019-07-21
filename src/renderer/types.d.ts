@@ -3,11 +3,28 @@
  * @license MIT
  */
 
+type Action = {
+  type: 'load';
+  notes: Note[];
+};
+
 type Config = {
   notesDirectory: string;
   noteFontFamily: string;
   noteFontSize: string;
 };
+
+/**
+ * JSON
+ *
+ * @see https://www.json.org/
+ */
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface JSONArray extends Array<JSONValue> {}
+
+type JSONObject = {[member: string]: JSONValue};
+type JSONValue = JSONArray | JSONObject | boolean | null | number | string;
 
 type Note = {
   title: string;
@@ -20,7 +37,7 @@ type Store = {
   // TODO: add selected notes
 };
 
-type Action = {
-  type: 'load';
-  notes: Note[];
+// Counterpart to Readonly<T>.
+type Writable<T> = {
+  -readonly [K in keyof T]: T[K];
 };

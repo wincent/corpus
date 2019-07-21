@@ -28,7 +28,12 @@ module.exports = {
     '@typescript-eslint/prefer-interface': 'off',
 
     // Default is ridiculous.
-    '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'no-public' }],
+    '@typescript-eslint/explicit-member-accessibility': [
+      'error',
+      {accessibility: 'no-public'},
+    ],
+
+    '@typescript-eslint/no-use-before-define': ['error', {functions: false}],
 
     // If it wasn't `foo!` it would be an assertion in the form of
     // `nullthrows(foo)`. Used sparingly anyway.
