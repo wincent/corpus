@@ -3,6 +3,12 @@
  * @license MIT
  */
 
+type Config = {
+  notesDirectory: string;
+  noteFontFamily: string;
+  noteFontSize: string;
+};
+
 type Note = {
   title: string;
   body: string;

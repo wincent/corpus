@@ -1,4 +1,9 @@
 /**
+ * @copyright Copyright (c) 2019-present Greg Hurrell
+ * @license MIT
+ */
+
+/**
  * This is an ES6 Set stand-in for programming in an immutable style.
  *
  * In development will throw an error on attempted mutation (use of `add()`,
@@ -11,7 +16,10 @@ export default class FrozenSet<T> implements Set<T> {
   private isFrozen: boolean;
   private storage: Set<T>;
 
-  constructor(iterable?: Iterable<T> | null, callback?: (s: FrozenSet<T>) => void) {
+  constructor(
+    iterable?: Iterable<T> | null,
+    callback?: (s: FrozenSet<T>) => void,
+  ) {
     this.storage = new Set(iterable);
 
     this.isFrozen = false;
@@ -75,8 +83,10 @@ export default class FrozenSet<T> implements Set<T> {
     return this.storage.entries();
   }
 
-
-  forEach(callbackfn: (value: T, value2: T, set: Set<T>) => void, thisArg?: any): void {
+  forEach(
+    callbackfn: (value: T, value2: T, set: Set<T>) => void,
+    thisArg?: any,
+  ): void {
     return this.storage.forEach(callbackfn, thisArg);
   }
 

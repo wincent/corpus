@@ -27,6 +27,9 @@ module.exports = {
     // Freedom to choose.
     '@typescript-eslint/prefer-interface': 'off',
 
+    // Default is ridiculous.
+    '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'no-public' }],
+
     // If it wasn't `foo!` it would be an assertion in the form of
     // `nullthrows(foo)`. Used sparingly anyway.
     '@typescript-eslint/no-non-null-assertion': 'off',
