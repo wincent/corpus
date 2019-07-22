@@ -7,6 +7,8 @@ import * as React from 'react';
 
 import NotesContext from '../contexts/NotesContext';
 import NotesDispatch from '../contexts/NotesDispatch';
+import loadConfig from '../util/loadConfig';
+import loadNotes from '../util/loadNotes';
 import NoteList from './NoteList';
 import OmniBar from './OmniBar';
 import SplitView from './SplitView';
@@ -21,7 +23,7 @@ const reducer = (store: Store, action: Action): Store => {
     case 'load':
       return {
         ...store,
-        notes: action.notes,
+        notes: [...store.notes, ...action.notes],
       };
   }
   return store;
@@ -39,16 +41,17 @@ export default function Corpus() {
   const [store, dispatch] = useReducer(reducer, initialState, init);
 
   useEffect(() => {
-    // load notes data
-    Promise.resolve().then(() => {
-      dispatch({
-        type: 'load',
-        notes: [
-          {title: 'note 1', body: 'contents'},
-          {title: 'note 2', body: 'body'},
-        ],
+    async function load() {
+      const {notesDirectory} = await loadConfig();
+      loadNotes(notesDirectory).subscribe((notes: readonly Note[]) => {
+        dispatch({
+          type: 'load',
+          notes,
+        });
       });
-    });
+    }
+
+    load();
   }, []);
 
   return (

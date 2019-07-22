@@ -5,7 +5,7 @@
 
 type Action = {
   type: 'load';
-  notes: Note[];
+  notes: readonly Note[];
 };
 
 type Config = {
@@ -32,7 +32,7 @@ type Note = {
 };
 
 type Store = {
-  notes: Note[];
+  notes: Readonly<Note[]>;
   // TODO: add filtered notes
   // TODO: add selected notes
 };
