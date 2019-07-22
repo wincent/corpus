@@ -129,7 +129,7 @@ function compareMTime({mtime: a}: StatInfo, {mtime: b}: StatInfo) {
   }
 }
 
-async function readContents(info: any): Promise<Note | null> {
+async function readContents(info: StatInfo): Promise<Note | null> {
   try {
     const content = (await readFile(info.path)).toString();
     const unpacked = unpackContent(content);

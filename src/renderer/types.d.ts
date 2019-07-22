@@ -27,8 +27,14 @@ type JSONObject = {[member: string]: JSONValue};
 type JSONValue = JSONArray | JSONObject | boolean | null | number | string;
 
 type Note = {
-  title: string;
   body: string;
+  mtime: number;
+  path: string;
+  readonly id: number; // really UUID
+  tags: Set<string>,
+  text: string,
+  title: string;
+  version: number;
 };
 
 type Store = {
