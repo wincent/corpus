@@ -14,18 +14,18 @@ const styles = {
   left: {
     flexBasis: 0,
     overflowY: 'scroll',
-  } as React.CSSProperties,
+  },
 
   right: {
     flexBasis: 0,
     overflowY: 'scroll',
-  } as React.CSSProperties,
+  },
 
   root: {
     display: 'flex',
     flexGrow: 1,
-  } as React.CSSProperties,
-};
+  },
+} as const;
 
 interface Props {
   children: React.ReactNode;

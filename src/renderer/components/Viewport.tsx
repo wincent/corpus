@@ -11,8 +11,8 @@ const styles = {
     flexDirection: 'column',
     height: '100vh',
     width: '100%',
-  } as React.CSSProperties,
-};
+  }
+} as const;
 
 interface Props {
   children?: React.ReactNode;

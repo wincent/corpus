@@ -27,14 +27,15 @@ function getStyles() {
       top: space + 'px',
       left: 0,
       right: 0,
-    } as React.CSSProperties,
+    },
+
     root: {
       background: colors.background,
       height: filteredNotesSize * PREVIEW_ROW_HEIGHT,
       minHeight: 'calc(100vh - 36px)', // ensure full background coverage
       position: 'relative',
-    } as React.CSSProperties,
-  };
+    },
+  } as const;
 
   return styles;
 }

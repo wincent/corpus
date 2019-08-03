@@ -40,21 +40,24 @@ function getStyles({foreground, showError, value}: State) {
       position: 'absolute',
       right: value ? '24px' : '10px',
       top: '33px',
-    } as React.CSSProperties,
+    },
+
     cancel: {
       color: '#bfbfbf',
       fontSize: '13px',
       position: 'absolute',
       right: '10px',
       top: '33px',
-    } as React.CSSProperties,
+    },
+
     icon: {
       color: '#565656',
       fontSize: '14px',
       left: '10px',
       position: 'absolute',
       top: '33px',
-    } as React.CSSProperties,
+    },
+
     input: {
       WebkitAppRegion: 'no-drag',
       WebkitAppearance: 'none', // only with this can we override padding
@@ -64,7 +67,8 @@ function getStyles({foreground, showError, value}: State) {
       lineHeight: '16px',
       padding: `2px ${rightInputPadding} 1px 20px`,
       width: '100%',
-    } as React.CSSProperties,
+    },
+
     root: {
       WebkitAppRegion: 'drag',
       WebkitUserSelect: 'none',
@@ -74,8 +78,8 @@ function getStyles({foreground, showError, value}: State) {
       padding: '30px 8px 14px',
       position: 'relative',
       minHeight: '60px',
-    } as React.CSSProperties,
-  };
+    },
+  } as const;
 }
 
 export default function OmniBar() {

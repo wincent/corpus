@@ -16,8 +16,8 @@ const styles = {
     position: 'absolute',
     textAlign: 'center',
     width: '100%',
-  } as React.CSSProperties,
-};
+  }
+} as const;
 
 export default function TitleBar() {
   const title = 'some title read from state management';

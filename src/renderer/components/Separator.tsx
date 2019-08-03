@@ -15,8 +15,8 @@ const styles = {
     flexGrow: 0,
     outline: 0,
     width: '8px',
-  } as React.CSSProperties,
-};
+  },
+} as const;
 
 interface Props {
   onMouseMove: (event: MouseEvent) => void;

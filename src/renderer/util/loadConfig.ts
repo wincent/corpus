@@ -66,8 +66,8 @@ function processConfig(input: JSONValue = {}): Readonly<Config> {
     ...DEFAULT_CONFIG,
   };
 
-  if (typeof input === 'object') {
-    for (const [key, value] of Object.entries(input as JSONObject)) {
+  if (input && typeof input === 'object' && !Array.isArray(input)) {
+    for (const [key, value] of Object.entries(input)) {
       if (isValidConfigKey(key)) {
         output[key] = CONFIG_NORMALIZERS[key](value, key);
       } else {
