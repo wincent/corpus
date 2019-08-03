@@ -11,7 +11,7 @@ const styles = {
     flexDirection: 'column',
     height: '100vh',
     width: '100%',
-  }
+  },
 } as const;
 
 interface Props {

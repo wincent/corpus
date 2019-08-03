@@ -16,7 +16,7 @@ const styles = {
     position: 'absolute',
     textAlign: 'center',
     width: '100%',
-  }
+  },
 } as const;
 
 export default function TitleBar() {
