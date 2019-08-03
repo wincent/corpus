@@ -31,8 +31,8 @@ type Note = {
   mtime: number;
   path: string;
   readonly id: number; // really UUID
-  tags: Set<string>,
-  text: string,
+  tags: Set<string>;
+  text: string;
   title: string;
   version: number;
 };
