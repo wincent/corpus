@@ -3,7 +3,8 @@
 # Licensed under the terms of the MIT license.
 
 if [ -n "$TMUX" ]; then
-  echo "error: clipboard (copy/paste) won't work if launched from inside a tmux session (bailing)"
+  echo "error: clipboard (copy/paste) won't work if launched from inside tmux"
+  echo "(bailing: relaunch with \`env TMUX= ./corpus.sh\` to proceed anyway)"
   exit 1
 fi
 

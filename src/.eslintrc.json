@@ -3,8 +3,13 @@
     "browser": true
   },
   "globals": {
-    "global": true,
-    "setImmediate": false
+    "__DEV__": false,
+    "SyntheticEvent": false,
+    "SyntheticInputEvent": false,
+    "SyntheticKeyboardEvent": false,
+    "SyntheticMouseEvent": false,
+    "TimeoutID": false,
+    "rxjs$Observable": false
   },
   "rules": {}
 }

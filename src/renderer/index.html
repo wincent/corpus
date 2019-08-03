@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Corpus</title>
+    <meta name="copyright" content="Copyright 2015-present Greg Hurrell. All rights reserved." />
+    <meta name="license" content="Licensed under the terms of the MIT license." />
+    <style type="text/css">
+      /* Sane box sizing model by default */
+      html {
+        box-sizing: border-box;
+      }
+      *,
+      *:after,
+      *:before {
+        box-sizing: inherit;
+      }
+
+      /* Reset */
+      body {
+        margin: 0;
+      }
+      textarea {
+        /* NOTE: this will go away when we switch to contenteditable */
+        resize: none;
+      }
+
+      body.grabbing * {
+        cursor: -webkit-grabbing !important;
+      }
+
+      p {
+        margin: 0; /* overwrite -webkit-margin-* */
+      }
+
+      /* No rubber banding */
+      body,
+      html {
+        overflow: hidden;
+      }
+
+      /* hover etc (can't do with inline styles) */
+      .separator:hover {
+        cursor: col-resize;
+      }
+
+      .tag:hover {
+        filter: brightness(85%);
+      }
+
+      .tag:active {
+        filter: brightness(75%);
+        transform: scale(1.1);
+        transition: transform .2s;
+      }
+
+      /* base for CSS animations */
+      .animatable {
+        transform: translate3d(0);
+      }
+    </style>
+    <link href="../../vendor/icons/css/fontello.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="app-root">
+      <!--
+        Read-only version of part of the DOM that React will build for us
+        (Omnibar, with empty lower area) to improve perceived boot-up
+        performance.
+      -->
+      <div style="display:flex;flex-direction:column;height:100vh;width:100vw;">
+        <div style="-webkit-user-select:none;border-bottom:1px solid #d1d1d1;flex-grow:0;padding:4px 8px;min-height:32px;background:linear-gradient(#d3d3d3, #d0d0d0);">
+          <input placeholder="Search or Create" style="width:100%;" tabindex="1" type="search" value="" disabled>
+        </div>
+        <div style="display:flex;flex-grow:1;background:#ebebeb;">
+          <div style="background:#ebebeb;min-height:calc(100vh - 36px);">
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      require('.');
+    </script>
+  </body>
+</html>

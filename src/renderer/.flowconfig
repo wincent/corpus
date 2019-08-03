@@ -1,0 +1,39 @@
+#
+# WARNING: See also src/main/.flowconfig
+#
+[ignore]
+# TODO: use Flow even in __tests__
+.*/__tests__/.*
+
+[include]
+../common/
+../../node_modules/
+
+[libs]
+../../flow-typed
+../../flow-libdefs/index.js
+../../flow-libdefs/electron-renderer-v4.0.0.js
+
+[lints]
+all=warn
+
+[options]
+esproposal.optional_chaining=enable
+
+# Used to suppress errors caused by Flow limitations.
+suppress_type=$FlowIssue
+
+# Used to suppress errors caused by our code.
+suppress_type=$FlowFixMe
+
+# Comment form of the above; requires a clarifying reason to be supplied.
+suppress_comment=\\(.\\|\n\\)*\\$\\(FlowFixMe\\|FlowIssue\\).+
+
+
+[strict]
+nonstrict-import
+sketchy-null
+unclear-type
+unsafe-getters-setters
+untyped-import
+untyped-type-import

@@ -7,7 +7,8 @@
     "prettier/react"
   ],
   "env": {
-    "es6": true
+    "es6": true,
+    "node": true
   },
   "parser": "babel-eslint",
   "parserOptions": {
@@ -27,24 +28,23 @@
     "new-cap": [
       2,
       {
-        "capIsNewExceptions": [
-          "ImmutableList",
-          "ImmutableMap",
-          "ImmutableOrderedSet",
-          "ImmutableRange",
-          "ImmutableRecord",
-          "ImmutableSet"
-        ]
+        "capIsNewExceptions": []
       }
     ],
     "no-alert": [0],
     "no-underscore-dangle": [0],
     "no-use-before-define": [0],
+    "flowtype/define-flow-type": 1,
     "prettier/prettier": ["error", {
       "singleQuote": true,
       "trailingComma": "all",
       "bracketSpacing": false,
       "jsxBracketSameLine": true
     }]
+  },
+  "settings": {
+    "react": {
+      "version": "16.6.3"
+    }
   }
 }

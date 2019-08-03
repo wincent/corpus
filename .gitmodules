@@ -1,0 +1,3 @@
+[submodule "vendor/electron-flowtype-definitions"]
+	path = vendor/electron-flowtype-definitions
+	url = https://github.com/danielbuechele/electron-flowtype-definitions.git
