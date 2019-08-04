@@ -11,7 +11,7 @@ fi
 tmux new-session -d -s corpus -n vim -x $(tput cols) -y $(tput lines)
 tmux send-keys -t corpus:vim "vim -c CommandTBoot" Enter
 
-# Window 1, (top) right pane: gulp
+# Window 1, (top) right pane: build
 tmux split-window -t corpus:vim -h
 tmux send-keys -t corpus:vim.right "yarn watch" Enter
 
