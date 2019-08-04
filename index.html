@@ -25,6 +25,10 @@
         cursor: -webkit-grabbing !important;
       }
 
+      p {
+        margin: 0; /* overwrite -webkit-margin-* */
+      }
+
       /* No rubber banding */
       body,
       html {
@@ -34,6 +38,16 @@
       /* hover etc (can't do with inline styles) */
       .separator:hover {
         cursor: col-resize;
+      }
+
+      .tag:hover {
+        filter: brightness(85%);
+      }
+
+      .tag:active {
+        filter: brightness(75%);
+        transform: scale(1.1);
+        transition: transform .2s;
       }
     </style>
     <link href="./vendor/icons/css/fontello.css" rel="stylesheet" type="text/css">
