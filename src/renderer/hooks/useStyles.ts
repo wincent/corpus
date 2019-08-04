@@ -4,15 +4,7 @@
  */
 
 export default function useStyles<T extends string>(
-  callback: () => Readonly<
-    {
-      [name in T]: React.CSSProperties;
-    }
-  >,
-): Readonly<
-  {
-    [name in T]: React.CSSProperties;
-  }
-> {
+  callback: () => Styles<T>,
+): Styles<T> {
   return callback();
 }
