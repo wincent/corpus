@@ -1,14 +1,18 @@
-import {useCallback} from 'react';
+/**
+ * @copyright Copyright (c) 2019-present Greg Hurrell
+ * @license MIT
+ */
 
-export default function useStyles<T extends string>(callback: (...args: any[]) => Readonly<{
-  [name in T]: React.CSSProperties
-}>, args: readonly any[]): Readonly<{
-  [name in T]: React.CSSProperties
-}> {
-  return (
-    useCallback(
-      () => callback(...args),
-      args
-    )
-  )();
+export default function useStyles<T extends string>(
+  callback: () => Readonly<
+    {
+      [name in T]: React.CSSProperties;
+    }
+  >,
+): Readonly<
+  {
+    [name in T]: React.CSSProperties;
+  }
+> {
+  return callback();
 }

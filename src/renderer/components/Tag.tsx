@@ -12,20 +12,17 @@ type Props = {
 };
 
 export default function Tag({focused, tag}: Props) {
-  const styles = useStyles<'root'>(
-    (focused: boolean) => ({
-      root: {
-        backgroundColor: focused ? '#fff' : '#9e9e9e',
-        borderRadius: '2px',
-        color: focused ? '#6f6f73' : '#e6e6e6',
-        cursor: 'pointer',
-        display: 'inline-block',
-        marginLeft: '4px',
-        padding: '0 4px',
-      },
-    }),
-    [focused]
-  );
+  const styles = useStyles<'root'>(() => ({
+    root: {
+      backgroundColor: focused ? '#fff' : '#9e9e9e',
+      borderRadius: '2px',
+      color: focused ? '#6f6f73' : '#e6e6e6',
+      cursor: 'pointer',
+      display: 'inline-block',
+      marginLeft: '4px',
+      padding: '0 4px',
+    },
+  }));
 
   return (
     <span

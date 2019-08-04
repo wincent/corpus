@@ -15,7 +15,7 @@ const {useContext} = React;
 
 function getStyles() {
   const filteredNotesSize = 0; // TODO calc
-  const space = 0/* getFirstRenderedNote() */ * PREVIEW_ROW_HEIGHT;
+  const space = 0 /* getFirstRenderedNote() */ * PREVIEW_ROW_HEIGHT;
 
   const styles: Styles<'list' | 'root'> = {
     list: {
