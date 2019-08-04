@@ -7,6 +7,6 @@ import 'csstype';
 
 declare module 'csstype' {
   interface Properties {
-    WebkitAppRegion?: string;
+    WebkitAppRegion?: 'drag' | 'inherit' | 'initial' | 'no-drag' | 'none' | 'unset';
   }
 }
