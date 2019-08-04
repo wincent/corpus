@@ -7,7 +7,7 @@ import * as React from 'react';
 
 const {useEffect, useState} = React;
 
-const styles: Styles = {
+const styles: Styles<'root'> = {
   root: {
     background: 'linear-gradient(90deg, #f8f8f8, #e9e9e9)',
     borderLeft: '1px solid #c3c3c3',

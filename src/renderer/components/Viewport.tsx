@@ -5,7 +5,7 @@
 
 import * as React from 'react';
 
-const styles: Styles = {
+const styles: Styles<'root'> = {
   root: {
     display: 'flex',
     flexDirection: 'column',

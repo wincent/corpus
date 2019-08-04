@@ -43,9 +43,11 @@ type Store = {
   // TODO: add selected notes
 };
 
-type Styles = Readonly<{
-  [name: string]: React.CSSProperties;
-}>;
+type Styles<T extends string> = Readonly<
+  {
+    [name in T]: React.CSSProperties;
+  }
+>;
 
 // Counterpart to Readonly<T>.
 type Writable<T> = {

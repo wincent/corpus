@@ -10,7 +10,7 @@ import Separator from './Separator';
 
 const {useEffect, useState} = React;
 
-const styles: Styles = {
+const styles: Styles<'left' | 'right' | 'root'> = {
   left: {
     flexBasis: 0,
     overflowY: 'scroll',

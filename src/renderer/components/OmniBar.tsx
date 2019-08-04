@@ -30,7 +30,11 @@ function getMaxLength() {
   );
 }
 
-function getStyles({foreground, showError, value}: State): Styles {
+function getStyles({
+  foreground,
+  showError,
+  value,
+}: State): Styles<'attention' | 'cancel' | 'icon' | 'input' | 'root'> {
   const rightInputPadding = 0 + (value ? 18 : 0) + (showError ? 18 : 0) + 'px';
 
   return {

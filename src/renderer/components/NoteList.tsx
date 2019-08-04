@@ -16,7 +16,7 @@ function getStyles() {
   const filteredNotesSize = 0; // TODO calc
   const space = /* getFirstRenderedNote() * */ PREVIEW_ROW_HEIGHT;
 
-  const styles: Styles = {
+  const styles: Styles<'list' | 'root'> = {
     list: {
       WebkitUserSelect: 'none',
       cursor: 'default',

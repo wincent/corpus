@@ -7,6 +7,12 @@ import 'csstype';
 
 declare module 'csstype' {
   interface Properties {
-    WebkitAppRegion?: 'drag' | 'inherit' | 'initial' | 'no-drag' | 'none' | 'unset';
+    WebkitAppRegion?:
+      | 'drag'
+      | 'inherit'
+      | 'initial'
+      | 'no-drag'
+      | 'none'
+      | 'unset';
   }
 }
