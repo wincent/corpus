@@ -16,7 +16,7 @@ const styles: Styles = {
     outline: 0,
     width: '8px',
   },
-} as const;
+};
 
 interface Props {
   onMouseMove: (event: MouseEvent) => void;

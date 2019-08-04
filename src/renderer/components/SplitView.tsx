@@ -25,7 +25,7 @@ const styles: Styles = {
     display: 'flex',
     flexGrow: 1,
   },
-} as const;
+};
 
 interface Props {
   children: React.ReactNode;

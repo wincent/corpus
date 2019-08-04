@@ -79,7 +79,7 @@ function getStyles({foreground, showError, value}: State): Styles {
       position: 'relative',
       minHeight: '60px',
     },
-  } as const;
+  };
 }
 
 export default function OmniBar() {

@@ -35,7 +35,7 @@ function getStyles() {
       minHeight: 'calc(100vh - 36px)', // ensure full background coverage
       position: 'relative',
     },
-  } as const;
+  };
 
   return styles;
 }

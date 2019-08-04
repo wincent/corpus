@@ -17,7 +17,7 @@ const styles: Styles = {
     textAlign: 'center',
     width: '100%',
   },
-} as const;
+};
 
 export default function TitleBar() {
   const title = 'some title read from state management';
