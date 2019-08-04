@@ -5,7 +5,7 @@
 
 import * as React from 'react';
 
-const styles = {
+const styles: Styles = {
   root: {
     WebkitAppRegion: 'drag',
     WebkitUserSelect: 'none',

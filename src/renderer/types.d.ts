@@ -43,6 +43,12 @@ type Store = {
   // TODO: add selected notes
 };
 
+type Styles = {
+  // TODO: figure out how to catch typos of `name` (eg. orot instead of root
+  // etc)
+  [name: string]: React.CSSProperties;
+};
+
 // Counterpart to Readonly<T>.
 type Writable<T> = {
   -readonly [K in keyof T]: T[K];
