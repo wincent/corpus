@@ -43,7 +43,7 @@ type Store = {
   // TODO: add selected notes
 };
 
-type Styles<T extends string> = Readonly<
+type Styles<T extends string = 'root'> = Readonly<
   {
     [name in T]: React.CSSProperties;
   }

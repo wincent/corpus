@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function Tags({focused, tags}: Props) {
-  const styles: Styles<'root'> = {
+  const styles: Styles = {
     root: {
       bottom: '4px',
       position: 'absolute',

@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-export default function useStyles<T extends string>(
+export default function useStyles<T extends string = 'root'>(
   callback: () => Styles<T>,
 ): Styles<T> {
   return callback();
