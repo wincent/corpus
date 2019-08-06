@@ -93,7 +93,7 @@ export default function NoteList() {
   return (
     <div ref={ref} style={styles.root}>
       <ul style={styles.list}>
-        {notes.map((note, i) => (
+        {notes.map((note: Note, i: number) => (
           <NotePreview
             focused={/*selected && */ focused}
             key={i}

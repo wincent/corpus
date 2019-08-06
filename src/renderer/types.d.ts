@@ -3,10 +3,17 @@
  * @license MIT
  */
 
-type Action = {
-  type: 'load';
-  notes: readonly Note[];
-};
+type FrozenSet<T> = import('@wincent/frozen-set').default<T>;
+
+type Action =
+  | Readonly<{
+      type: 'load';
+      notes: readonly Note[];
+    }>
+  | Readonly<{
+      type: 'filter';
+      query: string;
+    }>;
 
 type Config = {
   notesDirectory: string;
@@ -38,9 +45,9 @@ type Note = {
 };
 
 type Store = {
-  notes: Readonly<Note[]>;
-  // TODO: add filtered notes
-  // TODO: add selected notes
+  readonly filteredNotes: Readonly<Note[]>;
+  readonly notes: Readonly<Note[]>;
+  readonly selectedNotes: FrozenSet<Note>;
 };
 
 type Styles<T extends string = 'root'> = Readonly<

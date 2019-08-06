@@ -3,10 +3,13 @@
  * @license MIT
  */
 
+import FrozenSet from '@wincent/frozen-set';
 import * as React from 'react';
 
 import NotesContext from '../contexts/NotesContext';
 import NotesDispatch from '../contexts/NotesDispatch';
+// TODO: move some of these "util" modules into a "store" directory
+import filterNotes from '../util/filterNotes';
 import loadConfig from '../util/loadConfig';
 import loadNotes from '../util/loadNotes';
 import NoteList from './NoteList';
@@ -20,6 +23,12 @@ const {useEffect, useReducer} = React;
 
 const reducer = (store: Store, action: Action): Store => {
   switch (action.type) {
+    // TODO: consider offering a separate context for filtered notes?
+    case 'filter':
+      return {
+        ...store,
+        filteredNotes: filterNotes(action.query, store.notes),
+      };
     case 'load':
       return {
         ...store,
@@ -32,8 +41,10 @@ const reducer = (store: Store, action: Action): Store => {
 export default function Corpus() {
   // TODO: read notes... update them... if I want to do that async, where is the
   // best place to do it?
-  const initialState = {
+  const initialState: Store = {
+    filteredNotes: [],
     notes: [],
+    selectedNotes: new FrozenSet(),
   };
   const init: (initialState: Store) => Store = initialState => {
     return initialState;
