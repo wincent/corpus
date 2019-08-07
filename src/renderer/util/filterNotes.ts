@@ -30,10 +30,10 @@ function getMatcher(word: string): Matcher {
 }
 
 export default function filterNotes(
-  value: string,
+  query: string | null,
   notes: readonly Note[],
 ): readonly Note[] {
-  const matchers: Matcher[] = value
+  const matchers: Matcher[] = (query || '')
     .trim()
     .split(/\s+/)
     .map(getMatcher);

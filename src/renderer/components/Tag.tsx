@@ -4,7 +4,10 @@
  */
 
 import * as React from 'react';
+import NotesDispatch from '../contexts/NotesDispatch';
 import useStyles from '../hooks/useStyles';
+
+const {useContext} = React;
 
 type Props = {
   focused: boolean;
@@ -12,6 +15,8 @@ type Props = {
 };
 
 export default function Tag({focused, tag}: Props) {
+  const dispatch = useContext(NotesDispatch);
+
   const styles = useStyles<'root'>(() => ({
     root: {
       backgroundColor: focused ? '#fff' : '#9e9e9e',
@@ -28,9 +33,11 @@ export default function Tag({focused, tag}: Props) {
     <span
       className="tag"
       onClick={event => {
-        // Don't want to select note that was clicked on.
         event.stopPropagation();
-        // TODO: dispatch to initiate search for `#${tag}`
+        dispatch({
+          query: `#${tag}`,
+          type: 'filter',
+        });
       }}
       style={styles.root}
     >

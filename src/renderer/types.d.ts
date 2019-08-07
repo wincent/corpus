@@ -37,18 +37,19 @@ type Note = {
   body: string;
   mtime: number;
   path: string;
-  readonly id: number; // really UUID
+  readonly id: number; // really UUID; ideally would be an opaque type
   tags: Set<string>;
   text: string;
   title: string;
   version: number;
 };
 
-type Store = {
+type Store = Readonly<{
+  readonly query: string | null;
   readonly filteredNotes: Readonly<Note[]>;
   readonly notes: Readonly<Note[]>;
   readonly selectedNotes: FrozenSet<Note>;
-};
+}>;
 
 type Styles<T extends string = 'root'> = Readonly<
   {

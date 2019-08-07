@@ -1,4 +1,9 @@
 /**
+ * @copyright Copyright (c) 2019-present Greg Hurrell
+ * @license MIT
+ */
+
+/**
  * Returns an escaped, case-insentive regular expression object suitable for
  * finding the literal string `string`.
  */

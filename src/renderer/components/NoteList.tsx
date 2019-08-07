@@ -55,7 +55,7 @@ function getStyles() {
 
 export default function NoteList() {
   const dispatch = useContext(NotesDispatch);
-  const {notes} = useContext(NotesContext);
+  const {filteredNotes} = useContext(NotesContext);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -93,7 +93,7 @@ export default function NoteList() {
   return (
     <div ref={ref} style={styles.root}>
       <ul style={styles.list}>
-        {notes.map((note, i) => (
+        {filteredNotes.map((note, i) => (
           <NotePreview
             focused={/*selected && */ focused}
             key={i}

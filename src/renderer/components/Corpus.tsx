@@ -28,12 +28,17 @@ const reducer = (store: Store, action: Action): Store => {
       return {
         ...store,
         filteredNotes: filterNotes(action.query, store.notes),
+        query: action.query,
       };
-    case 'load':
+    case 'load': {
+      const notes = [...store.notes, ...action.notes];
+
       return {
         ...store,
-        notes: [...store.notes, ...action.notes],
+        filteredNotes: filterNotes(store.query, notes),
+        notes,
       };
+    }
   }
   return store;
 };
@@ -44,6 +49,7 @@ export default function Corpus() {
   const initialState: Store = {
     filteredNotes: [],
     notes: [],
+    query: null,
     selectedNotes: new FrozenSet(),
   };
   const init: (initialState: Store) => Store = initialState => {
