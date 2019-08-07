@@ -19,7 +19,9 @@ import Viewport from './Viewport';
 
 const {useEffect, useReducer} = React;
 
-// figure out best place to put reducers etc
+// TODO: figure out best place to put reducers etc
+// and whether I want to factor them out into little functions like I previously
+// did on the next branch
 
 const reducer = (store: Store, action: Action): Store => {
   switch (action.type) {

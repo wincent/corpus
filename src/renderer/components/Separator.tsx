@@ -38,17 +38,15 @@ export default function Separator({onMouseMove}: Props) {
         setDragging(false);
       };
 
-      const cleanUp = () => {
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-        document.body.classList.remove('grabbing');
-      };
-
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
       document.body.classList.add('grabbing');
 
-      return cleanUp;
+      return () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+        document.body.classList.remove('grabbing');
+      };
     }
   }, [dragging, onMouseMove]);
 
