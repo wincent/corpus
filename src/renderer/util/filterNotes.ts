@@ -42,6 +42,8 @@ export default function filterNotes(
     const indices: number[] = [];
     return notes.filter((note, index) => {
       // TODO: only return new array if the filtering operation excluded any items
+      // TODO: take previous array as param so we can retutn that if nothing is
+      // different
       if (
         matchers.every(pattern => {
           if (pattern.type === 'literal') {

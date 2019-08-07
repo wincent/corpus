@@ -14,6 +14,14 @@ module.exports = {
     'prettier',
     'prettier/@typescript-eslint',
   ],
+  overrides: [
+    {
+      files: '*.d.ts',
+      rules: {
+        'no-var': 'off',
+      },
+    },
+  ],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'notice', 'react-hooks'],
   parserOptions: {
