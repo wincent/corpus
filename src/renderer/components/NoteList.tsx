@@ -10,6 +10,7 @@ import * as colors from '../colors';
 import {PREVIEW_ROW_HEIGHT} from '../constants';
 import NotesContext from '../contexts/NotesContext';
 import NotesDispatch from '../contexts/NotesDispatch';
+import useStyles from '../hooks/useStyles';
 import NotePreview from './NotePreview';
 
 const {useContext, useEffect, useRef, useState} = React;
@@ -25,34 +26,6 @@ const OFF_VIEWPORT_NOTE_BUFFER_COUNT = 20;
  */
 const SCROLL_THROTTLE_INTERVAL = 250;
 
-function getStyles() {
-  const filteredNotesSize = 0; // TODO calc
-  const space = 0 /* getFirstRenderedNote() */ * PREVIEW_ROW_HEIGHT;
-
-  const styles: Styles<'list' | 'root'> = {
-    list: {
-      WebkitUserSelect: 'none',
-      cursor: 'default',
-      margin: 0,
-      outline: 0,
-      padding: 0,
-      position: 'absolute',
-      top: space + 'px',
-      left: 0,
-      right: 0,
-    },
-
-    root: {
-      background: colors.background,
-      height: filteredNotesSize * PREVIEW_ROW_HEIGHT,
-      minHeight: 'calc(100vh - 36px)', // ensure full background coverage
-      position: 'relative',
-    },
-  };
-
-  return styles;
-}
-
 export default function NoteList() {
   const dispatch = useContext(NotesDispatch);
   const {filteredNotes} = useContext(NotesContext);
@@ -60,6 +33,32 @@ export default function NoteList() {
   const ref = useRef<HTMLDivElement>(null);
 
   const [scrollTop, setScrollTop] = useState(0);
+
+  const styles = useStyles<'list' | 'root'>(() => {
+    const filteredNotesSize = 0; // TODO calc
+    const space = 0 /* getFirstRenderedNote() */ * PREVIEW_ROW_HEIGHT;
+
+    return {
+      list: {
+        WebkitUserSelect: 'none',
+        cursor: 'default',
+        margin: 0,
+        outline: 0,
+        padding: 0,
+        position: 'absolute',
+        top: space + 'px',
+        left: 0,
+        right: 0,
+      },
+
+      root: {
+        background: colors.background,
+        height: filteredNotesSize * PREVIEW_ROW_HEIGHT,
+        minHeight: 'calc(100vh - 36px)', // ensure full background coverage
+        position: 'relative',
+      },
+    };
+  });
 
   useEffect(() => {
     const updateScrollTop = throttle((scrollTop: number) => {
@@ -84,8 +83,6 @@ export default function NoteList() {
       throw new Error('NoteList: Unexpected unmount');
     };
   }, []);
-
-  const styles = getStyles();
 
   const focused = false;
 

@@ -27,9 +27,9 @@ const styles: Styles<'left' | 'right' | 'root'> = {
   },
 };
 
-interface Props {
+type Props = {
   children: React.ReactNode;
-}
+};
 
 function getPaneDimensions(desiredLeftPaneWidth: number) {
   if (desiredLeftPaneWidth < 40) {

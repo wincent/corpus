@@ -11,15 +11,15 @@ type Props = {
   tags: Set<string>;
 };
 
-export default function Tags({focused, tags}: Props) {
-  const styles: Styles = {
-    root: {
-      bottom: '4px',
-      position: 'absolute',
-      right: '4px',
-    },
-  };
+const styles: Styles = {
+  root: {
+    bottom: '4px',
+    position: 'absolute',
+    right: '4px',
+  },
+};
 
+export default function Tags({focused, tags}: Props) {
   return (
     <div style={styles.root}>
       {Array.from(tags).map(tag => (

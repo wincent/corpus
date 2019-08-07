@@ -8,12 +8,14 @@ import {PREVIEW_ROW_HEIGHT} from '../constants';
 import PreviewTitle from './PreviewTitle';
 import Tags from './Tags';
 
+// TODO: consistently use interface or type for props
 type Props = {
   focused: boolean;
   selected: boolean;
   note: Note;
 };
 
+// TODO: switch to useStyles hook
 function getStyles({
   focused,
   selected,

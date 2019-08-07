@@ -12,7 +12,7 @@ type Action =
     }>
   | Readonly<{
       type: 'filter';
-      query: string;
+      query: string | null;
     }>;
 
 type Config = {

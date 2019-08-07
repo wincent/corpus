@@ -5,17 +5,12 @@
 
 import {remote} from 'electron';
 import * as React from 'react';
-
+import NotesDispatch from '../contexts/NotesDispatch';
+import useStyles from '../hooks/useStyles';
 import * as log from '../util/log';
 import TitleBar from './TitleBar';
 
-const {useEffect, useRef, useState} = React;
-
-interface State {
-  foreground: boolean;
-  showError: boolean;
-  value: string;
-}
+const {useContext, useEffect, useRef, useState} = React;
 
 function getMaxLength() {
   const systemNameMax = 1000; // TODO really implement
@@ -30,69 +25,72 @@ function getMaxLength() {
   );
 }
 
-function getStyles({
-  foreground,
-  showError,
-  value,
-}: State): Styles<'attention' | 'cancel' | 'icon' | 'input' | 'root'> {
-  const rightInputPadding = 0 + (value ? 18 : 0) + (showError ? 18 : 0) + 'px';
-
-  return {
-    attention: {
-      color: '#fe2310',
-      fontSize: '13px',
-      position: 'absolute',
-      right: value ? '24px' : '10px',
-      top: '33px',
-    },
-
-    cancel: {
-      color: '#bfbfbf',
-      fontSize: '13px',
-      position: 'absolute',
-      right: '10px',
-      top: '33px',
-    },
-
-    icon: {
-      color: '#565656',
-      fontSize: '14px',
-      left: '10px',
-      position: 'absolute',
-      top: '33px',
-    },
-
-    input: {
-      WebkitAppRegion: 'no-drag',
-      WebkitAppearance: 'none', // only with this can we override padding
-      border: '1px solid #a0a0a0',
-      borderRadius: '4px',
-      fontFamily: 'Helvetica Neue',
-      lineHeight: '16px',
-      padding: `2px ${rightInputPadding} 1px 20px`,
-      width: '100%',
-    },
-
-    root: {
-      WebkitAppRegion: 'drag',
-      WebkitUserSelect: 'none',
-      background: foreground ? 'linear-gradient(#d3d3d3, #d0d0d0)' : '#f6f6f6',
-      borderBottom: '1px solid #d1d1d1',
-      flexGrow: 0,
-      padding: '30px 8px 14px',
-      position: 'relative',
-      minHeight: '60px',
-    },
-  };
-}
-
 export default function OmniBar() {
+  const dispatch = useContext(NotesDispatch);
+
   const inputRef = useRef<HTMLInputElement>(null!);
   const shouldFocus = useRef(true);
 
   const [foreground, setForeground] = useState(true);
-  const [value, setValue] = useState('some phony value for now');
+  const [value, setValue] = useState<string | null>(null);
   const [showError, setShowError] = useState(false);
+
+  const styles = useStyles<'attention' | 'cancel' | 'icon' | 'input' | 'root'>(
+    () => {
+      const rightInputPadding =
+        0 + (value ? 18 : 0) + (showError ? 18 : 0) + 'px';
+
+      return {
+        attention: {
+          color: '#fe2310',
+          fontSize: '13px',
+          position: 'absolute',
+          right: value ? '24px' : '10px',
+          top: '33px',
+        },
+
+        cancel: {
+          color: '#bfbfbf',
+          fontSize: '13px',
+          position: 'absolute',
+          right: '10px',
+          top: '33px',
+        },
+
+        icon: {
+          color: '#565656',
+          fontSize: '14px',
+          left: '10px',
+          position: 'absolute',
+          top: '33px',
+        },
+
+        input: {
+          WebkitAppRegion: 'no-drag',
+          WebkitAppearance: 'none', // only with this can we override padding
+          border: '1px solid #a0a0a0',
+          borderRadius: '4px',
+          fontFamily: 'Helvetica Neue',
+          lineHeight: '16px',
+          padding: `2px ${rightInputPadding} 1px 20px`,
+          width: '100%',
+        },
+
+        root: {
+          WebkitAppRegion: 'drag',
+          WebkitUserSelect: 'none',
+          background: foreground
+            ? 'linear-gradient(#d3d3d3, #d0d0d0)'
+            : '#f6f6f6',
+          borderBottom: '1px solid #d1d1d1',
+          flexGrow: 0,
+          padding: '30px 8px 14px',
+          position: 'relative',
+          minHeight: '60px',
+        },
+      };
+    },
+  );
 
   useEffect(() => {
     // On first render, subscribe to log events.
@@ -118,12 +116,6 @@ export default function OmniBar() {
     }
   });
 
-  const styles = getStyles({
-    foreground,
-    value,
-    showError,
-  });
-
   // TODO: use real implementation; not sure how we are going to manage data
   // yet.
   const selectionSize = 1;
@@ -138,7 +130,15 @@ export default function OmniBar() {
 
   function onCancelClick() {
     shouldFocus.current = true;
-    setValue('');
+    dispatch({
+      query: null,
+      type: 'filter',
+    });
+
+    // TODO figure out whether to manage this as local state or pull it from
+    // context (probably want textual value from context and things like text
+    // selection to be local state)
+    setValue(null);
   }
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
@@ -163,7 +163,7 @@ export default function OmniBar() {
         style={styles.input}
         tabIndex={1}
         type="text"
-        value={value}
+        value={value ? value : ''}
       />
       {showError ? (
         <span

@@ -18,9 +18,9 @@ const styles: Styles = {
   },
 };
 
-interface Props {
+type Props = {
   onMouseMove: (event: MouseEvent) => void;
-}
+};
 
 export default function Separator({onMouseMove}: Props) {
   const [dragging, setDragging] = useState(false);

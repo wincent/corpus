@@ -5,6 +5,10 @@
 
 import * as React from 'react';
 
+type Props = {
+  children?: React.ReactNode;
+};
+
 const styles: Styles = {
   root: {
     display: 'flex',
@@ -13,10 +17,6 @@ const styles: Styles = {
     width: '100%',
   },
 };
-
-interface Props {
-  children?: React.ReactNode;
-}
 
 export default function Viewport({children}: Props) {
   return <div style={styles.root}>{children}</div>;
