@@ -24,6 +24,8 @@ const styles: Styles<'left' | 'right' | 'root'> = {
   root: {
     display: 'flex',
     flexGrow: 1,
+    // BUG: not sure why i need this; i didn't use to
+    overflowY: 'scroll',
   },
 };
 

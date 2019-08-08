@@ -11,6 +11,7 @@ import {PREVIEW_ROW_HEIGHT} from '../constants';
 import NotesContext from '../contexts/NotesContext';
 import NotesDispatch from '../contexts/NotesDispatch';
 import useStyles from '../hooks/useStyles';
+import getLastInSet from '../util/getLastInSet';
 import NotePreview from './NotePreview';
 
 const {useContext, useEffect, useRef, useState} = React;
@@ -34,9 +35,50 @@ export default function NoteList() {
 
   const [scrollTop, setScrollTop] = useState(0);
 
+  const mostRecent = null; // TODO: actually implement selection, then use it
+  // here to determine mostRecent selection; using getLastInSet(selection)
+
+  // TODO: decide whether to pull this kind of thing out into a separate
+  // function or not.
+  const firstRenderedNote = (() => {
+    const topEdge = Math.floor(scrollTop / PREVIEW_ROW_HEIGHT);
+    const first = Math.max(0, topEdge - OFF_VIEWPORT_NOTE_BUFFER_COUNT);
+
+    // Always keep last-selected note in the range, even if it means
+    // over-rendering.
+    // TODO: reconsider this as it makes things slow
+    if (mostRecent != null) {
+      return Math.min(mostRecent, first);
+    } else {
+      return first;
+    }
+  })();
+
+  const filteredNotesSize = filteredNotes.length;
+
+  const lastRenderedNote = (() => {
+    const visibleHeight = window.innerHeight - 36; // TODO extract named constant
+    const bottomEdge = Math.ceil(
+      (scrollTop + visibleHeight) / PREVIEW_ROW_HEIGHT,
+    );
+    const last = Math.min(
+      filteredNotesSize - 1,
+      bottomEdge + OFF_VIEWPORT_NOTE_BUFFER_COUNT,
+    );
+
+    // Always keep last-selected note in the range, even if it means
+    // over-rendering.
+    if (mostRecent != null) {
+      return Math.max(mostRecent, last);
+    } else {
+      return last;
+    }
+  })();
+
+  console.log('first', firstRenderedNote, 'last', lastRenderedNote);
+
   const styles = useStyles<'list' | 'root'>(() => {
-    const filteredNotesSize = 0; // TODO calc
-    const space = 0 /* getFirstRenderedNote() */ * PREVIEW_ROW_HEIGHT;
+    const space = firstRenderedNote * PREVIEW_ROW_HEIGHT;
 
     return {
       list: {
@@ -86,18 +128,20 @@ export default function NoteList() {
 
   const focused = false;
 
-  // TODO: implement viewport-based rendering, filtering, selection etc
+  // TODO: implement filtering, selection etc
   return (
     <div ref={ref} style={styles.root}>
       <ul style={styles.list}>
-        {filteredNotes.map((note, i) => (
-          <NotePreview
-            focused={/*selected && */ focused}
-            key={i}
-            note={note}
-            selected={false}
-          />
-        ))}
+        {filteredNotes
+          .slice(firstRenderedNote, lastRenderedNote)
+          .map((note, i) => (
+            <NotePreview
+              focused={/*selected && */ focused}
+              key={i}
+              note={note}
+              selected={false}
+            />
+          ))}
       </ul>
     </div>
   );
