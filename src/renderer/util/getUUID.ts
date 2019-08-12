@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-export type UUID = number;
+export type UUID = Opaque<'UUID', number>;
 
 /**
  * Monotonically increasing, unique ID for each note.
@@ -14,5 +14,5 @@ let id = 0;
  * Returns a unique "UUID" used to identify a given note.
  */
 export default function getUUID(): UUID {
-  return id++;
+  return id++ as UUID;
 }

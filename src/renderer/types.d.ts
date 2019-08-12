@@ -4,6 +4,7 @@
  */
 
 type FrozenSet<T> = import('@wincent/frozen-set').default<T>;
+type UUID = import('./util/getUUID').UUID;
 
 type Action =
   | Readonly<{
@@ -37,7 +38,7 @@ type Note = {
   body: string;
   mtime: number;
   path: string;
-  readonly id: number; // really UUID; ideally would be an opaque type
+  readonly id: UUID;
   tags: Set<string>;
   text: string;
   title: string;
@@ -56,6 +57,9 @@ type Styles<T extends string = 'root'> = Readonly<
     [name in T]: React.CSSProperties;
   }
 >;
+
+// Via: https://codemix.com/opaque-types-in-javascript/
+type Opaque<K, T> = T & { __TYPE__: K };
 
 // Counterpart to Readonly<T>.
 type Writable<T> = {
