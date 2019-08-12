@@ -12,6 +12,13 @@ import TitleBar from './TitleBar';
 
 const {useContext, useEffect, useRef, useState} = React;
 
+const LOG_LEVEL = {
+  DEBUG: 0,
+  INFORMATIONAL: 1,
+  WARNING: 2,
+  ERROR: 3,
+};
+
 function getMaxLength() {
   const systemNameMax = 1000; // TODO really implement
 
@@ -93,20 +100,13 @@ export default function OmniBar() {
   );
 
   useEffect(() => {
-    // On first render, subscribe to log events.
-    const {dispose, sequenceNumbers} = log.subscribe(({level}) => {
-      if (log.LOG_LEVEL[level] >= log.LOG_LEVEL.WARNING) {
-        setShowError(true);
-      }
-    });
-
-    // If there were any error or warning log events before we mounted,
-    // show icon.
-    if (sequenceNumbers['ERROR'] !== -1 || sequenceNumbers['WARNING'] !== -1) {
-      setShowError(true);
-    }
-
-    return dispose;
+    remote
+      .getCurrentWindow()
+      .webContents.on('console-message', (_event: Event, level: number) => {
+        if (level >= LOG_LEVEL.WARNING) {
+          setShowError(true);
+        }
+      });
   }, []);
 
   useEffect(() => {
