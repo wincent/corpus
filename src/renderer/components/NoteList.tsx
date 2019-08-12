@@ -44,7 +44,7 @@ export default function NoteList() {
     const topEdge = Math.floor(scrollTop / PREVIEW_ROW_HEIGHT);
     const first = Math.max(0, topEdge - OFF_VIEWPORT_NOTE_BUFFER_COUNT);
 
-    // Always keep last-selected note in the range, even if it means
+    // Always keep most recently selected note in the range, even if it means
     // over-rendering.
     // TODO: reconsider this as it makes things slow
     if (mostRecent != null) {
@@ -66,7 +66,7 @@ export default function NoteList() {
       bottomEdge + OFF_VIEWPORT_NOTE_BUFFER_COUNT,
     );
 
-    // Always keep last-selected note in the range, even if it means
+    // Always keep most recently selected note in the range, even if it means
     // over-rendering.
     if (mostRecent != null) {
       return Math.max(mostRecent, last);

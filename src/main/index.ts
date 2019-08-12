@@ -3,21 +3,27 @@
  * @license MIT
  */
 
-import {app, BrowserWindow} from 'electron';
+import {app, BrowserWindow, Menu} from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import {promisify} from 'util';
+import template from './template';
 
 const exists = promisify(fs.exists);
 
+// Global references to avoid premature GC.
+let menu: Menu;
+let mainWindow: BrowserWindow;
+
 function onReady() {
   createWindow();
+  buildMenu();
   loadReactDevTools();
 }
 
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     height: 800,
     minHeight: 200,
     minWidth: 200,
@@ -28,7 +34,12 @@ function createWindow() {
     width: 1200,
   });
 
-  win.loadFile('index.html');
+  mainWindow.loadFile('index.html');
+}
+
+function buildMenu() {
+  menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 }
 
 async function loadReactDevTools() {
