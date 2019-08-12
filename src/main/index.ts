@@ -4,8 +4,17 @@
  */
 
 import {app, BrowserWindow} from 'electron';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import {promisify} from 'util';
+
+const exists = promisify(fs.exists);
+
+function onReady() {
+  createWindow();
+  loadReactDevTools();
+}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -20,21 +29,28 @@ function createWindow() {
   });
 
   win.loadFile('index.html');
-
-  // TODO in dev only, add existence checks
-  BrowserWindow.addDevToolsExtension(
-    path.join(
-      os.homedir(),
-      'Library',
-      'Application Support',
-      'Google',
-      'Chrome',
-      'Profile 1',
-      'Extensions',
-      'fmkadmapgofadopljbjfkapdkoienihi',
-      '3.6.0_0',
-    ),
-  );
 }
 
-app.on('ready', createWindow);
+async function loadReactDevTools() {
+  // TODO: make this less crude (ie. maybe search for latest version or
+  // something)
+  const extension = path.join(
+    os.homedir(),
+    'Library',
+    'Application Support',
+    'Google',
+    'Chrome',
+    'Profile 1',
+    'Extensions',
+    'fmkadmapgofadopljbjfkapdkoienihi',
+    '3.6.0_0',
+  );
+
+  const extensionExists = await exists(extension);
+
+  if (extensionExists) {
+    BrowserWindow.addDevToolsExtension(extension);
+  }
+}
+
+app.on('ready', onReady);
