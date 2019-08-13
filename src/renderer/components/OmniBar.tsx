@@ -41,70 +41,81 @@ export default function OmniBar() {
   const [foreground, setForeground] = useState(true);
   const [value, setValue] = useState<string | null>(null);
   const [showError, setShowError] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
-  const styles = useStyles<'attention' | 'cancel' | 'icon' | 'input' | 'root'>(
-    () => {
-      const rightInputPadding =
-        0 + (value ? 18 : 0) + (showError ? 18 : 0) + 'px';
+  const styles = useStyles<
+    'cancel' | 'error' | 'icon' | 'input' | 'root' | 'warning'
+  >(() => {
+    const rightInputPadding =
+      0 + (value ? 18 : 0) + (showError || showWarning ? 18 : 0) + 'px';
 
-      return {
-        attention: {
-          color: '#fe2310',
-          fontSize: '13px',
-          position: 'absolute',
-          right: value ? '24px' : '10px',
-          top: '33px',
-        },
+    return {
+      cancel: {
+        color: '#bfbfbf',
+        fontSize: '13px',
+        position: 'absolute',
+        right: '10px',
+        top: '33px',
+      },
 
-        cancel: {
-          color: '#bfbfbf',
-          fontSize: '13px',
-          position: 'absolute',
-          right: '10px',
-          top: '33px',
-        },
+      error: {
+        color: '#fe2310',
+        fontSize: '13px',
+        position: 'absolute',
+        right: value ? '24px' : '10px',
+        top: '33px',
+      },
 
-        icon: {
-          color: '#565656',
-          fontSize: '14px',
-          left: '10px',
-          position: 'absolute',
-          top: '33px',
-        },
+      icon: {
+        color: '#565656',
+        fontSize: '14px',
+        left: '10px',
+        position: 'absolute',
+        top: '33px',
+      },
 
-        input: {
-          WebkitAppRegion: 'no-drag',
-          WebkitAppearance: 'none', // only with this can we override padding
-          border: '1px solid #a0a0a0',
-          borderRadius: '4px',
-          fontFamily: 'Helvetica Neue',
-          lineHeight: '16px',
-          padding: `2px ${rightInputPadding} 1px 20px`,
-          width: '100%',
-        },
+      input: {
+        WebkitAppRegion: 'no-drag',
+        WebkitAppearance: 'none', // only with this can we override padding
+        border: '1px solid #a0a0a0',
+        borderRadius: '4px',
+        fontFamily: 'Helvetica Neue',
+        lineHeight: '16px',
+        padding: `2px ${rightInputPadding} 1px 20px`,
+        width: '100%',
+      },
 
-        root: {
-          WebkitAppRegion: 'drag',
-          WebkitUserSelect: 'none',
-          background: foreground
-            ? 'linear-gradient(#d3d3d3, #d0d0d0)'
-            : '#f6f6f6',
-          borderBottom: '1px solid #d1d1d1',
-          flexGrow: 0,
-          padding: '30px 8px 14px',
-          position: 'relative',
-          minHeight: '60px',
-        },
-      };
-    },
-  );
+      root: {
+        WebkitAppRegion: 'drag',
+        WebkitUserSelect: 'none',
+        background: foreground
+          ? 'linear-gradient(#d3d3d3, #d0d0d0)'
+          : '#f6f6f6',
+        borderBottom: '1px solid #d1d1d1',
+        flexGrow: 0,
+        padding: '30px 8px 14px',
+        position: 'relative',
+        minHeight: '60px',
+      },
+
+      warning: {
+        color: '#f3bc2b',
+        fontSize: '13px',
+        position: 'absolute',
+        right: value ? '24px' : '10px',
+        top: '33px',
+      },
+    };
+  });
 
   useEffect(() => {
     remote
       .getCurrentWindow()
       .webContents.on('console-message', (_event: Event, level: number) => {
-        if (level >= LOG_LEVEL.WARNING) {
+        if (level >= LOG_LEVEL.ERROR) {
           setShowError(true);
+        } else if (level >= LOG_LEVEL.WARNING) {
+          setShowWarning(true);
         }
       });
   }, []);
@@ -126,6 +137,7 @@ export default function OmniBar() {
     remote.getCurrentWindow().webContents.openDevTools();
 
     setShowError(false);
+    setShowWarning(false);
   }
 
   function onCancelClick() {
@@ -169,7 +181,13 @@ export default function OmniBar() {
         <span
           className="icon-attention"
           onClick={onAttentionClick}
-          style={styles.attention}
+          style={styles.error}
+        />
+      ) : showWarning ? (
+        <span
+          className="icon-attention"
+          onClick={onAttentionClick}
+          style={styles.warning}
         />
       ) : null}
       {value ? (
