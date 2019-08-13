@@ -45,7 +45,7 @@ const template: MenuItemConstructorOptions[] = [
     label: 'Note',
     submenu: [
       {
-        accelerator: 'Command+R',
+        accelerator: 'Alt+Command+R',
         click: () => getWebContents().send('rename'),
         enabled: false,
         id: 'rename',
@@ -123,14 +123,10 @@ const template: MenuItemConstructorOptions[] = [
     label: 'Debug',
     submenu: [
       {
-        accelerator: 'Alt+Command+R',
-        click: () => getWebContents().reloadIgnoringCache(),
-        label: 'Reload',
+        role: 'reload',
       },
       {
-        accelerator: 'Alt+Command+J',
-        click: () => getWebContents().toggleDevTools(),
-        label: 'Toggle Developer Tools',
+        role: 'toggledevtools',
       },
     ],
   },
