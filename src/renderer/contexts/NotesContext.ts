@@ -7,7 +7,7 @@ import FrozenSet from '@wincent/frozen-set';
 import * as React from 'react';
 
 /**
- * Fallback for rendering consumers without proviers (ie. in tests).
+ * Fallback for rendering consumers without providers (ie. in tests).
  */
 const DEFAULT_STATE: Store = {
   filteredNotes: [],
