@@ -10,6 +10,7 @@ import * as colors from '../colors';
 import {PREVIEW_ROW_HEIGHT} from '../constants';
 import NotesContext from '../contexts/NotesContext';
 import NotesDispatch from '../contexts/NotesDispatch';
+import usePrevious from '../hooks/usePrevious';
 import useStyles from '../hooks/useStyles';
 import getLastInSet from '../util/getLastInSet';
 import NotePreview from './NotePreview';
@@ -29,14 +30,19 @@ const SCROLL_THROTTLE_INTERVAL = 250;
 
 export default function NoteList() {
   const dispatch = useContext(NotesDispatch);
-  const {filteredNotes} = useContext(NotesContext);
+  const {filteredNotes, focus, selectedNotes} = useContext(NotesContext);
 
-  const ref = useRef<HTMLDivElement>(null);
+  const div = useRef<HTMLDivElement>(null);
+  const ul = useRef<HTMLUListElement>(null);
 
   const [scrollTop, setScrollTop] = useState(0);
+  const [focused, setFocused] = useState(false);
 
-  const mostRecent = null; // TODO: actually implement selection, then use it
-  // here to determine mostRecent selection; using getLastInSet(selection)
+  const wasFocused = usePrevious(focused);
+  const previousFocus = usePrevious(focus);
+
+  // TODO: probably want to avoid recalculating this
+  const mostRecent = getLastInSet(selectedNotes);
 
   // TODO: decide whether to pull this kind of thing out into a separate
   // function or not.
@@ -74,8 +80,6 @@ export default function NoteList() {
       return last;
     }
   })();
-
-  console.log('first', firstRenderedNote, 'last', lastRenderedNote);
 
   const styles = useStyles<'list' | 'root'>(() => {
     const space = firstRenderedNote * PREVIEW_ROW_HEIGHT;
@@ -116,32 +120,54 @@ export default function NoteList() {
       }
     };
 
-    const node = ref.current;
+    const node = div.current;
     const parent = node!.parentNode!;
     parent.addEventListener('scroll', onScroll);
 
-    return () => {
-      // No need to do clean-up; component never gets unmounted.
-      throw new Error('NoteList: Unexpected unmount');
-    };
+    // setTimeout(() => {
+    //   console.log('delayed focus');
+    //   ul.current!.focus();
+    // }, 1000);
   }, []);
 
-  const focused = false;
+  useEffect(() => {
+    if (focus === 'notelist' && previousFocus !== 'notelist') {
+      // TODO: figure out if this works... it doesn't seem to
+      ul.current!.focus();
+    }
+  });
+
+  const onBlur = () => {
+    // TODO: need to set up keyboard nav or something to actual enable focusing
+    console.log('onblur');
+    setFocused(false);
+  };
+
+  const onFocus = () => {
+    // TODO: compare with old implementation, which used a timeout before
+    // listening...
+    console.log('onfocus'); // never printed....
+    setFocused(true);
+  };
 
   // TODO: implement filtering, selection etc
   return (
-    <div ref={ref} style={styles.root}>
-      <ul style={styles.list}>
+    <div ref={div} style={styles.root}>
+      <ul onBlur={onBlur} onFocus={onFocus} ref={ul} style={styles.list}>
         {filteredNotes
           .slice(firstRenderedNote, lastRenderedNote)
-          .map((note, i) => (
-            <NotePreview
-              focused={/*selected && */ focused}
-              key={i}
-              note={note}
-              selected={false}
-            />
-          ))}
+          .map((note, i) => {
+            const selected = selectedNotes.has(i);
+
+            return (
+              <NotePreview
+                focused={selected && focused}
+                key={i}
+                note={note}
+                selected={selected}
+              />
+            );
+          })}
       </ul>
     </div>
   );

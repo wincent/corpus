@@ -3,9 +3,12 @@
  * @license MIT
  */
 
-import {remote} from 'electron';
+import {ipcRenderer, remote} from 'electron';
 import * as React from 'react';
+import * as Keys from '../Keys';
+import NotesContext from '../contexts/NotesContext';
 import NotesDispatch from '../contexts/NotesDispatch';
+import usePrevious from '../hooks/usePrevious';
 import useStyles from '../hooks/useStyles';
 import * as log from '../util/log';
 import TitleBar from './TitleBar';
@@ -49,9 +52,13 @@ function getMaxLength() {
 
 export default function OmniBar() {
   const dispatch = useContext(NotesDispatch);
+  const store = useContext(NotesContext);
+  const {selectedNotes} = store;
 
   const inputRef = useRef<HTMLInputElement>(null!);
   const shouldFocus = useRef(true);
+
+  const previousFocus = usePrevious(store.focus);
 
   const [foreground, setForeground] = useState(true);
   const [value, setValue] = useState<string | null>(null);
@@ -128,12 +135,20 @@ export default function OmniBar() {
       .webContents.on('console-message', (_event: Event, level: number) => {
         setIcon(level);
       });
+
+    ipcRenderer
+      .on('blur', () => setForeground(false))
+      .on('focus', () => setForeground(true));
   }, []);
 
   useEffect(() => {
     if (shouldFocus.current) {
       inputRef.current.focus();
       shouldFocus.current = false;
+    } else if (store.focus === 'omnibar' && previousFocus !== 'omnibar') {
+      const input = inputRef.current;
+      input.focus();
+      input.setSelectionRange(0, input.value.length);
     }
   });
 
@@ -168,7 +183,24 @@ export default function OmniBar() {
 
   function onFocus() {}
 
-  function onKeyDown() {}
+  const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = event => {
+    switch (event.keyCode) {
+      case Keys.TAB: {
+        event.preventDefault();
+        const size = selectedNotes.size;
+        if (size === 0) {
+          dispatch({type: 'focus', target: 'notelist'});
+          // TODO: implement
+          // dispatch({type: 'select-first'});
+        } else if (size === 1) {
+          dispatch({type: 'focus', target: 'note'});
+        } else {
+          dispatch({type: 'focus', target: 'notelist'});
+        }
+        return;
+      }
+    }
+  };
 
   return (
     <div style={styles.root}>

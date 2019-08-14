@@ -7,12 +7,19 @@ type FrozenSet<T> = import('@wincent/frozen-set').default<T>;
 
 type Action =
   | Readonly<{
+      type: 'filter';
+      query: string | null;
+    }>
+  | Readonly<{
+      type: 'focus';
+      target: FocusTarget;
+    }>
+  | Readonly<{
       type: 'load';
       notes: readonly Note[];
     }>
   | Readonly<{
-      type: 'filter';
-      query: string | null;
+      type: 'select-all';
     }>;
 
 type Config = {
@@ -44,9 +51,12 @@ type Note = {
   version: number;
 };
 
+type FocusTarget = 'note' | 'notelist' | 'omnibar' | 'titleinput';
+
 type Store = Readonly<{
   query: string | null;
   filteredNotes: Readonly<Note[]>;
+  focus: FocusTarget;
   notes: Readonly<Note[]>;
   selectedNotes: FrozenSet<number>;
 }>;

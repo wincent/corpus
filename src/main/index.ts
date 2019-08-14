@@ -35,6 +35,10 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
+
+  mainWindow
+    .on('blur', () => mainWindow.webContents.send('blur'))
+    .on('focus', () => mainWindow.webContents.send('focus'));
 }
 
 function buildMenu() {

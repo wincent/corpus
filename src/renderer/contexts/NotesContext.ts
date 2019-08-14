@@ -11,6 +11,7 @@ import * as React from 'react';
  */
 const DEFAULT_STATE: Store = {
   filteredNotes: [],
+  focus: 'omnibar',
   notes: [],
   query: null,
   selectedNotes: new FrozenSet(),

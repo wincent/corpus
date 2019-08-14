@@ -4,6 +4,7 @@
  */
 
 import FrozenSet from '@wincent/frozen-set';
+import {ipcRenderer} from 'electron';
 import * as React from 'react';
 
 import NotesContext from '../contexts/NotesContext';
@@ -12,6 +13,7 @@ import NotesDispatch from '../contexts/NotesDispatch';
 import filterNotes from '../util/filterNotes';
 import loadConfig from '../util/loadConfig';
 import loadNotes from '../util/loadNotes';
+import makeRange from '../util/makeRange';
 import NoteList from './NoteList';
 import OmniBar from './OmniBar';
 import SplitView from './SplitView';
@@ -32,6 +34,11 @@ const reducer = (store: Store, action: Action): Store => {
         filteredNotes: filterNotes(action.query, store.notes),
         query: action.query,
       };
+    case 'focus':
+      return {
+        ...store,
+        focus: action.target,
+      };
     case 'load': {
       const notes = [...store.notes, ...action.notes];
 
@@ -41,15 +48,22 @@ const reducer = (store: Store, action: Action): Store => {
         notes,
       };
     }
+    case 'select-all':
+      return {
+        ...store,
+        selectedNotes: new FrozenSet(makeRange(store.filteredNotes.length)),
+      };
   }
   return store;
 };
+// TODO: expose store on window to make debugging easy in dev-mode
 
 export default function Corpus() {
   // TODO: read notes... update them... if I want to do that async, where is the
   // best place to do it?
   const initialState: Store = {
     filteredNotes: [],
+    focus: 'omnibar',
     notes: [],
     query: null,
     selectedNotes: new FrozenSet(),
@@ -60,6 +74,15 @@ export default function Corpus() {
   const [store, dispatch] = useReducer(reducer, initialState, init);
 
   useEffect(() => {
+    load();
+
+    ipcRenderer.on('search', () => {
+      dispatch({
+        type: 'focus',
+        target: 'omnibar',
+      });
+    });
+
     async function load() {
       const {notesDirectory} = await loadConfig();
       loadNotes(notesDirectory).subscribe((notes: readonly Note[]) => {
@@ -69,8 +92,6 @@ export default function Corpus() {
         });
       });
     }
-
-    load();
   }, []);
 
   return (
