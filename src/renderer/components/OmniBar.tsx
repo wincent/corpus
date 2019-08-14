@@ -10,13 +10,28 @@ import useStyles from '../hooks/useStyles';
 import * as log from '../util/log';
 import TitleBar from './TitleBar';
 
-const {useContext, useEffect, useRef, useState} = React;
+const {useContext, useEffect, useReducer, useRef, useState} = React;
 
 const LOG_LEVEL = {
+  RESET: -1,
   DEBUG: 0,
   INFORMATIONAL: 1,
   WARNING: 2,
   ERROR: 3,
+};
+
+type Icon = 'error' | 'warning' | null;
+
+const reducer = (icon: Icon, level: number): Icon => {
+  if (level === LOG_LEVEL.RESET) {
+    return null;
+  } else if (level === LOG_LEVEL.ERROR) {
+    return 'error';
+  } else if (level === LOG_LEVEL.WARNING && icon !== 'error') {
+    return 'warning';
+  } else {
+    return icon;
+  }
 };
 
 function getMaxLength() {
@@ -40,14 +55,13 @@ export default function OmniBar() {
 
   const [foreground, setForeground] = useState(true);
   const [value, setValue] = useState<string | null>(null);
-  const [showError, setShowError] = useState(false);
-  const [showWarning, setShowWarning] = useState(false);
+
+  const [icon, setIcon] = useReducer(reducer, null);
 
   const styles = useStyles<
     'cancel' | 'error' | 'icon' | 'input' | 'root' | 'warning'
   >(() => {
-    const rightInputPadding =
-      0 + (value ? 18 : 0) + (showError || showWarning ? 18 : 0) + 'px';
+    const rightInputPadding = 0 + (value ? 18 : 0) + (icon ? 18 : 0) + 'px';
 
     return {
       cancel: {
@@ -112,11 +126,7 @@ export default function OmniBar() {
     remote
       .getCurrentWindow()
       .webContents.on('console-message', (_event: Event, level: number) => {
-        if (level >= LOG_LEVEL.ERROR) {
-          setShowError(true);
-        } else if (level >= LOG_LEVEL.WARNING) {
-          setShowWarning(true);
-        }
+        setIcon(level);
       });
   }, []);
 
@@ -136,8 +146,7 @@ export default function OmniBar() {
   function onAttentionClick() {
     remote.getCurrentWindow().webContents.openDevTools();
 
-    setShowError(false);
-    setShowWarning(false);
+    setIcon(LOG_LEVEL.RESET);
   }
 
   function onCancelClick() {
@@ -177,17 +186,11 @@ export default function OmniBar() {
         type="text"
         value={value ? value : ''}
       />
-      {showError ? (
+      {icon ? (
         <span
           className="icon-attention"
           onClick={onAttentionClick}
-          style={styles.error}
-        />
-      ) : showWarning ? (
-        <span
-          className="icon-attention"
-          onClick={onAttentionClick}
-          style={styles.warning}
+          style={styles[icon]}
         />
       ) : null}
       {value ? (
