@@ -45,10 +45,10 @@ type Note = {
 };
 
 type Store = Readonly<{
-  readonly query: string | null;
-  readonly filteredNotes: Readonly<Note[]>;
-  readonly notes: Readonly<Note[]>;
-  readonly selectedNotes: FrozenSet<Note>;
+  query: string | null;
+  filteredNotes: Readonly<Note[]>;
+  notes: Readonly<Note[]>;
+  selectedNotes: FrozenSet<number>;
 }>;
 
 type Styles<T extends string = 'root'> = Readonly<
