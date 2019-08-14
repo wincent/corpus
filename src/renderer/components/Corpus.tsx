@@ -7,8 +7,9 @@ import FrozenSet from '@wincent/frozen-set';
 import {ipcRenderer} from 'electron';
 import * as React from 'react';
 
+import ConfigContext from '../contexts/ConfigContext';
 import NotesContext from '../contexts/NotesContext';
-import NotesDispatch from '../contexts/NotesDispatch';
+import DispatchContext from '../contexts/DispatchContext';
 // TODO: move some of these "util" modules into a "store" directory
 import filterNotes from '../util/filterNotes';
 import loadConfig from '../util/loadConfig';
@@ -19,7 +20,15 @@ import OmniBar from './OmniBar';
 import SplitView from './SplitView';
 import Viewport from './Viewport';
 
-const {useEffect, useReducer} = React;
+const {useEffect, useState, useReducer} = React;
+
+const initialState: Store = {
+  filteredNotes: [],
+  focus: 'omnibar',
+  notes: [],
+  query: null,
+  selectedNotes: new FrozenSet(),
+};
 
 // TODO: figure out best place to put reducers etc
 // and whether I want to factor them out into little functions like I previously
@@ -59,22 +68,23 @@ const reducer = (store: Store, action: Action): Store => {
 // TODO: expose store on window to make debugging easy in dev-mode
 
 export default function Corpus() {
-  // TODO: read notes... update them... if I want to do that async, where is the
-  // best place to do it?
-  const initialState: Store = {
-    filteredNotes: [],
-    focus: 'omnibar',
-    notes: [],
-    query: null,
-    selectedNotes: new FrozenSet(),
-  };
-  const init: (initialState: Store) => Store = initialState => {
-    return initialState;
-  };
-  const [store, dispatch] = useReducer(reducer, initialState, init);
+  const [config, setConfig] = useState<Config | null>(null);
+
+  const [store, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    load();
+    loadConfig().then(config => {
+      const {notesDirectory} = config;
+
+      loadNotes(notesDirectory).subscribe((notes: readonly Note[]) => {
+        dispatch({
+          type: 'load',
+          notes,
+        });
+      });
+
+      setConfig(config);
+    });
 
     ipcRenderer.on('search', () => {
       dispatch({
@@ -82,29 +92,21 @@ export default function Corpus() {
         target: 'omnibar',
       });
     });
-
-    async function load() {
-      const {notesDirectory} = await loadConfig();
-      loadNotes(notesDirectory).subscribe((notes: readonly Note[]) => {
-        dispatch({
-          type: 'load',
-          notes,
-        });
-      });
-    }
   }, []);
 
   return (
-    <NotesDispatch.Provider value={dispatch}>
-      <NotesContext.Provider value={store}>
-        <Viewport>
-          <OmniBar />
-          <SplitView>
-            <NoteList />
-            <div>right</div>
-          </SplitView>
-        </Viewport>
-      </NotesContext.Provider>
-    </NotesDispatch.Provider>
+    <ConfigContext.Provider value={config}>
+      <DispatchContext.Provider value={dispatch}>
+        <NotesContext.Provider value={store}>
+          <Viewport>
+            <OmniBar />
+            <SplitView>
+              <NoteList />
+              <div>TODO: i{"'"}ll find something to put here</div>
+            </SplitView>
+          </Viewport>
+        </NotesContext.Provider>
+      </DispatchContext.Provider>
+    </ConfigContext.Provider>
   );
 }

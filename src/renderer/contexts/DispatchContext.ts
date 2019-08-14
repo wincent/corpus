@@ -5,6 +5,6 @@
 
 import * as React from 'react';
 
-const NotesDispatch = React.createContext<React.Dispatch<Action>>(() => {});
+const DispatchContext = React.createContext<React.Dispatch<Action>>(() => {});
 
-export default NotesDispatch;
+export default DispatchContext;

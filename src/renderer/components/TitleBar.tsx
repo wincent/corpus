@@ -4,6 +4,10 @@
  */
 
 import * as React from 'react';
+import ConfigContext from '../contexts/ConfigContext';
+import simplifyPath from '../util/simplifyPath';
+
+const {useContext} = React;
 
 const styles: Styles = {
   root: {
@@ -19,8 +23,11 @@ const styles: Styles = {
   },
 };
 
-export default function TitleBar() {
-  const title = 'some title read from state management';
+function TitleBar() {
+  const config = useContext(ConfigContext);
+
+  const notesDirectory = config ? config.notesDirectory : null;
+  const title = notesDirectory ? simplifyPath(notesDirectory) : 'Corpus';
 
   return (
     <div style={styles.root}>
@@ -28,3 +35,5 @@ export default function TitleBar() {
     </div>
   );
 }
+
+export default React.memo(TitleBar);

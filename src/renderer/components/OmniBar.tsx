@@ -7,7 +7,7 @@ import {ipcRenderer, remote} from 'electron';
 import * as React from 'react';
 import * as Keys from '../Keys';
 import NotesContext from '../contexts/NotesContext';
-import NotesDispatch from '../contexts/NotesDispatch';
+import DispatchContext from '../contexts/DispatchContext';
 import usePrevious from '../hooks/usePrevious';
 import useStyles from '../hooks/useStyles';
 import * as log from '../util/log';
@@ -51,7 +51,7 @@ function getMaxLength() {
 }
 
 export default function OmniBar() {
-  const dispatch = useContext(NotesDispatch);
+  const dispatch = useContext(DispatchContext);
   const store = useContext(NotesContext);
   const {selectedNotes} = store;
 

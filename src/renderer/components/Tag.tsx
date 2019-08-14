@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react';
-import NotesDispatch from '../contexts/NotesDispatch';
+import DispatchContext from '../contexts/DispatchContext';
 import useStyles from '../hooks/useStyles';
 
 const {useContext} = React;
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function Tag({focused, tag}: Props) {
-  const dispatch = useContext(NotesDispatch);
+  const dispatch = useContext(DispatchContext);
 
   const styles = useStyles<'root'>(() => ({
     root: {

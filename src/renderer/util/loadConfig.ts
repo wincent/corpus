@@ -26,7 +26,7 @@ export default async function loadConfig(): Promise<Config> {
   }
 }
 
-const DEFAULT_CONFIG: Config = Object.freeze({
+export const DEFAULT_CONFIG: Config = Object.freeze({
   noteFontFamily: 'Monaco',
   noteFontSize: '12',
   notesDirectory: path.join(

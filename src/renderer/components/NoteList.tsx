@@ -9,7 +9,7 @@ import * as React from 'react';
 import * as colors from '../colors';
 import {PREVIEW_ROW_HEIGHT} from '../constants';
 import NotesContext from '../contexts/NotesContext';
-import NotesDispatch from '../contexts/NotesDispatch';
+import DispatchContext from '../contexts/DispatchContext';
 import usePrevious from '../hooks/usePrevious';
 import useStyles from '../hooks/useStyles';
 import getLastInSet from '../util/getLastInSet';
@@ -29,7 +29,7 @@ const OFF_VIEWPORT_NOTE_BUFFER_COUNT = 20;
 const SCROLL_THROTTLE_INTERVAL = 250;
 
 export default function NoteList() {
-  const dispatch = useContext(NotesDispatch);
+  const dispatch = useContext(DispatchContext);
   const {filteredNotes, focus, selectedNotes} = useContext(NotesContext);
 
   const div = useRef<HTMLDivElement>(null);
