@@ -41,4 +41,4 @@ export default function reducer(store: Store, action: Action): Store {
       };
   }
   return store;
-};
+}

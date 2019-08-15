@@ -16,7 +16,7 @@ const {useEffect, useRef} = React;
  *
  *    https://usehooks.com/usePrevious/
  */
-export default function usePrevious<T extends any>(value: T): T | undefined {
+export default function usePrevious<T>(value: T): T | undefined {
   const ref = useRef<T>();
 
   useEffect(() => {
