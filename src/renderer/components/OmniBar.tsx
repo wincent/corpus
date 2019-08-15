@@ -10,7 +10,6 @@ import NotesContext from '../contexts/NotesContext';
 import DispatchContext from '../contexts/DispatchContext';
 import usePrevious from '../hooks/usePrevious';
 import useStyles from '../hooks/useStyles';
-import * as log from '../util/log';
 import TitleBar from './TitleBar';
 
 const {useContext, useEffect, useReducer, useRef, useState} = React;
@@ -188,7 +187,9 @@ export default function OmniBar() {
     });
   };
 
-  function onFocus() {}
+  function onFocus() {
+    // TODO: implement
+  }
 
   const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = event => {
     switch (event.keyCode) {

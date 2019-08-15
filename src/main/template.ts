@@ -27,7 +27,7 @@ const template: MenuItemConstructorOptions[] = [
         role: 'hide',
       },
       {
-        role: 'hideothers',
+        role: 'hideOthers',
       },
       {
         role: 'unhide',
@@ -100,7 +100,7 @@ const template: MenuItemConstructorOptions[] = [
       },
       {type: 'separator'},
       {
-        role: 'selectall',
+        role: 'selectAll',
       },
     ],
   },
@@ -126,7 +126,7 @@ const template: MenuItemConstructorOptions[] = [
         role: 'reload',
       },
       {
-        role: 'toggledevtools',
+        role: 'toggleDevTools',
       },
     ],
   },
