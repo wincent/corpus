@@ -6,8 +6,8 @@
 import throttle from '@wincent/throttle';
 import * as React from 'react';
 
-import * as colors from '../colors';
-import {PREVIEW_ROW_HEIGHT} from '../constants';
+import * as Colors from '../Colors';
+import {PREVIEW_ROW_HEIGHT} from '../Constants';
 import NotesContext from '../contexts/NotesContext';
 import DispatchContext from '../contexts/DispatchContext';
 import usePrevious from '../hooks/usePrevious';
@@ -98,7 +98,7 @@ export default function NoteList() {
       },
 
       root: {
-        background: colors.background,
+        background: Colors.BACKGROUND,
         height: filteredNotesSize * PREVIEW_ROW_HEIGHT,
         minHeight: 'calc(100vh - 36px)', // ensure full background coverage
         position: 'relative',

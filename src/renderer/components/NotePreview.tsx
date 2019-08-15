@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react';
-import {PREVIEW_ROW_HEIGHT} from '../constants';
+import {PREVIEW_ROW_HEIGHT} from '../Constants';
 import useStyles from '../hooks/useStyles';
 import PreviewTitle from './PreviewTitle';
 import Tags from './Tags';

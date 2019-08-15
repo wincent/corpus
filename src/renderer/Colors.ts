@@ -3,4 +3,4 @@
  * @license MIT
  */
 
-export const background = '#ebebeb';
+export const BACKGROUND = '#ebebeb';
