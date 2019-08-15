@@ -4,5 +4,5 @@
     "checkJs": true
   },
   "extends": "./tsconfig.json",
-  "include": [".*.js", "src/**/*.ts", "src/**/*.tsx"]
+  "include": ["*.js", "src/**/*.ts", "src/**/*.tsx"]
 }

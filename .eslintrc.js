@@ -3,8 +3,6 @@
  * @license MIT
  */
 
-/* eslint-env node */
-
 module.exports = {
   extends: [
     'eslint:recommended',
@@ -20,6 +18,15 @@ module.exports = {
       files: '*.d.ts',
       rules: {
         'no-var': 'off',
+      },
+    },
+    {
+      env: {
+        node: true,
+      },
+      files: '*.js',
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
       },
     },
   ],
