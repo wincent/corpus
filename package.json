@@ -35,9 +35,10 @@
   },
   "scripts": {
     "build": "tsc",
-    "ci": "yarn format:check && yarn lint && yarn typecheck && yarn test",
+    "ci": "yarn format:check && yarn lint && yarn typecheck && yarn test && yarn deduplicate:check",
     "clean": "rm -r dist/*",
     "deduplicate": "yarn-deduplicate yarn.lock",
+    "deduplicate:check": "yarn-deduplicate yarn.lock -f",
     "fix": "yarn format && yarn lint:fix && yarn deduplicate",
     "format": "prettier --write -- '*.{js,json,md}' 'src/**/*.{html,ts,tsx}'",
     "format:check": "prettier --list-different -- '*.{js,json,md}' 'src/**/*.{html,ts,tsx}'",
