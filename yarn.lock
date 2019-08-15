@@ -445,11 +445,6 @@
   dependencies:
     core-js "3.1.4"
 
-"@wincent/nullthrows@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@wincent/nullthrows/-/nullthrows-0.1.0.tgz#f473e65826d163e934aa4f06c4325f3e0c105652"
-  integrity sha512-g+bN8H5ZrvSxCalcdqt2tpgktm0rOcKa0l82+dTHeRcUKg+1M2IZDfG56Wl7MYdXh6hd6YKbIYUeclUSqesSVA==
-
 "@wincent/throttle@0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@wincent/throttle/-/throttle-0.0.2.tgz#23506929b9ffa94c5398a2920cb991adce8fdb3d"

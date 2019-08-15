@@ -10,7 +10,6 @@
   "dependencies": {
     "@wincent/clamp": "0.3.0",
     "@wincent/frozen-set": "0.0.1",
-    "@wincent/nullthrows": "0.1.0",
     "@wincent/throttle": "0.0.2",
     "electron": "6.0.0",
     "react": "^16.8.6",
