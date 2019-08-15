@@ -178,7 +178,14 @@ export default function OmniBar() {
   }
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-    setValue(event.currentTarget.value);
+    const {value} = event.currentTarget;
+
+    setValue(value);
+
+    dispatch({
+      query: value,
+      type: 'filter',
+    });
   };
 
   function onFocus() {}
