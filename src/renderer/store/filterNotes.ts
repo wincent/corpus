@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import stringFinder from './stringFinder';
+import stringFinder from '../util/stringFinder';
 
 type Matcher =
   | Readonly<{

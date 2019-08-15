@@ -10,11 +10,10 @@ import * as React from 'react';
 import ConfigContext from '../contexts/ConfigContext';
 import NotesContext from '../contexts/NotesContext';
 import DispatchContext from '../contexts/DispatchContext';
-// TODO: move some of these "util" modules into a "store" directory
-import filterNotes from '../util/filterNotes';
+import reducer from '../store/reducer';
+// TODO: maybe move some of these "util" modules into a "store" directory
 import loadConfig from '../util/loadConfig';
 import loadNotes from '../util/loadNotes';
-import makeRange from '../util/makeRange';
 import NoteList from './NoteList';
 import OmniBar from './OmniBar';
 import SplitView from './SplitView';
@@ -30,41 +29,6 @@ const initialState: Store = {
   selectedNotes: new FrozenSet(),
 };
 
-// TODO: figure out best place to put reducers etc
-// and whether I want to factor them out into little functions like I previously
-// did on the next branch
-
-const reducer = (store: Store, action: Action): Store => {
-  switch (action.type) {
-    // TODO: consider offering a separate context for filtered notes?
-    case 'filter':
-      return {
-        ...store,
-        filteredNotes: filterNotes(action.query, store.notes),
-        query: action.query,
-      };
-    case 'focus':
-      return {
-        ...store,
-        focus: action.target,
-      };
-    case 'load': {
-      const notes = [...store.notes, ...action.notes];
-
-      return {
-        ...store,
-        filteredNotes: filterNotes(store.query, notes),
-        notes,
-      };
-    }
-    case 'select-all':
-      return {
-        ...store,
-        selectedNotes: new FrozenSet(makeRange(store.filteredNotes.length)),
-      };
-  }
-  return store;
-};
 // TODO: expose store on window to make debugging easy in dev-mode
 
 export default function Corpus() {
