@@ -1,4 +1,10 @@
+# electron-packages build directories:
+/corpus-*-*
+
+# git-worktree worktrees:
 /master
-/media
 /next
+/media
+
+# other:
 /node_modules
