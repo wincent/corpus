@@ -1,5 +1,6 @@
-# electron-packages build directories:
-/corpus-*-*
+# release artifacts:
+/*.dmg
+/Corpus-*-*
 
 # git-worktree worktrees:
 /master

@@ -1,5 +1,5 @@
 {
-  "name": "corpus",
+  "name": "Corpus",
   "version": "0.0.9000-pre",
   "description": "A note-management application for macOS",
   "main": "dist/main/index.js",
@@ -22,6 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "electron": "^6.0.2",
+    "electron-installer-dmg": "3.0.0",
     "electron-packager": "14.0.4",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.0.0",
