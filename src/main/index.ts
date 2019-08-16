@@ -47,9 +47,9 @@ function buildMenu() {
 }
 
 async function loadReactDevTools() {
-  // TODO: make this less crude (ie. maybe search for latest version or
-  // something)
-  const extension = path.join(
+  BrowserWindow.removeExtension('React Developer Tools');
+
+  const base = path.join(
     os.homedir(),
     'Library',
     'Application Support',
@@ -58,13 +58,22 @@ async function loadReactDevTools() {
     'Profile 1',
     'Extensions',
     'fmkadmapgofadopljbjfkapdkoienihi',
-    '3.6.0_0',
   );
 
-  const extensionExists = await exists(extension);
+  const versions = [
+    '4.0.2_0',
+    '3.6.0_0',
+  ];
 
-  if (extensionExists) {
-    BrowserWindow.addDevToolsExtension(extension);
+  for (const version of versions) {
+    const extension = path.join(base, version);
+    const extensionExists = await exists(extension);
+
+    if (extensionExists) {
+      // TODO: maybe only do this when NODE_ENV !== 'production'
+      BrowserWindow.addDevToolsExtension(extension);
+      return;
+    }
   }
 }
 

@@ -12,4 +12,6 @@ import {DEFAULT_CONFIG} from '../util/loadConfig';
  */
 const ConfigContext = React.createContext<Config | null>(DEFAULT_CONFIG);
 
+ConfigContext.displayName = 'ConfigContext';
+
 export default ConfigContext;

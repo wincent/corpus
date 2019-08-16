@@ -19,4 +19,6 @@ const DEFAULT_STATE: Store = {
 
 const NotesContext = React.createContext(DEFAULT_STATE);
 
+NotesContext.displayName = 'NotesContext';
+
 export default NotesContext;
