@@ -115,7 +115,6 @@ async function build() {
       'next',
       'src',
       'tsconfig\\.[^/]+',
-      'vendor',
       'yarn.lock',
     ].map(pattern => `/${pattern}($|/)`),
     overwrite: true,
