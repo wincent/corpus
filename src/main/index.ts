@@ -46,8 +46,12 @@ function buildMenu() {
   Menu.setApplicationMenu(menu);
 }
 
+const REACT_DEVELOPER_TOOLS = 'React Developer Tools';
+
 async function loadReactDevTools() {
-  BrowserWindow.removeExtension('React Developer Tools');
+  if (BrowserWindow.getExtensions().hasOwnProperty(REACT_DEVELOPER_TOOLS)) {
+    BrowserWindow.removeExtension(REACT_DEVELOPER_TOOLS);
+  }
 
   const base = path.join(
     os.homedir(),
