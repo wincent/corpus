@@ -56,7 +56,7 @@ async function build() {
         ignore: [
           // Cannot bundle because it uses __dirname, and bundling breaks it.
           'electron',
-        ]
+        ],
       }),
       replace({
         // Seems rollup does some basic dead-code elimination; this is enough.

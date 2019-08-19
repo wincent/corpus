@@ -49,7 +49,12 @@ function buildMenu() {
 const REACT_DEVELOPER_TOOLS = 'React Developer Tools';
 
 async function loadReactDevTools() {
-  if (BrowserWindow.getExtensions().hasOwnProperty(REACT_DEVELOPER_TOOLS)) {
+  if (
+    Object.prototype.hasOwnProperty.call(
+      BrowserWindow.getExtensions(),
+      REACT_DEVELOPER_TOOLS,
+    )
+  ) {
     BrowserWindow.removeExtension(REACT_DEVELOPER_TOOLS);
   }
 
@@ -64,10 +69,7 @@ async function loadReactDevTools() {
     'fmkadmapgofadopljbjfkapdkoienihi',
   );
 
-  const versions = [
-    '4.0.2_0',
-    '3.6.0_0',
-  ];
+  const versions = ['4.0.2_0', '3.6.0_0'];
 
   for (const version of versions) {
     const extension = path.join(base, version);

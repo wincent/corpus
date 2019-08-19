@@ -15,6 +15,7 @@ import reducer from '../store/reducer';
 import loadConfig from '../util/loadConfig';
 import loadNotes from '../util/loadNotes';
 import NoteList from './NoteList';
+import NoteView from './NoteView';
 import OmniBar from './OmniBar';
 import SplitView from './SplitView';
 import Viewport from './Viewport';
@@ -66,7 +67,7 @@ export default function Corpus() {
             <OmniBar />
             <SplitView>
               <NoteList />
-              <div>TODO: i{"'"}ll find something to put here</div>
+              <NoteView />
             </SplitView>
           </Viewport>
         </NotesContext.Provider>
