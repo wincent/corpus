@@ -34,11 +34,13 @@ type Config = {
  * @see https://www.json.org/
  */
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface JSONArray extends Array<JSONValue> {}
-
-type JSONObject = {[member: string]: JSONValue};
-type JSONValue = JSONArray | JSONObject | boolean | null | number | string;
+type JSONValue =
+  | boolean
+  | null
+  | number
+  | string
+  | {[property: string]: JSONValue}
+  | Array<JSONValue>;
 
 type Note = {
   body: string;
