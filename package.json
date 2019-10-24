@@ -23,7 +23,7 @@
     "@typescript-eslint/parser": "^2.0.0",
     "electron": "*",
     "electron-installer-dmg": "3.0.0",
-    "electron-packager": "14.0.4",
+    "electron-packager": "*",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-notice": "^0.8.8",
