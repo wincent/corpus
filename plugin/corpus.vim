@@ -1,6 +1,25 @@
 " Copyright 2015-present Greg Hurrell. All rights reserved.
 " Licensed under the terms of the MIT license.
 
+""
+" @option g:CorpusLoaded any
+"
+" To prevent Corpus from being loaded, set |g:CorpusLoaded| to any value in your
+" |.vimrc|. For example:
+"
+" ```
+" let g:CorpusLoaded=1
+" ```
+if exists('g:CorpusLoaded') || &compatible || v:version < 700
+  finish
+endif
+
+let g:CorpusLoaded=1
+"
+" Temporarily set 'cpoptions' to Vim default as per `:h use-cpo-save`.
+let s:cpoptions=&cpoptions
+set cpoptions&vim
+
 if has('autocmd')
   augroup Corpus
     autocmd!
@@ -23,3 +42,7 @@ nnoremap <Plug>(Corpus) :Corpus<Space>
 if !hasmapto('<Plug>(Corpus)') && maparg('<Leader>c', 'n') ==# ''
   nmap <unique> <Leader>c <Plug>(Corpus)
 endif
+
+" Restore 'cpoptions' to its former value.
+let &cpoptions = s:cpoptions
+unlet s:cpoptions
