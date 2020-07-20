@@ -1,3 +1,6 @@
+" Copyright 2015-present Greg Hurrell. All rights reserved.
+" Licensed under the terms of the MIT license.
+
 autocmd BufWritePost <buffer> call corpus#buf_write_post()
 autocmd BufWritePre <buffer> call corpus#buf_write_pre()
 

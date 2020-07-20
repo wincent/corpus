@@ -1,3 +1,6 @@
+" Copyright 2015-present Greg Hurrell. All rights reserved.
+" Licensed under the terms of the MIT license.
+
 let s:chooser_buffer=v:null
 let s:chooser_selected_index=v:null
 let s:chooser_window=v:null
