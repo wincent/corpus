@@ -602,7 +602,10 @@ function! corpus#choose(selection) abort
     execute 'cd ' . fnameescape(l:directory)
     echomsg 'Changed to: ' . l:directory
     if !empty(l:file)
-      execute 'edit '. fnameescape(l:file . '.md')
+      if l:file !~? '\v\.md$'
+        let l:file=l:file . '.md'
+      endif
+      execute 'edit '. fnameescape(l:file)
     endif
   endif
 endfunction
