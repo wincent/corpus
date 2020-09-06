@@ -23,13 +23,13 @@ let s:preview_window=v:null
 "   ---
 "
 function! corpus#buf_new_file() abort
-  let l:file=corpus#normalize('<afile>')
+  let l:file=luaeval('corpus.normalize("<afile>")')
   call corpus#update_metadata(l:file)
   let b:corpus_new_file=1
 endfunction
 
 function! corpus#buf_write_post() abort
-  let l:file=corpus#normalize('<afile>')
+  let l:file=luaeval('corpus.normalize("<afile>")')
   if has_key(b:, 'corpus_new_file')
     unlet b:corpus_new_file
     let l:operation='create'
@@ -40,13 +40,13 @@ function! corpus#buf_write_post() abort
 endfunction
 
 function! corpus#buf_write_pre() abort
-  let l:file=corpus#normalize('<afile>')
+  let l:file=luaeval('corpus.normalize("<afile>")')
   call corpus#update_references(l:file)
   call corpus#update_metadata(l:file)
 endfunction
 
 function! corpus#commit(file, operation) abort
-  let l:config=corpus#config_for_file(a:file)
+  let l:config=luaeval('corpus.config_for_file("' . a:file . '")')
   if !get(l:config, 'autocommit', 0)
     return
   endif
@@ -71,20 +71,6 @@ function! corpus#commit(file, operation) abort
         \   ' -- ' .
         \   shellescape(a:file)
         \ )
-endfunction
-
-" Returns config from `g:CorpusDirectories` for `file`, or an empty dictionary
-" if `file` is not in one of the directories defined in `g:CorpusDirectories`.
-function! corpus#config_for_file(file) abort
-  let l:base=fnamemodify(a:file, ':h')
-  let l:config=get(g:, 'CorpusDirectories', {})
-  for l:directory in keys(l:config)
-    let l:candidate=corpus#normalize(l:directory)
-    if l:candidate == l:base
-      return extend({'location': l:candidate}, l:config[l:directory])
-    endif
-  endfor
-  return {}
 endfunction
 
 " Minimal subset of:
@@ -163,16 +149,6 @@ function! corpus#extract_reference_links(line) abort
   endwhile
 
   return l:reference_links
-endfunction
-
-" Adds 'corpus' to the 'filetype' if the current file is under a
-" directory configured via `g:CorpusDirectories`.
-function! corpus#ftdetect() abort
-  let l:file=corpus#normalize('<afile>')
-  let l:config=corpus#config_for_file(l:file)
-  if len(l:config)
-    set filetype+=.corpus
-  endif
 endfunction
 
 let s:metadata_key_value_pattern='\v^\s*(\w+)\s*:\s*(\S.{-})\s*$'
@@ -310,7 +286,7 @@ function! corpus#goto(mode) abort
     return
   endif
 
-  let l:config=corpus#config_for_file(expand('%:p'))
+  let l:config=luaeval('corpus.config_for_file("' . expand('%:p') .'")')
   let l:transform=get(l:config, 'transform', 'local')
   if l:start > 0 && l:end < l:len
     let l:name=strpart(l:line, l:start, l:end - l:start + 1)
@@ -358,18 +334,6 @@ function! corpus#goto(mode) abort
       call setline(line('.'), l:linkified)
       call cursor(0, l:col + 2)
     endif
-  endif
-endfunction
-
-" Turns `file` into a simplified absolute path with all symlinks resolved. If
-" `file` corresponds to a directory any trailing slash will be removed.
-function! corpus#normalize(file) abort
-  let l:file=fnamemodify(resolve(expand(a:file)), ':p')
-  let l:len=len(l:file)
-  if l:file[l:len - 1] == '/'
-    return strpart(l:file, 0, l:len - 1)
-  else
-    return l:file
   endif
 endfunction
 
@@ -429,7 +393,7 @@ function! corpus#title_for_file(file) abort
 endfunction
 
 function! corpus#update_references(file) abort
-  let l:config=corpus#config_for_file(a:file)
+  let l:config=luaeval('corpus.config_for_file("' . a:file . '")')
   if !get(l:config, 'autoreference', 0)
     return
   endif
@@ -518,7 +482,7 @@ function! corpus#update_references(file) abort
 endfunction
 
 function! corpus#update_metadata(file) abort
-  let l:config=corpus#config_for_file(a:file)
+  let l:config=luaeval('corpus.config_for_file("' . a:file . '")')
   if !get(l:config, 'autotitle', 0) && !has_key(l:config, 'tags')
     return
   endif
@@ -542,43 +506,11 @@ function! corpus#update_metadata(file) abort
   call corpus#set_metadata(l:metadata)
 endfunction
 
-function! corpus#directories() abort
-  let l:directories=keys(get(g:, 'CorpusDirectories', {}))
-  if !len(l:directories)
-    echoerr 'No Corpus directories configured: please set g:CorpusDirectories'
-  endif
-  return map(l:directories, {i, val -> substitute(resolve(fnamemodify(val, ':p')), '/$', '', '')})
-endfunction
-
-function! corpus#in_directory() abort
-  let l:directories=corpus#directories()
-  let l:cwd=getcwd()
-  for l:directory in l:directories
-    if l:directory == l:cwd
-      return 1
-    endif
-  endfor
-  return 0
-endfunction
-
-" If current working directory is a configured Corpus directory, returns it.
-" Otherwise, returns first found default.
-function! corpus#directory() abort
-  if corpus#in_directory()
-    let l:cwd=getcwd()
-    return l:cwd
-  else
-    let l:directories=corpus#directories()
-    let l:default=l:directories[0]
-    return l:default
-  endif
-endfunction
-
 function! corpus#complete(arglead, cmdline, cursor_pos) abort
-  if corpus#in_directory()
+  if luaeval('corpus.in_directory()')
     " TODO expand to current completion?
   else
-    let l:directories=corpus#directories()
+    let l:directories=luaeval('corpus.directories()')
     return l:directories
   endif
 endfunction
@@ -594,10 +526,10 @@ function! corpus#choose(selection) abort
       let l:directory=a:selection
       if !isdirectory(l:directory)
         let l:file=l:directory
-        let l:directory=corpus#directory()
+        let l:directory=luaeval('corpus.directory()')
       endif
     else
-      let l:directory=corpus#directory()
+      let l:directory=luaeval('corpus.directory()')
     endif
     execute 'cd ' . fnameescape(l:directory)
     echomsg 'Changed to: ' . l:directory
@@ -640,7 +572,7 @@ function! corpus#cmdline_changed(char) abort
     let l:match=matchlist(l:line, '\v^\s*Corpus>\s*(.{-})\s*$')
 
     if len(l:match)
-      if corpus#in_directory()
+      if luaeval('corpus.in_directory()')
         call corpus#set_up_mappings()
         " TODO: add neovim guards
         " Create unlisted scratch buffer.
@@ -711,7 +643,7 @@ endfunction
 
 " Get the full path to a file in the Corpus directory.
 function! corpus#file(basename) abort
-  return corpus#join(corpus#directory(), a:basename)
+  return corpus#join(luaeval('corpus.directory()', a:basename)
 endfunction
 
 " Join multiple path components using a separator (/).
@@ -809,30 +741,14 @@ endfunction
 
 " List all documents in the corpus.
 function! corpus#list() abort
-  let l:command=[
-        \   'git',
-        \   '-C',
-        \   corpus#directory(),
-        \   'ls-files',
-        \   '--cached',
-        \   '--others',
-        \   '-z',
-        \   '--',
-        \   '*.md'
-        \ ]
-  let l:files=corpus#run(l:command)
-  if len(l:files) == 1
-    return split(l:files[0], '\n')
-  else
-    return []
-  endif
+  return luaeval('corpus.list()')
 endfunction
 
 function! corpus#search(terms) abort
   let l:command=[
         \   'git',
         \   '-C',
-        \   corpus#directory(),
+        \   luaeval('corpus.directory()'),
         \   'grep',
         \   '-I',
         \   '-F',
