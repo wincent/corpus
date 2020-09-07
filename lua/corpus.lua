@@ -7,14 +7,14 @@ corpus = {
   -- directories defined in `CorpusDirectories`.
   config_for_file = function(file)
     local base = vim.fn.fnamemodify(file, ':h')
-    local config = _G.CorpusDirectories or {}
+    local config = _G.CorpusDirectories or vim.empty_dict()
     for directory, settings in pairs(config) do
       local candidate = corpus.normalize(directory)
       if candidate == base then
         return vim.tbl_extend('force', {location = candidate}, settings)
       end
     end
-    return {}
+    return vim.empty_dict()
   end,
 
   -- If current working directory is a configured Corpus directory, returns it.
@@ -29,7 +29,7 @@ corpus = {
   end,
 
   directories = function()
-    local config = _G.CorpusDirectories or {}
+    local config = _G.CorpusDirectories or vim.empty_dict()
     local directories = corpus.keys(config)
     if table.getn(directories) == 0 then
       vim.api.nvim_err_writeln(
@@ -101,6 +101,65 @@ corpus = {
     return {}
   end,
 
+  search = function(terms)
+    local directory = corpus.directory()
+    if directory ~= nil then
+      local command = {
+        'git',
+        '-C',
+        directory,
+        'grep',
+        '-I',
+        '-F',
+        '-l',
+        '-z',
+        '--all-match',
+        '--untracked'
+      }
+
+      if corpus.smartcase(terms) then
+        table.insert(command, '-i')
+      end
+
+      for term in terms:gmatch('%S+') do
+        table.insert(command, '-e')
+        table.insert(command, term)
+      end
+
+      table.insert(command, '--')
+      table.insert(command, '*.md')
+
+      local files = corpus.run(command)
+
+      if table.getn(files) == 1 then
+        -- Expect one long "line" from `git grep`, containing NUL
+        -- separator bytes, which Vim turns into newlines; we
+        -- split on those to get a list.
+        --
+        -- Also note Git Bug here: -z here doesn't always prevent stuff
+        -- from getting escaped; if in a subdirectory, `git grep` may
+        -- return results like:
+        --
+        --    "\"HTML is probably what you want\".md"
+        --    Akephalos.md
+        --    JavaScript loading.md
+        --
+        -- See: https://public-inbox.org/git/CAOyLvt9=wRfpvGGJqLMi7=wLWu881pOur8c9qNEg+Xqhf8W2ww@mail.gmail.com/
+        local list = {}
+        for file in files[1]:gmatch('[^\n]+') do
+          if vim.startswith(file, '"') and vim.endswith(file, '"') then
+            table.insert(list, file:sub(2, -2):gsub('\\"', '"'))
+          else
+            table.insert(list, file)
+          end
+        end
+        return list
+      end
+    end
+
+    return {}
+  end,
+
   -- TODO: move this to utility module
   map = function(list, cb)
     local result = {}
@@ -131,6 +190,16 @@ corpus = {
       return vim.fn.shellescape(word)
     end), ' ')
     return vim.fn.systemlist(command)
+  end,
+
+  -- Like 'smartcase', will be case-insensitive unless argument contains an
+  -- uppercase letter.
+  smartcase = function(input)
+    return input:match('%u') ~= nil
+  end,
+
+  title_for_file = function(file)
+    return vim.fn.fnamemodify(file, ':t:r')
   end,
 }
 

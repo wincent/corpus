@@ -46,7 +46,7 @@ function! corpus#buf_write_pre() abort
 endfunction
 
 function! corpus#commit(file, operation) abort
-  let l:config=luaeval('corpus.config_for_file("' . a:file . '")')
+  let l:config=luaeval('corpus.config_for_file(_A[1])', [a:file])
   if !get(l:config, 'autocommit', 0)
     return
   endif
@@ -286,7 +286,7 @@ function! corpus#goto(mode) abort
     return
   endif
 
-  let l:config=luaeval('corpus.config_for_file("' . expand('%:p') .'")')
+  let l:config=luaeval('corpus.config_for_file(_A[1])', [expand('%:p')])
   let l:transform=get(l:config, 'transform', 'local')
   if l:start > 0 && l:end < l:len
     let l:name=strpart(l:line, l:start, l:end - l:start + 1)
@@ -388,12 +388,8 @@ function! corpus#test() abort
   endif
 endfunction
 
-function! corpus#title_for_file(file) abort
-  return fnamemodify(a:file, ':t:r')
-endfunction
-
 function! corpus#update_references(file) abort
-  let l:config=luaeval('corpus.config_for_file("' . a:file . '")')
+  let l:config=luaeval('corpus.config_for_file(_A[1])', [a:file])
   if !get(l:config, 'autoreference', 0)
     return
   endif
@@ -482,7 +478,7 @@ function! corpus#update_references(file) abort
 endfunction
 
 function! corpus#update_metadata(file) abort
-  let l:config=luaeval('corpus.config_for_file("' . a:file . '")')
+  let l:config=luaeval('corpus.config_for_file(_A[1])', [a:file])
   if !get(l:config, 'autotitle', 0) && !has_key(l:config, 'tags')
     return
   endif
@@ -490,7 +486,7 @@ function! corpus#update_metadata(file) abort
   let l:metadata=corpus#get_metadata()
 
   if get(l:config, 'autotitle', 0)
-    let l:title=corpus#title_for_file(a:file)
+    let l:title=luaeval('corpus.title_for_file(_A[1])', [a:file])
     let l:metadata.title=l:title
   endif
 
@@ -592,9 +588,9 @@ function! corpus#cmdline_changed(char) abort
 
         let l:terms=l:match[1]
         if len(l:terms)
-          let l:results=corpus#search(l:terms)
+          let l:results=luaeval('corpus.search(_A[1])', [l:terms])
         else
-          let l:results=corpus#list()
+          let l:results=luaeval('corpus.list()')
         endif
 
         " Update results list and preview.
@@ -639,16 +635,6 @@ function! corpus#cmdline_leave() abort
     let s:preview_window=v:null
   endif
   call corpus#tear_down_mappings()
-endfunction
-
-" Get the full path to a file in the Corpus directory.
-function! corpus#file(basename) abort
-  return corpus#join(luaeval('corpus.directory()', a:basename)
-endfunction
-
-" Join multiple path components using a separator (/).
-function! corpus#join(...) abort
-  return join(a:000, '/')
 endfunction
 
 let s:preview_timer=v:null
@@ -742,53 +728,4 @@ endfunction
 " List all documents in the corpus.
 function! corpus#list() abort
   return luaeval('corpus.list()')
-endfunction
-
-function! corpus#search(terms) abort
-  let l:command=[
-        \   'git',
-        \   '-C',
-        \   luaeval('corpus.directory()'),
-        \   'grep',
-        \   '-I',
-        \   '-F',
-        \   '-l',
-        \   '-z',
-        \   '--all-match',
-        \   '--untracked'
-        \ ]
-
-  if !corpus#smartcase(a:terms)
-    call add(l:command, '-i')
-  endif
-
-  for l:term in split(a:terms)
-    call extend(l:command, ['-e', l:term])
-  endfor
-  call extend(l:command, ['--', '*.md'])
-  let l:files=corpus#run(l:command)
-  if len(l:files) == 1
-    " We expect one long line from `git grep`, and Vim will have turned
-    " NUL bytes inside that line into newlines, so we split aga,in.
-    let l:files=split(l:files[0], '\n')
-
-    " BUG: -z here doesn't always prevent stuff from getting escaped; if in a
-    " subdirectory, `git grep` may return results like:
-    "
-    "     "\"HTML is probably what you want\".md"
-    "     Akephalos.md
-    "     JavaScript loading.md
-    "
-    " See: https://public-inbox.org/git/CAOyLvt9=wRfpvGGJqLMi7=wLWu881pOur8c9qNEg+Xqhf8W2ww@mail.gmail.com/
-    "
-    return map(l:files, {i, val -> match(val, '\v^".*"$') == -1 ? val : substitute(strpart(val, 1, len(val) - 2), '\v\\"', '"', 'g')})
-  else
-    return []
-  endif
-endfunction
-
-" Like 'smartcase', will be case-insensitive unless argument contains an
-" uppercase letter.
-function! corpus#smartcase(terms) abort
-  return match(a:terms, '\v[A-Z]') == -1
 endfunction
