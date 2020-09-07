@@ -1,6 +1,8 @@
 -- Copyright 2015-present Greg Hurrell. All rights reserved.
 -- Licensed under the terms of the MIT license.
 
+local util = require 'corpus.util'
+
 corpus = {
   commit = function(file, operation)
     local config = corpus.config_for_file(file)
@@ -58,13 +60,13 @@ corpus = {
 
   directories = function()
     local config = _G.CorpusDirectories or vim.empty_dict()
-    local directories = corpus.keys(config)
+    local directories = util.dict.keys(config)
     if table.getn(directories) == 0 then
       vim.api.nvim_err_writeln(
         'No Corpus directories configured: please set CorpusDirectories'
       )
     end
-    return corpus.map(directories, function(directory)
+    return util.list.map(directories, function(directory)
       return corpus.normalize(directory)
     end)
   end,
@@ -76,35 +78,16 @@ corpus = {
     local config = corpus.config_for_file(file)
     if next(config) ~= nil then
       local filetypes = vim.split(vim.bo.filetype, '.', true)
-      if not corpus.includes(filetypes, 'corpus') then
+      if not util.list.includes(filetypes, 'corpus') then
         vim.bo.filetype = vim.bo.filetype .. '.corpus'
       end
     end
   end,
 
-  -- TODO: move this to utility module
-  includes = function(list, item)
-    for _, v in ipairs(list) do
-      if v == item then
-        return true
-      end
-    end
-    return false
-  end,
-
   in_directory = function()
     local directories = corpus.directories()
     local cwd = vim.fn.getcwd()
-    return corpus.includes(directories, cwd)
-  end,
-
-  -- TODO: move this to utility module
-  keys = function(tbl)
-    local result = {}
-    for key, _ in pairs(tbl) do
-      table.insert(result, key)
-    end
-    return result
+    return util.list.includes(directories, cwd)
   end,
 
   -- List all documents in the corpus.
@@ -188,15 +171,6 @@ corpus = {
     return {}
   end,
 
-  -- TODO: move this to utility module
-  map = function(list, cb)
-    local result = {}
-    for i, v in ipairs(list) do
-      result[i] = cb(v)
-    end
-    return result
-  end,
-
   -- Turns `afile` into a simplified absolute path with all symlinks resolved.
   -- If `afile` corresponds to a directory any trailing slash will be removed.
   normalize = function(afile)
@@ -214,7 +188,7 @@ corpus = {
   end,
 
   run = function(args)
-    local command = table.concat(corpus.map(args, function(word)
+    local command = table.concat(util.list.map(args, function(word)
       return vim.fn.shellescape(word)
     end), ' ')
     return vim.fn.systemlist(command)
