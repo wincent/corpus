@@ -25,24 +25,24 @@ let s:preview_window=v:null
 "   ---
 "
 function! corpus#buf_new_file() abort
-  let l:file=luaeval('corpus.normalize("<afile>")')
+  let l:file=v:lua.corpus.normalize('<afile>')
   call corpus#update_metadata(l:file)
   let b:corpus_new_file=1
 endfunction
 
 function! corpus#buf_write_post() abort
-  let l:file=luaeval('corpus.normalize("<afile>")')
+  let l:file=v:lua.corpus.normalize('<afile>')
   if has_key(b:, 'corpus_new_file')
     unlet b:corpus_new_file
     let l:operation='create'
   else
     let l:operation='update'
   endif
-  call luaeval('corpus.commit(_A[1], _A[2])', [l:file, l:operation])
+  call v:lua.corpus.commit(l:file, l:operation)
 endfunction
 
 function! corpus#buf_write_pre() abort
-  let l:file=luaeval('corpus.normalize("<afile>")')
+  let l:file=v:lua.corpus.normalize('<afile>')
   call corpus#update_references(l:file)
   call corpus#update_metadata(l:file)
 endfunction
@@ -260,7 +260,7 @@ function! corpus#goto(mode) abort
     return
   endif
 
-  let l:config=luaeval('corpus.config_for_file(_A[1])', [expand('%:p')])
+  let l:config=v:lua.corpus.config_for_file(expand('%:p'))
   let l:transform=get(l:config, 'transform', 'local')
   if l:start > 0 && l:end < l:len
     let l:name=strpart(l:line, l:start, l:end - l:start + 1)
@@ -363,7 +363,7 @@ function! corpus#test() abort
 endfunction
 
 function! corpus#update_references(file) abort
-  let l:config=luaeval('corpus.config_for_file(_A[1])', [a:file])
+  let l:config=v:lua.corpus.config_for_file(a:file)
   if !get(l:config, 'autoreference', 0)
     return
   endif
@@ -452,7 +452,7 @@ function! corpus#update_references(file) abort
 endfunction
 
 function! corpus#update_metadata(file) abort
-  let l:config=luaeval('corpus.config_for_file(_A[1])', [a:file])
+  let l:config=v:lua.corpus.config_for_file(a:file)
   if !get(l:config, 'autotitle', 0) && !has_key(l:config, 'tags')
     return
   endif
@@ -460,7 +460,7 @@ function! corpus#update_metadata(file) abort
   let l:metadata=corpus#get_metadata()
 
   if get(l:config, 'autotitle', 0)
-    let l:title=luaeval('corpus.title_for_file(_A[1])', [a:file])
+    let l:title=v:lua.corpus.title_for_file(a:file)
     let l:metadata.title=l:title
   endif
 
@@ -477,11 +477,10 @@ function! corpus#update_metadata(file) abort
 endfunction
 
 function! corpus#complete(arglead, cmdline, cursor_pos) abort
-  if luaeval('corpus.in_directory()')
+  if v:lua.corpus.in_directory()
     " TODO expand to current completion?
   else
-    let l:directories=luaeval('corpus.directories()')
-    return l:directories
+    return v:lua.corpus.directories()
   endif
 endfunction
 
@@ -496,10 +495,10 @@ function! corpus#choose(selection) abort
       let l:directory=a:selection
       if !isdirectory(l:directory)
         let l:file=l:directory
-        let l:directory=luaeval('corpus.directory()')
+        let l:directory=v:lua.corpus.directory()
       endif
     else
-      let l:directory=luaeval('corpus.directory()')
+      let l:directory=v:lua.corpus.directory()
     endif
     execute 'cd ' . fnameescape(l:directory)
     echomsg 'Changed to: ' . l:directory
@@ -542,7 +541,7 @@ function! corpus#cmdline_changed(char) abort
     let l:match=matchlist(l:line, '\v^\s*Corpus>\s*(.{-})\s*$')
 
     if len(l:match)
-      if luaeval('corpus.in_directory()')
+      if v:lua.corpus.in_directory()
         call corpus#set_up_mappings()
         " TODO: add neovim guards
         " Create unlisted scratch buffer.
@@ -562,9 +561,9 @@ function! corpus#cmdline_changed(char) abort
 
         let l:terms=l:match[1]
         if len(l:terms)
-          let l:results=luaeval('corpus.search(_A[1])', [l:terms])
+          let l:results=v:lua.corpus.search(l:terms)
         else
-          let l:results=luaeval('corpus.list()')
+          let l:results=v:lua.corpus.list()
         endif
 
         " Update results list and preview.
@@ -690,9 +689,4 @@ function! corpus#preview_previous() abort
       call corpus#debounced_preview()
     endif
   endif
-endfunction
-
-" List all documents in the corpus.
-function! corpus#list() abort
-  return luaeval('corpus.list()')
 endfunction
