@@ -2,6 +2,34 @@
 -- Licensed under the terms of the MIT license.
 
 corpus = {
+  commit = function(file, operation)
+    local config = corpus.config_for_file(file)
+    if config.autocommit then
+      file = vim.fn.fnamemodify(file, ':t')
+      local location = vim.fn.expand(config.location)
+      local subject = 'docs: ' .. operation .. ' ' .. vim.fn.fnamemodify(file, ':r') .. ' (Corpus autocommit)'
+
+      -- Just in case this is a new file (otherwise `git commit` will fail).
+      vim.fn.system(
+        'git -C ' ..
+        vim.fn.shellescape(location) ..
+        ' add -- ' ..
+        vim.fn.shellescape(file)
+      )
+
+      -- Note that this will fail silently if there are no changes to the
+      -- file (because we aren't passing `--allow-empty`) and that's ok.
+      vim.fn.system(
+        'git -C ' ..
+        vim.fn.shellescape(location) ..
+        ' commit -m ' ..
+        vim.fn.shellescape(subject) ..
+        ' -- ' ..
+        vim.fn.shellescape(file)
+      )
+    end
+  end,
+
   -- Returns config from the `CorpusDirectories` (Lua global) for
   -- `file`, or an empty table if `file` is not in one of the
   -- directories defined in `CorpusDirectories`.

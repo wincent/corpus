@@ -36,41 +36,13 @@ function! corpus#buf_write_post() abort
   else
     let l:operation='update'
   endif
-  call corpus#commit(l:file, l:operation)
+  call luaeval('corpus.commit(_A[1], _A[2])', [l:file, l:operation])
 endfunction
 
 function! corpus#buf_write_pre() abort
   let l:file=luaeval('corpus.normalize("<afile>")')
   call corpus#update_references(l:file)
   call corpus#update_metadata(l:file)
-endfunction
-
-function! corpus#commit(file, operation) abort
-  let l:config=luaeval('corpus.config_for_file(_A[1])', [a:file])
-  if !get(l:config, 'autocommit', 0)
-    return
-  endif
-  let l:file=fnamemodify(a:file, ':t:r')
-  let l:location=expand(l:config.location)
-
-  " Just in case this is a new file (otherwise `git commit` will fail).
-  call system(
-        \   'git -C ' .
-        \   shellescape(l:location) .
-        \   ' add -- ' .
-        \   shellescape(a:file)
-        \ )
-
-  " Note that this will fail silently if there are no changes to file (because
-  " we aren't passing `--allow-empty`) and that's ok.
-  call system(
-        \   'git -C ' .
-        \   shellescape(l:location) .
-        \   ' commit -m ' .
-        \   shellescape('docs: ' . a:operation . ' ' . l:file . ' (Corpus autocommit)') .
-        \   ' -- ' .
-        \   shellescape(a:file)
-        \ )
 endfunction
 
 " Minimal subset of:
@@ -716,13 +688,6 @@ function! corpus#preview_previous() abort
       call corpus#debounced_preview()
     endif
   endif
-endfunction
-
-function! corpus#run(args) abort
-  let l:args=copy(a:args)
-  call map(l:args, {i, word -> shellescape(word)})
-  let l:command=join(l:args, ' ')
-  return systemlist(l:command)
 endfunction
 
 " List all documents in the corpus.
