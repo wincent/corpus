@@ -3,7 +3,13 @@
 
 local util = {}
 
-util.dict = require 'corpus.util.dict'
-util.list = require 'corpus.util.list'
+local mt = {
+  __index = function(tbl, key)
+    if util[key] == nil then
+      util[key] = require('corpus.util.' .. key)
+    end
+    return util[key]
+  end
+}
 
-return util
+return setmetatable({}, mt)
