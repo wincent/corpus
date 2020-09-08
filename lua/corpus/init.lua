@@ -128,7 +128,7 @@ corpus = {
         '--untracked'
       }
 
-      if corpus.smartcase(terms) then
+      if not corpus.smartcase(terms) then
         table.insert(command, '-i')
       end
 
