@@ -50,7 +50,7 @@ corpus = {
 
   directories = function()
     local config = _G.CorpusDirectories or vim.empty_dict()
-    local directories = util.dict.keys(config)
+    local directories = vim.tbl_keys(config)
     if table.getn(directories) == 0 then
       vim.api.nvim_err_writeln(
         'No Corpus directories configured: please set CorpusDirectories'
@@ -68,7 +68,7 @@ corpus = {
     local config = corpus.config_for_file(file)
     if next(config) ~= nil then
       local filetypes = vim.split(vim.bo.filetype, '.', true)
-      if not util.list.includes(filetypes, 'corpus') then
+      if not vim.tbl_contains(filetypes, 'corpus') then
         vim.bo.filetype = vim.bo.filetype .. '.corpus'
       end
     end
@@ -90,7 +90,7 @@ corpus = {
   in_directory = function()
     local directories = corpus.directories()
     local cwd = vim.fn.getcwd()
-    return util.list.includes(directories, cwd)
+    return vim.tbl_contains(directories, cwd)
   end,
 
   -- List all documents in the corpus.

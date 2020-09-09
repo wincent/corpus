@@ -5,10 +5,12 @@ local util = {
   list = {},
 }
 
+-- Peforms a shallow clone of `list`.
 util.list.clone = function(list)
   return {unpack(list)}
 end
 
+-- Concatenates `list` with `other` (also a list), returning a new list.
 util.list.concat = function(list, other)
   local result = util.list.clone(list)
   for _, v in ipairs(other) do
@@ -17,16 +19,7 @@ util.list.concat = function(list, other)
   return result
 end
 
--- see tbl_contains provided by neovim
-util.list.includes = function(list, item)
-  for _, v in ipairs(list) do
-    if v == item then
-      return true
-    end
-  end
-  return false
-end
-
+-- Maps over `list`, returning a new list.
 util.list.map = function(list, cb)
   local result = {}
   for i, v in ipairs(list) do
@@ -35,6 +28,7 @@ util.list.map = function(list, cb)
   return result
 end
 
+-- Pushes one or more elements onto `list`, mutating it.
 util.list.push = function(list, ...)
   for _, v in ipairs({...}) do
     table.insert(list, v)
