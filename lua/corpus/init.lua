@@ -3,7 +3,133 @@
 
 local util = require 'corpus.util'
 
+local chooser_buffer = nil
+local chooser_selected_index = nil
+local chooser_window = nil
+
+local preview_buffer = nil
+local preview_window = nil
+
+-- TODO: can we make these a bit more private?
+local mappings = {
+  ['<C-j>'] = '<Cmd>lua corpus.preview_next()<CR>',
+  ['<C-k>'] = '<Cmd>lua corpus.preview_previous()<CR>',
+  ['<Down>'] = '<Cmd>lua corpus.preview_next()<CR>',
+  ['<Up>'] = '<Cmd>lua corpus.preview_previous()<CR>',
+}
+
+-- TODO: detect pre-existing mappings, save them, and restore them if needed.
+local set_up_mappings = function()
+  for rhs, lhs in pairs(mappings) do
+    vim.api.nvim_set_keymap('c', lhs, rhs, {silent = true})
+  end
+end
+
+local tear_down_mappings = function()
+  for rhs, lhs in pairs(mappings) do
+    if vim.fn.maparg(rhs, 'c') == lhs then
+      -- TODO: find out if bang from old version was actually necessary
+      -- vim.cmd('silent! cunmap ' .. lhs)
+      vim.api.nvim_del_kemap('c', lhs)
+    end
+  end
+end
+
+-- TODO make most of these private (really only want them public for testing
+-- during development)
 corpus = {
+  cmdline_changed = function(char)
+    if char == ':' then
+      local line = vim.fn.getcmdline()
+      local _, _, term = string.find(line, '^%s*Corpus%f[%A]%s*(%S*)%s*$')
+      if term ~= nil then
+        if corpus.in_directory() then
+          set_up_mappings()
+          if chooser_window == nil then
+            chooser_buffer = vim.api.nvim_create_buf(
+              false, -- listed?
+              true -- scratch?
+            )
+            chooser_window = vim.api.nvim_open_win(
+              chooser_buffer,
+              false --[[ enter? --]], {
+                col = 0,
+                row = 0,
+                focusable = false,
+                relative = 'editor',
+                style = 'minimal',
+                width = math.floor(vim.api.nvim_get_option('columns') / 2),
+                height = vim.api.nvim_get_option('lines') - 2,
+              }
+            )
+            vim.api.nvim_win_set_option(chooser_window, 'wrap', false)
+          end
+
+          local results = nil
+          if term:len() > 0 then
+            results = corpus.search(term)
+          else
+            results = corpus.list()
+          end
+
+          local lines = nil
+          if #results > 0 then
+            chooser_selected_index = 0
+
+            -- +1 because cursor indexing is 1-based.
+            vim.api.nvim_win_set_cursor(window, {1, 0})
+            lines = util.list.map(results, function (result, i)
+              local name = vim.fn.fnamemodify(result, ':r')
+              if i == chooser_selected_index then
+                return '> ' .. name
+              else
+                return '  ' .. name
+              end
+            end)
+            -- corpus.preview() TODO: implement
+          else
+            lines = {}
+            chooser_selected_index = nil
+          end
+
+          vim.api.nvim_buf_set_lines(
+            chooser_buffer,
+            0, -- start
+            -1, -- end
+            false, -- strict indexing?
+            lines
+          )
+
+          -- Reserve two lines for statusline and command line.
+          vim.api.nvim_win_set_height(
+            window,
+            vim.api.nvim_get_option('lines') - 2
+          )
+
+          vim.cmd('redraw')
+          return
+        end
+      end
+    end
+    tear_down_mappings()
+  end,
+
+  cmdline_enter = function()
+    chooser_selected_index = nil
+  end,
+
+  cmdline_leave = function()
+    if chooser_window ~= nil then
+      vim.api.nvim_win_close(chooser_window, true --[[ force? --]])
+      chooser_window = nil
+    end
+    if preview_window ~= nil then
+      vim.api.nvim_win_close(preview_window, true --[[ force? --]])
+      preview_window = nil
+    end
+    tear_down_mappings()
+  end,
+
   commit = function(file, operation)
     local config = corpus.config_for_file(file)
     if config.autocommit then
@@ -111,6 +237,18 @@ corpus = {
       end
     end
     return {}
+  end,
+
+  preview = function()
+    if chooser_selected_index ~= nil then
+      local line = nvim_buf_get_lines(
+        chooser_buffer,
+        chooser_selected_index,
+        chooser_selected_index + 1,
+        false
+      )[0]
+      -- TODO: finish this...
+    end
   end,
 
   search = function(terms)

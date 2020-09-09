@@ -23,7 +23,7 @@ end
 util.list.map = function(list, cb)
   local result = {}
   for i, v in ipairs(list) do
-    result[i] = cb(v)
+    result[i] = cb(v, i)
   end
   return result
 end

@@ -20,6 +20,9 @@ let g:CorpusLoaded=1
 let s:cpoptions=&cpoptions
 set cpoptions&vim
 
+" TODO: don't eagerly require this
+lua require'corpus'
+
 if has('autocmd')
   augroup Corpus
     autocmd!
@@ -28,10 +31,17 @@ if has('autocmd')
     " TODO: don't blow up on macOS /usr/bin/vim; will need deeper fix in long term
     if exists('##CmdlineChanged')
       autocmd CmdlineChanged * call corpus#cmdline_changed(expand('<afile>'))
+
+      " Uncomment this to test new version.
+      " autocmd CmdlineChanged * call v:lua.corpus.cmdline_changed(expand('<afile>'))
     endif
 
-    autocmd CmdlineEnter * call corpus#cmdline_enter(expand('<afile>'))
+    autocmd CmdlineEnter * call corpus#cmdline_enter()
     autocmd CmdlineLeave * call corpus#cmdline_leave()
+
+    " Uncomment these to test new version.
+    " autocmd CmdlineEnter * call v:lua.corpus.cmdline_enter()
+    " autocmd CmdlineLeave * call v:lua.corpus.cmdline_leave()
   augroup END
 endif
 

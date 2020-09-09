@@ -520,7 +520,6 @@ let s:mappings={
       \   '<Up>': '<Cmd>call corpus#preview_previous()<CR>'
       \ }
 
-" TODO: detect pre-existing mappings, save them, and restore them if needed
 function! corpus#set_up_mappings() abort
   for l:key in keys(s:mappings)
     execute 'cnoremap <silent> ' . l:key . ' ' . s:mappings[l:key]
@@ -612,15 +611,16 @@ endfunction
 
 let s:preview_timer=v:null
 
+" TODO: reimplement debouncing, but first, port a non-debounced version.
 function! corpus#debounced_preview() abort
   if type(s:preview_timer) != type(v:null)
     call timer_stop(s:preview_timer)
   endif
   let l:time=get(g:, 'CorpusDebounce', 250)
   let s:preview_timer=timer_start(l:time, 'corpus#preview')
+  " call v:lua.corpus.preview()
 endfunction
 
-" TODO Make this a private function; don't want anybody  else calling it
 function! corpus#preview(handle) abort
   if s:preview_timer == a:handle
     let s:preview_timer=v:null
@@ -634,6 +634,7 @@ function! corpus#preview(handle) abort
       let s:preview_buffer=nvim_create_buf(v:false, v:true)
     endif
     if type(s:preview_window) == type(v:null)
+      " TODO: kill the background window blur on this thing; makes it look ugly
       let s:preview_window=nvim_open_win(s:preview_buffer, v:false, {
             \   'col': &columns / 2,
             \   'row': 0,
