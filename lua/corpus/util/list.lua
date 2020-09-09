@@ -5,6 +5,19 @@ local util = {
   list = {},
 }
 
+util.list.clone = function(list)
+  return {unpack(list)}
+end
+
+util.list.concat = function(list, other)
+  local result = util.list.clone(list)
+  for _, v in ipairs(other) do
+    table.insert(result, v)
+  end
+  return result
+end
+
+-- see tbl_contains provided by neovim
 util.list.includes = function(list, item)
   for _, v in ipairs(list) do
     if v == item then

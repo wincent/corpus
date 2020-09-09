@@ -12,23 +12,13 @@ corpus = {
       local subject = 'docs: ' .. operation .. ' ' .. vim.fn.fnamemodify(file, ':r') .. ' (Corpus autocommit)'
 
       -- Just in case this is a new file (otherwise `git commit` will fail).
-      vim.fn.system(
-        'git -C ' ..
-        vim.fn.shellescape(location) ..
-        ' add -- ' ..
-        vim.fn.shellescape(file)
-      )
+      corpus.git(location, 'add', '--', file)
+      -- TODO: check v:shell_error for this one ^^^
+      -- vim.api.nvim_get_vvar('shell_error')
 
       -- Note that this will fail silently if there are no changes to the
       -- file (because we aren't passing `--allow-empty`) and that's ok.
-      vim.fn.system(
-        'git -C ' ..
-        vim.fn.shellescape(location) ..
-        ' commit -m ' ..
-        vim.fn.shellescape(subject) ..
-        ' -- ' ..
-        vim.fn.shellescape(file)
-      )
+      corpus.git(location, 'commit', '-m', subject, '--', file)
     end
   end,
 
@@ -84,6 +74,19 @@ corpus = {
     end
   end,
 
+  git = function(directory, ...)
+    if vim.fn.isdirectory(directory) == 0 then
+      error('Not a directory: ' .. directory)
+    end
+    if vim.fn.isdirectory(directory .. '/.git') == 0 then
+      -- TODO: decide whether it's right to do this unconditionally like this
+      corpus.run({'git', '-C', directory, 'init'})
+    end
+
+    local command = util.list.concat({'git', '-C', directory}, {...})
+    return corpus.run(command)
+  end,
+
   in_directory = function()
     local directories = corpus.directories()
     local cwd = vim.fn.getcwd()
@@ -94,17 +97,15 @@ corpus = {
   list = function()
     local directory = corpus.directory()
     if directory ~= nil then
-      local files = corpus.run({
-        'git',
-        '-C',
+      local files = corpus.git(
         directory,
         'ls-files',
         '--cached',
         '--others',
         '-z',
         '--',
-        '*.md',
-      })
+        '*.md'
+      )
       if table.maxn(files) == 1 then
         return vim.split(files[1], '\n', true)
       end
@@ -115,10 +116,7 @@ corpus = {
   search = function(terms)
     local directory = corpus.directory()
     if directory ~= nil then
-      local command = {
-        'git',
-        '-C',
-        directory,
+      local args = {
         'grep',
         '-I',
         '-F',
@@ -129,18 +127,18 @@ corpus = {
       }
 
       if not corpus.smartcase(terms) then
-        table.insert(command, '-i')
+        table.insert(args, '-i')
       end
 
       for term in terms:gmatch('%S+') do
-        table.insert(command, '-e')
-        table.insert(command, term)
+        table.insert(args, '-e')
+        table.insert(args, term)
       end
 
-      table.insert(command, '--')
-      table.insert(command, '*.md')
+      table.insert(args, '--')
+      table.insert(args, '*.md')
 
-      local files = corpus.run(command)
+      local files = corpus.git(directory, unpack(args))
 
       if table.getn(files) == 1 then
         -- Expect one long "line" from `git grep`, containing NUL
@@ -187,6 +185,8 @@ corpus = {
     vim.api.nvim_command('unsilent echomsg "' .. message .. '"')
   end,
 
+  -- TODO: better name for the param here (it's more than just args; it is
+  -- command plus args)
   run = function(args)
     local command = table.concat(util.list.map(args, function(word)
       return vim.fn.shellescape(word)
