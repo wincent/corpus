@@ -35,4 +35,10 @@ util.list.map = function(list, cb)
   return result
 end
 
+util.list.push = function(list, ...)
+  for _, v in ipairs({...}) do
+    table.insert(list, v)
+  end
+end
+
 return util.list

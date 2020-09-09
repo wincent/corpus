@@ -131,12 +131,10 @@ corpus = {
       end
 
       for term in terms:gmatch('%S+') do
-        table.insert(args, '-e')
-        table.insert(args, term)
+        util.list.push(args, '-e', term)
       end
 
-      table.insert(args, '--')
-      table.insert(args, '*.md')
+      util.list.push(args, '--', '*.md')
 
       local files = corpus.git(directory, unpack(args))
 
