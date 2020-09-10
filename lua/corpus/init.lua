@@ -39,6 +39,32 @@ end
 -- TODO make most of these private (really only want them public for testing
 -- during development)
 corpus = {
+  choose = function(selection)
+    local file = corpus.get_selected_file()
+    if file ~= nil then
+      vim.cmd('edit ' .. vim.fn.fnameescape(file))
+    else
+      file = ''
+      local directory
+      if vim.trim(selection) == '' then
+        directory = corpus.directory()
+      else
+        directory = selection
+        if vim.fn.isdirectory(directory) == 0 then
+          file = selection
+          directory = corpus.directory()
+        end
+      end
+      vim.cmd('cd ' .. vim.fn.fnameescape(directory))
+      if file ~= '' then
+        if not vim.endswith(file, '.md') then
+          file = file .. '.md'
+        end
+        vim.cmd('edit ' .. vim.fn.fnameescape(file))
+      end
+    end
+  end,
+
   cmdline_changed = function(char)
     if char == ':' then
       local line = vim.fn.getcmdline()
@@ -209,6 +235,20 @@ corpus = {
     end
   end,
 
+  get_selected_file = function()
+    if chooser_selected_index ~= nil then
+      local line = vim.api.nvim_buf_get_lines(
+        chooser_buffer,
+        chooser_selected_index - 1,
+        chooser_selected_index,
+        false
+      )[1]
+
+      -- Strip leading "> " or "  ", and append extension.
+      return vim.trim(line:sub(3, line:len())) .. '.md'
+    end
+  end,
+
   git = function(directory, ...)
     if vim.fn.isdirectory(directory) == 0 then
       error('Not a directory: ' .. directory)
@@ -220,6 +260,26 @@ corpus = {
 
     local command = util.list.concat({'git', '-C', directory}, {...})
     return corpus.run(command)
+  end,
+
+  highlight_selection = function ()
+    if chooser_selected_index ~= nil then
+      vim.api.nvim_buf_clear_namespace(
+        chooser_buffer,
+        chooser_namespace,
+        0, -- TODO only clear whole buffer when resetting
+        -1 -- (just clearing previous would suffice)
+      )
+      -- TODO make highlight configurable
+      vim.api.nvim_buf_add_highlight(
+        chooser_buffer,
+        chooser_namespace,
+        'PMenuSel',
+        chooser_selected_index - 1, -- line (0-indexed)
+        0, -- col_start
+        -1 -- col_end (end-of-line)
+      )
+    end
   end,
 
   in_directory = function()
@@ -249,17 +309,8 @@ corpus = {
   end,
 
   preview = function()
-    if chooser_selected_index ~= nil then
-      local line = vim.api.nvim_buf_get_lines(
-        chooser_buffer,
-        chooser_selected_index - 1,
-        chooser_selected_index,
-        false
-      )[1]
-
-      -- Strip leading "> " or "  ", and append extension.
-      local file = vim.trim(line:sub(3, line:len())) .. '.md'
-
+    local file = corpus.get_selected_file()
+    if file ~= nil then
       if preview_buffer == nil then
         preview_buffer = vim.api.nvim_create_buf(
           false, -- listed?
@@ -376,26 +427,6 @@ corpus = {
     end
   end,
 
-  highlight_selection = function ()
-    if chooser_selected_index ~= nil then
-      vim.api.nvim_buf_clear_namespace(
-        chooser_buffer,
-        chooser_namespace,
-        0, -- TODO only clear whole buffer when resetting
-        -1 -- (just clearing previous would suffice)
-      )
-      -- TODO make highlight configurable
-      vim.api.nvim_buf_add_highlight(
-        chooser_buffer,
-        chooser_namespace,
-        'PMenuSel',
-        chooser_selected_index - 1, -- line (0-indexed)
-        0, -- col_start
-        -1 -- col_end (end-of-line)
-      )
-    end
-  end,
-
   -- TODO: if this gets slow/sluggish, may have to run it as async job.
   search = function(terms)
     local directory = corpus.directory()
@@ -463,7 +494,6 @@ corpus = {
   end,
 
   log = function(message)
-    -- Because I don't know how to do "unsilent" version of `print()`.
     vim.api.nvim_command('unsilent echomsg "' .. message .. '"')
   end,
 

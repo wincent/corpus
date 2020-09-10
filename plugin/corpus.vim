@@ -39,7 +39,7 @@ if has('autocmd')
   augroup END
 endif
 
-command! -complete=customlist,corpus#complete -nargs=* Corpus call corpus#choose(<q-args>)
+command! -complete=customlist,corpus#complete -nargs=* Corpus call v:lua.corpus.choose(<q-args>)
 
 nnoremap <Plug>(Corpus) :Corpus<Space>
 
