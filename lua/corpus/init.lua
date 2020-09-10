@@ -40,13 +40,14 @@ end
 -- during development)
 corpus = {
   choose = function(selection)
+    selection = vim.trim(selection)
     local file = corpus.get_selected_file()
     if file ~= nil then
       vim.cmd('edit ' .. vim.fn.fnameescape(file))
     else
       file = ''
       local directory
-      if vim.trim(selection) == '' then
+      if selection == '' then
         directory = corpus.directory()
       else
         directory = selection
