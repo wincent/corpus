@@ -80,7 +80,6 @@ corpus = {
             -- 1 because Neovim cursor indexing is 1-based, as are Lua lists.
             chooser_selected_index = 1
 
-            vim.api.nvim_win_set_cursor(window, {1, 0})
             lines = util.list.map(results, function (result, i)
               local name = vim.fn.fnamemodify(result, ':r')
               local prefix = nil
@@ -107,9 +106,11 @@ corpus = {
 
           -- Reserve two lines for statusline and command line.
           vim.api.nvim_win_set_height(
-            window,
+            chooser_window,
             vim.api.nvim_get_option('lines') - 2
           )
+
+          corpus.highlight_selection()
 
           -- TODO: only do this if lines actually changed, or selection changed
           corpus.preview(lines) -- TODO: debounce this like original
@@ -340,31 +341,14 @@ corpus = {
             ({lines[2]:gsub('^..', '> ')})[1],
           }
         )
-        vim.api.nvim_win_set_cursor(chooser_window, {chooser_selected_index, 0})
         chooser_selected_index = chooser_selected_index + 1
-        vim.api.nvim_buf_clear_namespace(
-          chooser_buffer,
-          chooser_namespace,
-          0, -- TODO only clear whole buffer when resetting
-          -1 -- (just clearing previous would suffice)
-        )
-        vim.api.nvim_buf_add_highlight(
-          chooser_buffer,
-          chooser_namespace,
-          'PMenuSel',
-          chooser_selected_index - 1, -- line (0-indexed)
-          0, -- col_start
-          -1 -- col_end (end-of-line)
-        )
+        corpus.highlight_selection()
         corpus.preview()
       end
     end
   end,
 
   -- TODO: DRY this up; it is very similar to preview_next
-  -- TODO: to make menu highlight extend full width, pad lines with spaces on
-  -- right
-  -- TODO: do initial highlight of row on first display as well
   preview_previous = function()
     if chooser_selected_index ~= nil then
       if chooser_selected_index > 1 then
@@ -385,23 +369,28 @@ corpus = {
           }
         )
         chooser_selected_index = chooser_selected_index - 1
-        vim.api.nvim_win_set_cursor(chooser_window, {chooser_selected_index, 0})
-        vim.api.nvim_buf_clear_namespace(
-          chooser_buffer,
-          chooser_namespace,
-          0, -- TODO only clear whole buffer when resetting
-          -1 -- (just clearing previous would suffice)
-        )
-        vim.api.nvim_buf_add_highlight(
-          chooser_buffer,
-          chooser_namespace,
-          'PMenuSel',
-          chooser_selected_index - 1, -- line (0-indexed)
-          0, -- col_start
-          -1 -- col_end (end-of-line)
-        )
+        corpus.highlight_selection()
         corpus.preview()
       end
+    end
+  end,
+
+  highlight_selection = function ()
+    if chooser_selected_index ~= nil then
+      vim.api.nvim_buf_clear_namespace(
+        chooser_buffer,
+        chooser_namespace,
+        0, -- TODO only clear whole buffer when resetting
+        -1 -- (just clearing previous would suffice)
+      )
+      vim.api.nvim_buf_add_highlight(
+        chooser_buffer,
+        chooser_namespace,
+        'PMenuSel',
+        chooser_selected_index - 1, -- line (0-indexed)
+        0, -- col_start
+        -1 -- col_end (end-of-line)
+      )
     end
   end,
 
