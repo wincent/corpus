@@ -42,7 +42,7 @@ corpus = {
   cmdline_changed = function(char)
     if char == ':' then
       local line = vim.fn.getcmdline()
-      local _, _, term = string.find(line, '^%s*Corpus%f[%A]%s*(%S*)%s*$')
+      local _, _, term = string.find(line, '^%s*Corpus%f[%A]%s*(.-)%s*$')
       if term ~= nil then
         if corpus.in_directory() then
           set_up_mappings()
