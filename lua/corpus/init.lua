@@ -280,8 +280,15 @@ corpus = {
         vim.api.nvim_win_set_option(
           preview_window,
           'winhl',
-          'EndOfBuffer:VertSplit,Normal:VertSplit'
+          'EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit'
         )
+        vim.api.nvim_win_set_option(
+          preview_window,
+          'foldcolumn',
+          '1'
+        )
+        -- TODO: need to pad buffer with blank lines to make foldcolumn
+        -- extend all the way down
       end
       local contents = vim.fn.readfile(
         file,
