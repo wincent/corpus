@@ -74,9 +74,9 @@ corpus = {
 
           local lines = nil
           if #results > 0 then
-            chooser_selected_index = 0
+            -- 1 because Neovim cursor indexing is 1-based, as are Lua lists.
+            chooser_selected_index = 1
 
-            -- +1 because cursor indexing is 1-based.
             vim.api.nvim_win_set_cursor(window, {1, 0})
             lines = util.list.map(results, function (result, i)
               local name = vim.fn.fnamemodify(result, ':r')
@@ -86,7 +86,6 @@ corpus = {
                 return '  ' .. name
               end
             end)
-            -- corpus.preview() TODO: implement
           else
             lines = {}
             chooser_selected_index = nil
@@ -106,6 +105,9 @@ corpus = {
             vim.api.nvim_get_option('lines') - 2
           )
 
+          -- TODO: only do this if lines actually changed, or selection changed
+          corpus.preview(lines) -- TODO: debounce this like original
+          -- TODO: confirm we still need this
           vim.cmd('redraw')
           return
         end
@@ -233,7 +235,7 @@ corpus = {
         '*.md'
       )
       if table.maxn(files) == 1 then
-        return vim.split(files[1], '\n', true)
+        return vim.split(vim.trim(files[1]), '\n', true)
       end
     end
     return {}
@@ -241,16 +243,59 @@ corpus = {
 
   preview = function()
     if chooser_selected_index ~= nil then
-      local line = nvim_buf_get_lines(
+      local line = vim.api.nvim_buf_get_lines(
         chooser_buffer,
+        chooser_selected_index - 1,
         chooser_selected_index,
-        chooser_selected_index + 1,
         false
-      )[0]
-      -- TODO: finish this...
+      )[1] -- empty
+
+      -- Strip leading "> " or "  ", and append extension.
+      local file = line:sub(3, line:len()) .. '.md'
+
+      if preview_buffer == nil then
+        preview_buffer = vim.api.nvim_create_buf(
+          false, -- listed?
+          true -- scratch?
+        )
+      end
+      local lines = vim.api.nvim_get_option('lines')
+      if preview_window == nil then
+        -- TODO: kill the background window blur on this thing; makes it look
+        -- ugly; failing that, a border around the edge would fix it.
+        local width = math.floor(vim.api.nvim_get_option('columns') / 2)
+        preview_window = vim.api.nvim_open_win(
+          preview_buffer,
+          false --[[ enter? --]], {
+              col = width,
+              row = 0,
+              focusable = false,
+              relative = 'editor',
+              style = 'minimal',
+              width = width,
+              height = lines - 2,
+          }
+        )
+      end
+      local contents = vim.fn.readfile(
+        file,
+        '', -- if "b" then binary
+        lines -- maximum lines
+      )
+      vim.api.nvim_buf_set_lines(
+        preview_buffer,
+        0, -- start
+        -1, -- end
+        false, -- strict indexing?
+        contents
+      )
+      -- TODO: may be able to avoid double redraw... (already calling it
+      -- from cmdline_changed() -- might be able to remove it from there
+      vim.cmd('redraw')
     end
   end,
 
+  -- TODO: if this gets slow/sluggish, may have to run it as async job.
   search = function(terms)
     local directory = corpus.directory()
     if directory ~= nil then
