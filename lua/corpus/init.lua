@@ -46,6 +46,7 @@ corpus = {
       if term ~= nil then
         if corpus.in_directory() then
           set_up_mappings()
+          local width = math.floor(vim.api.nvim_get_option('columns') / 2)
           if chooser_window == nil then
             chooser_buffer = vim.api.nvim_create_buf(
               false, -- listed?
@@ -59,7 +60,7 @@ corpus = {
                 focusable = false,
                 relative = 'editor',
                 style = 'minimal',
-                width = math.floor(vim.api.nvim_get_option('columns') / 2),
+                width = width,
                 height = vim.api.nvim_get_option('lines') - 2,
               }
             )
@@ -82,11 +83,14 @@ corpus = {
             vim.api.nvim_win_set_cursor(window, {1, 0})
             lines = util.list.map(results, function (result, i)
               local name = vim.fn.fnamemodify(result, ':r')
+              local prefix = nil
               if i == chooser_selected_index then
-                return '> ' .. name
+                prefix = '> '
               else
-                return '  ' .. name
+                prefix = '  '
               end
+              -- Right pad so that selection highlight extends fully across.
+              return prefix .. string.format('%-' .. (width - 2) .. 's', name)
             end)
           else
             lines = {}
@@ -253,7 +257,7 @@ corpus = {
       )[1]
 
       -- Strip leading "> " or "  ", and append extension.
-      local file = line:sub(3, line:len()) .. '.md'
+      local file = vim.trim(line:sub(3, line:len())) .. '.md'
 
       if preview_buffer == nil then
         preview_buffer = vim.api.nvim_create_buf(
@@ -263,7 +267,6 @@ corpus = {
       end
       local lines = vim.api.nvim_get_option('lines')
       if preview_window == nil then
-        -- TODO: make border?
         local width = math.floor(vim.api.nvim_get_option('columns') / 2)
         preview_window = vim.api.nvim_open_win(
           preview_buffer,
