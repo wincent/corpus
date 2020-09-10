@@ -281,6 +281,7 @@ corpus = {
               height = lines - 2,
           }
         )
+        -- TODO make these highlights configurable
         vim.api.nvim_win_set_option(
           preview_window,
           'winhl',
@@ -383,6 +384,7 @@ corpus = {
         0, -- TODO only clear whole buffer when resetting
         -1 -- (just clearing previous would suffice)
       )
+      -- TODO make highlight configurable
       vim.api.nvim_buf_add_highlight(
         chooser_buffer,
         chooser_namespace,

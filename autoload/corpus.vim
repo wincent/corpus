@@ -487,6 +487,7 @@ endfunction
 function! corpus#choose(selection) abort
   if type(s:chooser_selected_index) != type(v:null)
     let l:line=nvim_buf_get_lines(s:chooser_buffer, s:chooser_selected_index, s:chooser_selected_index + 1, v:false)[0]
+    " TODO must trim here? i have no idea what frickin buffer this is using.
     let l:file=strpart(l:line, 2, len(l:line) - 2) . '.md'
     execute 'edit ' . fnameescape(l:file)
   else

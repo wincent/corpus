@@ -21,6 +21,7 @@ let s:cpoptions=&cpoptions
 set cpoptions&vim
 
 function! s:RequireCorpus()
+  " TODO: on first run, rewrite autocommands to not call this on subsequent runs.
   lua require'corpus'
 endfunction
 
