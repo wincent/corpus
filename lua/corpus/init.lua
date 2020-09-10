@@ -264,6 +264,7 @@ corpus = {
 
   highlight_selection = function ()
     if chooser_selected_index ~= nil then
+      vim.api.nvim_win_set_cursor(chooser_window, {chooser_selected_index, 0})
       vim.api.nvim_buf_clear_namespace(
         chooser_buffer,
         chooser_namespace,
