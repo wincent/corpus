@@ -63,6 +63,7 @@ corpus = {
               }
             )
             vim.api.nvim_win_set_option(chooser_window, 'wrap', false)
+            vim.api.nvim_win_set_option(chooser_window, 'winhl', 'Normal:Question')
           end
 
           local results = nil
@@ -261,8 +262,7 @@ corpus = {
       end
       local lines = vim.api.nvim_get_option('lines')
       if preview_window == nil then
-        -- TODO: kill the background window blur on this thing; makes it look
-        -- ugly; failing that, a border around the edge would fix it.
+        -- TODO: make border?
         local width = math.floor(vim.api.nvim_get_option('columns') / 2)
         preview_window = vim.api.nvim_open_win(
           preview_buffer,
@@ -275,6 +275,11 @@ corpus = {
               width = width,
               height = lines - 2,
           }
+        )
+        vim.api.nvim_win_set_option(
+          preview_window,
+          'winhl',
+          'EndOfBuffer:VertSplit,Normal:VertSplit'
         )
       end
       local contents = vim.fn.readfile(
@@ -314,10 +319,11 @@ corpus = {
             ({lines[2]:gsub('^..', '> ')})[1],
           }
         )
+        -- TODO matchaddpos to make it stand out even more
         vim.api.nvim_win_set_cursor(chooser_window, {chooser_selected_index, 0})
         chooser_selected_index = chooser_selected_index + 1
         vim.cmd('redraw') -- TODO: check if we need this (may only need it if debouncing, because preview will do it)
-        --corpus.preview()
+        corpus.preview()
       end
     end
   end,
@@ -345,7 +351,7 @@ corpus = {
         chooser_selected_index = chooser_selected_index - 1
         vim.api.nvim_win_set_cursor(chooser_window, {chooser_selected_index, 0})
         vim.cmd('redraw') -- TODO: check if we need this (may only need it if debouncing, because preview will do it)
-        --corpus.preview()
+        corpus.preview()
       end
     end
   end,
