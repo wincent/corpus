@@ -295,14 +295,19 @@ corpus = {
           'foldenable',
           false
         )
-        -- TODO: need to pad buffer with blank lines to make foldcolumn
-        -- extend all the way down
       end
       local contents = vim.fn.readfile(
         file,
         '', -- if "b" then binary
         lines -- maximum lines
       )
+      -- Pad buffer with blank lines to make foldcolumn extend all the way down.
+      -- Subtract two for statusline and command line.
+      local padding = lines - table.getn(contents) - 2
+      for i = 1, padding do
+        util.list.push(contents, '')
+      end
+
       vim.api.nvim_buf_set_lines(
         preview_buffer,
         0, -- start
