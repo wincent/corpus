@@ -20,17 +20,17 @@ local mappings = {
 
 -- TODO: detect pre-existing mappings, save them, and restore them if needed.
 local set_up_mappings = function()
-  for rhs, lhs in pairs(mappings) do
+  for lhs, rhs in pairs(mappings) do
     vim.api.nvim_set_keymap('c', lhs, rhs, {silent = true})
   end
 end
 
 local tear_down_mappings = function()
-  for rhs, lhs in pairs(mappings) do
-    if vim.fn.maparg(rhs, 'c') == lhs then
+  for lhs, rhs in pairs(mappings) do
+    if vim.fn.maparg(lhs, 'c') == rhs then
       -- TODO: find out if bang from old version was actually necessary
       -- vim.cmd('silent! cunmap ' .. lhs)
-      vim.api.nvim_del_kemap('c', lhs)
+      vim.api.nvim_del_keymap('c', lhs)
     end
   end
 end
@@ -248,7 +248,7 @@ corpus = {
         chooser_selected_index - 1,
         chooser_selected_index,
         false
-      )[1] -- empty
+      )[1]
 
       -- Strip leading "> " or "  ", and append extension.
       local file = line:sub(3, line:len()) .. '.md'
@@ -292,6 +292,61 @@ corpus = {
       -- TODO: may be able to avoid double redraw... (already calling it
       -- from cmdline_changed() -- might be able to remove it from there
       vim.cmd('redraw')
+    end
+  end,
+
+  preview_next = function()
+    if chooser_selected_index ~= nil then
+      if chooser_selected_index < vim.api.nvim_buf_line_count(chooser_buffer) then
+        local lines = vim.api.nvim_buf_get_lines(
+          chooser_buffer,
+          chooser_selected_index - 1,
+          chooser_selected_index + 1,
+          false
+        )
+        vim.api.nvim_buf_set_lines(
+          chooser_buffer,
+          chooser_selected_index - 1,
+          chooser_selected_index + 1,
+          false, -- strict indexing?
+          {
+            ({lines[1]:gsub('^..', '  ')})[1],
+            ({lines[2]:gsub('^..', '> ')})[1],
+          }
+        )
+        vim.api.nvim_win_set_cursor(chooser_window, {chooser_selected_index, 0})
+        chooser_selected_index = chooser_selected_index + 1
+        vim.cmd('redraw') -- TODO: check if we need this (may only need it if debouncing, because preview will do it)
+        --corpus.preview()
+      end
+    end
+  end,
+
+  -- TODO: DRY this up; it is very similar to preview_next
+  preview_previous = function()
+    if chooser_selected_index ~= nil then
+      if chooser_selected_index > 1 then
+        local lines = vim.api.nvim_buf_get_lines(
+          chooser_buffer,
+          chooser_selected_index - 2,
+          chooser_selected_index,
+          false
+        )
+        vim.api.nvim_buf_set_lines(
+          chooser_buffer,
+          chooser_selected_index - 2,
+          chooser_selected_index,
+          false, -- strict indexing?
+          {
+            ({lines[1]:gsub('^..', '> ')})[1],
+            ({lines[2]:gsub('^..', '  ')})[1],
+          }
+        )
+        chooser_selected_index = chooser_selected_index - 1
+        vim.api.nvim_win_set_cursor(chooser_window, {chooser_selected_index, 0})
+        vim.cmd('redraw') -- TODO: check if we need this (may only need it if debouncing, because preview will do it)
+        --corpus.preview()
+      end
     end
   end,
 

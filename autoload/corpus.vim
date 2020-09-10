@@ -513,102 +513,6 @@ endfunction
 
 " TODO: listen to VimResized events to refresh dimensions
 
-let s:mappings={
-      \   '<C-j>': '<Cmd>call corpus#preview_next()<CR>',
-      \   '<C-k>': '<Cmd>call corpus#preview_previous()<CR>',
-      \   '<Down>': '<Cmd>call corpus#preview_next()<CR>',
-      \   '<Up>': '<Cmd>call corpus#preview_previous()<CR>'
-      \ }
-
-function! corpus#set_up_mappings() abort
-  for l:key in keys(s:mappings)
-    execute 'cnoremap <silent> ' . l:key . ' ' . s:mappings[l:key]
-  endfor
-endfunction
-
-function! corpus#tear_down_mappings() abort
-  for l:key in keys(s:mappings)
-    if maparg(l:key, 'c') == s:mappings[l:key]
-      execute 'silent! cunmap ' . l:key
-    endif
-  endfor
-endfunction
-
-function! corpus#cmdline_changed(char) abort
-  if a:char == ':'
-    let l:line=getcmdline()
-    let l:match=matchlist(l:line, '\v^\s*Corpus>\s*(.{-})\s*$')
-
-    if len(l:match)
-      if v:lua.corpus.in_directory()
-        call corpus#set_up_mappings()
-        " TODO: add neovim guards
-        " Create unlisted scratch buffer.
-        if type(s:chooser_window) == type(v:null)
-          let s:chooser_buffer=nvim_create_buf(v:false, v:true)
-          let s:chooser_window=nvim_open_win(s:chooser_buffer, v:false, {
-                \   'col': 0,
-                \   'row': 0,
-                \   'focusable': 0,
-                \   'relative': 'editor',
-                \   'style': 'minimal',
-                \   'width': &columns / 2,
-                \   'height': &lines - 2
-                \ })
-          call nvim_win_set_option(s:chooser_window, 'wrap', v:false)
-        endif
-
-        let l:terms=l:match[1]
-        if len(l:terms)
-          let l:results=v:lua.corpus.search(l:terms)
-        else
-          let l:results=v:lua.corpus.list()
-        endif
-
-        " Update results list and preview.
-        if len(l:results)
-          let s:chooser_selected_index=0
-
-          " +1 because cursor indexing is 1-based.
-          call nvim_win_set_cursor(s:chooser_window, [1, 0])
-          let l:list=map(l:results, {i, val -> (i == s:chooser_selected_index ? '> ' : '  ') . fnamemodify(val, ':r')})
-          call corpus#debounced_preview()
-        else
-          let l:list=[]
-          let s:chooser_selected_index=v:null
-        endif
-
-        call nvim_buf_set_lines(s:chooser_buffer, 0, -1, v:false, l:list)
-
-        " Reserve two lines for statusline and command line.
-        call nvim_win_set_height(s:chooser_window, &lines - 2)
-        redraw
-      else
-        " Not in a directory.
-        call corpus#tear_down_mappings()
-      endif
-    else
-      call corpus#tear_down_mappings()
-    endif
-  endif
-endfunction
-
-function! corpus#cmdline_enter(char) abort
-  let s:chooser_selected_index=v:null
-endfunction
-
-function! corpus#cmdline_leave() abort
-  if type(s:chooser_window) != type(v:null)
-    call nvim_win_close(s:chooser_window, v:true)
-    let s:chooser_window=v:null
-  endif
-  if type(s:preview_window) != type(v:null)
-    call nvim_win_close(s:preview_window, v:true)
-    let s:preview_window=v:null
-  endif
-  call corpus#tear_down_mappings()
-endfunction
-
 let s:preview_timer=v:null
 
 " TODO: reimplement debouncing, but first, port a non-debounced version.
@@ -659,7 +563,6 @@ function! corpus#preview_next() abort
             \   substitute(l:lines[0], '..', '  ', ''),
             \   substitute(l:lines[1], '..', '> ', '')
             \ ]
-      let l:file=strpart(l:lines[1], 2, len(l:lines[1]) - 2) . '.md'
       call nvim_buf_set_lines(s:chooser_buffer, s:chooser_selected_index, s:chooser_selected_index + 2, v:false, l:updated_lines)
       let s:chooser_selected_index=s:chooser_selected_index + 1
 
@@ -680,7 +583,6 @@ function! corpus#preview_previous() abort
             \   substitute(l:lines[1], '..', '  ', '')
             \ ]
       " TODO: might want to debounce this
-      let l:file=strpart(l:lines[0], 2, len(l:lines[0]) - 2) . '.md'
       call nvim_buf_set_lines(s:chooser_buffer, s:chooser_selected_index - 1, s:chooser_selected_index + 1, v:false, l:updated_lines)
       let s:chooser_selected_index=s:chooser_selected_index - 1
 
