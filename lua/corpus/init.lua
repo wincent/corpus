@@ -8,6 +8,8 @@ local chooser_selected_index = nil
 local chooser_window = nil
 local chooser_namespace = vim.api.nvim_create_namespace('')
 
+local current_search = nil
+
 local preview_buffer = nil
 local preview_window = nil
 
@@ -95,64 +97,67 @@ corpus = {
             vim.api.nvim_win_set_option(chooser_window, 'winhl', 'Normal:Question')
           end
 
-          local results = nil
-          if term:len() > 0 then
-            results = corpus.search(term)
-          else
-            results = corpus.list()
-          end
+          local update = function(results)
+            local lines = nil
 
-          local lines = nil
-          if #results > 0 then
-            -- 1 because Neovim cursor indexing is 1-based, as are Lua lists.
-            chooser_selected_index = 1
+            if #results > 0 then
+              -- 1 because Neovim cursor indexing is 1-based, as are Lua lists.
+              chooser_selected_index = 1
 
-            lines = util.list.map(results, function (result, i)
-              local name = vim.fn.fnamemodify(result, ':r')
-              local prefix = nil
-              if i == chooser_selected_index then
-                prefix = '> '
-              else
-                prefix = '  '
-              end
-              -- Right pad so that selection highlight extends fully across.
-              if width < 102 then
-                return prefix .. string.format('%-' .. (width - 2) .. 's', name)
-              else
-                -- Avoid: "invalid format (width or precision too long)"
-                local padded = prefix .. string.format('%-99s', name)
-                local diff = width - padded:len()
-                if diff > 0 then
-                  padded = padded .. string.rep(' ', diff)
+              lines = util.list.map(results, function (result, i)
+                local name = vim.fn.fnamemodify(result, ':r')
+                local prefix = nil
+                if i == chooser_selected_index then
+                  prefix = '> '
+                else
+                  prefix = '  '
                 end
-                return padded
-              end
-            end)
-          else
-            lines = {}
-            chooser_selected_index = nil
+                -- Right pad so that selection highlight extends fully across.
+                if width < 102 then
+                  return prefix .. string.format('%-' .. (width - 2) .. 's', name)
+                else
+                  -- Avoid: "invalid format (width or precision too long)"
+                  local padded = prefix .. string.format('%-99s', name)
+                  local diff = width - padded:len()
+                  if diff > 0 then
+                    padded = padded .. string.rep(' ', diff)
+                  end
+                  return padded
+                end
+              end)
+            else
+              lines = {}
+              chooser_selected_index = nil
+            end
+
+            vim.api.nvim_buf_set_lines(
+              chooser_buffer,
+              0, -- start
+              -1, -- end
+              false, -- strict indexing?
+              lines
+            )
+
+            -- Reserve two lines for statusline and command line.
+            vim.api.nvim_win_set_height(
+              chooser_window,
+              vim.api.nvim_get_option('lines') - 2
+            )
+
+            corpus.highlight_selection()
+
+            -- TODO: only do this if lines actually changed, or selection changed
+            corpus.preview(lines) -- TODO: debounce this like original
+            -- TODO: confirm we still need this
+            vim.cmd('redraw')
           end
 
-          vim.api.nvim_buf_set_lines(
-            chooser_buffer,
-            0, -- start
-            -1, -- end
-            false, -- strict indexing?
-            lines
-          )
+          if term:len() > 0 then
+            corpus.search(term, update)
+          else
+            corpus.list(update)
+          end
 
-          -- Reserve two lines for statusline and command line.
-          vim.api.nvim_win_set_height(
-            chooser_window,
-            vim.api.nvim_get_option('lines') - 2
-          )
-
-          corpus.highlight_selection()
-
-          -- TODO: only do this if lines actually changed, or selection changed
-          corpus.preview(lines) -- TODO: debounce this like original
-          -- TODO: confirm we still need this
-          vim.cmd('redraw')
           return
         end
       end
@@ -301,23 +306,54 @@ corpus = {
   end,
 
   -- List all documents in the corpus.
-  list = function()
+  list = function(callback)
+    if current_search ~= nil then
+      current_search.cancel()
+    end
+
     local directory = corpus.directory()
-    if directory ~= nil then
-      local files = corpus.git(
-        directory,
+
+    if directory == nil then
+      callback({})
+    else
+      -- Using util.run here just for consistency, although the truth is this
+      -- one is not going to be a bottleneck.
+      local args = {
         'ls-files',
         '--cached',
         '--others',
         '-z',
         '--',
         '*.md'
-      )
-      if table.maxn(files) == 1 then
-        return vim.split(vim.trim(files[1]), '\n', true)
-      end
+      }
+
+      local stdout = {}
+
+      current_search = util.run('git', args, {
+        cwd = directory,
+        on_exit = function(code, signal)
+          if code == 0 then
+            local list = {}
+            for _, line in ipairs(stdout) do
+              for _, file in ipairs(vim.split(line, '\0', true)) do
+                local trimmed = vim.trim(file)
+                if trimmed ~= '' then
+                  table.insert(list, trimmed)
+                end
+              end
+            end
+            callback(list)
+          else
+            callback({})
+          end
+        end,
+        on_stdout = function(err, data)
+          if err == nil then
+            table.insert(stdout, data)
+          end
+        end,
+      })
     end
-    return {}
   end,
 
   preview = function()
@@ -439,10 +475,16 @@ corpus = {
     end
   end,
 
-  -- TODO: if this gets slow/sluggish, may have to run it as async job.
-  search = function(terms)
+  search = function(terms, callback)
+    if current_search ~= nil then
+      current_search.cancel()
+    end
+
     local directory = corpus.directory()
-    if directory ~= nil then
+
+    if directory == nil then
+      callback({})
+    else
       local args = {
         'grep',
         '-I',
@@ -463,35 +505,47 @@ corpus = {
 
       util.list.push(args, '--', '*.md')
 
-      local files = corpus.git(directory, unpack(args))
+      local stdout = {}
 
-      if table.getn(files) == 1 then
-        -- Expect one long "line" from `git grep`, containing NUL
-        -- separator bytes, which Vim turns into newlines; we
-        -- split on those to get a list.
-        --
-        -- Also note Git Bug here: -z here doesn't always prevent stuff
-        -- from getting escaped; if in a subdirectory, `git grep` may
-        -- return results like:
-        --
-        --    "\"HTML is probably what you want\".md"
-        --    Akephalos.md
-        --    JavaScript loading.md
-        --
-        -- See: https://public-inbox.org/git/CAOyLvt9=wRfpvGGJqLMi7=wLWu881pOur8c9qNEg+Xqhf8W2ww@mail.gmail.com/
-        local list = {}
-        for file in files[1]:gmatch('[^\n]+') do
-          if vim.startswith(file, '"') and vim.endswith(file, '"') then
-            table.insert(list, file:sub(2, -2):gsub('\\"', '"'))
-          else
-            table.insert(list, file)
+      current_search = util.run('git', args, {
+        cwd = directory,
+        on_exit = function(code, signal)
+          if code == 0 then
+            local list = {}
+            for _, line in ipairs(stdout) do
+              for _, file in ipairs(vim.split(line, '\0', true)) do
+                -- Note Git Bug here: -z here doesn't always prevent stuff
+                -- from getting escaped; if in a subdirectory, `git grep` may
+                -- return results like:
+                --
+                --    "\"HTML is probably what you want\".md"
+                --    Akephalos.md
+                --    JavaScript loading.md
+                --
+                -- See: https://public-inbox.org/git/CAOyLvt9=wRfpvGGJqLMi7=wLWu881pOur8c9qNEg+Xqhf8W2ww@mail.gmail.com/
+                if vim.startswith(file, '"') and vim.endswith(file, '"') then
+                  table.insert(list, file:sub(2, -2):gsub('\\"', '"'))
+                elseif file ~= '' then
+                  -- Due to NUL termination, we'll get an empty string at end of
+                  -- each line, so we skip those.
+                  table.insert(list, file)
+                end
+              end
+            end
+            callback(list)
+          elseif code == 1 then
+            -- No matches, but "git grep" itself was correctly invoked.
+            callback({})
           end
-        end
-        return list
-      end
+        end,
+        on_stdout = function(err, data)
+          -- Seems unlikely we'd get an `err` here, but...
+          if err == nil then
+            table.insert(stdout, data)
+          end
+        end,
+      })
     end
-
-    return {}
   end,
 
   -- Turns `afile` into a simplified absolute path with all symlinks resolved.
