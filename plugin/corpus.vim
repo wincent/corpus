@@ -10,7 +10,7 @@
 " ```
 " let g:CorpusLoaded=1
 " ```
-if exists('g:CorpusLoaded') || &compatible || v:version < 700
+if exists('g:CorpusLoaded') || &compatible || !has('nvim')
   finish
 endif
 
