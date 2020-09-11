@@ -116,7 +116,17 @@ corpus = {
                 prefix = '  '
               end
               -- Right pad so that selection highlight extends fully across.
-              return prefix .. string.format('%-' .. (width - 2) .. 's', name)
+              if width < 102 then
+                return prefix .. string.format('%-' .. (width - 2) .. 's', name)
+              else
+                -- Avoid: "invalid format (width or precision too long)"
+                local padded = prefix .. string.format('%-99s', name)
+                local diff = width - padded:len()
+                if diff > 0 then
+                  padded = padded .. string.rep(' ', diff)
+                end
+                return padded
+              end
             end)
           else
             lines = {}
