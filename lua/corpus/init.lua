@@ -334,11 +334,19 @@ corpus = {
         on_exit = function(code, signal)
           if code == 0 then
             local list = {}
-            for _, line in ipairs(stdout) do
-              for _, file in ipairs(vim.split(line, '\0', true)) do
-                local trimmed = vim.trim(file)
-                if trimmed ~= '' then
-                  table.insert(list, trimmed)
+            -- Take care to ensure we don't cut a filename in half given:
+            --
+            --    chunk[1]: first file name\0second file
+            --    chunk[2]: name\0third file name\0
+            --
+            local pending = ''
+            for _, chunk in ipairs(stdout) do
+              for match in chunk:gmatch('%Z*%z?') do
+                if vim.endswith(match, '\0') then
+                  table.insert(list, pending .. match:sub(1, -2))
+                  pending = ''
+                else
+                  pending = pending .. match
                 end
               end
             end
@@ -512,23 +520,31 @@ corpus = {
         on_exit = function(code, signal)
           if code == 0 then
             local list = {}
-            for _, line in ipairs(stdout) do
-              for _, file in ipairs(vim.split(line, '\0', true)) do
-                -- Note Git Bug here: -z here doesn't always prevent stuff
-                -- from getting escaped; if in a subdirectory, `git grep` may
-                -- return results like:
-                --
-                --    "\"HTML is probably what you want\".md"
-                --    Akephalos.md
-                --    JavaScript loading.md
-                --
-                -- See: https://public-inbox.org/git/CAOyLvt9=wRfpvGGJqLMi7=wLWu881pOur8c9qNEg+Xqhf8W2ww@mail.gmail.com/
-                if vim.startswith(file, '"') and vim.endswith(file, '"') then
-                  table.insert(list, file:sub(2, -2):gsub('\\"', '"'))
-                elseif file ~= '' then
-                  -- Due to NUL termination, we'll get an empty string at end of
-                  -- each line, so we skip those.
-                  table.insert(list, file)
+            -- Just like in `corpus.list()`, beware of file names that are
+            -- split over two chunks.
+            local pending = ''
+            for _, chunk in ipairs(stdout) do
+              for match in chunk:gmatch('%Z*%z?') do
+                if vim.endswith(match, '\0') then
+                  local file = pending .. match:sub(1, -2)
+                  pending = ''
+
+                  -- Note Git Bug here: -z here doesn't always prevent stuff
+                  -- from getting escaped; if in a subdirectory, `git grep` may
+                  -- return results like:
+                  --
+                  --    "\"HTML is probably what you want\".md"
+                  --    Akephalos.md
+                  --    JavaScript loading.md
+                  --
+                  -- See: https://public-inbox.org/git/CAOyLvt9=wRfpvGGJqLMi7=wLWu881pOur8c9qNEg+Xqhf8W2ww@mail.gmail.com/
+                  if vim.startswith(file, '"') and vim.endswith(file, '"') then
+                    table.insert(list, file:sub(2, -2):gsub('\\"', '"'))
+                  else
+                    table.insert(list, file)
+                  end
+                else
+                  pending = pending .. match
                 end
               end
             end
