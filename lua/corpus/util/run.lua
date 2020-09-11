@@ -65,15 +65,13 @@ local util = {
     -- TODO: maybe provide a way to pipe something in.
     stdin:shutdown()
 
-    local cancel = function()
-      cancelled = true
-      if not handle:is_closing() then
-        handle:kill(SIGTERM)
-      end
-    end
-
     return {
-      cancel = cancel,
+      cancel = function()
+        cancelled = true
+        if not handle:is_closing() then
+          handle:kill(SIGTERM)
+        end
+      end
     }
   end,
 }
