@@ -37,9 +37,9 @@ local util = {
     local on_stderr = callback('on_stderr', options)
     local on_stdout = callback('on_stdout', options)
 
-    local handle, pid
+    local handle
 
-    handle, pid = vim.loop.spawn(
+    handle = vim.loop.spawn(
       command, {
         args = args,
         stdio = {stdin, stdout, stderr},
