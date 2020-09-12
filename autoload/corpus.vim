@@ -481,11 +481,5 @@ function! corpus#update_metadata(file) abort
 endfunction
 
 function! corpus#complete(arglead, cmdline, cursor_pos) abort
-  if v:lua.corpus.in_directory()
-    " TODO expand to current completion?
-  else
-    return v:lua.corpus.directories()
-  endif
+  return v:lua.corpus.complete(a:arglead, a:cmdline, a:cursor_pos)
 endfunction
-
-" TODO: listen to VimResized events to refresh dimensions

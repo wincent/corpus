@@ -26,6 +26,7 @@ local set_up_mappings = function()
   for lhs, rhs in pairs(mappings) do
     vim.api.nvim_set_keymap('c', lhs, rhs, {silent = true})
   end
+  -- TODO sub to VimResized autocmd
 end
 
 local tear_down_mappings = function()
@@ -36,6 +37,7 @@ local tear_down_mappings = function()
       vim.api.nvim_del_keymap('c', lhs)
     end
   end
+  -- TODO unsub to VimResized autocmd
 end
 
 -- TODO make most of these private (really only want them public for testing
@@ -199,6 +201,26 @@ corpus = {
     end
   end,
 
+  complete = function(arglead, cmdline, cursor_pos)
+    if corpus.in_directory() then
+      local file = corpus.get_selected_file()
+      if file ~= nil then
+        local title = corpus.get_selected_file():sub(1, -4) -- strip ".md"
+        local prefix, _ = cmdline:gsub('^%s*Corpus%s+', '') -- strip "Corpus "
+        if vim.startswith(title, prefix) and prefix ~= title then
+          -- If on "foo bar bazzzz"
+          --                   ^
+          -- Must return "bazzzz", not "zzz".
+          local suffix = title:sub(prefix:len() - arglead:len() + 1, -1)
+          return {suffix}
+        end
+      end
+    else
+      -- BUG: getting stuck on one of these
+      return corpus.directories()
+    end
+  end,
+
   -- Returns config from the `CorpusDirectories` (Lua global) for
   -- `file`, or an empty table if `file` is not in one of the
   -- directories defined in `CorpusDirectories`.
@@ -239,7 +261,7 @@ corpus = {
   end,
 
   -- Adds 'corpus' to the 'filetype' if the current file is under a directory
-  -- configured via `g:CorpusDirectories`.
+  -- configured via `CorpusDirectories`.
   ftdetect = function()
     local file = corpus.normalize('<afile>')
     local config = corpus.config_for_file(file)
