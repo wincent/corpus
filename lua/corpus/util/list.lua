@@ -19,6 +19,16 @@ util.list.concat = function(list, other)
   return result
 end
 
+util.list.filter = function(list, cb)
+  local result = {}
+  for i, v in ipairs(list) do
+    if cb(v, i) then
+      table.insert(result, v)
+    end
+  end
+  return result
+end
+
 -- Maps over `list`, returning a new list.
 util.list.map = function(list, cb)
   local result = {}

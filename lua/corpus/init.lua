@@ -216,8 +216,11 @@ corpus = {
         end
       end
     else
-      -- BUG: getting stuck on one of these
-      return corpus.directories()
+      local directories = corpus.directories()
+      return util.list.filter(directories, function(directory, i)
+        -- TODO actually filter here
+        return true
+      end)
     end
   end,
 
@@ -589,7 +592,11 @@ corpus = {
   -- Turns `afile` into a simplified absolute path with all symlinks resolved.
   -- If `afile` corresponds to a directory any trailing slash will be removed.
   normalize = function(afile)
-    local file = vim.fn.fnamemodify(vim.fn.resolve(vim.fn.expand(afile)), ':p')
+    local file = afile
+    if vim.startswith(file, '<') then
+      file = vim.fn.expand(file)
+    end
+    file = vim.fn.fnamemodify(vim.fn.resolve(file), ':p')
     if vim.endswith(file, '/') then
       return file:sub(0, file:len() - 1)
     else
