@@ -2,8 +2,8 @@
   <img src="https://raw.githubusercontent.com/wincent/corpus/media/corpus-logo.png" />
 </p>
 
-<p>
-  <img src="https://raw.githubusercontent.com/wincent/corpus/media/corpus-vim.png" />
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wincent/corpus/media/corpus-demo.gif" />
 </p>
 
 # corpus<a name="corpus-corpus" href="#user-content-corpus-corpus"></a>

@@ -5,7 +5,7 @@
 " @header
 "
 " @image https://raw.githubusercontent.com/wincent/corpus/media/corpus-logo.png center
-" @image https://raw.githubusercontent.com/wincent/corpus/media/corpus-vim.png
+" @image https://raw.githubusercontent.com/wincent/corpus/media/corpus-demo.gif center
 
 ""
 " @plugin corpus Corpus plug-in for Neovim
