@@ -218,8 +218,7 @@ corpus = {
     else
       local directories = corpus.directories()
       return util.list.filter(directories, function(directory, i)
-        -- TODO actually filter here
-        return true
+        return vim.startswith(directory, arglead)
       end)
     end
   end,
