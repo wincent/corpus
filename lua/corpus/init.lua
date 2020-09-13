@@ -595,7 +595,7 @@ corpus = {
     if vim.startswith(file, '<') then
       file = vim.fn.expand(file)
     end
-    file = vim.fn.fnamemodify(vim.fn.resolve(file), ':p')
+    file = vim.fn.resolve(vim.fn.fnamemodify(file, ':p'))
     if vim.endswith(file, '/') then
       return file:sub(0, file:len() - 1)
     else
