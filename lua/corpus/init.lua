@@ -207,7 +207,7 @@ corpus = {
       if file ~= nil then
         local title = corpus.get_selected_file():sub(1, -4) -- strip ".md"
         local prefix, _ = cmdline:gsub('^%s*Corpus%s+', '') -- strip "Corpus "
-        if vim.startswith(title, prefix) and prefix ~= title then
+        if vim.startswith(title, prefix) then
           -- If on "foo bar bazzzz"
           --                   ^
           -- Must return "bazzzz", not "zzz".
