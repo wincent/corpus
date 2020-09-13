@@ -1,12 +1,10 @@
 " Copyright 2015-present Greg Hurrell. All rights reserved.
 " Licensed under the terms of the MIT license.
 
-" TODO: add logo
-" @image https://raw.githubusercontent.com/wincent/corpus/media/corpus-logo.jpg center
-
 ""
 " @header
 "
+" @image https://raw.githubusercontent.com/wincent/corpus/media/corpus-logo.jpg center
 " @image https://raw.githubusercontent.com/wincent/corpus/media/corpus-vim.png
 
 ""

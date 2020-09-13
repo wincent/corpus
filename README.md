@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wincent/corpus/media/corpus-logo.jpg" />
+</p>
+
 <p>
   <img src="https://raw.githubusercontent.com/wincent/corpus/media/corpus-vim.png" />
 </p>
