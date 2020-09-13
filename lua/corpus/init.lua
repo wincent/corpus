@@ -154,10 +154,8 @@ corpus = {
               vim.api.nvim_get_option('lines') - 2
             )
 
-            corpus.highlight_selection()
-
             -- TODO: only do this if lines actually changed, or selection changed
-            corpus.preview()
+            corpus.highlight_selection()
           end
 
           if term:len() > 0 then
@@ -326,6 +324,7 @@ corpus = {
         0, -- col_start
         -1 -- col_end (end-of-line)
       )
+      corpus.preview()
     end
   end,
 
@@ -479,7 +478,6 @@ corpus = {
         )
         chooser_selected_index = chooser_selected_index + 1
         corpus.highlight_selection()
-        corpus.preview()
       end
     end
   end,
@@ -506,7 +504,6 @@ corpus = {
         )
         chooser_selected_index = chooser_selected_index - 1
         corpus.highlight_selection()
-        corpus.preview()
       end
     end
   end,
