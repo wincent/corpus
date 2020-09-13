@@ -157,9 +157,7 @@ corpus = {
             corpus.highlight_selection()
 
             -- TODO: only do this if lines actually changed, or selection changed
-            corpus.preview(lines) -- TODO: debounce this like original
-            -- TODO: confirm we still need this
-            vim.cmd('redraw')
+            corpus.preview()
           end
 
           if term:len() > 0 then
@@ -456,8 +454,6 @@ corpus = {
         false, -- strict indexing?
         contents
       )
-      -- TODO: may be able to avoid double redraw... (already calling it
-      -- from cmdline_changed() -- might be able to remove it from there
       vim.cmd('redraw')
     end
   end,
