@@ -47,21 +47,29 @@ corpus = {
     selection = vim.trim(selection)
     local file = corpus.get_selected_file()
     if file ~= nil then
+      -- In a Corpus directory.
       vim.cmd('edit ' .. vim.fn.fnameescape(file))
     else
-      file = ''
-      local directory
-      if selection == '' then
-        directory = corpus.directory()
-      else
-        directory = selection
-        if vim.fn.isdirectory(directory) == 0 then
-          file = selection
-          directory = corpus.directory()
+      -- Not in a Corpus directory.
+      local directory = corpus.directory()
+      if selection:find('/') then
+        selection = corpus.normalize(selection)
+        if vim.tbl_contains(corpus.directories(), selection) then
+          directory = selection
+          file = ''
+        else
+          error(
+            'Invalid path: expected a new note name with no slashes, ' ..
+            'or a directory defined in the `CorpusDirectories` configuration'
+          )
         end
+      elseif directory == nil then
+        error('Please configure `CorpusDirectories`')
+      else
+        file = selection
       end
       vim.cmd('cd ' .. vim.fn.fnameescape(directory))
-      if file ~= '' then
+      if file ~= '' and file ~= nil then
         if not vim.endswith(file, '.md') then
           file = file .. '.md'
         end
