@@ -4,7 +4,7 @@
 ""
 " @header
 "
-" @image https://raw.githubusercontent.com/wincent/corpus/media/corpus-logo.jpg center
+" @image https://raw.githubusercontent.com/wincent/corpus/media/corpus-logo.png center
 " @image https://raw.githubusercontent.com/wincent/corpus/media/corpus-vim.png
 
 ""

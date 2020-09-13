@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/wincent/corpus/media/corpus-logo.jpg" />
+  <img src="https://raw.githubusercontent.com/wincent/corpus/media/corpus-logo.png" />
 </p>
 
 <p>
