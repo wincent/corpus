@@ -324,8 +324,8 @@ corpus = {
         0, -- col_start
         -1 -- col_end (end-of-line)
       )
-      corpus.preview()
     end
+    corpus.preview()
   end,
 
   in_directory = function()
@@ -394,67 +394,70 @@ corpus = {
   end,
 
   preview = function()
+    if preview_buffer == nil then
+      preview_buffer = vim.api.nvim_create_buf(
+        false, -- listed?
+        true -- scratch?
+      )
+    end
+    local lines = vim.api.nvim_get_option('lines')
+    if preview_window == nil then
+      local width = math.floor(vim.api.nvim_get_option('columns') / 2)
+      preview_window = vim.api.nvim_open_win(
+        preview_buffer,
+        false --[[ enter? --]], {
+            col = width,
+            row = 0,
+            focusable = false,
+            relative = 'editor',
+            style = 'minimal',
+            width = width,
+            height = lines - 2,
+        }
+      )
+      -- TODO make these highlights configurable
+      vim.api.nvim_win_set_option(
+        preview_window,
+        'winhl',
+        'EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit'
+      )
+      vim.api.nvim_win_set_option(
+        preview_window,
+        'foldcolumn',
+        '1'
+      )
+      vim.api.nvim_win_set_option(
+        preview_window,
+        'foldenable',
+        false
+      )
+    end
     local file = corpus.get_selected_file()
-    if file ~= nil then
-      if preview_buffer == nil then
-        preview_buffer = vim.api.nvim_create_buf(
-          false, -- listed?
-          true -- scratch?
-        )
-      end
-      local lines = vim.api.nvim_get_option('lines')
-      if preview_window == nil then
-        local width = math.floor(vim.api.nvim_get_option('columns') / 2)
-        preview_window = vim.api.nvim_open_win(
-          preview_buffer,
-          false --[[ enter? --]], {
-              col = width,
-              row = 0,
-              focusable = false,
-              relative = 'editor',
-              style = 'minimal',
-              width = width,
-              height = lines - 2,
-          }
-        )
-        -- TODO make these highlights configurable
-        vim.api.nvim_win_set_option(
-          preview_window,
-          'winhl',
-          'EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit'
-        )
-        vim.api.nvim_win_set_option(
-          preview_window,
-          'foldcolumn',
-          '1'
-        )
-        vim.api.nvim_win_set_option(
-          preview_window,
-          'foldenable',
-          false
-        )
-      end
-      local contents = vim.fn.readfile(
+    local contents = nil
+    if file == nil then
+      contents = {}
+    else
+      contents = vim.fn.readfile(
         file,
         '', -- if "b" then binary
         lines -- maximum lines
       )
-      -- Pad buffer with blank lines to make foldcolumn extend all the way down.
-      -- Subtract two for statusline and command line.
-      local padding = lines - table.getn(contents) - 2
-      for i = 1, padding do
-        util.list.push(contents, '')
-      end
-
-      vim.api.nvim_buf_set_lines(
-        preview_buffer,
-        0, -- start
-        -1, -- end
-        false, -- strict indexing?
-        contents
-      )
-      vim.cmd('redraw')
     end
+    -- Pad buffer with blank lines to make foldcolumn extend all the way down.
+    -- Subtract two for statusline and command line.
+    local padding = lines - table.getn(contents) - 2
+    for i = 1, padding do
+      util.list.push(contents, '')
+    end
+
+    vim.api.nvim_buf_set_lines(
+      preview_buffer,
+      0, -- start
+      -1, -- end
+      false, -- strict indexing?
+      contents
+    )
+    vim.cmd('redraw')
   end,
 
   preview_next = function()
