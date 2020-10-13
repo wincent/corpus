@@ -85,7 +85,7 @@ corpus = {
       if term ~= nil then
         if corpus.in_directory() then
           set_up_mappings()
-          local width = math.floor(vim.api.nvim_get_option('columns') / 2)
+          local width = math.floor(vim.o.columns / 2)
           if chooser_window == nil then
             chooser_buffer = vim.api.nvim_create_buf(
               false, -- listed?
@@ -100,7 +100,7 @@ corpus = {
                 relative = 'editor',
                 style = 'minimal',
                 width = width,
-                height = vim.api.nvim_get_option('lines') - 2,
+                height = vim.o.lines - 2,
               }
             )
             vim.api.nvim_win_set_option(chooser_window, 'wrap', false)
@@ -151,7 +151,7 @@ corpus = {
             -- Reserve two lines for statusline and command line.
             vim.api.nvim_win_set_height(
               chooser_window,
-              vim.api.nvim_get_option('lines') - 2
+              vim.o.lines - 2
             )
 
             -- TODO: only do this if lines actually changed, or selection changed
@@ -400,9 +400,9 @@ corpus = {
         true -- scratch?
       )
     end
-    local lines = vim.api.nvim_get_option('lines')
+    local lines = vim.o.lines
     if preview_window == nil then
-      local width = math.floor(vim.api.nvim_get_option('columns') / 2)
+      local width = math.floor(vim.o.columns / 2)
       preview_window = vim.api.nvim_open_win(
         preview_buffer,
         false --[[ enter? --]], {
