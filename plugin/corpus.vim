@@ -246,6 +246,34 @@
 " ## master (not yet released)
 "
 " - Initial release.
+" - Added |g:CorpusChooserSelectionHighlight| and |g:CorpusPreviewWinhighlight|
+"   settings (https://github.com/wincent/corpus/issues/75).
+
+""
+" @option g:CorpusChooserSelectionHighlight string "PMenuSel"
+"
+" Specifies the highlight group applied to the currently selected item
+" in the chooser listing (the left-hand pane). To override from the default
+" value of "PMenuSel", set a different value in your |init.vim|:
+"
+" ```
+" let g:CorpusChooserSelectionHighlight='Error'
+" ```
+"
+" @option g:CorpusPreviewWinhighlight string see below
+"
+" Specifies the |'winhighlight'| string for the preview pane (the right-hand
+" pane). The default is:
+"
+" ```
+" EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit".
+" ```
+"
+" To override, provide an alternate setting in your |init.vim|:
+"
+" ```
+" let g:CorpusPreviewWinhighlight='Normal:ModeMsg'
+" ```
 
 ""
 " @option g:CorpusLoaded any

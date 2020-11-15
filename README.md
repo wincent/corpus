@@ -196,6 +196,32 @@ When set to &quot;web&quot;, tells Corpus to transform filenames into link targe
 
 Defaults to 'local'.
 
+<p align="right"><a name="gcorpuschooserselectionhighlight" href="#user-content-gcorpuschooserselectionhighlight"><code>g:CorpusChooserSelectionHighlight</code></a></p>
+
+### `g:CorpusChooserSelectionHighlight` (string, default: "PMenuSel")<a name="corpus-gcorpuschooserselectionhighlight-string-default-pmenusel" href="#user-content-corpus-gcorpuschooserselectionhighlight-string-default-pmenusel"></a>
+
+Specifies the highlight group applied to the currently selected item in the chooser listing (the left-hand pane). To override from the default value of &quot;PMenuSel&quot;, set a different value in your <strong>`init.vim`</strong>:
+
+```
+let g:CorpusChooserSelectionHighlight='Error'
+```
+
+<p align="right"><a name="gcorpuspreviewwinhighlight" href="#user-content-gcorpuspreviewwinhighlight"><code>g:CorpusPreviewWinhighlight</code></a></p>
+
+### `g:CorpusPreviewWinhighlight` (string, default: see below)<a name="corpus-gcorpuspreviewwinhighlight-string-default-see-below" href="#user-content-corpus-gcorpuspreviewwinhighlight-string-default-see-below"></a>
+
+Specifies the <strong>`'winhighlight'`</strong> string for the preview pane (the right-hand pane). The default is:
+
+```
+EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit".
+```
+
+To override, provide an alternate setting in your <strong>`init.vim`</strong>:
+
+```
+let g:CorpusPreviewWinhighlight='Normal:ModeMsg'
+```
+
 <p align="right"><a name="gcorpusloaded" href="#user-content-gcorpusloaded"><code>g:CorpusLoaded</code></a></p>
 
 ### `g:CorpusLoaded` (any, default: none)<a name="corpus-gcorpusloaded-any-default-none" href="#user-content-corpus-gcorpusloaded-any-default-none"></a>
@@ -241,3 +267,4 @@ Corpus is written and maintained by Greg Hurrell &lt;greg@hurrell.net&gt;.
 ### master (not yet released)<a name="corpus-master-not-yet-released" href="#user-content-corpus-master-not-yet-released"></a>
 
 - Initial release.
+- Added <strong>[`g:CorpusChooserSelectionHighlight`](#user-content-gcorpuschooserselectionhighlight)</strong> and <strong>[`g:CorpusPreviewWinhighlight`](#user-content-gcorpuspreviewwinhighlight)</strong> settings (https://github.com/wincent/corpus/issues/75).

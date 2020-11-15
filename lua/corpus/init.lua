@@ -21,6 +21,16 @@ local mappings = {
   ['<Up>'] = '<Cmd>lua corpus.preview_previous()<CR>',
 }
 
+-- "Safe" version of `nvim_get_var()` that returns `default` (or `nil`) if the
+-- variable is not set.
+local get_var = function(name, default)
+  local result = default
+  pcall(function ()
+    result = vim.api.nvim_get_var(name)
+  end)
+  return result
+end
+
 -- TODO: detect pre-existing mappings, save them, and restore them if needed.
 local set_up_mappings = function()
   for lhs, rhs in pairs(mappings) do
@@ -315,11 +325,10 @@ corpus = {
         0, -- TODO only clear whole buffer when resetting
         -1 -- (just clearing previous would suffice)
       )
-      -- TODO make highlight configurable
       vim.api.nvim_buf_add_highlight(
         chooser_buffer,
         chooser_namespace,
-        'PMenuSel',
+        get_var('CorpusChooserSelectionHighlight', 'PMenuSel'),
         chooser_selected_index - 1, -- line (0-indexed)
         0, -- col_start
         -1 -- col_end (end-of-line)
@@ -415,11 +424,13 @@ corpus = {
             height = lines - 2,
         }
       )
-      -- TODO make these highlights configurable
       vim.api.nvim_win_set_option(
         preview_window,
-        'winhl',
-        'EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit'
+        'winhighlight',
+        get_var(
+          'CorpusPreviewWinhighlight',
+          'EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit'
+        )
       )
       vim.api.nvim_win_set_option(
         preview_window,
