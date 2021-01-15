@@ -429,7 +429,7 @@ corpus = {
         'winhighlight',
         get_var(
           'CorpusPreviewWinhighlight',
-          'EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit'
+          'EndOfBuffer:LineNr,FoldColumn:StatusLine,Normal:LineNr'
         )
       )
       vim.api.nvim_win_set_option(

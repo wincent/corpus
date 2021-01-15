@@ -266,7 +266,7 @@
 " pane). The default is:
 "
 " ```
-" EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit".
+" EndOfBuffer:LineNr,FoldColumn:StatusLine,Normal:LineNr.
 " ```
 "
 " To override, provide an alternate setting in your |init.vim|:

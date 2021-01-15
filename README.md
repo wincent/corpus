@@ -213,7 +213,7 @@ let g:CorpusChooserSelectionHighlight='Error'
 Specifies the <strong>`'winhighlight'`</strong> string for the preview pane (the right-hand pane). The default is:
 
 ```
-EndOfBuffer:VertSplit,FoldColumn:StatusLine,Normal:VertSplit".
+EndOfBuffer:LineNr,FoldColumn:StatusLine,Normal:LineNr.
 ```
 
 To override, provide an alternate setting in your <strong>`init.vim`</strong>:
