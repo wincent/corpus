@@ -53,6 +53,7 @@ end
 -- TODO make most of these private (really only want them public for testing
 -- during development)
 corpus = {
+  metadata = require'corpus.metadata',
   choose = function(selection)
     selection = vim.trim(selection)
     local file = corpus.get_selected_file()
