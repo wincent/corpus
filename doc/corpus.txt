@@ -296,7 +296,7 @@ Corpus is written and maintained by Greg Hurrell <greg@hurrell.net>.
 
 HISTORY                                                         *corpus-history*
 
-master (not yet released) ~
+main (not yet released) ~
 
 - Initial release.
 - Added |g:CorpusChooserSelectionHighlight| and |g:CorpusPreviewWinhighlight|

@@ -243,7 +243,7 @@
 "
 " # History
 "
-" ## master (not yet released)
+" ## main (not yet released)
 "
 " - Initial release.
 " - Added |g:CorpusChooserSelectionHighlight| and |g:CorpusPreviewWinhighlight|

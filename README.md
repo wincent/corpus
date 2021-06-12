@@ -264,7 +264,7 @@ Corpus is written and maintained by Greg Hurrell &lt;greg@hurrell.net&gt;.
 
 ## History<a name="corpus-history" href="#user-content-corpus-history"></a>
 
-### master (not yet released)<a name="corpus-master-not-yet-released" href="#user-content-corpus-master-not-yet-released"></a>
+### main (not yet released)<a name="corpus-main-not-yet-released" href="#user-content-corpus-main-not-yet-released"></a>
 
 - Initial release.
 - Added <strong>[`g:CorpusChooserSelectionHighlight`](#user-content-gcorpuschooserselectionhighlight)</strong> and <strong>[`g:CorpusPreviewWinhighlight`](#user-content-gcorpuspreviewwinhighlight)</strong> settings (https://github.com/wincent/corpus/issues/75).
