@@ -13,24 +13,9 @@ let s:chooser_window=v:null
 
 let s:preview_buffer=v:null
 let s:preview_window=v:null
-
-" When opening a new file in a Corpus-managed location, pre-populate it
-" with metadata of the form:
-"
-"   ---
-"   title: Title based on file name
-"   tags: wiki
-"   ---
-"
-" or:
-"
-"   ---
-"   title: Title based on file name
-"   ---
-"
 function! corpus#buf_new_file() abort
   let l:file=v:lua.corpus.normalize('<afile>')
-  call corpus#update_metadata(l:file)
+  call v:lua.corpus.metadata.update(l:file)
   let b:corpus_new_file=1
 endfunction
 
@@ -48,7 +33,7 @@ endfunction
 function! corpus#buf_write_pre() abort
   let l:file=v:lua.corpus.normalize('<afile>')
   call corpus#update_references(l:file)
-  call corpus#update_metadata(l:file)
+  call v:lua.corpus.metadata.update(l:file)
 endfunction
 
 " Minimal subset of:
@@ -127,57 +112,6 @@ function! corpus#extract_reference_links(line) abort
   endwhile
 
   return l:reference_links
-endfunction
-
-let s:metadata_key_value_pattern='\v^\s*(\w+)\s*:\s*(\S.{-})\s*$'
-
-" Returns raw metadata as a list of strings; eg:
-"
-"   ['tags: wiki', 'title: foo']
-"
-" If there is no valid metadata, an empty list is returned.
-"
-" If there are blank lines in the metadata, they are included in the list.
-function! corpus#get_metadata_raw() abort
-  if match(getline(1), '\v^---\s*$') != -1
-    let l:metadata=[]
-    for l:i in range(2, line('$'))
-      let l:line=getline(l:i)
-      if match(l:line, '\v^\s*$') != -1
-        call add(l:metadata, '')
-        continue
-      elseif match(l:line, '\v^---\s*$') != -1
-        return l:metadata
-      endif
-      let l:match=matchlist(l:line, s:metadata_key_value_pattern)
-      if len(l:match) == 0
-        return []
-      endif
-      call add(l:metadata, (l:match[0]))
-    endfor
-  endif
-  return []
-endfunction
-
-" Returns metadata as a dictionary; eg:
-"
-"   {'tags': 'wiki', 'title': 'foo'}
-"
-" If there is no valid metadata, an empty dictionary is returned.
-function! corpus#get_metadata() abort
-  let l:raw=corpus#get_metadata_raw()
-  if len(l:raw)
-    let l:metadata={}
-    for l:line in l:raw
-      let l:match=matchlist(l:line, s:metadata_key_value_pattern)
-      if len(l:match)
-        let l:metadata[l:match[1]]=l:match[2]
-      endif
-    endfor
-    return l:metadata
-  else
-    return {}
-  endif
 endfunction
 
 function! corpus#goto(mode) abort
@@ -315,34 +249,6 @@ function! corpus#goto(mode) abort
   endif
 endfunction
 
-function! corpus#set_metadata(metadata) abort
-  " Remove old metadata, if present.
-  let l:raw=corpus#get_metadata_raw()
-  if (len(l:raw))
-    " +2 lines for the '---' delimiters.
-    call deletebufline('', 1, len(l:raw) + 2)
-  endif
-
-  " Format new metadata.
-  let l:lines=['---']
-  let l:keys=keys(a:metadata)
-  for l:key in l:keys
-    call add(l:lines, l:key . ': ' . a:metadata[l:key])
-  endfor
-  call add(l:lines, '---')
-
-  " Prepend new metadata.
-  call append(0, l:lines)
-
-  " Make sure there is at least one blank line after metadata.
-  " +2 lines for the '---' delimiters.
-  " +1 more to see next line.
-  let l:next=len(l:keys) + 2 + 1
-  if match(getline(l:next), '\v^\s*$') == -1
-    call append(l:next - 1, '')
-  endif
-endfunction
-
 function! corpus#test() abort
   let v:errors=[]
 
@@ -373,7 +279,7 @@ function! corpus#update_references(file) abort
   endif
 
   " Skip over metadata.
-  let l:raw=corpus#get_metadata_raw()
+  let l:raw=v:lua.corpus.metadata.raw()
   if len(l:raw)
     let l:start=len(l:raw) + 2 + 1
   else
@@ -453,31 +359,6 @@ function! corpus#update_references(file) abort
       call append(line('$'), '[' . l:reference . ']: ' . l:target)
     endif
   endfor
-endfunction
-
-function! corpus#update_metadata(file) abort
-  let l:config=v:lua.corpus.config_for_file(a:file)
-  if !get(l:config, 'autotitle', 0) && !has_key(l:config, 'tags')
-    return
-  endif
-
-  let l:metadata=corpus#get_metadata()
-
-  if get(l:config, 'autotitle', 0)
-    let l:title=v:lua.corpus.title_for_file(a:file)
-    let l:metadata.title=l:title
-  endif
-
-  if has_key(l:config, 'tags')
-    let l:tags=split(get(l:metadata, 'tags', ''))
-    for l:tag in l:config.tags
-      if index(l:tags, l:tag) == -1
-        call add(l:tags, l:tag)
-      endif
-    endfor
-    let l:metadata.tags=join(l:tags)
-  endif
-  call corpus#set_metadata(l:metadata)
 endfunction
 
 function! corpus#complete(arglead, cmdline, cursor_pos) abort
