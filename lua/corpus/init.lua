@@ -53,14 +53,22 @@ end
 -- TODO make most of these private (really only want them public for testing
 -- during development)
 corpus = {
-  choose = function(selection)
+  choose = function(selection, bang)
     selection = vim.trim(selection)
-    local file = corpus.get_selected_file()
+    local create = bang == '!'
+    local file = nil
+    if vim.endswith(selection, '!') and vim.g.CorpusBangCreation == 1 then
+      create = true
+      selection = selection:sub(0, -2)
+    end
+    if not create then
+      file = corpus.get_selected_file()
+    end
     if file ~= nil then
-      -- In a Corpus directory.
+      -- In a Corpus directory, trying to open a file.
       vim.cmd('edit ' .. vim.fn.fnameescape(file))
     else
-      -- Not in a Corpus directory.
+      -- In create mode, or not in a Corpus directory.
       local directory = corpus.directory()
       if selection:find('/') then
         selection = corpus.normalize(selection)
@@ -220,7 +228,7 @@ corpus = {
       local file = corpus.get_selected_file()
       if file ~= nil then
         local title = corpus.get_selected_file():sub(1, -4) -- strip ".md"
-        local prefix, _ = cmdline:gsub('^%s*Corpus%s+', '') -- strip "Corpus "
+        local prefix, _ = cmdline:gsub('^%s*Corpus!?%s+', '') -- strip "Corpus "
         if vim.startswith(title, prefix) then
           -- If on "foo bar bazzzz"
           --                   ^

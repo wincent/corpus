@@ -248,8 +248,19 @@
 " - Initial release.
 " - Added |g:CorpusChooserSelectionHighlight| and |g:CorpusPreviewWinhighlight|
 "   settings (https://github.com/wincent/corpus/issues/75).
+" - Added |g:CorpusBangCreation| (https://github.com/wincent/corpus/issues/81).
 
 ""
+" @option g:CorpusBangCreation number 0
+"
+" When set to `1`, Corpus will take a trailing "!" at the end of a search term
+" as a cue to create a file with that name. For example, an invocation like
+" `:Corpus Foo!` would create or open a file called "Foo.md".
+"
+" ```
+" let g:CorpusBangCreation=1
+" ```
+"
 " @option g:CorpusChooserSelectionHighlight string "PMenuSel"
 "
 " Specifies the highlight group applied to the currently selected item
@@ -274,8 +285,8 @@
 " ```
 " let g:CorpusPreviewWinhighlight='Normal:ModeMsg'
 " ```
-
-""
+"
+"
 " @option g:CorpusLoaded any
 "
 " To prevent Corpus from being loaded, set |g:CorpusLoaded| to any value in your
@@ -324,18 +335,40 @@ endif
 " `<Enter>` opens the selection in a buffer. Pressing `<Esc>` dismisses the
 " search interface.
 "
-" If the search query does not match any files, pressing `<Enter>` will create a
-" new file with the same name. As a special case, you can append an explicit
-" ".md" file extension to the search query. This supports the following use
-" case: imagine you want to create a file "Foo.md", but your notes directory
-" already contains a file "Bar.md" that happens to contain the string "Foo". In
-" this situation, typing "Foo" will show the "Bar" in the list of candidate
-" files. Pressing `<Enter>` in this scenario would open "Bar.md". If you
-" instead type "Foo.md", you can press `<Enter>` to create "Foo.md".
+" If the search query does not match any files, pressing `<Enter>` will
+" create a new file with the same name. There are three additional
+" special cases that you can use to create a new file:
+"
+" - You can append an explicit ".md" file extension to the search
+"   query. This supports the following use case: imagine you want to
+"   create a file "Foo.md", but your notes directory already contains
+"   a file, "Bar.md", that happens to contain the string "Foo". In this
+"   situation, typing "Foo" will show the "Bar" in the list of candidate
+"   files. Pressing `<Enter>` in this scenario would open "Bar.md". If you
+"   instead type "Foo.md", you can press `<Enter>` to create "Foo.md".
+" - You can invoke |:Corpus| with a |<bang>| suffix (ie. as `:Corpus!`) to tell
+"   it that you intend to create a file matching the name of your search term,
+"   if one doesn't exist already. In this mode, a preview of matching filenames
+"   is still shown (so that you can see whether there is an existing file with
+"   the desired name or not), but regardless of what is shown, pressing `<Enter>`
+"   will create or open a file with exactly that name (".md" will be appended to
+"   the filename if not already present).
+" - Alternatively, if you get to the end of your desired filename and
+"   realize that neither of the preceding two tricks work (ie. because you
+"   already have a file with contents "Foo.md" inside it, or because you
+"   didn't use `:Corpus!`), you can append a trailing "!" to your search
+"   term, which Corpus will take as a cue to create a new file no matter
+"   what. This last technique only works when |g:CorpusBangCreation| is
+"   set to `1`; the feature is optional because it can make it awkward to
+"   include exclamation marks in your search terms and filenames. For example,
+"   if |g:CorpusBangCreation| is set and you want to search for "foo bar!", that
+"   search term would lead to the creation of a file, "foo bar.md"; to avoid
+"   this, search instead for "bar! foo" (the exclamation mark forces file
+"   creation only if it appears at the end of the search).
 "
 " When outside a Corpus directory, you can use tab-completion to switch to one
 " of the configured |CorpusDirectories|.
-command! -complete=customlist,corpus#complete -nargs=* Corpus call v:lua.corpus.choose(<q-args>)
+command! -bang -complete=customlist,corpus#complete -nargs=* Corpus call v:lua.corpus.choose(<q-args>, "<bang>")
 
 nnoremap <Plug>(Corpus) :Corpus<Space>
 

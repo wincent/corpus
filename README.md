@@ -41,7 +41,11 @@ Note that Corpus requires a recent version of Neovim.
 
 When inside a Corpus directory, accepts a search query. On the left side of Corpus will show a list of files containing all of the words in the search query. On the right side, it will show a preview of the currently selected file. The selection can be moved up and down with the <strong>`<Up>`</strong> and <strong>`<Down>`</strong> keys (or equivalently, with `<C-k>` and `<C-j>`. Pressing `<Enter>` opens the selection in a buffer. Pressing `<Esc>` dismisses the search interface.
 
-If the search query does not match any files, pressing `<Enter>` will create a new file with the same name. As a special case, you can append an explicit &quot;.md&quot; file extension to the search query. This supports the following use case: imagine you want to create a file &quot;Foo.md&quot;, but your notes directory already contains a file &quot;Bar.md&quot; that happens to contain the string &quot;Foo&quot;. In this situation, typing &quot;Foo&quot; will show the &quot;Bar&quot; in the list of candidate files. Pressing `<Enter>` in this scenario would open &quot;Bar.md&quot;. If you instead type &quot;Foo.md&quot;, you can press `<Enter>` to create &quot;Foo.md&quot;.
+If the search query does not match any files, pressing `<Enter>` will create a new file with the same name. There are three additional special cases that you can use to create a new file:
+
+- You can append an explicit &quot;.md&quot; file extension to the search query. This supports the following use case: imagine you want to create a file &quot;Foo.md&quot;, but your notes directory already contains a file, &quot;Bar.md&quot;, that happens to contain the string &quot;Foo&quot;. In this situation, typing &quot;Foo&quot; will show the &quot;Bar&quot; in the list of candidate files. Pressing `<Enter>` in this scenario would open &quot;Bar.md&quot;. If you instead type &quot;Foo.md&quot;, you can press `<Enter>` to create &quot;Foo.md&quot;.
+- You can invoke <strong>[`:Corpus`](#user-content-corpus)</strong> with a <strong>`<bang>`</strong> suffix (ie. as `:Corpus!`) to tell it that you intend to create a file matching the name of your search term, if one doesn't exist already. In this mode, a preview of matching filenames is still shown (so that you can see whether there is an existing file with the desired name or not), but regardless of what is shown, pressing `<Enter>` will create or open a file with exactly that name (&quot;.md&quot; will be appended to the filename if not already present).
+- Alternatively, if you get to the end of your desired filename and realize that neither of the preceding two tricks work (ie. because you already have a file with contents &quot;Foo.md&quot; inside it, or because you didn't use `:Corpus!`), you can append a trailing &quot;!&quot; to your search term, which Corpus will take as a cue to create a new file no matter what. This last technique only works when <strong>[`g:CorpusBangCreation`](#user-content-gcorpusbangcreation)</strong> is set to `1`; the feature is optional because it can make it awkward to include exclamation marks in your search terms and filenames. For example, if <strong>[`g:CorpusBangCreation`](#user-content-gcorpusbangcreation)</strong> is set and you want to search for &quot;foo bar!&quot;, that search term would lead to the creation of a file, &quot;foo bar.md&quot;; to avoid this, search instead for &quot;bar! foo&quot; (the exclamation mark forces file creation only if it appears at the end of the search).
 
 When outside a Corpus directory, you can use tab-completion to switch to one of the configured <strong>`CorpusDirectories`</strong>.
 
@@ -196,6 +200,16 @@ When set to &quot;web&quot;, tells Corpus to transform filenames into link targe
 
 Defaults to 'local'.
 
+<p align="right"><a name="gcorpusbangcreation" href="#user-content-gcorpusbangcreation"><code>g:CorpusBangCreation</code></a></p>
+
+### `g:CorpusBangCreation` (number, default: 0)<a name="corpus-gcorpusbangcreation-number-default-0" href="#user-content-corpus-gcorpusbangcreation-number-default-0"></a>
+
+When set to `1`, Corpus will take a trailing &quot;!&quot; at the end of a search term as a cue to create a file with that name. For example, an invocation like `:Corpus Foo!` would create or open a file called &quot;Foo.md&quot;.
+
+```
+let g:CorpusBangCreation=1
+```
+
 <p align="right"><a name="gcorpuschooserselectionhighlight" href="#user-content-gcorpuschooserselectionhighlight"><code>g:CorpusChooserSelectionHighlight</code></a></p>
 
 ### `g:CorpusChooserSelectionHighlight` (string, default: "PMenuSel")<a name="corpus-gcorpuschooserselectionhighlight-string-default-pmenusel" href="#user-content-corpus-gcorpuschooserselectionhighlight-string-default-pmenusel"></a>
@@ -268,3 +282,4 @@ Corpus is written and maintained by Greg Hurrell &lt;greg@hurrell.net&gt;.
 
 - Initial release.
 - Added <strong>[`g:CorpusChooserSelectionHighlight`](#user-content-gcorpuschooserselectionhighlight)</strong> and <strong>[`g:CorpusPreviewWinhighlight`](#user-content-gcorpuspreviewwinhighlight)</strong> settings (https://github.com/wincent/corpus/issues/75).
+- Added <strong>[`g:CorpusBangCreation`](#user-content-gcorpusbangcreation)</strong> (https://github.com/wincent/corpus/issues/81).
