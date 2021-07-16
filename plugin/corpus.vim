@@ -97,10 +97,10 @@
 " }
 "
 " -- init.lua (as Vim global):
-" vim.g.corpus_directories = {...}
+" vim.g.CorpusDirectories = {...}
 "
 " " init.vim (as Vim global):
-" let g:corpus_directories = {...}
+" let g:CorpusDirectories = {...}
 " ```
 "
 " Keys in the table name directories containing Corpus notes. These
