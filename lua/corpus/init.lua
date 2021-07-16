@@ -250,7 +250,7 @@ corpus = {
   -- directories defined in `CorpusDirectories`.
   config_for_file = function(file)
     local base = vim.fn.fnamemodify(file, ':h')
-    local config = _G.CorpusDirectories or vim.empty_dict()
+    local config = corpus.corpus_directories()
     for directory, settings in pairs(config) do
       local candidate = corpus.normalize(directory)
       if candidate == base then
@@ -258,6 +258,10 @@ corpus = {
       end
     end
     return vim.empty_dict()
+  end,
+
+  corpus_directories = function()
+    return _G.CorpusDirectories or vim.g.CorpusDirectories or vim.empty_dict()
   end,
 
   -- If current working directory is a configured Corpus directory, returns it.
@@ -272,7 +276,7 @@ corpus = {
   end,
 
   directories = function()
-    local config = _G.CorpusDirectories or vim.empty_dict()
+    local config = corpus.corpus_directories()
     local directories = vim.tbl_keys(config)
     if table.getn(directories) == 0 then
       vim.api.nvim_err_writeln(

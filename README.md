@@ -47,7 +47,7 @@ If the search query does not match any files, pressing `<Enter>` will create a n
 - You can invoke <strong>[`:Corpus`](#user-content-corpus)</strong> with a <strong>`<bang>`</strong> suffix (ie. as `:Corpus!`) to tell it that you intend to create a file matching the name of your search term, if one doesn't exist already. In this mode, a preview of matching filenames is still shown (so that you can see whether there is an existing file with the desired name or not), but regardless of what is shown, pressing `<Enter>` will create or open a file with exactly that name (&quot;.md&quot; will be appended to the filename if not already present).
 - Alternatively, if you get to the end of your desired filename and realize that neither of the preceding two tricks work (ie. because you already have a file with contents &quot;Foo.md&quot; inside it, or because you didn't use `:Corpus!`), you can append a trailing &quot;!&quot; to your search term, which Corpus will take as a cue to create a new file no matter what. This last technique only works when <strong>[`g:CorpusBangCreation`](#user-content-gcorpusbangcreation)</strong> is set to `1`; the feature is optional because it can make it awkward to include exclamation marks in your search terms and filenames. For example, if <strong>[`g:CorpusBangCreation`](#user-content-gcorpusbangcreation)</strong> is set and you want to search for &quot;foo bar!&quot;, that search term would lead to the creation of a file, &quot;foo bar.md&quot;; to avoid this, search instead for &quot;bar! foo&quot; (the exclamation mark forces file creation only if it appears at the end of the search).
 
-When outside a Corpus directory, you can use tab-completion to switch to one of the configured <strong>`CorpusDirectories`</strong>.
+When outside a Corpus directory, you can use tab-completion to switch to one of the configured <strong>[`CorpusDirectories`](#user-content-corpusdirectories)</strong>.
 
 ## Mappings<a name="corpus-mappings" href="#user-content-corpus-mappings"></a>
 
@@ -88,30 +88,35 @@ nmap <leader>o <Plug>(Corpus)
 
 ## Options<a name="corpus-options" href="#user-content-corpus-options"></a>
 
-Corpus relies on a list of <strong>`CorpusDirectories`</strong> defined as a Lua global variable in your <strong>`init.vim`</strong>. For example:
+<p align="right"><a name="corpusdirectories" href="#user-content-corpusdirectories"><code>CorpusDirectories</code></a> <a name="gcorpusdirectories" href="#user-content-gcorpusdirectories"><code>g:CorpusDirectories</code></a></p>
+
+Corpus relies on a list of <strong>[`CorpusDirectories`](#user-content-corpusdirectories)</strong> defined as a Lua table variable in your <strong>`init.lua`</strong>, or as a Vim dictionary in your <strong>`init.vim`</strong>. For example:
 
 ```
-if has('nvim')
-  lua <<
-    CorpusDirectories = {
-      ['~/Documents/Corpus'] = {
-        autocommit = true,
-        autoreference = 1,
-        autotitle = 1,
-        base = './',
-        transform = 'local',
-      },
-      ['~/code/masochist/content/content/wiki'] = {
-        autocommit = false,
-        autoreference = 1,
-        autotitle = 1,
-        base = '/wiki/',
-        tags = {'wiki'},
-        transform = 'web',
-      },
-  }
-.
-endif
+ -- init.lua (as Lua global):
+ CorpusDirectories = {
+   ['~/Documents/Corpus'] = {
+       autocommit = true,
+       autoreference = 1,
+       autotitle = 1,
+       base = './',
+       transform = 'local',
+     },
+     ['~/code/masochist/content/content/wiki'] = {
+       autocommit = false,
+       autoreference = 1,
+       autotitle = 1,
+       base = '/wiki/',
+       tags = {'wiki'},
+       transform = 'web',
+     },
+ }
+
+ -- init.lua (as Vim global):
+ vim.g.corpus_directories = {...}
+
+ " init.vim (as Vim global):
+ let g:corpus_directories = {...}
 ```
 
 Keys in the table name directories containing Corpus notes. These directories should be Git repositories. A tilde in the name will be automatically expanded.
@@ -283,3 +288,4 @@ Corpus is written and maintained by Greg Hurrell &lt;greg@hurrell.net&gt;.
 - Initial release.
 - Added <strong>[`g:CorpusChooserSelectionHighlight`](#user-content-gcorpuschooserselectionhighlight)</strong> and <strong>[`g:CorpusPreviewWinhighlight`](#user-content-gcorpuspreviewwinhighlight)</strong> settings (https://github.com/wincent/corpus/issues/75).
 - Added <strong>[`g:CorpusBangCreation`](#user-content-gcorpusbangcreation)</strong> (https://github.com/wincent/corpus/issues/81).
+- Accept either a Lua global (`CorpusDirectories`) or a Vim Global (`g:CorpusDirectories`) for configuration.

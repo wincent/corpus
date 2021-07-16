@@ -71,31 +71,36 @@
 "
 " @options
 "
-" Corpus relies on a list of |CorpusDirectories| defined as a Lua global
-" variable in your |init.vim|. For example:
+"                                         *CorpusDirectories* *g:CorpusDirectories*
+" Corpus relies on a list of |CorpusDirectories| defined as a Lua
+" table variable in your |init.lua|, or as a Vim dictionary in your
+" |init.vim|. For example:
 "
 " ```
-" if has('nvim')
-"   lua <<
-"     CorpusDirectories = {
-"       ['~/Documents/Corpus'] = {
-"         autocommit = true,
-"         autoreference = 1,
-"         autotitle = 1,
-"         base = './',
-"         transform = 'local',
-"       },
-"       ['~/code/masochist/content/content/wiki'] = {
-"         autocommit = false,
-"         autoreference = 1,
-"         autotitle = 1,
-"         base = '/wiki/',
-"         tags = {'wiki'},
-"         transform = 'web',
-"       },
-"   }
-" .
-" endif
+" -- init.lua (as Lua global):
+" CorpusDirectories = {
+"   ['~/Documents/Corpus'] = {
+"       autocommit = true,
+"       autoreference = 1,
+"       autotitle = 1,
+"       base = './',
+"       transform = 'local',
+"     },
+"     ['~/code/masochist/content/content/wiki'] = {
+"       autocommit = false,
+"       autoreference = 1,
+"       autotitle = 1,
+"       base = '/wiki/',
+"       tags = {'wiki'},
+"       transform = 'web',
+"     },
+" }
+"
+" -- init.lua (as Vim global):
+" vim.g.corpus_directories = {...}
+"
+" " init.vim (as Vim global):
+" let g:corpus_directories = {...}
 " ```
 "
 " Keys in the table name directories containing Corpus notes. These
@@ -249,6 +254,8 @@
 " - Added |g:CorpusChooserSelectionHighlight| and |g:CorpusPreviewWinhighlight|
 "   settings (https://github.com/wincent/corpus/issues/75).
 " - Added |g:CorpusBangCreation| (https://github.com/wincent/corpus/issues/81).
+" - Accept either a Lua global (`CorpusDirectories`) or a Vim Global
+"   (`g:CorpusDirectories`) for configuration.
 
 ""
 " @option g:CorpusBangCreation number 0
