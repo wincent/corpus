@@ -209,7 +209,7 @@ corpus = {
 
       -- Note that this will fail silently if there are no changes to the
       -- file (because we aren't passing `--allow-empty`) and that's ok.
-      corpus.git(location, 'commit', '-m', subject, '--', file)
+      corpus.git(location, 'commit', '--no-gpg-sign', '-m', subject, '--', file)
     end
   end,
 
