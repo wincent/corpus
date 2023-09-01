@@ -244,7 +244,17 @@
 "
 " # Authors
 "
-" Corpus is written and maintained by Greg Hurrell <greg@hurrell.net>.
+" Corpus is written and maintained by Greg Hurrell <greg@hurrell.net>. Other
+" contributors that have submitted patches include, in alphabetical order:
+"
+" - Cody Buell
+" - Joe Lencioni
+"
+" This list produced with:
+"
+" ```
+" :read !git shortlog -s HEAD | grep -v 'Greg Hurrell' | cut -f 2- | sed -e 's/^/- /'
+" ```
 "
 " # History
 "
@@ -256,8 +266,19 @@
 " - Added |g:CorpusBangCreation| (https://github.com/wincent/corpus/issues/81).
 " - Accept either a Lua global (`CorpusDirectories`) or a Vim Global
 "   (`g:CorpusDirectories`) for configuration.
+" - Added |g:CorpusAutoCd| (https://github.com/wincent/corpus/pull/84, patch
+"   from Cody Buell).
 
 ""
+" @option g:CorpusAutoCd number 0
+"
+" When set to 1, and when there is only one Corpus directory, initiating a
+" |:Corpus| command will automatically |:cd| into that directory.
+"
+" ```
+" let g:CorpusAutoCd=1
+" ```
+"
 " @option g:CorpusBangCreation number 0
 "
 " When set to `1`, Corpus will take a trailing "!" at the end of a search term
