@@ -205,6 +205,16 @@ When set to &quot;web&quot;, tells Corpus to transform filenames into link targe
 
 Defaults to 'local'.
 
+<p align="right"><a name="gcorpusautocd" href="#user-content-gcorpusautocd"><code>g:CorpusAutoCd</code></a></p>
+
+### `g:CorpusAutoCd` (number, default: 0)<a name="corpus-gcorpusautocd-number-default-0" href="#user-content-corpus-gcorpusautocd-number-default-0"></a>
+
+When set to 1, and when there is only one Corpus directory, initiating a <strong>[`:Corpus`](#user-content-corpus)</strong> command will automatically <strong>`:cd`</strong> into that directory.
+
+```
+let g:CorpusAutoCd=1
+```
+
 <p align="right"><a name="gcorpusbangcreation" href="#user-content-gcorpusbangcreation"><code>g:CorpusBangCreation</code></a></p>
 
 ### `g:CorpusBangCreation` (number, default: 0)<a name="corpus-gcorpusbangcreation-number-default-0" href="#user-content-corpus-gcorpusbangcreation-number-default-0"></a>
@@ -279,7 +289,16 @@ Patches can be sent via mail to greg@hurrell.net, or as GitHub pull requests at:
 
 ## Authors<a name="corpus-authors" href="#user-content-corpus-authors"></a>
 
-Corpus is written and maintained by Greg Hurrell &lt;greg@hurrell.net&gt;.
+Corpus is written and maintained by Greg Hurrell &lt;greg@hurrell.net&gt;. Other contributors that have submitted patches include, in alphabetical order:
+
+- Cody Buell
+- Joe Lencioni
+
+This list produced with:
+
+```
+:read !git shortlog -s HEAD | grep -v 'Greg Hurrell' | cut -f 2- | sed -e 's/^/- /'
+```
 
 ## History<a name="corpus-history" href="#user-content-corpus-history"></a>
 
@@ -289,3 +308,4 @@ Corpus is written and maintained by Greg Hurrell &lt;greg@hurrell.net&gt;.
 - Added <strong>[`g:CorpusChooserSelectionHighlight`](#user-content-gcorpuschooserselectionhighlight)</strong> and <strong>[`g:CorpusPreviewWinhighlight`](#user-content-gcorpuspreviewwinhighlight)</strong> settings (https://github.com/wincent/corpus/issues/75).
 - Added <strong>[`g:CorpusBangCreation`](#user-content-gcorpusbangcreation)</strong> (https://github.com/wincent/corpus/issues/81).
 - Accept either a Lua global (`CorpusDirectories`) or a Vim Global (`g:CorpusDirectories`) for configuration.
+- Added <strong>[`g:CorpusAutoCd`](#user-content-gcorpusautocd)</strong> (https://github.com/wincent/corpus/pull/84, patch from Cody Buell).
