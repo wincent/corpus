@@ -91,9 +91,11 @@ corpus = {
       local line = vim.fn.getcmdline()
       local _, _, term = string.find(line, '^%s*Corpus%f[%A]%s*(.-)%s*$')
       if term ~= nil then
-        local num_dirs = table.getn(corpus.directories())
-        if not corpus.in_directory() and num_dirs == 1 then
-          vim.cmd('cd ' .. vim.fn.fnameescape(corpus.directory()))
+        if corpus.auto_cd() then
+          local num_dirs = table.getn(corpus.directories())
+          if not corpus.in_directory() and num_dirs == 1 then
+            vim.cmd('cd ' .. vim.fn.fnameescape(corpus.directory()))
+          end
         end
         if corpus.in_directory() then
           set_up_mappings()
@@ -252,6 +254,10 @@ corpus = {
       end
     end
     return vim.empty_dict()
+  end,
+
+  auto_cd = function()
+    return _G.CorpusAutoCd == 1 or vim.g.CorpusAutoCd == 1 or false
   end,
 
   corpus_directories = function()
