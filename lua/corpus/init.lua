@@ -92,8 +92,8 @@ corpus = {
       local _, _, term = string.find(line, '^%s*Corpus%f[%A]%s*(.-)%s*$')
       if term ~= nil then
         if corpus.auto_cd() then
-          local num_dirs = table.getn(corpus.directories())
-          if not corpus.in_directory() and num_dirs == 1 then
+          local directory_count = table.getn(corpus.directories())
+          if not corpus.in_directory() and directory_count == 1 then
             vim.cmd('cd ' .. vim.fn.fnameescape(corpus.directory()))
           end
         end
