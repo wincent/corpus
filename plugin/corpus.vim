@@ -268,6 +268,7 @@
 "   (`g:CorpusDirectories`) for configuration.
 " - Added |g:CorpusAutoCd| (https://github.com/wincent/corpus/pull/84, patch
 "   from Cody Buell).
+" - Added |g:CorpusSort| (https://github.com/wincent/corpus/issues/74).
 
 ""
 " @option g:CorpusAutoCd number 0
@@ -328,6 +329,20 @@ if exists('g:CorpusLoaded') || &compatible || !has('nvim')
 endif
 
 let g:CorpusLoaded=1
+
+""
+" @option g:CorpusSort string "default"
+"
+" Specifies the sort order for the chooser listing. The default sort order
+" maintains the order of results returned by `git-ls-files` and `git-grep`, which
+" should be lexicographical order.
+"
+" To sort by last-modified timestamp instead (ie. showing the most recently
+" modified files at the top of the listing), set to "stat".
+"
+" ```
+" let g:CorpusSort='stat'
+" ```
 
 " Temporarily set 'cpoptions' to Vim default as per `:h use-cpo-save`.
 let s:cpoptions=&cpoptions

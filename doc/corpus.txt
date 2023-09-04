@@ -297,6 +297,19 @@ To prevent Corpus from being loaded, set |g:CorpusLoaded| to any value in your
 >
     let g:CorpusLoaded=1
 <
+
+                                                                  *g:CorpusSort*
+|g:CorpusSort|                                       string (default: "default")
+
+Specifies the sort order for the chooser listing. The default sort order
+maintains the order of results returned by `git-ls-files` and `git-grep`, which
+should be lexicographical order.
+
+To sort by last-modified timestamp instead (ie. showing the most recently
+modified files at the top of the listing), set to "stat".
+>
+    let g:CorpusSort='stat'
+<
 WEBSITE                                                         *corpus-website*
 
 The official Corpus source code repo is at:
@@ -360,3 +373,4 @@ main (not yet released) ~
   (`g:CorpusDirectories`) for configuration.
 - Added |g:CorpusAutoCd| (https://github.com/wincent/corpus/pull/84, patch
   from Cody Buell).
+- Added |g:CorpusSort| (https://github.com/wincent/corpus/issues/74).

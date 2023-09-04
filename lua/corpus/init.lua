@@ -21,6 +21,11 @@ local mappings = {
   ['<Up>'] = '<Cmd>lua corpus.preview_previous()<CR>',
 }
 
+local fallback_mtime = {
+  nsec = 0,
+  sec = 0,
+}
+
 -- TODO: detect pre-existing mappings, save them, and restore them if needed.
 local set_up_mappings = function()
   for lhs, rhs in pairs(mappings) do
@@ -125,6 +130,35 @@ corpus = {
             local lines = nil
 
             if #results > 0 then
+              if corpus.sort() == 'stat' then
+                local mtimes = {}
+                for _, name in ipairs(results) do
+                  local success, stat = pcall(vim.uv.fs_stat, name)
+                  if success and
+                    stat and
+                    stat.mtime and
+                    type(stat.mtime.sec) == 'number' and
+                    type(stat.mtime.nsec) == 'number' then
+                    mtimes[name] = stat.mtime
+                  else
+                    mtimes[name] = fallback_mtime
+                  end
+                end
+                table.sort(results, function(a, b)
+                  if mtimes[a].sec > mtimes[b].sec then
+                    return true
+                  elseif mtimes[a].sec == mtimes[b].sec then
+                    if mtimes[a].nsec > mtimes[b].nsec then
+                      return true
+                    else
+                      return false
+                    end
+                  else
+                    return false
+                  end
+                end)
+              end
+
               -- 1 because Neovim cursor indexing is 1-based, as are Lua lists.
               chooser_selected_index = 1
 
@@ -262,6 +296,15 @@ corpus = {
 
   corpus_directories = function()
     return _G.CorpusDirectories or vim.g.CorpusDirectories or vim.empty_dict()
+  end,
+
+  sort = function()
+    if _G.CorpusSort == 'stat' or vim.g.CorpusSort == 'stat' then
+      return 'stat'
+    else
+      -- Order returned by `git-grep`/`git-ls-files` (ie. lexicographical).
+      return 'default'
+    end
   end,
 
   -- If current working directory is a configured Corpus directory, returns it.

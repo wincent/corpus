@@ -261,6 +261,18 @@ To prevent Corpus from being loaded, set <strong>[`g:CorpusLoaded`](#user-conten
 let g:CorpusLoaded=1
 ```
 
+<p align="right"><a name="gcorpussort" href="#user-content-gcorpussort"><code>g:CorpusSort</code></a></p>
+
+### `g:CorpusSort` (string, default: "default")<a name="corpus-gcorpussort-string-default-default" href="#user-content-corpus-gcorpussort-string-default-default"></a>
+
+Specifies the sort order for the chooser listing. The default sort order maintains the order of results returned by `git-ls-files` and `git-grep`, which should be lexicographical order.
+
+To sort by last-modified timestamp instead (ie. showing the most recently modified files at the top of the listing), set to &quot;stat&quot;.
+
+```
+let g:CorpusSort='stat'
+```
+
 ## Website<a name="corpus-website" href="#user-content-corpus-website"></a>
 
 The official Corpus source code repo is at:
@@ -309,3 +321,4 @@ This list produced with:
 - Added <strong>[`g:CorpusBangCreation`](#user-content-gcorpusbangcreation)</strong> (https://github.com/wincent/corpus/issues/81).
 - Accept either a Lua global (`CorpusDirectories`) or a Vim Global (`g:CorpusDirectories`) for configuration.
 - Added <strong>[`g:CorpusAutoCd`](#user-content-gcorpusautocd)</strong> (https://github.com/wincent/corpus/pull/84, patch from Cody Buell).
+- Added <strong>[`g:CorpusSort`](#user-content-gcorpussort)</strong> (https://github.com/wincent/corpus/issues/74).
