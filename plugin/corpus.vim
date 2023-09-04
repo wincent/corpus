@@ -354,7 +354,7 @@ if has('autocmd')
     autocmd BufNewFile *.md call corpus#buf_new_file()
 
     if exists('##CmdlineChanged')
-      autocmd CmdlineChanged * call luaeval("require'corpus'") | call v:lua.corpus.cmdline_changed(expand('<afile>'))
+      autocmd CmdlineChanged * call v:lua.require'corpus'.cmdline_changed(expand('<afile>'))
     endif
 
     autocmd CmdlineEnter * lua require'corpus'.cmdline_enter()
