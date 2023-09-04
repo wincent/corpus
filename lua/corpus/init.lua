@@ -29,6 +29,8 @@ local fallback_mtime = {
   sec = 0,
 }
 
+local configured = {}
+
 -- TODO: detect pre-existing mappings, save them, and restore them if needed.
 local set_up_mappings = function()
   for lhs, rhs in pairs(mappings) do
@@ -56,7 +58,7 @@ corpus = {
     selection = vim.trim(selection)
     local create = bang == '!'
     local file = nil
-    if vim.endswith(selection, '!') and vim.g.CorpusBangCreation == 1 then
+    if vim.endswith(selection, '!') and corpus.bang_creation() then
       create = true
       selection = selection:sub(0, -2)
     end
@@ -295,15 +297,46 @@ corpus = {
   end,
 
   auto_cd = function()
-    return _G.CorpusAutoCd == 1 or vim.g.CorpusAutoCd == 1 or false
+    if configured.auto_cd ~= nil then
+      return configured.auto_cd == true
+    else
+      -- TODO: eventually, remove these global fallbacks
+      return _G.CorpusAutoCd == 1 or vim.g.CorpusAutoCd == 1 or false
+    end
+  end,
+
+  bang_creation = function()
+    if configured.bang_creation ~= nil then
+      return configured.bang_creation == true
+    else
+      -- TODO: eventually, remove the global fallback
+      return vim.g.CorpusBangCreation == 1
+    end
+  end,
+
+  chooser_selection_highlight = function()
+    -- TODO: eventually, remove the global fallback
+    return configured.chooser_selection_highlight or
+      vim.g.CorpusChooserSelectionHighlight or
+      'PMenuSel'
   end,
 
   corpus_directories = function()
-    return _G.CorpusDirectories or vim.g.CorpusDirectories or vim.empty_dict()
+    -- TODO: eventually, remove the global fallbacks
+    return configured.directories or _G.CorpusDirectories or vim.g.CorpusDirectories or vim.empty_dict()
+  end,
+
+  preview_win_highlight = function()
+    -- TODO: eventually, remove the global fallback
+    return configured.preview_win_highlight or
+      vim.g.CorpusPreviewWinhighlight or
+      'EndOfBuffer:LineNr,FoldColumn:StatusLine,Normal:LineNr'
   end,
 
   sort = function()
-    if _G.CorpusSort == 'stat' or vim.g.CorpusSort == 'stat' then
+    -- TODO: eventually, remove the global fallbacks
+    local sort = configured.sort or _G.CorpusSort or vim.g.CorpusSort
+    if sort == 'stat' then
       return 'stat'
     else
       -- Order returned by `git-grep`/`git-ls-files` (ie. lexicographical).
@@ -387,7 +420,7 @@ corpus = {
       vim.api.nvim_buf_add_highlight(
         chooser_buffer,
         chooser_namespace,
-        vim.g.CorpusChooserSelectionHighlight or 'PMenuSel',
+        corpus.chooser_selection_highlight(),
         chooser_selected_index - 1, -- line (0-indexed)
         0, -- col_start
         -1 -- col_end (end-of-line)
@@ -486,7 +519,7 @@ corpus = {
       vim.api.nvim_win_set_option(
         preview_window,
         'winhighlight',
-        vim.g.CorpusPreviewWinhighlight or 'EndOfBuffer:LineNr,FoldColumn:StatusLine,Normal:LineNr'
+        corpus.preview_win_highlight()
       )
       vim.api.nvim_win_set_option(
         preview_window,
@@ -697,5 +730,32 @@ corpus = {
     return vim.fn.fnamemodify(file, ':t:r')
   end,
 }
+
+setmetatable(corpus, {
+  __call = function(_table, config)
+    -- TODO validation
+    if config == nil then
+      -- Nothing to do.
+    elseif type(config) == 'table' then
+      if config.bang_creation ~= nil then
+        configured.bang_creation = not not config.bang_creation
+      end
+      if config.directories then
+        configured.directories = config.directories
+      end
+      if config.sort then
+        configured.sort = config.sort
+      end
+      if config.chooser_selection_highlight then
+        configured.chooser_selection_highlight = config.chooser_selection_highlight
+      end
+      if config.preview_win_highlight then
+        configured.preview_win_highlight = config.preview_win_highlight
+      end
+    else
+      error('corpus() expects a table argument')
+    end
+  end,
+})
 
 return corpus

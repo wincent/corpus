@@ -270,6 +270,8 @@
 "   from Cody Buell).
 " - Added |g:CorpusSort| (https://github.com/wincent/corpus/issues/74).
 
+" TODO: update all of these docs...
+
 ""
 " @option g:CorpusAutoCd number 0
 "
