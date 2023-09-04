@@ -348,22 +348,17 @@ let g:CorpusLoaded=1
 let s:cpoptions=&cpoptions
 set cpoptions&vim
 
-function! s:RequireCorpus()
-  " TODO: on first run, rewrite autocommands to not call this on subsequent runs.
-  lua require'corpus'
-endfunction
-
 if has('autocmd')
   augroup Corpus
     autocmd!
     autocmd BufNewFile *.md call corpus#buf_new_file()
 
     if exists('##CmdlineChanged')
-      autocmd CmdlineChanged * call s:RequireCorpus() | call v:lua.corpus.cmdline_changed(expand('<afile>'))
+      autocmd CmdlineChanged * call luaeval("require'corpus'") | call v:lua.corpus.cmdline_changed(expand('<afile>'))
     endif
 
-    autocmd CmdlineEnter * call s:RequireCorpus() | call v:lua.corpus.cmdline_enter()
-    autocmd CmdlineLeave * call s:RequireCorpus() | call v:lua.corpus.cmdline_leave()
+    autocmd CmdlineEnter * lua require'corpus'.cmdline_enter()
+    autocmd CmdlineLeave * lua require'corpus'.cmdline_leave()
   augroup END
 endif
 
