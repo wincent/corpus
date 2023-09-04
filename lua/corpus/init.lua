@@ -18,10 +18,10 @@ local preview_window = nil
 
 -- TODO: can we make these a bit more private?
 local mappings = {
-  ['<C-j>'] = '<Cmd>lua corpus.preview_next()<CR>',
-  ['<C-k>'] = '<Cmd>lua corpus.preview_previous()<CR>',
-  ['<Down>'] = '<Cmd>lua corpus.preview_next()<CR>',
-  ['<Up>'] = '<Cmd>lua corpus.preview_previous()<CR>',
+  ['<C-j>'] = "<Cmd>lua require'corpus'.preview_next()<CR>",
+  ['<C-k>'] = "<Cmd>lua require'corpus'.preview_previous()<CR>",
+  ['<Down>'] = "<Cmd>lua require'corpus'.preview_next()<CR>",
+  ['<Up>'] = "<Cmd>lua require'corpus'.preview_previous()<CR>",
 }
 
 local fallback_mtime = {
@@ -50,6 +50,7 @@ end
 
 -- TODO make most of these private (really only want them public for testing
 -- during development)
+local corpus = nil
 corpus = {
   choose = function(selection, bang)
     selection = vim.trim(selection)

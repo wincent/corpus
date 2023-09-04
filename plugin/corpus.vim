@@ -406,7 +406,7 @@ endif
 "
 " When outside a Corpus directory, you can use tab-completion to switch to one
 " of the configured |CorpusDirectories|.
-command! -bang -complete=customlist,corpus#complete -nargs=* Corpus call v:lua.corpus.choose(<q-args>, "<bang>")
+command! -bang -complete=customlist,corpus#complete -nargs=* Corpus call v:lua.require'corpus'.choose(<q-args>, "<bang>")
 
 nnoremap <Plug>(Corpus) :Corpus<Space>
 
