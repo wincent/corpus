@@ -356,11 +356,11 @@ if has('autocmd')
     autocmd BufNewFile *.md call corpus#buf_new_file()
 
     if exists('##CmdlineChanged')
-      autocmd CmdlineChanged * call v:lua.require'corpus'.cmdline_changed(expand('<afile>'))
+      autocmd CmdlineChanged * call v:lua.require'wincent.corpus'.cmdline_changed(expand('<afile>'))
     endif
 
-    autocmd CmdlineEnter * lua require'corpus'.cmdline_enter()
-    autocmd CmdlineLeave * lua require'corpus'.cmdline_leave()
+    autocmd CmdlineEnter * lua require'wincent.corpus'.cmdline_enter()
+    autocmd CmdlineLeave * lua require'wincent.corpus'.cmdline_leave()
   augroup END
 endif
 
@@ -408,7 +408,7 @@ endif
 "
 " When outside a Corpus directory, you can use tab-completion to switch to one
 " of the configured |CorpusDirectories|.
-command! -bang -complete=customlist,corpus#complete -nargs=* Corpus call v:lua.require'corpus'.choose(<q-args>, "<bang>")
+command! -bang -complete=customlist,corpus#complete -nargs=* Corpus call v:lua.require'wincent.corpus'.choose(<q-args>, "<bang>")
 
 nnoremap <Plug>(Corpus) :Corpus<Space>
 

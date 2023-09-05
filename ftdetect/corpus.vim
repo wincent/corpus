@@ -2,5 +2,5 @@
 " Licensed under the terms of the MIT license.
 
 if has('nvim')
-  autocmd BufNewFile,BufRead *.md lua require'corpus'.ftdetect()
+  autocmd BufNewFile,BufRead *.md lua require'wincent.corpus'.ftdetect()
 endif

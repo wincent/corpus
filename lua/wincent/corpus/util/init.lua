@@ -6,7 +6,7 @@ local util = {}
 local mt = {
   __index = function(tbl, key)
     if util[key] == nil then
-      util[key] = require('corpus.util.' .. key)
+      util[key] = require('wincent.corpus.util.' .. key)
     end
     return util[key]
   end
