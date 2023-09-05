@@ -1,7 +1,7 @@
 -- Copyright 2015-present Greg Hurrell. All rights reserved.
 -- Licensed under the terms of the MIT license.
 
-local util = require 'wincent.corpus.util'
+local util = require 'wincent.corpus.private.util'
 
 -- For compatibility; see: https://github.com/neovim/neovim/pull/22846
 local uv = vim.uv or vim.loop
