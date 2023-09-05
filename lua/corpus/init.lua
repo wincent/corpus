@@ -3,6 +3,9 @@
 
 local util = require 'corpus.util'
 
+-- For compatibility; see: https://github.com/neovim/neovim/pull/22846
+local uv = vim.uv or vim.loop
+
 local chooser_buffer = nil
 local chooser_selected_index = nil
 local chooser_window = nil
@@ -133,7 +136,7 @@ corpus = {
               if corpus.sort() == 'stat' then
                 local mtimes = {}
                 for _, name in ipairs(results) do
-                  local success, stat = pcall(vim.uv.fs_stat, name)
+                  local success, stat = pcall(uv.fs_stat, name)
                   if success and
                     stat and
                     stat.mtime and
