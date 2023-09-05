@@ -3,6 +3,9 @@
 
 local SIGTERM = 15
 
+-- For compatibility; see: https://github.com/neovim/neovim/pull/22846
+local uv = vim.uv or vim.loop
+
 local close = function(closable)
   if not closable:is_closing() then
     closable:close()
@@ -29,9 +32,9 @@ local util = {
       end)
     end
 
-    local stderr = vim.loop.new_pipe(false)
-    local stdin = vim.loop.new_pipe(false)
-    local stdout = vim.loop.new_pipe(false)
+    local stderr = uv.new_pipe(false)
+    local stdin = uv.new_pipe(false)
+    local stdout = uv.new_pipe(false)
 
     local on_exit = callback('on_exit', options)
     local on_stderr = callback('on_stderr', options)
@@ -39,7 +42,7 @@ local util = {
 
     local handle
 
-    handle = vim.loop.spawn(
+    handle = uv.spawn(
       command, {
         args = args,
         stdio = {stdin, stdout, stderr},
