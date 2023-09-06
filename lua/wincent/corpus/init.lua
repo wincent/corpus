@@ -1,13 +1,13 @@
 -- Copyright 2015-present Greg Hurrell. All rights reserved.
 -- Licensed under the terms of the MIT license.
 
-local chooser = require'wincent.corpus.private.chooser'
-local config = require'wincent.corpus.private.config'
-local directory = require'wincent.corpus.private.directory'
-local directories = require'wincent.corpus.private.directories'
-local in_directory = require'wincent.corpus.private.in_directory'
-local normalize = require'wincent.corpus.private.normalize'
-local preview = require'wincent.corpus.private.preview'
+local chooser = require('wincent.corpus.private.chooser')
+local config = require('wincent.corpus.private.config')
+local directory = require('wincent.corpus.private.directory')
+local directories = require('wincent.corpus.private.directories')
+local in_directory = require('wincent.corpus.private.in_directory')
+local normalize = require('wincent.corpus.private.normalize')
+local preview = require('wincent.corpus.private.preview')
 
 local corpus = nil
 
@@ -22,7 +22,7 @@ local mappings = {
 -- TODO: detect pre-existing mappings, save them, and restore them if needed.
 local set_up_mappings = function()
   for lhs, rhs in pairs(mappings) do
-    vim.api.nvim_set_keymap('c', lhs, rhs, {silent = true})
+    vim.api.nvim_set_keymap('c', lhs, rhs, { silent = true })
   end
   -- TODO sub to VimResized autocmd
 end
@@ -63,8 +63,8 @@ corpus = {
           file = ''
         else
           error(
-            'Invalid path: expected a new note name with no slashes, ' ..
-            'or a directory defined in the `CorpusDirectories` configuration'
+            'Invalid path: expected a new note name with no slashes, '
+              .. 'or a directory defined in the `CorpusDirectories` configuration'
           )
         end
       elseif corpus_directory == nil then
@@ -129,7 +129,7 @@ corpus = {
 
 setmetatable(corpus, {
   __call = function(_table, settings)
-    require'wincent.corpus.private.config'(settings)
+    require('wincent.corpus.private.config')(settings)
   end,
 })
 

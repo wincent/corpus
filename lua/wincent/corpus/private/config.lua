@@ -24,24 +24,19 @@ local getters = {
 
   chooser_selection_highlight = function()
     -- TODO: eventually, remove the global fallback
-    return configured.chooser_selection_highlight or
-      vim.g.CorpusChooserSelectionHighlight or
-      'PMenuSel'
+    return configured.chooser_selection_highlight or vim.g.CorpusChooserSelectionHighlight or 'PMenuSel'
   end,
 
   corpus_directories = function()
     -- TODO: eventually, remove the global fallbacks
-    return configured.directories or
-      _G.CorpusDirectories or
-      vim.g.CorpusDirectories or
-      vim.empty_dict()
+    return configured.directories or _G.CorpusDirectories or vim.g.CorpusDirectories or vim.empty_dict()
   end,
 
   preview_win_highlight = function()
     -- TODO: eventually, remove the global fallback
-    return configured.preview_win_highlight or
-      vim.g.CorpusPreviewWinhighlight or
-      'EndOfBuffer:LineNr,FoldColumn:StatusLine,Normal:LineNr'
+    return configured.preview_win_highlight
+      or vim.g.CorpusPreviewWinhighlight
+      or 'EndOfBuffer:LineNr,FoldColumn:StatusLine,Normal:LineNr'
   end,
 
   sort = function()

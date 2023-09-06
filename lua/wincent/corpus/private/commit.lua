@@ -1,8 +1,8 @@
 -- Copyright 2015-present Greg Hurrell. All rights reserved.
 -- Licensed under the terms of the MIT license.
 
-local config_for_file = require'wincent.corpus.private.config_for_file'
-local git = require'wincent.corpus.private.git'
+local config_for_file = require('wincent.corpus.private.config_for_file')
+local git = require('wincent.corpus.private.git')
 
 local commit = function(file, operation)
   local config = config_for_file(file)

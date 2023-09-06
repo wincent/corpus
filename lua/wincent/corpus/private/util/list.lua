@@ -7,7 +7,7 @@ local util = {
 
 -- Peforms a shallow clone of `list`.
 util.list.clone = function(list)
-  return {unpack(list)}
+  return { unpack(list) }
 end
 
 -- Concatenates `list` with `other` (also a list), returning a new list.
@@ -40,7 +40,7 @@ end
 
 -- Pushes one or more elements onto `list`, mutating it.
 util.list.push = function(list, ...)
-  for _, v in ipairs({...}) do
+  for _, v in ipairs({ ... }) do
     table.insert(list, v)
   end
 end

@@ -1,8 +1,8 @@
 -- Copyright 2015-present Greg Hurrell. All rights reserved.
 -- Licensed under the terms of the MIT license.
 
-local config = require'wincent.corpus.private.config'
-local util = require'wincent.corpus.private.util'
+local config = require('wincent.corpus.private.config')
+local util = require('wincent.corpus.private.util')
 
 local preview_buffer = nil
 local preview_window = nil
@@ -27,33 +27,18 @@ preview = {
     local lines = vim.o.lines
     if preview_window == nil then
       local width = math.floor(vim.o.columns / 2)
-      preview_window = vim.api.nvim_open_win(
-        preview_buffer,
-        false --[[ enter? --]], {
-            col = width,
-            row = 0,
-            focusable = false,
-            relative = 'editor',
-            style = 'minimal',
-            width = width,
-            height = lines - 2,
-        }
-      )
-      vim.api.nvim_win_set_option(
-        preview_window,
-        'winhighlight',
-        config.preview_win_highlight
-      )
-      vim.api.nvim_win_set_option(
-        preview_window,
-        'foldcolumn',
-        '1'
-      )
-      vim.api.nvim_win_set_option(
-        preview_window,
-        'foldenable',
-        false
-      )
+      preview_window = vim.api.nvim_open_win(preview_buffer, false --[[ enter? --]], {
+        col = width,
+        row = 0,
+        focusable = false,
+        relative = 'editor',
+        style = 'minimal',
+        width = width,
+        height = lines - 2,
+      })
+      vim.api.nvim_win_set_option(preview_window, 'winhighlight', config.preview_win_highlight)
+      vim.api.nvim_win_set_option(preview_window, 'foldcolumn', '1')
+      vim.api.nvim_win_set_option(preview_window, 'foldenable', false)
     end
     local contents = nil
     if file == nil then
@@ -81,7 +66,6 @@ preview = {
     )
     vim.cmd('redraw')
   end,
-
 }
 
 return preview

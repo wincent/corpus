@@ -1,10 +1,10 @@
 -- Copyright 2015-present Greg Hurrell. All rights reserved.
 -- Licensed under the terms of the MIT license.
 
-local chooser = require'wincent.corpus.private.chooser'
-local directories = require'wincent.corpus.private.directories'
-local in_directory = require'wincent.corpus.private.in_directory'
-local util = require'wincent.corpus.private.util'
+local chooser = require('wincent.corpus.private.chooser')
+local directories = require('wincent.corpus.private.directories')
+local in_directory = require('wincent.corpus.private.in_directory')
+local util = require('wincent.corpus.private.util')
 
 local complete = function(arglead, cmdline, _cursor_pos)
   if in_directory() then
@@ -17,7 +17,7 @@ local complete = function(arglead, cmdline, _cursor_pos)
         --                   ^
         -- Must return "bazzzz", not "zzz".
         local suffix = title:sub(prefix:len() - arglead:len() + 1, -1)
-        return {suffix}
+        return { suffix }
       end
     end
   else

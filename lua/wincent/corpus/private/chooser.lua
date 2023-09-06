@@ -1,11 +1,11 @@
 -- Copyright 2015-present Greg Hurrell. All rights reserved.
 -- Licensed under the terms of the MIT license.
 
-local config = require'wincent.corpus.private.config'
-local directory = require'wincent.corpus.private.directory'
-local preview = require'wincent.corpus.private.preview'
-local smartcase = require'wincent.corpus.private.smartcase'
-local util = require'wincent.corpus.private.util'
+local config = require('wincent.corpus.private.config')
+local directory = require('wincent.corpus.private.directory')
+local preview = require('wincent.corpus.private.preview')
+local smartcase = require('wincent.corpus.private.smartcase')
+local util = require('wincent.corpus.private.util')
 
 local chooser_buffer = nil
 local chooser_selected_index = nil
@@ -33,21 +33,17 @@ chooser = {
 
   get_selected_file = function()
     if chooser_selected_index ~= nil then
-      local line = vim.api.nvim_buf_get_lines(
-        chooser_buffer,
-        chooser_selected_index - 1,
-        chooser_selected_index,
-        false
-      )[1]
+      local line =
+        vim.api.nvim_buf_get_lines(chooser_buffer, chooser_selected_index - 1, chooser_selected_index, false)[1]
 
       -- Strip leading "> " or "  ", and append extension.
       return vim.trim(line:sub(3, line:len())) .. '.md'
     end
   end,
 
-  highlight_selection = function ()
+  highlight_selection = function()
     if chooser_selected_index ~= nil then
-      vim.api.nvim_win_set_cursor(chooser_window, {chooser_selected_index, 0})
+      vim.api.nvim_win_set_cursor(chooser_window, { chooser_selected_index, 0 })
       vim.api.nvim_buf_clear_namespace(
         chooser_buffer,
         chooser_namespace,
@@ -85,7 +81,7 @@ chooser = {
         '--others',
         '-z',
         '--',
-        '*.md'
+        '*.md',
       }
 
       local stdout = {}
@@ -128,20 +124,16 @@ chooser = {
   next = function()
     if chooser_selected_index ~= nil then
       if chooser_selected_index < vim.api.nvim_buf_line_count(chooser_buffer) then
-        local lines = vim.api.nvim_buf_get_lines(
-          chooser_buffer,
-          chooser_selected_index - 1,
-          chooser_selected_index + 1,
-          false
-        )
+        local lines =
+          vim.api.nvim_buf_get_lines(chooser_buffer, chooser_selected_index - 1, chooser_selected_index + 1, false)
         vim.api.nvim_buf_set_lines(
           chooser_buffer,
           chooser_selected_index - 1,
           chooser_selected_index + 1,
           false, -- strict indexing?
           {
-            ({lines[1]:gsub('^..', '  ')})[1],
-            ({lines[2]:gsub('^..', '> ')})[1],
+            ({ lines[1]:gsub('^..', '  ') })[1],
+            ({ lines[2]:gsub('^..', '> ') })[1],
           }
         )
         chooser_selected_index = chooser_selected_index + 1
@@ -157,18 +149,15 @@ chooser = {
         true -- scratch?
       )
       local width = math.floor(vim.o.columns / 2)
-      chooser_window = vim.api.nvim_open_win(
-        chooser_buffer,
-        false --[[ enter? --]], {
-          col = 0,
-          row = 0,
-          focusable = false,
-          relative = 'editor',
-          style = 'minimal',
-          width = width,
-          height = vim.o.lines - 2,
-        }
-      )
+      chooser_window = vim.api.nvim_open_win(chooser_buffer, false --[[ enter? --]], {
+        col = 0,
+        row = 0,
+        focusable = false,
+        relative = 'editor',
+        style = 'minimal',
+        width = width,
+        height = vim.o.lines - 2,
+      })
       vim.api.nvim_win_set_option(chooser_window, 'wrap', false)
       vim.api.nvim_win_set_option(chooser_window, 'winhl', 'Normal:Question')
     end
@@ -178,20 +167,16 @@ chooser = {
   previous = function()
     if chooser_selected_index ~= nil then
       if chooser_selected_index > 1 then
-        local lines = vim.api.nvim_buf_get_lines(
-          chooser_buffer,
-          chooser_selected_index - 2,
-          chooser_selected_index,
-          false
-        )
+        local lines =
+          vim.api.nvim_buf_get_lines(chooser_buffer, chooser_selected_index - 2, chooser_selected_index, false)
         vim.api.nvim_buf_set_lines(
           chooser_buffer,
           chooser_selected_index - 2,
           chooser_selected_index,
           false, -- strict indexing?
           {
-            ({lines[1]:gsub('^..', '> ')})[1],
-            ({lines[2]:gsub('^..', '  ')})[1],
+            ({ lines[1]:gsub('^..', '> ') })[1],
+            ({ lines[2]:gsub('^..', '  ') })[1],
           }
         )
         chooser_selected_index = chooser_selected_index - 1
@@ -221,7 +206,7 @@ chooser = {
         '-l',
         '-z',
         '--all-match',
-        '--untracked'
+        '--untracked',
       }
 
       if not smartcase(terms) then
@@ -293,11 +278,13 @@ chooser = {
         local mtimes = {}
         for _, name in ipairs(results) do
           local success, stat = pcall(uv.fs_stat, name)
-          if success and
-            stat and
-            stat.mtime and
-            type(stat.mtime.sec) == 'number' and
-            type(stat.mtime.nsec) == 'number' then
+          if
+            success
+            and stat
+            and stat.mtime
+            and type(stat.mtime.sec) == 'number'
+            and type(stat.mtime.nsec) == 'number'
+          then
             mtimes[name] = stat.mtime
           else
             mtimes[name] = fallback_mtime
@@ -322,7 +309,7 @@ chooser = {
       chooser_selected_index = 1
 
       local width = math.floor(vim.o.columns / 2)
-      lines = util.list.map(results, function (result, i)
+      lines = util.list.map(results, function(result, i)
         local name = vim.fn.fnamemodify(result, ':r')
         local prefix = nil
         if i == chooser_selected_index then
@@ -357,10 +344,7 @@ chooser = {
     )
 
     -- Reserve two lines for statusline and command line.
-    vim.api.nvim_win_set_height(
-      chooser_window,
-      vim.o.lines - 2
-    )
+    vim.api.nvim_win_set_height(chooser_window, vim.o.lines - 2)
 
     -- TODO: only do this if lines actually changed, or selection changed
     chooser.highlight_selection()

@@ -9,7 +9,7 @@ local mt = {
       util[key] = require('wincent.corpus.private.util.' .. key)
     end
     return util[key]
-  end
+  end,
 }
 
 return setmetatable({}, mt)

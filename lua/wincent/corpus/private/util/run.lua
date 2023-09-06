@@ -43,9 +43,10 @@ local util = {
     local handle
 
     handle = uv.spawn(
-      command, {
+      command,
+      {
         args = args,
-        stdio = {stdin, stdout, stderr},
+        stdio = { stdin, stdout, stderr },
         cwd = cwd or '.',
         env = env,
       },
@@ -74,7 +75,7 @@ local util = {
         if not handle:is_closing() then
           handle:kill(SIGTERM)
         end
-      end
+      end,
     }
   end,
 }
