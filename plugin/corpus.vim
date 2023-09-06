@@ -410,6 +410,8 @@ endif
 " of the configured |CorpusDirectories|.
 command! -bang -complete=customlist,corpus#complete -nargs=* Corpus call v:lua.require'wincent.corpus'.choose(<q-args>, "<bang>")
 
+" TODO: use vim.api.nvim_create_user_command instead of this ^^^
+
 nnoremap <Plug>(Corpus) :Corpus<Space>
 
 if !hasmapto('<Plug>(Corpus)') && maparg('<Leader>c', 'n') ==# ''

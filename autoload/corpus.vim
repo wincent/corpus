@@ -27,24 +27,24 @@ let s:preview_window=v:null
 "   ---
 "
 function! corpus#buf_new_file() abort
-  let l:file=v:lua.require'wincent.corpus'.normalize('<afile>')
+  let l:file=v:lua.require'wincent.corpus.private.normalize'('<afile>')
   call corpus#update_metadata(l:file)
   let b:corpus_new_file=1
 endfunction
 
 function! corpus#buf_write_post() abort
-  let l:file=v:lua.require'wincent.corpus'.normalize('<afile>')
+  let l:file=v:lua.require'wincent.corpus.private.normalize'('<afile>')
   if has_key(b:, 'corpus_new_file')
     unlet b:corpus_new_file
     let l:operation='create'
   else
     let l:operation='update'
   endif
-  call v:lua.require'wincent.corpus'.commit(l:file, l:operation)
+  call v:lua.require'wincent.corpus.private.commit'(l:file, l:operation)
 endfunction
 
 function! corpus#buf_write_pre() abort
-  let l:file=v:lua.require'wincent.corpus'.normalize('<afile>')
+  let l:file=v:lua.require'wincent.corpus.private.normalize'('<afile>')
   call corpus#update_references(l:file)
   call corpus#update_metadata(l:file)
 endfunction
@@ -262,7 +262,7 @@ function! corpus#goto(mode) abort
     return
   endif
 
-  let l:config=v:lua.require'wincent.corpus'.config_for_file(expand('%:p'))
+  let l:config=v:lua.require'wincent.corpus.private.config_for_file'(expand('%:p'))
   let l:transform=get(l:config, 'transform', 'local')
   if l:start > 0 && l:end < l:len
     let l:name=strpart(l:line, l:start, l:end - l:start + 1)
@@ -365,7 +365,7 @@ function! corpus#test() abort
 endfunction
 
 function! corpus#update_references(file) abort
-  let l:config=v:lua.require'wincent.corpus'.config_for_file(a:file)
+  let l:config=v:lua.require'wincent.corpus.private.config_for_file'(a:file)
   if !get(l:config, 'autoreference', 0)
     return
   endif
@@ -454,7 +454,7 @@ function! corpus#update_references(file) abort
 endfunction
 
 function! corpus#update_metadata(file) abort
-  let l:config=v:lua.require'wincent.corpus'.config_for_file(a:file)
+  let l:config=v:lua.require'wincent.corpus.private.config_for_file'(a:file)
   if !get(l:config, 'autotitle', 0) && !has_key(l:config, 'tags')
     return
   endif
@@ -462,7 +462,7 @@ function! corpus#update_metadata(file) abort
   let l:metadata=corpus#get_metadata()
 
   if get(l:config, 'autotitle', 0)
-    let l:title=v:lua.require'wincent.corpus'.title_for_file(a:file)
+    let l:title=v:lua.require'wincent.corpus.private.title_for_file'(a:file)
     let l:metadata.title=l:title
   endif
 
@@ -479,5 +479,5 @@ function! corpus#update_metadata(file) abort
 endfunction
 
 function! corpus#complete(arglead, cmdline, cursor_pos) abort
-  return v:lua.require'wincent.corpus'.complete(a:arglead, a:cmdline, a:cursor_pos)
+  return v:lua.require'wincent.corpus.private.complete'(a:arglead, a:cmdline, a:cursor_pos)
 endfunction

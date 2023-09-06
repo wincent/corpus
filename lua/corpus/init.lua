@@ -6,16 +6,14 @@ local warned = {}
 local deprecated = function(name)
   if not warned[name] then
     warned[name] = true
-    vim.cmd('echohl WarningMsg')
     if name == '' then
-      vim.cmd('echo "Calling `corpus()` directly is deprecated;"')
-      vim.cmd([[echo "`use require'wincent.corpus'{}` instead."]])
+      vim.api.nvim_err_writeln('Calling `corpus{}` directly is deprecated;')
+      vim.api.nvim_err_writeln("use `require'wincent.corpus'{}` instead.")
     else
-      vim.cmd('echo "Calling `' .. name .. '()` directly on `corpus` is deprecated;"')
-      vim.cmd([[echo "`use require'wincent.corpus'.]] .. name .. '()` instead."')
+      vim.api.nvim_err_writeln('Calling `' .. name .. '()` directly on `corpus` is deprecated;')
+      vim.api.nvim_err_writeln("use `require'wincent.corpus'." .. name .. '()` instead.')
     end
-    vim.cmd('echo "This compatibility shim will be removed in a future release."')
-    vim.cmd('echohl None')
+    vim.api.nvim_err_writeln('This compatibility shim will be removed in a future release.')
   end
 end
 

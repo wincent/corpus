@@ -49,7 +49,7 @@ local util = {
         cwd = cwd or '.',
         env = env,
       },
-      vim.schedule_wrap(function(code, signal) 
+      vim.schedule_wrap(function(code, signal)
         stdout:read_stop()
         stderr:read_stop()
 
