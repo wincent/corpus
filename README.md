@@ -275,11 +275,7 @@ let g:CorpusSort='stat'
 
 ## Website<a name="corpus-website" href="#user-content-corpus-website"></a>
 
-The official Corpus source code repo is at:
-
-http://git.wincent.com/corpus.git
-
-A mirror exists at:
+Source code:
 
 https://github.com/wincent/corpus
 

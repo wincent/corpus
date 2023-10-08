@@ -204,11 +204,7 @@
 "
 " # Website
 "
-" The official Corpus source code repo is at:
-"
-"   http://git.wincent.com/corpus.git
-"
-" A mirror exists at:
+" Source code:
 "
 "   https://github.com/wincent/corpus
 "
