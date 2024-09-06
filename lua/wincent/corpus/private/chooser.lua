@@ -9,6 +9,7 @@ local util = require('wincent.corpus.private.util')
 
 local chooser_buffer = nil
 local chooser_selected_index = nil
+local chooser_selected_file = nil
 local chooser_window = nil
 local current_search = nil
 local fallback_mtime = {
@@ -30,18 +31,23 @@ chooser = {
       chooser_window = nil
     end
     if chooser_buffer ~= nil then
+      chooser_selected_file = chooser.get_selected_file()
       vim.api.nvim_buf_delete(chooser_buffer, { force = true })
       chooser_buffer = nil
     end
   end,
 
   get_selected_file = function()
-    if chooser_selected_index ~= nil then
-      local line =
-        vim.api.nvim_buf_get_lines(chooser_buffer, chooser_selected_index - 1, chooser_selected_index, false)[1]
+    if chooser_buffer == nil then
+      return chooser_selected_file
+    else
+      if chooser_selected_index ~= nil then
+        local line =
+          vim.api.nvim_buf_get_lines(chooser_buffer, chooser_selected_index - 1, chooser_selected_index, false)[1]
 
-      -- Strip leading "> " or "  ", and append extension.
-      return vim.trim(line:sub(3, line:len())) .. '.md'
+        -- Strip leading "> " or "  ", and append extension.
+        return vim.trim(line:sub(3, line:len())) .. '.md'
+      end
     end
   end,
 
