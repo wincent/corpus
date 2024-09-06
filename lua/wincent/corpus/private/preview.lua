@@ -16,7 +16,7 @@ preview = {
       preview_window = nil
     end
     if preview_buffer ~= nil then
-      vim.api.nvim_buf_delete(preview_buffer, {force = true})
+      vim.api.nvim_buf_delete(preview_buffer, { force = true })
       preview_buffer = nil
     end
   end,

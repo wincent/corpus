@@ -30,7 +30,7 @@ chooser = {
       chooser_window = nil
     end
     if chooser_buffer ~= nil then
-      vim.api.nvim_buf_delete(chooser_buffer, {force = true})
+      vim.api.nvim_buf_delete(chooser_buffer, { force = true })
       chooser_buffer = nil
     end
   end,
