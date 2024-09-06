@@ -15,6 +15,10 @@ preview = {
       vim.api.nvim_win_close(preview_window, true --[[ force? --]])
       preview_window = nil
     end
+    if preview_buffer ~= nil then
+      vim.api.nvim_buf_delete(preview_buffer, {force = true})
+      preview_buffer = nil
+    end
   end,
 
   show = function(file)

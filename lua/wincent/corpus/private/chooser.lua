@@ -29,6 +29,10 @@ chooser = {
       vim.api.nvim_win_close(chooser_window, true --[[ force? --]])
       chooser_window = nil
     end
+    if chooser_buffer ~= nil then
+      vim.api.nvim_buf_delete(chooser_buffer, {force = true})
+      chooser_buffer = nil
+    end
   end,
 
   get_selected_file = function()
@@ -143,11 +147,13 @@ chooser = {
   end,
 
   open = function()
-    if chooser_window == nil then
+    if chooser_buffer == nil then
       chooser_buffer = vim.api.nvim_create_buf(
         false, -- listed?
         true -- scratch?
       )
+    end
+    if chooser_window == nil then
       local width = math.floor(vim.o.columns / 2)
       chooser_window = vim.api.nvim_open_win(chooser_buffer, false --[[ enter? --]], {
         col = 0,
