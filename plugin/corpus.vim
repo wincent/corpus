@@ -135,6 +135,15 @@
 "
 " Defaults to `false`.
 "
+"                                                       *corpus-referenceheader*
+" ## `referenceheader`
+"
+" When set to a string value, Corpus will maintain a header above the references
+" list using HTML comment syntax. For example, given a `referenceheader` of
+" 'References', it will insert a comment of the form `<!-- References -->`.
+"
+" Defaults to `nil` (ie. no header).
+"
 "                                                             *corpus-autotitle*
 " ## `autotitle`
 "
@@ -265,6 +274,7 @@
 " - Added |g:CorpusAutoCd| (https://github.com/wincent/corpus/pull/84, patch
 "   from Cody Buell).
 " - Added |g:CorpusSort| (https://github.com/wincent/corpus/issues/74).
+" - Added `referenceheader` setting (see |corpus-referenceheader|).
 
 " TODO: update all of these docs...
 

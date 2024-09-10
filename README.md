@@ -149,6 +149,14 @@ We will see references like the following created at the bottom of the file:
 
 Defaults to `false`.
 
+<p align="right"><a name="corpus-referenceheader" href="#user-content-corpus-referenceheader"><code>corpus-referenceheader</code></a></p>
+
+### `referenceheader`<a name="corpus-referenceheader" href="#user-content-corpus-referenceheader"></a>
+
+When set to a string value, Corpus will maintain a header above the references list using HTML comment syntax. For example, given a `referenceheader` of 'References', it will insert a comment of the form `<!-- References -->`.
+
+Defaults to `nil` (ie. no header).
+
 <p align="right"><a name="corpus-autotitle" href="#user-content-corpus-autotitle"><code>corpus-autotitle</code></a></p>
 
 ### `autotitle`<a name="corpus-autotitle" href="#user-content-corpus-autotitle"></a>
@@ -318,3 +326,4 @@ This list produced with:
 - Accept either a Lua global (`CorpusDirectories`) or a Vim Global (`g:CorpusDirectories`) for configuration.
 - Added <strong>[`g:CorpusAutoCd`](#user-content-gcorpusautocd)</strong> (https://github.com/wincent/corpus/pull/84, patch from Cody Buell).
 - Added <strong>[`g:CorpusSort`](#user-content-gcorpussort)</strong> (https://github.com/wincent/corpus/issues/74).
+- Added `referenceheader` setting (see <strong>[`corpus-referenceheader`](#user-content-corpus-referenceheader)</strong>).

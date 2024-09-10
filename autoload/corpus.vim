@@ -366,9 +366,10 @@ endfunction
 
 function! corpus#update_references(file) abort
   let l:config=v:lua.require'wincent.corpus.private.config_for_file'(a:file)
-  if !get(l:config, 'autoreference', 0)
+  if !get(l:config, 'autoreference', v:null)
     return
   endif
+  let l:header=get(l:config, 'referenceheader', '')
 
   " Skip over metadata.
   let l:raw=corpus#get_metadata_raw()
@@ -378,9 +379,11 @@ function! corpus#update_references(file) abort
     let l:start=1
   endif
 
-  " Look for link reference definitions and reference links.
+  " Look for link reference definitions, reference links, and the last header.
   let l:labels={}
   let l:references={}
+  let l:last_comment=v:null
+  let l:first_definition=v:null
 
   " We don't look for link reference definitions or reference links
   " inside of fenced code blocks.
@@ -411,8 +414,17 @@ function! corpus#update_references(file) abort
       continue
     endif
 
+    " Reference header.
+    if match(l:line, '\v^\<!--.*--\>') != -1
+      let l:last_comment=l:i
+      continue
+    endif
+
     let l:match=corpus#extract_link_reference_definition(l:line)
     if len(l:match)
+      if type(l:first_definition) == type(v:null)
+        let l:first_definition=l:i
+      endif
       let l:labels[tolower(l:match[0])]=l:match[1]
       continue
     endif
@@ -422,8 +434,32 @@ function! corpus#update_references(file) abort
     endfor
   endfor
 
+  if len(keys(l:references)) == 0
+    " Nothing to do; could potentially consider removing existing labels here.
+    return
+  endif
+
   " If there are existing labels, we assume they are at the bottom.
   let l:has_labels=!!len(l:labels)
+
+  if l:header != ''
+    let l:header_comment='<!-- ' . l:header . ' -->'
+    if type(l:last_comment) == type(v:null)
+      " Add new header.
+      if type(l:first_definition) != type(v:null)
+        " Above existing definitions.
+        call append(l:first_definition - 1, '')
+        call append(l:first_definition - 1, l:header_comment)
+      else
+        " At end.
+        call corpus#append_blank_line_if_absent()
+        call append(line('$'), l:header_comment)
+      endif
+    else
+      " Update existing header.
+      call setline(l:last_comment, l:header_comment)
+    endif
+  endif
 
   for l:reference in sort(keys(l:references))
     let l:key=tolower(l:reference)
@@ -432,11 +468,8 @@ function! corpus#update_references(file) abort
       let l:labels[l:key]=l:reference
 
       if !l:has_labels
-        " Add a blank separator line if there is not one there already.
         let l:has_labels=1
-        if match(getline(line('$')), '\v^\s*$') == -1
-          call append(line('$'), '')
-        endif
+        call corpus#append_blank_line_if_absent()
       endif
 
       let l:base=get(l:config, 'base', '')
@@ -451,6 +484,13 @@ function! corpus#update_references(file) abort
       call append(line('$'), '[' . l:reference . ']: ' . l:target)
     endif
   endfor
+endfunction
+
+" Add a blank separator line at end of buffer if there is not one there already.
+function! corpus#append_blank_line_if_absent() abort
+  if match(getline(line('$')), '\v^\s*$') == -1
+    call append(line('$'), '')
+  endif
 endfunction
 
 function! corpus#update_metadata(file) abort
